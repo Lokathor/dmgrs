@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["main",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["SRC",""]],"fn":[["file_attr_parser","Parses `#![mbc(none)]`, keeping the part inside the square brackets."],["main",""],["parser",""]]};

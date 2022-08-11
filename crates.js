@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["dmgrs"];
+window.ALL_CRATES = ["ahash","cfg_if","chumsky","const_random","const_random_macro","crunchy","dmgrs","getrandom","lazy_static","libc","proc_macro_hack","tiny_keccak"];

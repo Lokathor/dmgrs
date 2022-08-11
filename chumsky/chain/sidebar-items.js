@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":[["Chain","A utility trait that facilitates chaining parser outputs together into [`Vec`]s."]]};
