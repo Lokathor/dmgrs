@@ -6,6 +6,7 @@ pub fn gb_binary_literal() -> impl Parser<char, u16, Error = Simple<char>> {
     filter(|c: &char| c.is_digit(2))
       .padded_by(underscores)
       .repeated()
+      .at_least(1)
       .collect::<String>()
       .try_map(|s: String, span| {
         u16::from_str_radix(&s, 2)
@@ -31,6 +32,7 @@ pub fn gb_hex_literal() -> impl Parser<char, u16, Error = Simple<char>> {
     filter(|c: &char| c.is_digit(16))
       .padded_by(underscores)
       .repeated()
+      .at_least(1)
       .collect::<String>()
       .try_map(|s: String, span| {
         u16::from_str_radix(&s, 16)
