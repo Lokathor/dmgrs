@@ -6,11 +6,17 @@
 const NR52 = $FF26;
 const LCDC = $FF40;
 const LCDC_LCD_ON = bit!(7);
-const LCDC_BGWIN_ON = bit!(1);
+const LCDC_WIN_TILEMAP1 = bit!(6);
+const LCDC_WIN_ON = bit!(5);
+const LCDC_CHARBLOCK_LOW = bit!(4);
+const LCDC_BG_TILEMAP1 = bit!(3);
+const LCDC_OBJ_IS_TALL = bit!(2);
+const LCDC_OBJ_ON = bit!(1);
+const LCDC_BGWIN_ON = bit!(0);
 const LY = $FF44;
 const BGP = $FF47;
 const VRAM_BLOCK2 = $9000;
-const TILE_MAP0 = $9800;
+const TILEMAP0 = $9800;
 
 fn main() -> ! {
   // shut down audio
@@ -36,7 +42,7 @@ fn main() -> ! {
 
   // copy tile map data
   ld de, TileMap
-  ld hl, TILE_MAP0
+  ld hl, TILEMAP0
   ld bc, size_of_val!(TileMap)
   call simple_copy
 

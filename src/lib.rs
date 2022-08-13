@@ -1,5 +1,28 @@
-use chumsky::prelude::*;
+#![warn(missing_docs)]
+#![allow(dead_code)]
 
+//! Stuff to work with Dmgrs assembly files.
+//!
+//! Right now, just a lot of [chumsky] parsers.
+
+use std::ops::Range;
+
+use chumsky::{
+  prelude::*,
+  text::{ident, newline},
+};
+
+#[allow(unused)]
+macro_rules! box_str {
+  ($x:expr) => {
+    $x.to_string().into_boxed_str()
+  };
+}
+
+/// Boxed str, but easier to type without the `<>`.
+pub type BoxStr = Box<str>;
+
+/// GB Binary literals are prefixed with `%`, then 0-1, with `_` allowed.
 pub fn gb_binary_literal() -> impl Parser<char, u16, Error = Simple<char>> {
   let underscores = just('_').ignored().repeated();
   just('%').ignore_then(
@@ -16,7 +39,7 @@ pub fn gb_binary_literal() -> impl Parser<char, u16, Error = Simple<char>> {
 }
 #[test]
 fn test_gb_binary_literal() {
-  let p = gb_binary_literal();
+  let p = gb_binary_literal().then_ignore(end());
   for num in [0, 1, 76, 89, 255, 256, 492, 11489, u16::MAX] {
     assert_eq!(p.parse(format!("%{num:b}")), Ok(num));
     assert_eq!(p.parse(format!("%{num:016b}")), Ok(num));
@@ -26,6 +49,7 @@ fn test_gb_binary_literal() {
   assert_eq!(p.parse(format!("%1010_1111____")), Ok(0b1010_1111));
 }
 
+/// GB Hex literals are prefixed with `$`, then 0-F, with `_` allowed.
 pub fn gb_hex_literal() -> impl Parser<char, u16, Error = Simple<char>> {
   let underscores = just('_').ignored().repeated();
   just('$').ignore_then(
@@ -42,7 +66,7 @@ pub fn gb_hex_literal() -> impl Parser<char, u16, Error = Simple<char>> {
 }
 #[test]
 fn test_gb_hex_literal() {
-  let p = gb_hex_literal();
+  let p = gb_hex_literal().then_ignore(end());
   for num in [0, 1, 76, 89, 255, 256, 492, 11489, u16::MAX] {
     assert_eq!(p.parse(format!("${num:x}")), Ok(num));
     assert_eq!(p.parse(format!("${num:08x}")), Ok(num));
@@ -54,119 +78,134 @@ fn test_gb_hex_literal() {
   assert_eq!(p.parse(format!("$A___")), Ok(0xA___));
 }
 
-/*
-TODO: Raw Instruction Forms
+/// Multi-line comments start with `/*` and end with `*/`
+///
+/// As the name implies, there can be newlines within the comment
+pub fn multi_line_comment() -> impl Parser<char, (), Error = Simple<char>> {
+  just("/*").then(take_until(just("*/"))).ignored()
+}
+#[test]
+fn test_multi_line_comment() {
+  let p = multi_line_comment().then_ignore(end());
+  assert_eq!(p.parse("/* multi \n line \n comment */"), Ok(()));
+}
 
-ADC A, [HL]
-ADC A, n8
-ADC A, r8
-ADD A, [HL]
-ADD A, n8
-ADD A, r8
-ADD HL, r16
-ADD HL, SP
-ADD SP, e8
-AND A, [HL]
-AND A, n8
-AND A, r8
-BIT u3, [HL]
-BIT u3, r8
-CALL cc, n16
-CALL n16
-CCF
-CP A, [HL]
-CP A, n8
-CP A, r8
-CPL
-DAA
-DEC [HL]
-DEC r16
-DEC r8
-DEC SP
-DI
-EI
-HALT
-INC [HL]
-INC r16
-INC r8
-INC SP
-JP cc, n16
-JP HL
-JP n16
-JR cc, e8
-JR e8
-LD [HL], n8
-LD [HL], r8
-LD [HLD], A
-LD [HLI], A
-LD [HL-], A
-LD [HL+], A
-LD [n16], A
-LD [n16], SP
-LD [r16], A
-LD A, [HLD]
-LD A, [HLI]
-LD A, [HL-]
-LD A, [HL+]
-LD A, [n16]
-LD A, [r16]
-LD HL, SP+e8
-LD HL, SP
-LD r16, n16
-LD r8, [HL]
-LD r8, n8
-LD r8, r8
-LD SP, HL
-LD SP, n16
-LDH [C], A
-LDH [n16], A
-LDH A, [C]
-LDH A, [n16]
-NOP
-OR A, [HL]
-OR A, n8
-OR A, r8
-POP AF
-POP r16
-PUSH AF
-PUSH r16
-RES u3, [HL]
-RES u3, r8
-RET
-RET cc
-RETI
-RL [HL]
-RL r8
-RLA
-RLC [HL]
-RLC r8
-RLCA
-RR [HL]
-RR r8
-RRA
-RRC [HL]
-RRC r8
-RRCA
-RST vec
-SBC A, [HL]
-SBC A, n8
-SBC A, r8
-SCF
-SET u3, [HL]
-SET u3, r8
-SLA [HL]
-SLA r8
-SRA [HL]
-SRA r8
-SRL [HL]
-SRL r8
-STOP
-SUB A, [HL]
-SUB A, n8
-SUB A, r8
-SWAP [HL]
-SWAP r8
-XOR A, [HL]
-XOR A, n8
-XOR A, r8
-*/
+/// Horizontal space doesn't advance to the next statement
+///
+/// * spaces
+/// * tabs
+/// * multi-line comments (which "count as" one space).
+pub fn horizontal_space() -> impl Parser<char, (), Error = Simple<char>> {
+  let space = just(' ').ignored();
+  let tab = just('\t').ignored();
+  let multi = multi_line_comment();
+  choice((space, tab, multi)).repeated().ignored()
+}
+#[test]
+fn test_horizontal_space() {
+  let p = horizontal_space().then_ignore(end());
+  assert_eq!(p.parse(""), Ok(()));
+  assert_eq!(p.parse(" "), Ok(()));
+  assert_eq!(p.parse("\t"), Ok(()));
+  assert_eq!(p.parse("   \t   \t  "), Ok(()));
+  assert_eq!(p.parse("  /* hello there \n general kenobi */ \t  "), Ok(()));
+}
+
+/// A [`newline`](chumsky::text::newline) implicitly ends all statements in
+/// Dmgrs.
+///
+/// * [`horizontal_space`] can come before the end of the statement.
+/// * By using `//`, text until the newline becomes a comment.
+/// * For these purposes, the end of input counts as "a newline".
+pub fn end_of_statement() -> impl Parser<char, (), Error = Simple<char>> {
+  let instant_newline = newline();
+  let eol_comment =
+    just("//").ignored().then(take_until(newline().or(end()))).ignored();
+
+  horizontal_space()
+    .ignored()
+    .then(choice((end(), instant_newline, eol_comment)))
+    .ignored()
+}
+#[test]
+fn test_end_of_statement() {
+  let p = end_of_statement().then_ignore(end());
+  assert_eq!(p.parse(""), Ok(()));
+  assert_eq!(p.parse(" \t "), Ok(()));
+  assert_eq!(p.parse("\n"), Ok(()));
+  assert_eq!(p.parse(" // EOL comment before EOF"), Ok(()));
+  assert_eq!(p.parse(" // EOL comment then newline\n"), Ok(()));
+}
+
+/// See [`program_attribute`]
+#[derive(Debug, Clone)]
+pub struct ProgramAttribute {
+  span: Range<usize>,
+  text: BoxStr,
+}
+
+/// Program attributes are like `#![words here]`.
+///
+/// The output is the text between the brackets.
+pub fn program_attribute(
+) -> impl Parser<char, ProgramAttribute, Error = Simple<char>> {
+  just("#!")
+    .ignore_then(
+      filter(|c: &char| *c != ']')
+        .repeated()
+        .collect::<String>()
+        .delimited_by(just('['), just(']')),
+    )
+    .map_with_span(|string, span| ProgramAttribute {
+      text: string.into_boxed_str(),
+      span,
+    })
+}
+#[test]
+fn test_program_attribute() {
+  let p = program_attribute().then_ignore(end());
+  assert_eq!(p.parse("#![]").unwrap().text, box_str!(""));
+  assert_eq!(p.parse("#![foo bar]").unwrap().text, box_str!("foo bar"));
+}
+
+/// See [`macro_invocation`]
+#[derive(Debug, Clone)]
+pub struct MacroInvocation {
+  span: Range<usize>,
+  name: BoxStr,
+  content: BoxStr,
+}
+/// Macros are invoked with `name!(words here)`
+///
+/// The output is the text between the brackets.
+pub fn macro_invocation(
+) -> impl Parser<char, MacroInvocation, Error = Simple<char>> {
+  ident()
+    .then_ignore(just('!'))
+    .then(
+      filter(|c: &char| *c != ')')
+        .repeated()
+        .collect::<String>()
+        .delimited_by(just('('), just(')')),
+    )
+    .map_with_span(|(name, content), span| MacroInvocation {
+      span,
+      name: name.into_boxed_str(),
+      content: content.into_boxed_str(),
+    })
+}
+#[test]
+fn test_macro_invocation() {
+  let p = macro_invocation().then_ignore(end());
+  //
+  let MacroInvocation { name, content, span } = p.parse("bit!(7)").unwrap();
+  assert_eq!(name, box_str!("bit"));
+  assert_eq!(content, box_str!("7"));
+  drop(span);
+  //
+  let MacroInvocation { name, content, span } =
+    p.parse(r#"gfx!(".X", ..XX..X.)"#).unwrap();
+  assert_eq!(name, box_str!("gfx"));
+  assert_eq!(content, box_str!(r#"".X", ..XX..X."#));
+  drop(span);
+}
