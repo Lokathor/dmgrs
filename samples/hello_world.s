@@ -1,11 +1,31 @@
+// These are "program attributes". `mbc` is required, and the rest can take
+// default values when not specified. Theoretically, they let the compiler know
+// stuff about your game such as the MBC you're using, rom size, ram size, etc.
+//
+// In truth, the compiler only actually supports the rom_only MBC and other MBCs
+// aren't really planned because this is all more like an experiment to goof
+// around with the language part of things.
 #![mbc(rom_only)]
 
-// Based on the CC0 licensed hello-world, from the GB Asm Tutorial:
+// The code is based on the CC0 licensed hello-world, from the GB Asm Tutorial:
 // https://eldred.fr/gb-asm-tutorial/assets/hello-world.asm
 
-const NR52 = $FF26;
+// Like in rust, a `const` is a value that you can use during compilaion
+// anywhere that you'd need an integer literal. They don't take up any runtime
+// space. Limited math is supported within const expressions, using `u16` as the
+// datatype. If a const is used with an instruction that needs a smaller sized
+// integer (either `u8` or `u3`) it's fine as long as the actual value of the
+// const fits into that smaller integer type (127 fits into a `u8`, and 5 fits
+// into a `u3`). If the value does not fit, a compile error is generated.
+
+const NR52 = $FF26; // hex literals start with $
 const LCDC = $FF40;
-const LCDC_LCD_ON = bit!(7);
+// an example use of a "macro", in this case it just gives `1<<N`, but the name
+// helps make the intent clear. Macros are just functions built into the
+// compiler that do various bespoke things. I should really stop calling them
+// macros and come up with some other name because every time i say it people
+// think they're something different. Directives? Builtins? Something else?
+const LCDC_LCD_ON = bit!(7); 
 const LCDC_WIN_TILEMAP1 = bit!(6);
 const LCDC_WIN_ON = bit!(5);
 const LCDC_CHARBLOCK_LOW = bit!(4);
@@ -18,6 +38,18 @@ const BGP = $FF47;
 const VRAM_BLOCK2 = $9000;
 const TILEMAP0 = $9800;
 
+// Each function is its own output section and label.
+
+// The rom's header is automatically generated for you by the compiler based on
+// program attributes you declare at the top of the file. The header's entry
+// point jump will automatically go to your `main` function. It's a compile
+// error to not have a main function.
+
+// Because `main` function wasn't really "called" by the entry point (using call
+// to adjust the stack) it can't return (also that would be bad because the
+// header isn't code anyway). We mark this with `-> !`, and then it's a compile
+// error to use any return instruction, or to allow control flow to pass off the
+// end of the function.
 fn main -> ! {
   // shut down audio
   ld a, 0
@@ -27,8 +59,14 @@ fn main -> ! {
   loop {
     ld a, [LY]
     cp 144
-    if c continue
+    // the end of every loop must explicitly state when to break or continue the
+    // loop. You could also use break or continue at other points of the loop
+    // body if you want to continue the loop early for example.
+    if c, continue
   }
+
+  /* Not needed/shown in this example,
+  but i'd also like to support if and if-else */
 
   // Turn LCD off
   ld a, 0
@@ -52,14 +90,17 @@ fn main -> ! {
 
   // set the four background palette indexes:
   // 2-bits each, low to high bits
-  ld a, %11_10_01_00
+  ld a, %11_10_01_00 // binary literals start with %
   ld [BGP], a
 
+  // just spin loop, our demo has nothing else to do.
   loop {}
 }
 
-// Copies `bc` bytes from `de` to `hl`.
-// Assumes that `bc` > 0 and always copies at least one byte.
+// Each function
+
+// Copies `bc` bytes from `de` to `hl`. Assumes that `bc` > 0, and so always
+// copies at least one byte.
 fn simple_copy {
   loop {
     ld a, [de]
@@ -68,9 +109,18 @@ fn simple_copy {
     dec bc
     ld a, b
     or a, c
-    if nz continue
+    if nz, continue
   }
+  // A `ret` instruction is automatically inserted at the end of this function
+  // during compilation, you don't have to state it explicitly. You could if you
+  // really want (and the compiler won't put two `ret` in a row in that case),
+  // but you just don't have to.
 }
+
+// A `static` puts non-instruction data into the output rom. In this case, we're
+// putting an unspecified number of bytes with `[u8]`. You can also specify
+// `[u8; N]` and the compiler will issue an error if the number of bytes listed
+// isn't exactly equal to `N`.
 
 static Tiles: [u8] = [
   $00,$ff, $00,$ff, $00,$ff, $00,$ff, $00,$ff, $00,$ff, $00,$ff, $00,$ff,
@@ -165,3 +215,130 @@ static TileMap: [u8] = [
 	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0,
 	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0,
 ];
+
+
+// Here is the list of supported instruction mnemonics. Within an actual program
+// they're case-insensitive, but for this example list the case matters.
+// * The parts in caps indicate what the programmer would write directly.
+// * The parts in lowercase indicate where the programmer would substitute a
+//   value (`n8`, `n16`, `e8`, or `u3`), a register name (`r8`, r16`), or a
+//   condition code (`cc`).
+// * In any place a number is needed the programer can write a literal, const,
+//   or label. Every function and static is labeled with its own name. When a
+//   label is used the value is the final address of that label after placement
+//   within the rom's layout.
+
+/*
+ADC A, [HL]
+ADC A, n8
+ADC A, r8
+ADD A, [HL]
+ADD A, n8
+ADD A, r8
+ADD HL, r16
+ADD HL, SP
+ADD SP, e8
+AND A, [HL]
+AND A, n8
+AND A, r8
+BIT u3, [HL]
+BIT u3, r8
+CALL cc, n16
+CALL n16
+CCF
+CP A, [HL]
+CP A, n8
+CP A, r8
+CPL
+DAA
+DEC [HL]
+DEC r16
+DEC r8
+DEC SP
+DI
+EI
+HALT
+INC [HL]
+INC r16
+INC r8
+INC SP
+JP cc, n16
+JP HL
+JP n16
+JR cc, e8
+JR e8
+LD [HL], n8
+LD [HL], r8
+LD [HLD], A
+LD [HLI], A
+LD [HL-], A
+LD [HL+], A
+LD [n16], A
+LD [n16], SP
+LD [r16], A
+LD A, [HLD]
+LD A, [HLI]
+LD A, [HL-]
+LD A, [HL+]
+LD A, [n16]
+LD A, [r16]
+LD HL, SP+e8
+LD HL, SP
+LD r16, n16
+LD r8, [HL]
+LD r8, n8
+LD r8, r8
+LD SP, HL
+LD SP, n16
+LDH [C], A
+LDH [n16], A
+LDH A, [C]
+LDH A, [n16]
+NOP
+OR A, [HL]
+OR A, n8
+OR A, r8
+POP AF
+POP r16
+PUSH AF
+PUSH r16
+RES u3, [HL]
+RES u3, r8
+RET
+RET cc
+RETI
+RL [HL]
+RL r8
+RLA
+RLC [HL]
+RLC r8
+RLCA
+RR [HL]
+RR r8
+RRA
+RRC [HL]
+RRC r8
+RRCA
+RST vec
+SBC A, [HL]
+SBC A, n8
+SBC A, r8
+SCF
+SET u3, [HL]
+SET u3, r8
+SLA [HL]
+SLA r8
+SRA [HL]
+SRA r8
+SRL [HL]
+SRL r8
+STOP
+SUB A, [HL]
+SUB A, n8
+SUB A, r8
+SWAP [HL]
+SWAP r8
+XOR A, [HL]
+XOR A, n8
+XOR A, r8
+*/
