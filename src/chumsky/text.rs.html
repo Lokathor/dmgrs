@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/chumsky-0.8.0/src/text.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>text.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../chumsky/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/chumsky-651fb76526ac39e3/a0a67e4/src/text.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>text.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../chumsky/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -343,6 +343,101 @@
 <span id="343">343</span>
 <span id="344">344</span>
 <span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Text-specific parsers and utilities.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! *“Ford!&quot; he said, &quot;there&#39;s an infinite number of monkeys outside who want to talk to us about this script for</span>
@@ -370,6 +465,7 @@
 <span class="comment">// &gt;;</span>
 
 <span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters before or after another pattern.</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Padded</span>&lt;<span class="ident">A</span>&gt;(<span class="ident">A</span>);
 
@@ -425,6 +521,12 @@
     <span class="doccomment">/// For [`char`], this is [`String`]. For [`u8`], this is [`Vec&lt;u8&gt;`].</span>
     <span class="kw">type</span> <span class="ident">Collection</span>: <span class="ident">Chain</span>&lt;<span class="self">Self</span>&gt; + <span class="ident">FromIterator</span>&lt;<span class="self">Self</span>&gt; + <span class="ident">AsRef</span>&lt;<span class="ident"><span class="self">Self</span>::Str</span>&gt; + <span class="lifetime">&#39;static</span>;
 
+    <span class="doccomment">/// Convert the given ASCII character to this character type.</span>
+    <span class="kw">fn</span> <span class="ident">from_ascii</span>(<span class="ident">c</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span>;
+
+    <span class="doccomment">/// Returns true if the character is canonically considered to be inline whitespace (i.e: not part of a newline).</span>
+    <span class="kw">fn</span> <span class="ident">is_inline_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
+
     <span class="doccomment">/// Returns true if the character is canonically considered to be whitespace.</span>
     <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
 
@@ -442,6 +544,12 @@
     <span class="kw">type</span> <span class="ident">Str</span> = [<span class="ident">u8</span>];
     <span class="kw">type</span> <span class="ident">Collection</span> = <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;;
 
+    <span class="kw">fn</span> <span class="ident">from_ascii</span>(<span class="ident">c</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident">c</span>
+    }
+    <span class="kw">fn</span> <span class="ident">is_inline_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="kw-2">*</span><span class="self">self</span> == <span class="string">b&#39; &#39;</span> || <span class="kw-2">*</span><span class="self">self</span> == <span class="string">b&#39;\t&#39;</span>
+    }
     <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">is_ascii_whitespace</span>()
     }
@@ -460,6 +568,12 @@
     <span class="kw">type</span> <span class="ident">Str</span> = <span class="ident">str</span>;
     <span class="kw">type</span> <span class="ident">Collection</span> = <span class="ident">String</span>;
 
+    <span class="kw">fn</span> <span class="ident">from_ascii</span>(<span class="ident">c</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident">c</span> <span class="kw">as</span> <span class="ident">char</span>
+    }
+    <span class="kw">fn</span> <span class="ident">is_inline_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="kw-2">*</span><span class="self">self</span> == <span class="string">&#39; &#39;</span> || <span class="kw-2">*</span><span class="self">self</span> == <span class="string">&#39;\t&#39;</span>
+    }
     <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">char::is_whitespace</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
@@ -504,7 +618,9 @@
 
 <span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `()`.</span>
+<span class="doccomment">/// This parser is a `Parser::Repeated` and so methods such as `at_least()` can be called on it.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The output type of this parser is `Vec&lt;()&gt;`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">///</span>
@@ -513,18 +629,13 @@
 <span class="doccomment">/// let whitespace = text::whitespace::&lt;_, Simple&lt;char&gt;&gt;();</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// // Any amount of whitespace is parsed...</span>
-<span class="doccomment">/// assert_eq!(whitespace.parse(&quot;   \t \n\n  \t  &quot;), Ok(()));</span>
+<span class="doccomment">/// assert_eq!(whitespace.parse(&quot;\t \n  \r &quot;), Ok(vec![(), (), (), (), (), (), ()]));</span>
 <span class="doccomment">/// // ...including none at all!</span>
-<span class="doccomment">/// assert_eq!(whitespace.parse(&quot;&quot;), Ok(()));</span>
+<span class="doccomment">/// assert_eq!(whitespace.parse(&quot;&quot;), Ok(vec![]));</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;() -&gt; <span class="ident">Padding</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">custom</span>(|<span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;| <span class="kw">loop</span> {
-        <span class="kw">let</span> <span class="ident">state</span> = <span class="ident">stream</span>.<span class="ident">save</span>();
-        <span class="kw">if</span> <span class="ident">stream</span>.<span class="ident">next</span>().<span class="number">2</span>.<span class="ident">map_or</span>(<span class="bool-val">true</span>, |<span class="ident">b</span>| !<span class="ident">b</span>.<span class="ident">is_whitespace</span>()) {
-            <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">state</span>);
-            <span class="kw">break</span> (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>)));
-        }
-    })
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
+) -&gt; <span class="ident">Repeated</span>&lt;<span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>&gt; {
+    <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_whitespace</span>()).<span class="ident">ignored</span>().<span class="ident">repeated</span>()
 }
 
 <span class="doccomment">/// A parser that accepts (and ignores) any newline characters or character sequences.</span>
@@ -546,7 +657,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let newline = text::newline::&lt;Simple&lt;char&gt;&gt;()</span>
+<span class="doccomment">/// let newline = text::newline::&lt;char, Simple&lt;char&gt;&gt;()</span>
 <span class="doccomment">///     .then_ignore(end());</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// assert_eq!(newline.parse(&quot;\n&quot;), Ok(()));</span>
@@ -558,16 +669,23 @@
 <span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{2028}&quot;), Ok(()));</span>
 <span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{2029}&quot;), Ok(()));</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">newline</span>&lt;<span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">char</span>&gt;&gt;() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
-    <span class="ident">just</span>(<span class="string">&#39;\r&#39;</span>)
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">newline</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span> {
+    <span class="ident">just</span>(<span class="ident">C::from_ascii</span>(<span class="string">b&#39;\r&#39;</span>))
         .<span class="ident">or_not</span>()
-        .<span class="ident">ignore_then</span>(<span class="ident">just</span>(<span class="string">&#39;\n&#39;</span>))
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&#39;\r&#39;</span>)) <span class="comment">// Carriage return</span>
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&#39;\x0B&#39;</span>)) <span class="comment">// Vertical tab</span>
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&#39;\x0C&#39;</span>)) <span class="comment">// Form feed</span>
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&#39;\u{0085}&#39;</span>)) <span class="comment">// Next line</span>
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&#39;\u{2028}&#39;</span>)) <span class="comment">// Line separator</span>
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&#39;\u{2029}&#39;</span>)) <span class="comment">// Paragraph separator</span>
+        .<span class="ident">ignore_then</span>(<span class="ident">just</span>(<span class="ident">C::from_ascii</span>(<span class="string">b&#39;\n&#39;</span>)))
+        .<span class="ident">or</span>(<span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| {
+            [
+                <span class="string">&#39;\r&#39;</span>,       <span class="comment">// Carriage return</span>
+                <span class="string">&#39;\x0B&#39;</span>,     <span class="comment">// Vertical tab</span>
+                <span class="string">&#39;\x0C&#39;</span>,     <span class="comment">// Form feed</span>
+                <span class="string">&#39;\u{0085}&#39;</span>, <span class="comment">// Next line</span>
+                <span class="string">&#39;\u{2028}&#39;</span>, <span class="comment">// Line separator</span>
+                <span class="string">&#39;\u{2029}&#39;</span>, <span class="comment">// Paragraph separator</span>
+            ]
+            .<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>.<span class="ident">to_char</span>())
+        }))
         .<span class="ident">ignored</span>()
 }
 
@@ -592,6 +710,7 @@
 <span class="doccomment">/// assert_eq!(digits.parse(&quot;0000&quot;), Ok(&quot;0000&quot;.to_string()));</span>
 <span class="doccomment">/// assert!(digits.parse(&quot;&quot;).is_err());</span>
 <span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">digits</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;(
     <span class="ident">radix</span>: <span class="ident">u32</span>,
 ) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
@@ -601,7 +720,7 @@
         .<span class="ident">collect</span>()
 }
 
-<span class="doccomment">/// A parser that accepts a positive integer.</span>
+<span class="doccomment">/// A parser that accepts a non-negative integer.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// An integer is defined as a non-empty sequence of ASCII digits, where the first digit is non-zero or the sequence</span>
 <span class="doccomment">/// has length one.</span>
@@ -632,6 +751,7 @@
 <span class="doccomment">/// assert_eq!(hex.parse(&quot;b4&quot;), Ok(&quot;b4&quot;.to_string()));</span>
 <span class="doccomment">/// assert!(hex.parse(&quot;0B&quot;).is_err());</span>
 <span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">int</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;(
     <span class="ident">radix</span>: <span class="ident">u32</span>,
 ) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
@@ -649,6 +769,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// An identifier is defined as an ASCII alphabetic character or an underscore followed by any number of alphanumeric</span>
 <span class="doccomment">/// characters or underscores. The regex pattern for it is `[a-zA-Z_][a-zA-Z0-9_]*`.</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ident</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span>
 {
     <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphabetic</span>() || <span class="ident">c</span>.<span class="ident">to_char</span>() == <span class="string">&#39;_&#39;</span>)
@@ -676,6 +797,7 @@
 <span class="doccomment">/// // &#39;def&#39; was found, but only as part of a larger identifier, so this fails to parse</span>
 <span class="doccomment">/// assert!(def.parse(&quot;define&quot;).is_err());</span>
 <span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyword</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">S</span>: <span class="ident">AsRef</span>&lt;<span class="ident">C::Str</span>&gt; + <span class="lifetime">&#39;a</span> + <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
     <span class="ident">keyword</span>: <span class="ident">S</span>,
 ) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span> {
@@ -686,6 +808,74 @@
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(<span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>))
         }
+    })
+}
+
+<span class="doccomment">/// A parser that consumes text and generates tokens using semantic whitespace rules and the given token parser.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Also required is a function that collects a [`Vec`] of tokens into a whitespace-indicated token tree.</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">semantic_indentation</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>, <span class="ident">Tok</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
+    <span class="ident">token</span>: <span class="ident">T</span>,
+    <span class="ident">make_group</span>: <span class="ident">F</span>,
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>
+<span class="kw">where</span>
+    <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>,
+    <span class="ident">Tok</span>: <span class="lifetime">&#39;a</span>,
+    <span class="ident">T</span>: <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">Tok</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>,
+    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="ident">E::Span</span>) -&gt; <span class="ident">Tok</span> + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>,
+{
+    <span class="kw">let</span> <span class="ident">line_ws</span> = <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_inline_whitespace</span>());
+
+    <span class="kw">let</span> <span class="ident">line</span> = <span class="ident">token</span>.<span class="ident">padded_by</span>(<span class="ident">line_ws</span>.<span class="ident">ignored</span>().<span class="ident">repeated</span>()).<span class="ident">repeated</span>();
+
+    <span class="kw">let</span> <span class="ident">lines</span> = <span class="ident">line_ws</span>
+        .<span class="ident">repeated</span>()
+        .<span class="ident">then</span>(<span class="ident">line</span>.<span class="ident">map_with_span</span>(|<span class="ident">line</span>, <span class="ident">span</span>| (<span class="ident">line</span>, <span class="ident">span</span>)))
+        .<span class="ident">separated_by</span>(<span class="ident">newline</span>())
+        .<span class="ident">padded</span>();
+
+    <span class="ident">lines</span>.<span class="ident">map</span>(<span class="kw">move</span> |<span class="ident">lines</span>| {
+        <span class="kw">fn</span> <span class="ident">collapse</span>&lt;<span class="ident">C</span>, <span class="ident">Tok</span>, <span class="ident">F</span>, <span class="ident">S</span>&gt;(
+            <span class="kw-2">mut</span> <span class="ident">tree</span>: <span class="ident">Vec</span>&lt;(<span class="ident">Vec</span>&lt;<span class="ident">C</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="prelude-ty">Option</span>&lt;<span class="ident">S</span>&gt;)&gt;,
+            <span class="ident">make_group</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>,
+        ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Tok</span>&gt;
+        <span class="kw">where</span>
+            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="ident">S</span>) -&gt; <span class="ident">Tok</span>,
+        {
+            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">tts</span>, <span class="ident">line_span</span>)) = <span class="ident">tree</span>.<span class="ident">pop</span>() {
+                <span class="kw">let</span> <span class="ident">tt</span> = <span class="ident">make_group</span>(<span class="ident">tts</span>, <span class="ident">line_span</span><span class="question-mark">?</span>);
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last</span>) = <span class="ident">tree</span>.<span class="ident">last_mut</span>() {
+                    <span class="ident">last</span>.<span class="number">1</span>.<span class="ident">push</span>(<span class="ident">tt</span>);
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">tt</span>);
+                }
+            }
+            <span class="prelude-val">None</span>
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nesting</span> = <span class="macro">vec!</span>[(<span class="ident">Vec::new</span>(), <span class="ident">Vec::new</span>(), <span class="prelude-val">None</span>)];
+        <span class="kw">for</span> (<span class="ident">indent</span>, (<span class="kw-2">mut</span> <span class="ident">line</span>, <span class="ident">line_span</span>)) <span class="kw">in</span> <span class="ident">lines</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">indent</span> = <span class="ident">indent</span>.<span class="ident">as_slice</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> = <span class="number">0</span>;
+            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tail</span>) = <span class="ident">nesting</span>
+                .<span class="ident">get</span>(<span class="ident">i</span>)
+                .<span class="ident">and_then</span>(|(<span class="ident">n</span>, <span class="kw">_</span>, <span class="kw">_</span>)| <span class="ident">indent</span>.<span class="ident">strip_prefix</span>(<span class="ident">n</span>.<span class="ident">as_slice</span>()))
+            {
+                <span class="ident">indent</span> = <span class="ident">tail</span>;
+                <span class="ident">i</span> += <span class="number">1</span>;
+            }
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tail</span>) = <span class="ident">collapse</span>(<span class="ident">nesting</span>.<span class="ident">split_off</span>(<span class="ident">i</span>), <span class="kw-2">&amp;</span><span class="ident">make_group</span>) {
+                <span class="ident">nesting</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="number">1</span>.<span class="ident">push</span>(<span class="ident">tail</span>);
+            }
+            <span class="kw">if</span> !<span class="ident">indent</span>.<span class="ident">is_empty</span>() {
+                <span class="ident">nesting</span>.<span class="ident">push</span>((<span class="ident">indent</span>.<span class="ident">to_vec</span>(), <span class="ident">line</span>, <span class="prelude-val">Some</span>(<span class="ident">line_span</span>)));
+            } <span class="kw">else</span> {
+                <span class="ident">nesting</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="number">1</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">line</span>);
+            }
+        }
+
+        <span class="ident">nesting</span>.<span class="ident">remove</span>(<span class="number">0</span>).<span class="number">1</span>
     })
 }
 </code></pre></div>

@@ -209,6 +209,43 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 
@@ -419,6 +456,43 @@
   <span class="macro">assert_eq!</span>(<span class="ident">name</span>, <span class="macro">box_str!</span>(<span class="string">&quot;gfx&quot;</span>));
   <span class="macro">assert_eq!</span>(<span class="ident">content</span>, <span class="macro">box_str!</span>(<span class="string">r#&quot;&quot;.X&quot;, ..XX..X.&quot;#</span>));
   <span class="ident">drop</span>(<span class="ident">span</span>);
+}
+
+<span class="doccomment">/// Tries to grab up all the text inside of a paren group.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * This is including any inner parens</span>
+<span class="doccomment">/// * The outermost parens won&#39;t be in the output</span>
+<span class="doccomment">/// * This is janky because it can&#39;t tell what a string literal is so it&#39;s</span>
+<span class="doccomment">///   easily confused</span>
+<span class="doccomment">/// * Also if the inner tokens are like a huge pile of unbalanced parens for</span>
+<span class="doccomment">///   some reason that would confuse it.</span>
+<span class="kw">fn</span> <span class="ident">paren_delimited_text</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, <span class="ident">Vec</span>&lt;<span class="ident">char</span>&gt;, <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;
+{
+  <span class="ident">recursive</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(|<span class="ident">tree</span>| {
+    <span class="kw">let</span> <span class="ident">text</span> = <span class="ident">one_of</span>(<span class="string">&quot;()&quot;</span>).<span class="ident">not</span>().<span class="ident">repeated</span>().<span class="ident">at_least</span>(<span class="number">1</span>);
+
+    <span class="kw">let</span> <span class="ident">group</span> = <span class="ident">just</span>(<span class="string">&#39;(&#39;</span>).<span class="ident">chain</span>(<span class="ident">tree</span>.<span class="ident">repeated</span>().<span class="ident">flatten</span>()).<span class="ident">chain</span>(<span class="ident">just</span>(<span class="string">&#39;)&#39;</span>));
+
+    <span class="ident">text</span>.<span class="ident">or</span>(<span class="ident">group</span>)
+  })
+  .<span class="ident">repeated</span>()
+  .<span class="ident">flatten</span>()
+  .<span class="ident">delimited_by</span>(<span class="ident">just</span>(<span class="string">&#39;(&#39;</span>), <span class="ident">just</span>(<span class="string">&#39;)&#39;</span>))
+}
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_gather_it_all_until_a_matching_paren</span>() {
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">paren_delimited_text</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+  <span class="kw">fn</span> <span class="ident">str_as_vec</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">char</span>&gt; {
+    <span class="ident">s</span>.<span class="ident">chars</span>().<span class="ident">collect</span>()
+  }
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;()&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">str_as_vec</span>(<span class="string">&quot;&quot;</span>)));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;( )&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">str_as_vec</span>(<span class="string">&quot; &quot;</span>)));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;(foo)&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">str_as_vec</span>(<span class="string">&quot;foo&quot;</span>)));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;(foo(bar)baz)&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">str_as_vec</span>(<span class="string">&quot;foo(bar)baz&quot;</span>)));
+  <span class="macro">assert_eq!</span>(
+    <span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;(foo(bar)(baz(biz))boz)&quot;</span>),
+    <span class="prelude-val">Ok</span>(<span class="ident">str_as_vec</span>(<span class="string">&quot;foo(bar)(baz(biz))boz&quot;</span>))
+  );
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/chumsky-0.8.0/src/combinator.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>combinator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../chumsky/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/chumsky-651fb76526ac39e3/a0a67e4/src/combinator.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>combinator.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../chumsky/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../chumsky/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1462,6 +1462,173 @@
 <span id="1462">1462</span>
 <span id="1463">1463</span>
 <span id="1464">1464</span>
+<span id="1465">1465</span>
+<span id="1466">1466</span>
+<span id="1467">1467</span>
+<span id="1468">1468</span>
+<span id="1469">1469</span>
+<span id="1470">1470</span>
+<span id="1471">1471</span>
+<span id="1472">1472</span>
+<span id="1473">1473</span>
+<span id="1474">1474</span>
+<span id="1475">1475</span>
+<span id="1476">1476</span>
+<span id="1477">1477</span>
+<span id="1478">1478</span>
+<span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
+<span id="1484">1484</span>
+<span id="1485">1485</span>
+<span id="1486">1486</span>
+<span id="1487">1487</span>
+<span id="1488">1488</span>
+<span id="1489">1489</span>
+<span id="1490">1490</span>
+<span id="1491">1491</span>
+<span id="1492">1492</span>
+<span id="1493">1493</span>
+<span id="1494">1494</span>
+<span id="1495">1495</span>
+<span id="1496">1496</span>
+<span id="1497">1497</span>
+<span id="1498">1498</span>
+<span id="1499">1499</span>
+<span id="1500">1500</span>
+<span id="1501">1501</span>
+<span id="1502">1502</span>
+<span id="1503">1503</span>
+<span id="1504">1504</span>
+<span id="1505">1505</span>
+<span id="1506">1506</span>
+<span id="1507">1507</span>
+<span id="1508">1508</span>
+<span id="1509">1509</span>
+<span id="1510">1510</span>
+<span id="1511">1511</span>
+<span id="1512">1512</span>
+<span id="1513">1513</span>
+<span id="1514">1514</span>
+<span id="1515">1515</span>
+<span id="1516">1516</span>
+<span id="1517">1517</span>
+<span id="1518">1518</span>
+<span id="1519">1519</span>
+<span id="1520">1520</span>
+<span id="1521">1521</span>
+<span id="1522">1522</span>
+<span id="1523">1523</span>
+<span id="1524">1524</span>
+<span id="1525">1525</span>
+<span id="1526">1526</span>
+<span id="1527">1527</span>
+<span id="1528">1528</span>
+<span id="1529">1529</span>
+<span id="1530">1530</span>
+<span id="1531">1531</span>
+<span id="1532">1532</span>
+<span id="1533">1533</span>
+<span id="1534">1534</span>
+<span id="1535">1535</span>
+<span id="1536">1536</span>
+<span id="1537">1537</span>
+<span id="1538">1538</span>
+<span id="1539">1539</span>
+<span id="1540">1540</span>
+<span id="1541">1541</span>
+<span id="1542">1542</span>
+<span id="1543">1543</span>
+<span id="1544">1544</span>
+<span id="1545">1545</span>
+<span id="1546">1546</span>
+<span id="1547">1547</span>
+<span id="1548">1548</span>
+<span id="1549">1549</span>
+<span id="1550">1550</span>
+<span id="1551">1551</span>
+<span id="1552">1552</span>
+<span id="1553">1553</span>
+<span id="1554">1554</span>
+<span id="1555">1555</span>
+<span id="1556">1556</span>
+<span id="1557">1557</span>
+<span id="1558">1558</span>
+<span id="1559">1559</span>
+<span id="1560">1560</span>
+<span id="1561">1561</span>
+<span id="1562">1562</span>
+<span id="1563">1563</span>
+<span id="1564">1564</span>
+<span id="1565">1565</span>
+<span id="1566">1566</span>
+<span id="1567">1567</span>
+<span id="1568">1568</span>
+<span id="1569">1569</span>
+<span id="1570">1570</span>
+<span id="1571">1571</span>
+<span id="1572">1572</span>
+<span id="1573">1573</span>
+<span id="1574">1574</span>
+<span id="1575">1575</span>
+<span id="1576">1576</span>
+<span id="1577">1577</span>
+<span id="1578">1578</span>
+<span id="1579">1579</span>
+<span id="1580">1580</span>
+<span id="1581">1581</span>
+<span id="1582">1582</span>
+<span id="1583">1583</span>
+<span id="1584">1584</span>
+<span id="1585">1585</span>
+<span id="1586">1586</span>
+<span id="1587">1587</span>
+<span id="1588">1588</span>
+<span id="1589">1589</span>
+<span id="1590">1590</span>
+<span id="1591">1591</span>
+<span id="1592">1592</span>
+<span id="1593">1593</span>
+<span id="1594">1594</span>
+<span id="1595">1595</span>
+<span id="1596">1596</span>
+<span id="1597">1597</span>
+<span id="1598">1598</span>
+<span id="1599">1599</span>
+<span id="1600">1600</span>
+<span id="1601">1601</span>
+<span id="1602">1602</span>
+<span id="1603">1603</span>
+<span id="1604">1604</span>
+<span id="1605">1605</span>
+<span id="1606">1606</span>
+<span id="1607">1607</span>
+<span id="1608">1608</span>
+<span id="1609">1609</span>
+<span id="1610">1610</span>
+<span id="1611">1611</span>
+<span id="1612">1612</span>
+<span id="1613">1613</span>
+<span id="1614">1614</span>
+<span id="1615">1615</span>
+<span id="1616">1616</span>
+<span id="1617">1617</span>
+<span id="1618">1618</span>
+<span id="1619">1619</span>
+<span id="1620">1620</span>
+<span id="1621">1621</span>
+<span id="1622">1622</span>
+<span id="1623">1623</span>
+<span id="1624">1624</span>
+<span id="1625">1625</span>
+<span id="1626">1626</span>
+<span id="1627">1627</span>
+<span id="1628">1628</span>
+<span id="1629">1629</span>
+<span id="1630">1630</span>
+<span id="1631">1631</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Combinators that allow combining and extending existing parsers.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! *“Ford... you&#39;re turning into a penguin. Stop it.”*</span>
@@ -1481,6 +1648,7 @@
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ThenIgnore</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt; = <span class="ident">Map</span>&lt;<span class="ident">Then</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>&gt;, <span class="kw">fn</span>((<span class="ident">O</span>, <span class="ident">U</span>)) -&gt; <span class="ident">O</span>, (<span class="ident">O</span>, <span class="ident">U</span>)&gt;;
 
 <span class="doccomment">/// See [`Parser::or`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Or</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">B</span>);
 
@@ -1516,84 +1684,107 @@
         <span class="kw">let</span> <span class="ident">b_res</span> = <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">1</span>, <span class="ident">stream</span>);
         <span class="kw">let</span> <span class="ident">b_state</span> = <span class="ident">stream</span>.<span class="ident">save</span>();
 
-        <span class="kw">fn</span> <span class="ident">zip_with</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">A</span>, <span class="ident">B</span>) -&gt; <span class="ident">R</span>&gt;(<span class="ident">a</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">A</span>&gt;, <span class="ident">b</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">B</span>&gt;, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">R</span>&gt; {
-            <span class="kw">match</span> (<span class="ident">a</span>, <span class="ident">b</span>) {
-                (<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">Some</span>(<span class="ident">b</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">f</span>(<span class="ident">a</span>, <span class="ident">b</span>)),
-                <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+        <span class="kw">if</span> <span class="ident">b_res</span>.<span class="number">0</span>.<span class="ident">is_empty</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> (<span class="ident">b_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">b_out</span>)) = <span class="ident">b_res</span> {
+                <span class="kw">return</span> (<span class="ident">b_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">b_out</span>));
             }
         }
 
-        <span class="kw">let</span> <span class="ident">is_a</span> = <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="ident">a_res</span>, <span class="kw-2">&amp;</span><span class="ident">b_res</span>) {
-            ((<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">a_out</span>)), (<span class="ident">b_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">b_out</span>))) =&gt; {
-                <span class="kw">match</span> <span class="ident">a_errors</span>.<span class="ident">len</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b_errors</span>.<span class="ident">len</span>()) {
-                    <span class="ident">Ordering::Greater</span> =&gt; <span class="bool-val">false</span>,
-                    <span class="ident">Ordering::Less</span> =&gt; <span class="bool-val">true</span>,
-                    <span class="ident">Ordering::Equal</span> =&gt; {
-                        <span class="kw">match</span> <span class="ident">zip_with</span>(<span class="ident">a_errors</span>.<span class="ident">last</span>(), <span class="ident">b_errors</span>.<span class="ident">last</span>(), |<span class="ident">a</span>, <span class="ident">b</span>| <span class="ident">a</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">at</span>)) {
-                            <span class="prelude-val">Some</span>(<span class="ident">Ordering::Greater</span>) =&gt; <span class="bool-val">true</span>,
-                            <span class="prelude-val">Some</span>(<span class="ident">Ordering::Less</span>) =&gt; <span class="bool-val">false</span>,
-                            <span class="kw">_</span> =&gt; <span class="kw">match</span> <span class="ident">zip_with</span>(<span class="ident">a_out</span>.<span class="number">1</span>.<span class="ident">as_ref</span>(), <span class="ident">b_out</span>.<span class="number">1</span>.<span class="ident">as_ref</span>(), |<span class="ident">a</span>, <span class="ident">b</span>| {
-                                <span class="ident">a</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">at</span>)
-                            }) {
-                                <span class="prelude-val">Some</span>(<span class="ident">Ordering::Greater</span>) =&gt; <span class="bool-val">true</span>,
-                                <span class="prelude-val">Some</span>(<span class="ident">Ordering::Less</span>) =&gt; <span class="bool-val">false</span>,
-                                <span class="kw">_</span> =&gt; <span class="bool-val">true</span>,
-                            },
-                        }
-                    }
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">fn</span> <span class="ident">choose_between</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(
+            <span class="ident">a_res</span>: <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;,
+            <span class="ident">a_state</span>: <span class="ident">usize</span>,
+            <span class="ident">b_res</span>: <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;,
+            <span class="ident">b_state</span>: <span class="ident">usize</span>,
+            <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
+        ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
+            <span class="kw">fn</span> <span class="ident">zip_with</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">A</span>, <span class="ident">B</span>) -&gt; <span class="ident">R</span>&gt;(
+                <span class="ident">a</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">A</span>&gt;,
+                <span class="ident">b</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">B</span>&gt;,
+                <span class="ident">f</span>: <span class="ident">F</span>,
+            ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">R</span>&gt; {
+                <span class="kw">match</span> (<span class="ident">a</span>, <span class="ident">b</span>) {
+                    (<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">Some</span>(<span class="ident">b</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">f</span>(<span class="ident">a</span>, <span class="ident">b</span>)),
+                    <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
                 }
             }
-            <span class="comment">// ((a_errors, Ok(_)), (b_errors, Err(_))) if !a_errors.is_empty() =&gt; panic!(&quot;a_errors = {:?}&quot;, a_errors.iter().map(|e| e.debug()).collect::&lt;Vec&lt;_&gt;&gt;()),</span>
-            ((<span class="ident">_a_errors</span>, <span class="prelude-val">Ok</span>(<span class="kw">_</span>)), (<span class="ident">_b_errors</span>, <span class="prelude-val">Err</span>(<span class="kw">_</span>))) =&gt; <span class="bool-val">true</span>,
-            <span class="comment">// ((a_errors, Err(_)), (b_errors, Ok(_))) if !b_errors.is_empty() =&gt; panic!(&quot;b_errors = {:?}&quot;, b_errors.iter().map(|e| e.debug()).collect::&lt;Vec&lt;_&gt;&gt;()),</span>
-            ((<span class="ident">_a_errors</span>, <span class="prelude-val">Err</span>(<span class="kw">_</span>)), (<span class="ident">_b_errors</span>, <span class="prelude-val">Ok</span>(<span class="kw">_</span>))) =&gt; <span class="bool-val">false</span>,
-            ((<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_err</span>)), (<span class="ident">b_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">b_err</span>))) =&gt; <span class="kw">match</span> <span class="ident">a_err</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b_err</span>.<span class="ident">at</span>) {
-                <span class="ident">Ordering::Greater</span> =&gt; <span class="bool-val">true</span>,
-                <span class="ident">Ordering::Less</span> =&gt; <span class="bool-val">false</span>,
-                <span class="ident">Ordering::Equal</span> =&gt; <span class="kw">match</span> <span class="ident">a_errors</span>.<span class="ident">len</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b_errors</span>.<span class="ident">len</span>()) {
-                    <span class="ident">Ordering::Greater</span> =&gt; <span class="bool-val">false</span>,
-                    <span class="ident">Ordering::Less</span> =&gt; <span class="bool-val">true</span>,
-                    <span class="ident">Ordering::Equal</span> =&gt; {
-                        <span class="kw">match</span> <span class="ident">zip_with</span>(<span class="ident">a_errors</span>.<span class="ident">last</span>(), <span class="ident">b_errors</span>.<span class="ident">last</span>(), |<span class="ident">a</span>, <span class="ident">b</span>| <span class="ident">a</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">at</span>)) {
-                            <span class="prelude-val">Some</span>(<span class="ident">Ordering::Greater</span>) =&gt; <span class="bool-val">true</span>,
-                            <span class="prelude-val">Some</span>(<span class="ident">Ordering::Less</span>) =&gt; <span class="bool-val">false</span>,
-                            <span class="comment">// If the branches really do seem to be equally valid as parse options, try to unify them</span>
-                            <span class="comment">// We already know that both parsers produces hard errors, so unwrapping cannot fail here</span>
-                            <span class="kw">_</span> =&gt; {
-                                <span class="kw">return</span> (
-                                    <span class="ident">a_res</span>.<span class="number">0</span>,
-                                    <span class="prelude-val">Err</span>(<span class="ident">a_res</span>.<span class="number">1</span>.<span class="ident">err</span>().<span class="ident">unwrap</span>().<span class="ident">max</span>(<span class="ident">b_res</span>.<span class="number">1</span>.<span class="ident">err</span>().<span class="ident">unwrap</span>())),
-                                )
+
+            <span class="kw">let</span> <span class="ident">is_a</span> = <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="ident">a_res</span>, <span class="kw-2">&amp;</span><span class="ident">b_res</span>) {
+                ((<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">a_out</span>)), (<span class="ident">b_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">b_out</span>))) =&gt; {
+                    <span class="kw">match</span> <span class="ident">a_errors</span>.<span class="ident">len</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b_errors</span>.<span class="ident">len</span>()) {
+                        <span class="ident">Ordering::Greater</span> =&gt; <span class="bool-val">false</span>,
+                        <span class="ident">Ordering::Less</span> =&gt; <span class="bool-val">true</span>,
+                        <span class="ident">Ordering::Equal</span> =&gt; {
+                            <span class="kw">match</span> <span class="ident">zip_with</span>(<span class="ident">a_errors</span>.<span class="ident">last</span>(), <span class="ident">b_errors</span>.<span class="ident">last</span>(), |<span class="ident">a</span>, <span class="ident">b</span>| <span class="ident">a</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">at</span>))
+                            {
+                                <span class="prelude-val">Some</span>(<span class="ident">Ordering::Greater</span>) =&gt; <span class="bool-val">true</span>,
+                                <span class="prelude-val">Some</span>(<span class="ident">Ordering::Less</span>) =&gt; <span class="bool-val">false</span>,
+                                <span class="kw">_</span> =&gt; <span class="kw">match</span> <span class="ident">zip_with</span>(<span class="ident">a_out</span>.<span class="number">1</span>.<span class="ident">as_ref</span>(), <span class="ident">b_out</span>.<span class="number">1</span>.<span class="ident">as_ref</span>(), |<span class="ident">a</span>, <span class="ident">b</span>| {
+                                    <span class="ident">a</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">at</span>)
+                                }) {
+                                    <span class="prelude-val">Some</span>(<span class="ident">Ordering::Greater</span>) =&gt; <span class="bool-val">true</span>,
+                                    <span class="prelude-val">Some</span>(<span class="ident">Ordering::Less</span>) =&gt; <span class="bool-val">false</span>,
+                                    <span class="kw">_</span> =&gt; <span class="bool-val">true</span>,
+                                },
                             }
                         }
                     }
+                }
+                <span class="comment">// ((a_errors, Ok(_)), (b_errors, Err(_))) if !a_errors.is_empty() =&gt; panic!(&quot;a_errors = {:?}&quot;, a_errors.iter().map(|e| e.debug()).collect::&lt;Vec&lt;_&gt;&gt;()),</span>
+                ((<span class="ident">_a_errors</span>, <span class="prelude-val">Ok</span>(<span class="kw">_</span>)), (<span class="ident">_b_errors</span>, <span class="prelude-val">Err</span>(<span class="kw">_</span>))) =&gt; <span class="bool-val">true</span>,
+                <span class="comment">// ((a_errors, Err(_)), (b_errors, Ok(_))) if !b_errors.is_empty() =&gt; panic!(&quot;b_errors = {:?}&quot;, b_errors.iter().map(|e| e.debug()).collect::&lt;Vec&lt;_&gt;&gt;()),</span>
+                ((<span class="ident">_a_errors</span>, <span class="prelude-val">Err</span>(<span class="kw">_</span>)), (<span class="ident">_b_errors</span>, <span class="prelude-val">Ok</span>(<span class="kw">_</span>))) =&gt; <span class="bool-val">false</span>,
+                ((<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_err</span>)), (<span class="ident">b_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">b_err</span>))) =&gt; <span class="kw">match</span> <span class="ident">a_err</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b_err</span>.<span class="ident">at</span>) {
+                    <span class="ident">Ordering::Greater</span> =&gt; <span class="bool-val">true</span>,
+                    <span class="ident">Ordering::Less</span> =&gt; <span class="bool-val">false</span>,
+                    <span class="ident">Ordering::Equal</span> =&gt; <span class="kw">match</span> <span class="ident">a_errors</span>.<span class="ident">len</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b_errors</span>.<span class="ident">len</span>()) {
+                        <span class="ident">Ordering::Greater</span> =&gt; <span class="bool-val">false</span>,
+                        <span class="ident">Ordering::Less</span> =&gt; <span class="bool-val">true</span>,
+                        <span class="ident">Ordering::Equal</span> =&gt; {
+                            <span class="kw">match</span> <span class="ident">zip_with</span>(<span class="ident">a_errors</span>.<span class="ident">last</span>(), <span class="ident">b_errors</span>.<span class="ident">last</span>(), |<span class="ident">a</span>, <span class="ident">b</span>| <span class="ident">a</span>.<span class="ident">at</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">at</span>))
+                            {
+                                <span class="prelude-val">Some</span>(<span class="ident">Ordering::Greater</span>) =&gt; <span class="bool-val">true</span>,
+                                <span class="prelude-val">Some</span>(<span class="ident">Ordering::Less</span>) =&gt; <span class="bool-val">false</span>,
+                                <span class="comment">// If the branches really do seem to be equally valid as parse options, try to unify them</span>
+                                <span class="comment">// We already know that both parsers produces hard errors, so unwrapping cannot fail here</span>
+                                <span class="kw">_</span> =&gt; {
+                                    <span class="kw">return</span> (
+                                        <span class="ident">a_res</span>.<span class="number">0</span>,
+                                        <span class="prelude-val">Err</span>(<span class="ident">a_res</span>.<span class="number">1</span>.<span class="ident">err</span>().<span class="ident">unwrap</span>().<span class="ident">max</span>(<span class="ident">b_res</span>.<span class="number">1</span>.<span class="ident">err</span>().<span class="ident">unwrap</span>())),
+                                    )
+                                }
+                            }
+                        }
+                    },
                 },
-            },
-        };
+            };
 
-        <span class="kw">if</span> <span class="ident">is_a</span> {
-            <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">a_state</span>);
-            (
-                <span class="ident">a_res</span>.<span class="number">0</span>,
-                <span class="ident">a_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="ident">out</span>, <span class="ident">alt</span>)| {
-                    (
-                        <span class="ident">out</span>,
-                        <span class="ident">merge_alts</span>(<span class="ident">alt</span>, <span class="ident">b_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="kw">_</span>, <span class="ident">alt</span>)| <span class="ident">alt</span>).<span class="ident">unwrap_or_else</span>(<span class="prelude-val">Some</span>)),
-                    )
-                }),
-            )
-        } <span class="kw">else</span> {
-            <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">b_state</span>);
-            (
-                <span class="ident">b_res</span>.<span class="number">0</span>,
-                <span class="ident">b_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="ident">out</span>, <span class="ident">alt</span>)| {
-                    (
-                        <span class="ident">out</span>,
-                        <span class="ident">merge_alts</span>(<span class="ident">alt</span>, <span class="ident">a_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="kw">_</span>, <span class="ident">alt</span>)| <span class="ident">alt</span>).<span class="ident">unwrap_or_else</span>(<span class="prelude-val">Some</span>)),
-                    )
-                }),
-            )
+            <span class="kw">if</span> <span class="ident">is_a</span> {
+                <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">a_state</span>);
+                (
+                    <span class="ident">a_res</span>.<span class="number">0</span>,
+                    <span class="ident">a_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="ident">out</span>, <span class="ident">alt</span>)| {
+                        (
+                            <span class="ident">out</span>,
+                            <span class="ident">merge_alts</span>(<span class="ident">alt</span>, <span class="ident">b_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="kw">_</span>, <span class="ident">alt</span>)| <span class="ident">alt</span>).<span class="ident">unwrap_or_else</span>(<span class="prelude-val">Some</span>)),
+                        )
+                    }),
+                )
+            } <span class="kw">else</span> {
+                <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">b_state</span>);
+                (
+                    <span class="ident">b_res</span>.<span class="number">0</span>,
+                    <span class="ident">b_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="ident">out</span>, <span class="ident">alt</span>)| {
+                        (
+                            <span class="ident">out</span>,
+                            <span class="ident">merge_alts</span>(<span class="ident">alt</span>, <span class="ident">a_res</span>.<span class="number">1</span>.<span class="ident">map</span>(|(<span class="kw">_</span>, <span class="ident">alt</span>)| <span class="ident">alt</span>).<span class="ident">unwrap_or_else</span>(<span class="prelude-val">Some</span>)),
+                        )
+                    }),
+                )
+            }
         }
+
+        <span class="ident">choose_between</span>(<span class="ident">a_res</span>, <span class="ident">a_state</span>, <span class="ident">b_res</span>, <span class="ident">b_state</span>, <span class="ident">stream</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -1609,6 +1800,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::or_not`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OrNot</span>&lt;<span class="ident">A</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>);
 
@@ -1650,7 +1842,74 @@
     }
 }
 
+<span class="doccomment">/// See [`Parser::not`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Not</span>&lt;<span class="ident">A</span>, <span class="ident">O</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">O</span>&gt;);
+
+<span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">O</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Not</span>&lt;<span class="ident">A</span>, <span class="ident">O</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Clone</span>, <span class="ident">O</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Not</span>&lt;<span class="ident">A</span>, <span class="ident">O</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>&gt; <span class="kw">for</span> <span class="ident">Not</span>&lt;<span class="ident">A</span>, <span class="ident">O</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
+        <span class="kw">let</span> <span class="ident">before</span> = <span class="ident">stream</span>.<span class="ident">save</span>();
+        <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_parse</span>(|<span class="ident">stream</span>| {
+            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+            <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">stream</span>)
+        }) {
+            (<span class="kw">_</span>, <span class="prelude-val">Ok</span>(<span class="kw">_</span>)) =&gt; {
+                <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">before</span>);
+                <span class="kw">let</span> (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) = <span class="ident">stream</span>.<span class="ident">next</span>();
+                (
+                    <span class="ident">Vec::new</span>(),
+                    <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
+                        <span class="ident">at</span>,
+                        <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="ident">Vec::new</span>(), <span class="ident">found</span>),
+                    )),
+                )
+            }
+            (<span class="kw">_</span>, <span class="prelude-val">Err</span>(<span class="kw">_</span>)) =&gt; {
+                <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">before</span>);
+                <span class="kw">let</span> (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) = <span class="ident">stream</span>.<span class="ident">next</span>();
+                (
+                    <span class="ident">Vec::new</span>(),
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">found</span>) = <span class="ident">found</span> {
+                        <span class="prelude-val">Ok</span>((<span class="ident">found</span>, <span class="prelude-val">None</span>))
+                    } <span class="kw">else</span> {
+                        <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
+                            <span class="ident">at</span>,
+                            <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="ident">Vec::new</span>(), <span class="prelude-val">None</span>),
+                        ))
+                    },
+                )
+            }
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    }
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    }
+}
+
 <span class="doccomment">/// See [`Parser::then`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Then</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">B</span>);
 
@@ -1703,6 +1962,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::then_with`]</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ThenWith</span>&lt;<span class="ident">I</span>, <span class="ident">O1</span>, <span class="ident">O2</span>, <span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">F</span>&gt;(
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>,
@@ -1778,6 +2038,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::delimited_by`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DelimitedBy</span>&lt;<span class="ident">A</span>, <span class="ident">L</span>, <span class="ident">R</span>, <span class="ident">U</span>, <span class="ident">V</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">item</span>: <span class="ident">A</span>,
@@ -1831,6 +2092,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::repeated`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Repeated</span>&lt;<span class="ident">A</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">usize</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt;);
 
@@ -1929,7 +2191,7 @@
                 (<span class="kw-2">mut</span> <span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_err</span>)) <span class="kw">if</span> <span class="ident">outputs</span>.<span class="ident">len</span>() &lt; <span class="self">self</span>.<span class="number">1</span> =&gt; {
                     <span class="ident">errors</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">a_errors</span>);
                     (<span class="bool-val">true</span>, <span class="ident">ControlFlow::Break</span>((
-                        <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">errors</span>),
+                        <span class="ident">core::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">errors</span>),
                         <span class="prelude-val">Err</span>(<span class="ident">a_err</span>),
                     )))
                 },
@@ -1945,8 +2207,8 @@
                         ),
                     );
                     (<span class="bool-val">false</span>, <span class="ident">ControlFlow::Break</span>((
-                        <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">errors</span>),
-                        <span class="prelude-val">Ok</span>((<span class="ident">std::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">outputs</span>), <span class="ident">alt</span>)),
+                        <span class="ident">core::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">errors</span>),
+                        <span class="prelude-val">Ok</span>((<span class="ident">core::mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="ident">outputs</span>), <span class="ident">alt</span>)),
                     )))
                 },
             }) {
@@ -1972,6 +2234,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::separated_by`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SeparatedBy</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">U</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">item</span>: <span class="ident">A</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">delimiter</span>: <span class="ident">B</span>,
@@ -2262,10 +2525,11 @@
 }
 
 <span class="doccomment">/// See [`Parser::debug`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Debug</span>&lt;<span class="ident">A</span>&gt;(
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">Rc</span>&lt;<span class="kw">dyn</span> <span class="ident">fmt::Display</span>&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">std::panic::Location</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">core::panic::Location</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
 );
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Clone</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Debug</span>&lt;<span class="ident">A</span>&gt; {
@@ -2307,6 +2571,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::map`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Map</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">O</span>&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">O</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Map</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt; {}
@@ -2346,6 +2611,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::map_with_span`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MapWithSpan</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">O</span>&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">O</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">MapWithSpan</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt; {}
@@ -2389,6 +2655,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::validate`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Validate</span>&lt;<span class="ident">A</span>, <span class="ident">U</span>, <span class="ident">F</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">U</span>&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">Copy</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Validate</span>&lt;<span class="ident">A</span>, <span class="ident">U</span>, <span class="ident">F</span>&gt; {}
@@ -2445,6 +2712,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::foldl`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Foldl</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;(<span class="ident">O</span>, <span class="ident">U</span>)&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Foldl</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt; {}
@@ -2491,6 +2759,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::foldr`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Foldr</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;(<span class="ident">O</span>, <span class="ident">U</span>)&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Foldr</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt; {}
@@ -2539,6 +2808,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::map_err`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MapErr</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>);
 
@@ -2576,6 +2846,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::map_err_with_span`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MapErrWithSpan</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>);
 
@@ -2619,6 +2890,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::try_map`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TryMap</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">O</span>&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">O</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">TryMap</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt; {}
@@ -2671,6 +2943,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::or_else`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OrElse</span>&lt;<span class="ident">A</span>, <span class="ident">F</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>);
 
@@ -2716,6 +2989,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::labelled`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Label</span>&lt;<span class="ident">A</span>, <span class="ident">L</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">L</span>);
 
@@ -2765,6 +3039,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::to`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">To</span>&lt;<span class="ident">A</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">U</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">O</span>&gt;);
 
 <span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">U</span>: <span class="ident">Copy</span>, <span class="ident">O</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">To</span>&lt;<span class="ident">A</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt; {}
@@ -2800,6 +3075,7 @@
 }
 
 <span class="doccomment">/// See [`Parser::rewind`].</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Rewind</span>&lt;<span class="ident">A</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>);
 
@@ -2849,8 +3125,66 @@
     }
 }
 
+<span class="doccomment">/// See [`Parser::unwrapped`]</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Unwrapped</span>&lt;<span class="ident">A</span>, <span class="ident">U</span>, <span class="ident">E</span>&gt;(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Location</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;(<span class="ident">U</span>, <span class="ident">E</span>)&gt;,
+);
+
+<span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Clone</span>, <span class="ident">U</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Unwrapped</span>&lt;<span class="ident">A</span>, <span class="ident">U</span>, <span class="ident">E</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident">Unwrapped</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+    }
+}
+<span class="kw">impl</span>&lt;<span class="ident">A</span>: <span class="ident">Copy</span>, <span class="ident">U</span>, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Unwrapped</span>&lt;<span class="ident">A</span>, <span class="ident">U</span>, <span class="ident">E</span>&gt; {}
+
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="prelude-ty">Result</span>&lt;<span class="ident">O</span>, <span class="ident">U</span>&gt;, <span class="ident">Error</span> = <span class="ident">E</span>&gt;, <span class="ident">U</span>: <span class="ident">fmt::Debug</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;
+    <span class="kw">for</span> <span class="ident">Unwrapped</span>&lt;<span class="ident">A</span>, <span class="ident">U</span>, <span class="ident">E</span>&gt;
+{
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+        <span class="kw">let</span> (<span class="ident">errors</span>, <span class="ident">res</span>) = <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">1</span>, <span class="ident">stream</span>);
+
+        (
+            <span class="ident">errors</span>,
+            <span class="ident">res</span>.<span class="ident">map</span>(|(<span class="ident">out</span>, <span class="ident">alt</span>)| {
+                (
+                    <span class="ident">out</span>.<span class="ident">unwrap_or_else</span>(|<span class="ident">err</span>| {
+                        <span class="macro">panic!</span>(
+                            <span class="string">&quot;Parser defined at {} failed to unwrap. Error: {:?}&quot;</span>,
+                            <span class="self">self</span>.<span class="number">0</span>, <span class="ident">err</span>
+                        )
+                    }),
+                    <span class="ident">alt</span>,
+                )
+            }),
+        )
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    }
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    }
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="ident">alloc::vec</span>;
     <span class="kw">use</span> <span class="ident">error::Simple</span>;
     <span class="kw">use</span> <span class="ident">text::TextParser</span>;
 
