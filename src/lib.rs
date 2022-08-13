@@ -209,3 +209,40 @@ fn test_macro_invocation() {
   assert_eq!(content, box_str!(r#"".X", ..XX..X."#));
   drop(span);
 }
+
+/// Tries to grab up all the text inside of a paren group.
+///
+/// * This is including any inner parens
+/// * The outermost parens won't be in the output
+/// * This is janky because it can't tell what a string literal is so it's
+///   easily confused
+/// * Also if the inner tokens are like a huge pile of unbalanced parens for
+///   some reason that would confuse it.
+fn paren_delimited_text() -> impl Parser<char, Vec<char>, Error = Simple<char>>
+{
+  recursive::<_, _, _, _, Simple<char>>(|tree| {
+    let text = one_of("()").not().repeated().at_least(1);
+
+    let group = just('(').chain(tree.repeated().flatten()).chain(just(')'));
+
+    text.or(group)
+  })
+  .repeated()
+  .flatten()
+  .delimited_by(just('('), just(')'))
+}
+#[test]
+fn test_gather_it_all_until_a_matching_paren() {
+  let p = paren_delimited_text().then_ignore(end());
+  fn str_as_vec(s: &str) -> Vec<char> {
+    s.chars().collect()
+  }
+  assert_eq!(p.parse("()"), Ok(str_as_vec("")));
+  assert_eq!(p.parse("( )"), Ok(str_as_vec(" ")));
+  assert_eq!(p.parse("(foo)"), Ok(str_as_vec("foo")));
+  assert_eq!(p.parse("(foo(bar)baz)"), Ok(str_as_vec("foo(bar)baz")));
+  assert_eq!(
+    p.parse("(foo(bar)(baz(biz))boz)"),
+    Ok(str_as_vec("foo(bar)(baz(biz))boz"))
+  );
+}
