@@ -18,7 +18,7 @@ const BGP = $FF47;
 const VRAM_BLOCK2 = $9000;
 const TILEMAP0 = $9800;
 
-fn main() -> ! {
+fn main -> ! {
   // shut down audio
   ld a, 0
   ld [NR52], a
@@ -60,7 +60,7 @@ fn main() -> ! {
 
 // Copies `bc` bytes from `de` to `hl`.
 // Assumes that `bc` > 0 and always copies at least one byte.
-fn simple_copy() {
+fn simple_copy {
   loop {
     ld a, [de]
     ld [hl+], a
