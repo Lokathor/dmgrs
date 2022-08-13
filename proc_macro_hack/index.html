@@ -29,9 +29,9 @@ macros.</p>
 
 <span class="attribute">#[<span class="ident">proc_macro_hack</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_one</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">expr</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">Expr</span>);
+    <span class="kw">let</span> <span class="ident">expr</span> = <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">Expr</span>);
     <span class="ident">TokenStream::from</span>(<span class="macro">quote!</span> {
-        <span class="number">1</span> <span class="op">+</span> (#<span class="ident">expr</span>)
+        <span class="number">1</span> + (#<span class="ident">expr</span>)
     })
 }</code></pre></div>
 <h3 id="the-declaration-crate"><a href="#the-declaration-crate">The declaration crate</a></h3>
@@ -63,8 +63,8 @@ implementation crate), then use your procedural macros as usual.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">demo_hack::add_one</span>;
 
 <span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="kw">let</span> <span class="ident">two</span> <span class="op">=</span> <span class="number">2</span>;
-    <span class="kw">let</span> <span class="ident">nine</span> <span class="op">=</span> <span class="macro">add_one!</span>(<span class="ident">two</span>) <span class="op">+</span> <span class="macro">add_one!</span>(<span class="number">2</span> <span class="op">+</span> <span class="number">3</span>);
+    <span class="kw">let</span> <span class="ident">two</span> = <span class="number">2</span>;
+    <span class="kw">let</span> <span class="ident">nine</span> = <span class="macro">add_one!</span>(<span class="ident">two</span>) + <span class="macro">add_one!</span>(<span class="number">2</span> + <span class="number">3</span>);
     <span class="macro">println!</span>(<span class="string">&quot;nine = {}&quot;</span>, <span class="ident">nine</span>);
 }</code></pre></div>
 <h2 id="limitations"><a href="#limitations">Limitations</a></h2>
@@ -96,4 +96,4 @@ implementations. To opt in to compiling your macro to native
 declaration crate.</p>
 </li>
 </ul>
-</div></details><h2 id="attributes" class="small-section-header"><a href="#attributes">Attribute Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="attr" href="attr.proc_macro_hack.html" title="proc_macro_hack::proc_macro_hack attr">proc_macro_hack</a></div><div class="item-right docblock-short"></div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="proc_macro_hack" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</div></details><h2 id="attributes" class="small-section-header"><a href="#attributes">Attribute Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="attr" href="attr.proc_macro_hack.html" title="proc_macro_hack::proc_macro_hack attr">proc_macro_hack</a></div><div class="item-right docblock-short"></div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="proc_macro_hack" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

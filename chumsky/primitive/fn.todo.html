@@ -5,7 +5,7 @@ parse input, not immediately when invoked.</p>
 committing to implementing the entire thing immediately.</p>
 <p>The output type of this parser is whatever you want it to be: it’ll never produce output!</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class='information'><div class='tooltip should_panic'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered should_panic"><code><span class="kw">let</span> <span class="ident">int</span> <span class="op">=</span> <span class="ident">just</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="string">&quot;0x&quot;</span>).<span class="ident">ignore_then</span>(<span class="ident">todo</span>())
+<div class='information'><div class='tooltip should_panic'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered should_panic"><code><span class="kw">let</span> <span class="ident">int</span> = <span class="ident">just</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(<span class="string">&quot;0x&quot;</span>).<span class="ident">ignore_then</span>(<span class="ident">todo</span>())
     .<span class="ident">or</span>(<span class="ident">just</span>(<span class="string">&quot;0b&quot;</span>).<span class="ident">ignore_then</span>(<span class="ident">text::digits</span>(<span class="number">2</span>)))
     .<span class="ident">or</span>(<span class="ident">text::int</span>(<span class="number">10</span>));
 
@@ -15,4 +15,4 @@ committing to implementing the entire thing immediately.</p>
 <span class="macro">assert_eq!</span>(<span class="ident">int</span>.<span class="ident">parse</span>(<span class="string">&quot;0b00101&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;00101&quot;</span>.<span class="ident">to_string</span>()));
 <span class="comment">// Parsing hexidecimal numbers results in a panic because the parser is unimplemented</span>
 <span class="ident">int</span>.<span class="ident">parse</span>(<span class="string">&quot;0xd4&quot;</span>);</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

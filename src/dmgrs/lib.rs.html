@@ -170,25 +170,87 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">chumsky::prelude</span>::<span class="kw-2">*</span>;
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+</pre><pre class="rust"><code><span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gb_binary_literal</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">char</span>, <span class="ident">u16</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-  <span class="kw">let</span> <span class="ident">underscores</span> <span class="op">=</span> <span class="ident">just</span>(<span class="string">&#39;_&#39;</span>).<span class="ident">ignored</span>().<span class="ident">repeated</span>();
+<span class="doccomment">//! Stuff to work with Dmgrs assembly files.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Right now, just a lot of [chumsky] parsers.</span>
+
+<span class="kw">use</span> <span class="ident">std::ops::Range</span>;
+
+<span class="kw">use</span> <span class="ident">chumsky</span>::{
+  <span class="ident">prelude</span>::<span class="kw-2">*</span>,
+  <span class="ident">text</span>::{<span class="ident">ident</span>, <span class="ident">newline</span>},
+};
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
+<span class="macro">macro_rules!</span> <span class="ident">box_str</span> {
+  (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">expr</span>) =&gt; {
+    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>.<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>()
+  };
+}
+
+<span class="doccomment">/// Boxed str, but easier to type without the `&lt;&gt;`.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">BoxStr</span> = <span class="ident">Box</span>&lt;<span class="ident">str</span>&gt;;
+
+<span class="doccomment">/// GB Binary literals are prefixed with `%`, then 0-1, with `_` allowed.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gb_binary_literal</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, <span class="ident">u16</span>, <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="kw">let</span> <span class="ident">underscores</span> = <span class="ident">just</span>(<span class="string">&#39;_&#39;</span>).<span class="ident">ignored</span>().<span class="ident">repeated</span>();
   <span class="ident">just</span>(<span class="string">&#39;%&#39;</span>).<span class="ident">ignore_then</span>(
-    <span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="number">2</span>))
+    <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="number">2</span>))
       .<span class="ident">padded_by</span>(<span class="ident">underscores</span>)
       .<span class="ident">repeated</span>()
       .<span class="ident">at_least</span>(<span class="number">1</span>)
-      .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()
-      .<span class="ident">try_map</span>(<span class="op">|</span><span class="ident">s</span>: <span class="ident">String</span>, <span class="ident">span</span><span class="op">|</span> {
+      .<span class="ident">collect</span>::&lt;<span class="ident">String</span>&gt;()
+      .<span class="ident">try_map</span>(|<span class="ident">s</span>: <span class="ident">String</span>, <span class="ident">span</span>| {
         <span class="ident">u16::from_str_radix</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>, <span class="number">2</span>)
-          .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">why</span><span class="op">|</span> <span class="ident">Simple::custom</span>(<span class="ident">span</span>, <span class="macro">format!</span>(<span class="string">&quot;{why:?}&quot;</span>)))
+          .<span class="ident">map_err</span>(|<span class="ident">why</span>| <span class="ident">Simple::custom</span>(<span class="ident">span</span>, <span class="macro">format!</span>(<span class="string">&quot;{why:?}&quot;</span>)))
       }),
   )
 }
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_gb_binary_literal</span>() {
-  <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">gb_binary_literal</span>();
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">gb_binary_literal</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
   <span class="kw">for</span> <span class="ident">num</span> <span class="kw">in</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">76</span>, <span class="number">89</span>, <span class="number">255</span>, <span class="number">256</span>, <span class="number">492</span>, <span class="number">11489</span>, <span class="ident">u16::MAX</span>] {
     <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="macro">format!</span>(<span class="string">&quot;%{num:b}&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="ident">num</span>));
     <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="macro">format!</span>(<span class="string">&quot;%{num:016b}&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="ident">num</span>));
@@ -198,23 +260,24 @@
   <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="macro">format!</span>(<span class="string">&quot;%1010_1111____&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0b1010_1111</span>));
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gb_hex_literal</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">char</span>, <span class="ident">u16</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-  <span class="kw">let</span> <span class="ident">underscores</span> <span class="op">=</span> <span class="ident">just</span>(<span class="string">&#39;_&#39;</span>).<span class="ident">ignored</span>().<span class="ident">repeated</span>();
+<span class="doccomment">/// GB Hex literals are prefixed with `$`, then 0-F, with `_` allowed.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gb_hex_literal</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, <span class="ident">u16</span>, <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="kw">let</span> <span class="ident">underscores</span> = <span class="ident">just</span>(<span class="string">&#39;_&#39;</span>).<span class="ident">ignored</span>().<span class="ident">repeated</span>();
   <span class="ident">just</span>(<span class="string">&#39;$&#39;</span>).<span class="ident">ignore_then</span>(
-    <span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="number">16</span>))
+    <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="number">16</span>))
       .<span class="ident">padded_by</span>(<span class="ident">underscores</span>)
       .<span class="ident">repeated</span>()
       .<span class="ident">at_least</span>(<span class="number">1</span>)
-      .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()
-      .<span class="ident">try_map</span>(<span class="op">|</span><span class="ident">s</span>: <span class="ident">String</span>, <span class="ident">span</span><span class="op">|</span> {
+      .<span class="ident">collect</span>::&lt;<span class="ident">String</span>&gt;()
+      .<span class="ident">try_map</span>(|<span class="ident">s</span>: <span class="ident">String</span>, <span class="ident">span</span>| {
         <span class="ident">u16::from_str_radix</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>, <span class="number">16</span>)
-          .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">why</span><span class="op">|</span> <span class="ident">Simple::custom</span>(<span class="ident">span</span>, <span class="macro">format!</span>(<span class="string">&quot;{why:?}&quot;</span>)))
+          .<span class="ident">map_err</span>(|<span class="ident">why</span>| <span class="ident">Simple::custom</span>(<span class="ident">span</span>, <span class="macro">format!</span>(<span class="string">&quot;{why:?}&quot;</span>)))
       }),
   )
 }
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">test_gb_hex_literal</span>() {
-  <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">gb_hex_literal</span>();
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">gb_hex_literal</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
   <span class="kw">for</span> <span class="ident">num</span> <span class="kw">in</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">76</span>, <span class="number">89</span>, <span class="number">255</span>, <span class="number">256</span>, <span class="number">492</span>, <span class="number">11489</span>, <span class="ident">u16::MAX</span>] {
     <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="macro">format!</span>(<span class="string">&quot;${num:x}&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="ident">num</span>));
     <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="macro">format!</span>(<span class="string">&quot;${num:08x}&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="ident">num</span>));
@@ -226,121 +289,136 @@
   <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="macro">format!</span>(<span class="string">&quot;$A___&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0xA___</span>));
 }
 
-<span class="comment">/*
-TODO: Raw Instruction Forms
+<span class="doccomment">/// Multi-line comments start with `/*` and end with `*/`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// As the name implies, there can be newlines within the comment</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">multi_line_comment</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, (), <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="ident">just</span>(<span class="string">&quot;/*&quot;</span>).<span class="ident">then</span>(<span class="ident">take_until</span>(<span class="ident">just</span>(<span class="string">&quot;*/&quot;</span>))).<span class="ident">ignored</span>()
+}
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_multi_line_comment</span>() {
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">multi_line_comment</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;/* multi \n line \n comment */&quot;</span>), <span class="prelude-val">Ok</span>(()));
+}
 
-ADC A, [HL]
-ADC A, n8
-ADC A, r8
-ADD A, [HL]
-ADD A, n8
-ADD A, r8
-ADD HL, r16
-ADD HL, SP
-ADD SP, e8
-AND A, [HL]
-AND A, n8
-AND A, r8
-BIT u3, [HL]
-BIT u3, r8
-CALL cc, n16
-CALL n16
-CCF
-CP A, [HL]
-CP A, n8
-CP A, r8
-CPL
-DAA
-DEC [HL]
-DEC r16
-DEC r8
-DEC SP
-DI
-EI
-HALT
-INC [HL]
-INC r16
-INC r8
-INC SP
-JP cc, n16
-JP HL
-JP n16
-JR cc, e8
-JR e8
-LD [HL], n8
-LD [HL], r8
-LD [HLD], A
-LD [HLI], A
-LD [HL-], A
-LD [HL+], A
-LD [n16], A
-LD [n16], SP
-LD [r16], A
-LD A, [HLD]
-LD A, [HLI]
-LD A, [HL-]
-LD A, [HL+]
-LD A, [n16]
-LD A, [r16]
-LD HL, SP+e8
-LD HL, SP
-LD r16, n16
-LD r8, [HL]
-LD r8, n8
-LD r8, r8
-LD SP, HL
-LD SP, n16
-LDH [C], A
-LDH [n16], A
-LDH A, [C]
-LDH A, [n16]
-NOP
-OR A, [HL]
-OR A, n8
-OR A, r8
-POP AF
-POP r16
-PUSH AF
-PUSH r16
-RES u3, [HL]
-RES u3, r8
-RET
-RET cc
-RETI
-RL [HL]
-RL r8
-RLA
-RLC [HL]
-RLC r8
-RLCA
-RR [HL]
-RR r8
-RRA
-RRC [HL]
-RRC r8
-RRCA
-RST vec
-SBC A, [HL]
-SBC A, n8
-SBC A, r8
-SCF
-SET u3, [HL]
-SET u3, r8
-SLA [HL]
-SLA r8
-SRA [HL]
-SRA r8
-SRL [HL]
-SRL r8
-STOP
-SUB A, [HL]
-SUB A, n8
-SUB A, r8
-SWAP [HL]
-SWAP r8
-XOR A, [HL]
-XOR A, n8
-XOR A, r8
-*/</span>
+<span class="doccomment">/// Horizontal space doesn&#39;t advance to the next statement</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * spaces</span>
+<span class="doccomment">/// * tabs</span>
+<span class="doccomment">/// * multi-line comments (which &quot;count as&quot; one space).</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">horizontal_space</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, (), <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="kw">let</span> <span class="ident">space</span> = <span class="ident">just</span>(<span class="string">&#39; &#39;</span>).<span class="ident">ignored</span>();
+  <span class="kw">let</span> <span class="ident">tab</span> = <span class="ident">just</span>(<span class="string">&#39;\t&#39;</span>).<span class="ident">ignored</span>();
+  <span class="kw">let</span> <span class="ident">multi</span> = <span class="ident">multi_line_comment</span>();
+  <span class="ident">choice</span>((<span class="ident">space</span>, <span class="ident">tab</span>, <span class="ident">multi</span>)).<span class="ident">repeated</span>().<span class="ident">ignored</span>()
+}
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_horizontal_space</span>() {
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">horizontal_space</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot; &quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;\t&quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;   \t   \t  &quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;  /* hello there \n general kenobi */ \t  &quot;</span>), <span class="prelude-val">Ok</span>(()));
+}
+
+<span class="doccomment">/// A [`newline`](chumsky::text::newline) implicitly ends all statements in</span>
+<span class="doccomment">/// Dmgrs.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// * [`horizontal_space`] can come before the end of the statement.</span>
+<span class="doccomment">/// * By using `//`, text until the newline becomes a comment.</span>
+<span class="doccomment">/// * For these purposes, the end of input counts as &quot;a newline&quot;.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">end_of_statement</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, (), <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="kw">let</span> <span class="ident">instant_newline</span> = <span class="ident">newline</span>();
+  <span class="kw">let</span> <span class="ident">eol_comment</span> =
+    <span class="ident">just</span>(<span class="string">&quot;//&quot;</span>).<span class="ident">ignored</span>().<span class="ident">then</span>(<span class="ident">take_until</span>(<span class="ident">newline</span>().<span class="ident">or</span>(<span class="ident">end</span>()))).<span class="ident">ignored</span>();
+
+  <span class="ident">horizontal_space</span>()
+    .<span class="ident">ignored</span>()
+    .<span class="ident">then</span>(<span class="ident">choice</span>((<span class="ident">end</span>(), <span class="ident">instant_newline</span>, <span class="ident">eol_comment</span>)))
+    .<span class="ident">ignored</span>()
+}
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_end_of_statement</span>() {
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">end_of_statement</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot; \t &quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;\n&quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot; // EOL comment before EOF&quot;</span>), <span class="prelude-val">Ok</span>(()));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot; // EOL comment then newline\n&quot;</span>), <span class="prelude-val">Ok</span>(()));
+}
+
+<span class="doccomment">/// See [`program_attribute`]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ProgramAttribute</span> {
+  <span class="ident">span</span>: <span class="ident">Range</span>&lt;<span class="ident">usize</span>&gt;,
+  <span class="ident">text</span>: <span class="ident">BoxStr</span>,
+}
+
+<span class="doccomment">/// Program attributes are like `#![words here]`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The output is the text between the brackets.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">program_attribute</span>(
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, <span class="ident">ProgramAttribute</span>, <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="ident">just</span>(<span class="string">&quot;#!&quot;</span>)
+    .<span class="ident">ignore_then</span>(
+      <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span>| <span class="kw-2">*</span><span class="ident">c</span> != <span class="string">&#39;]&#39;</span>)
+        .<span class="ident">repeated</span>()
+        .<span class="ident">collect</span>::&lt;<span class="ident">String</span>&gt;()
+        .<span class="ident">delimited_by</span>(<span class="ident">just</span>(<span class="string">&#39;[&#39;</span>), <span class="ident">just</span>(<span class="string">&#39;]&#39;</span>)),
+    )
+    .<span class="ident">map_with_span</span>(|<span class="ident">string</span>, <span class="ident">span</span>| <span class="ident">ProgramAttribute</span> {
+      <span class="ident">text</span>: <span class="ident">string</span>.<span class="ident">into_boxed_str</span>(),
+      <span class="ident">span</span>,
+    })
+}
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_program_attribute</span>() {
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">program_attribute</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;#![]&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">text</span>, <span class="macro">box_str!</span>(<span class="string">&quot;&quot;</span>));
+  <span class="macro">assert_eq!</span>(<span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;#![foo bar]&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">text</span>, <span class="macro">box_str!</span>(<span class="string">&quot;foo bar&quot;</span>));
+}
+
+<span class="doccomment">/// See [`macro_invocation`]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MacroInvocation</span> {
+  <span class="ident">span</span>: <span class="ident">Range</span>&lt;<span class="ident">usize</span>&gt;,
+  <span class="ident">name</span>: <span class="ident">BoxStr</span>,
+  <span class="ident">content</span>: <span class="ident">BoxStr</span>,
+}
+<span class="doccomment">/// Macros are invoked with `name!(words here)`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The output is the text between the brackets.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">macro_invocation</span>(
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, <span class="ident">MacroInvocation</span>, <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
+  <span class="ident">ident</span>()
+    .<span class="ident">then_ignore</span>(<span class="ident">just</span>(<span class="string">&#39;!&#39;</span>))
+    .<span class="ident">then</span>(
+      <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span>| <span class="kw-2">*</span><span class="ident">c</span> != <span class="string">&#39;)&#39;</span>)
+        .<span class="ident">repeated</span>()
+        .<span class="ident">collect</span>::&lt;<span class="ident">String</span>&gt;()
+        .<span class="ident">delimited_by</span>(<span class="ident">just</span>(<span class="string">&#39;(&#39;</span>), <span class="ident">just</span>(<span class="string">&#39;)&#39;</span>)),
+    )
+    .<span class="ident">map_with_span</span>(|(<span class="ident">name</span>, <span class="ident">content</span>), <span class="ident">span</span>| <span class="ident">MacroInvocation</span> {
+      <span class="ident">span</span>,
+      <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">into_boxed_str</span>(),
+      <span class="ident">content</span>: <span class="ident">content</span>.<span class="ident">into_boxed_str</span>(),
+    })
+}
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">test_macro_invocation</span>() {
+  <span class="kw">let</span> <span class="ident">p</span> = <span class="ident">macro_invocation</span>().<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+  <span class="comment">//</span>
+  <span class="kw">let</span> <span class="ident">MacroInvocation</span> { <span class="ident">name</span>, <span class="ident">content</span>, <span class="ident">span</span> } = <span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">&quot;bit!(7)&quot;</span>).<span class="ident">unwrap</span>();
+  <span class="macro">assert_eq!</span>(<span class="ident">name</span>, <span class="macro">box_str!</span>(<span class="string">&quot;bit&quot;</span>));
+  <span class="macro">assert_eq!</span>(<span class="ident">content</span>, <span class="macro">box_str!</span>(<span class="string">&quot;7&quot;</span>));
+  <span class="ident">drop</span>(<span class="ident">span</span>);
+  <span class="comment">//</span>
+  <span class="kw">let</span> <span class="ident">MacroInvocation</span> { <span class="ident">name</span>, <span class="ident">content</span>, <span class="ident">span</span> } =
+    <span class="ident">p</span>.<span class="ident">parse</span>(<span class="string">r#&quot;gfx!(&quot;.X&quot;, ..XX..X.)&quot;#</span>).<span class="ident">unwrap</span>();
+  <span class="macro">assert_eq!</span>(<span class="ident">name</span>, <span class="macro">box_str!</span>(<span class="string">&quot;gfx&quot;</span>));
+  <span class="macro">assert_eq!</span>(<span class="ident">content</span>, <span class="macro">box_str!</span>(<span class="string">r#&quot;&quot;.X&quot;, ..XX..X.&quot;#</span>));
+  <span class="ident">drop</span>(<span class="ident">span</span>);
+}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

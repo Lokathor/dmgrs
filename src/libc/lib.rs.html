@@ -160,8 +160,8 @@
 <span class="doccomment">//! [Documentation for other platforms][pd].</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [pd]: https://rust-lang.github.io/libc/#platform-specific-documentation</span>
-<span class="attribute">#![<span class="ident">crate_name</span> <span class="op">=</span> <span class="string">&quot;libc&quot;</span>]</span>
-<span class="attribute">#![<span class="ident">crate_type</span> <span class="op">=</span> <span class="string">&quot;rlib&quot;</span>]</span>
+<span class="attribute">#![<span class="ident">crate_name</span> = <span class="string">&quot;libc&quot;</span>]</span>
+<span class="attribute">#![<span class="ident">crate_type</span> = <span class="string">&quot;rlib&quot;</span>]</span>
 <span class="attribute">#![<span class="ident">allow</span>(
     <span class="ident">renamed_and_removed_lints</span>, <span class="comment">// Keep this order.</span>
     <span class="ident">unknown_lints</span>, <span class="comment">// Keep this order.</span>
@@ -176,20 +176,20 @@
 )]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">libc_deny_warnings</span>, <span class="ident">deny</span>(<span class="ident">warnings</span>))]</span>
 <span class="comment">// Attributes needed when building as part of the standard library</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc-dep-of-std&quot;</span>, <span class="ident">feature</span>(<span class="ident">link_cfg</span>, <span class="ident">no_core</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> = <span class="string">&quot;rustc-dep-of-std&quot;</span>, <span class="ident">feature</span>(<span class="ident">link_cfg</span>, <span class="ident">no_core</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">libc_thread_local</span>, <span class="ident">feature</span>(<span class="ident">thread_local</span>))]</span>
 <span class="comment">// Enable extra lints:</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;extra_traits&quot;</span>, <span class="ident">deny</span>(<span class="ident">missing_debug_implementations</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> = <span class="string">&quot;extra_traits&quot;</span>, <span class="ident">deny</span>(<span class="ident">missing_debug_implementations</span>))]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_copy_implementations</span>, <span class="ident">safe_packed_borrows</span>)]</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc-dep-of-std&quot;</span>), <span class="ident">no_std</span>)]</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc-dep-of-std&quot;</span>, <span class="ident">no_core</span>)]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustc-dep-of-std&quot;</span>), <span class="ident">no_std</span>)]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> = <span class="string">&quot;rustc-dep-of-std&quot;</span>, <span class="ident">no_core</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">libc_const_extern_fn_unstable</span>, <span class="ident">feature</span>(<span class="ident">const_extern_fn</span>))]</span>
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">macros</span>;
 
 <span class="macro">cfg_if!</span> {
-    <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc-dep-of-std&quot;</span>)]</span> {
+    <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;rustc-dep-of-std&quot;</span>)]</span> {
         <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rustc_std_workspace_core</span> <span class="kw">as</span> <span class="ident">core</span>;
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
         <span class="kw">use</span> <span class="ident">core::iter</span>;
@@ -254,31 +254,31 @@
 
         <span class="kw">mod</span> <span class="ident">windows</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">windows</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;fuchsia&quot;</span>)]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;fuchsia&quot;</span>)]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
         <span class="kw">mod</span> <span class="ident">fuchsia</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fuchsia</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;switch&quot;</span>)]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;switch&quot;</span>)]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
         <span class="kw">mod</span> <span class="ident">switch</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">switch</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;psp&quot;</span>)]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;psp&quot;</span>)]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
         <span class="kw">mod</span> <span class="ident">psp</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">psp</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;vxworks&quot;</span>)]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;vxworks&quot;</span>)]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
         <span class="kw">mod</span> <span class="ident">vxworks</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">vxworks</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;solid_asp3&quot;</span>)]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;solid_asp3&quot;</span>)]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
@@ -290,19 +290,19 @@
 
         <span class="kw">mod</span> <span class="ident">unix</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">unix</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;hermit&quot;</span>)]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;hermit&quot;</span>)]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
         <span class="kw">mod</span> <span class="ident">hermit</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hermit</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_env</span> <span class="op">=</span> <span class="string">&quot;sgx&quot;</span>, <span class="ident">target_vendor</span> <span class="op">=</span> <span class="string">&quot;fortanix&quot;</span>))]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_env</span> = <span class="string">&quot;sgx&quot;</span>, <span class="ident">target_vendor</span> = <span class="string">&quot;fortanix&quot;</span>))]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
         <span class="kw">mod</span> <span class="ident">sgx</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sgx</span>::<span class="kw-2">*</span>;
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_env</span> <span class="op">=</span> <span class="string">&quot;wasi&quot;</span>, <span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;wasi&quot;</span>))]</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_env</span> = <span class="string">&quot;wasi&quot;</span>, <span class="ident">target_os</span> = <span class="string">&quot;wasi&quot;</span>))]</span> {
         <span class="kw">mod</span> <span class="ident">fixed_width_ints</span>;
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fixed_width_ints</span>::<span class="kw-2">*</span>;
 
@@ -313,4 +313,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

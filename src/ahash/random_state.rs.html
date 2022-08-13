@@ -115,21 +115,21 @@
 <span class="kw">use</span> <span class="ident">core::sync::atomic::AtomicUsize</span>;
 <span class="kw">use</span> <span class="ident">core::sync::atomic::Ordering</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compile-time-rng&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;compile-time-rng&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">const_random::const_random</span>;
 
 <span class="doccomment">///This constant come from Kunth&#39;s prng</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">MULTIPLE</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">6364136223846793005</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">INCREMENT</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1442695040888963407</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">MULTIPLE</span>: <span class="ident">u64</span> = <span class="number">6364136223846793005</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">INCREMENT</span>: <span class="ident">u64</span> = <span class="number">1442695040888963407</span>;
 
 <span class="comment">// Const random provides randomized starting key with no runtime cost.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compile-time-rng&quot;</span>)]</span>
-<span class="kw">const</span> <span class="ident">INIT_SEED</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="macro">const_random!</span>(<span class="ident">u64</span>);
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;compile-time-rng&quot;</span>)]</span>
+<span class="kw">const</span> <span class="ident">INIT_SEED</span>: <span class="ident">u64</span> = <span class="macro">const_random!</span>(<span class="ident">u64</span>);
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compile-time-rng&quot;</span>))]</span>
-<span class="kw">const</span> <span class="ident">INIT_SEED</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">INCREMENT</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;compile-time-rng&quot;</span>))]</span>
+<span class="kw">const</span> <span class="ident">INIT_SEED</span>: <span class="ident">u64</span> = <span class="ident">INCREMENT</span>;
 
-<span class="kw">static</span> <span class="ident">SEED</span>: <span class="ident">AtomicUsize</span> <span class="op">=</span> <span class="ident">AtomicUsize::new</span>(<span class="ident">INIT_SEED</span> <span class="kw">as</span> <span class="ident">usize</span>);
+<span class="kw">static</span> <span class="ident">SEED</span>: <span class="ident">AtomicUsize</span> = <span class="ident">AtomicUsize::new</span>(<span class="ident">INIT_SEED</span> <span class="kw">as</span> <span class="ident">usize</span>);
 
 <span class="doccomment">/// Provides a [Hasher] factory. This is typically used (e.g. by [`HashMap`]) to create</span>
 <span class="doccomment">/// [AHasher]s in order to hash the keys of the map. See `build_hasher` below.</span>
@@ -148,16 +148,16 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="ident">RandomState</span> {
         <span class="comment">//Using a self pointer. When running with ASLR this is a random value.</span>
-        <span class="kw">let</span> <span class="ident">previous</span> <span class="op">=</span> <span class="ident">SEED</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>) <span class="kw">as</span> <span class="ident">u64</span>;
-        <span class="kw">let</span> <span class="ident">stack_mem_loc</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">previous</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="ident">u64</span>;
+        <span class="kw">let</span> <span class="ident">previous</span> = <span class="ident">SEED</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>) <span class="kw">as</span> <span class="ident">u64</span>;
+        <span class="kw">let</span> <span class="ident">stack_mem_loc</span> = <span class="kw-2">&amp;</span><span class="ident">previous</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="ident">u64</span>;
         <span class="comment">//This is similar to the update function in the fallback.</span>
         <span class="comment">//only one multiply is needed because memory locations are not under an attackers control.</span>
-        <span class="kw">let</span> <span class="ident">current_seed</span> <span class="op">=</span> <span class="ident">previous</span>
+        <span class="kw">let</span> <span class="ident">current_seed</span> = <span class="ident">previous</span>
             .<span class="ident">wrapping_add</span>(<span class="ident">stack_mem_loc</span>)
             .<span class="ident">wrapping_mul</span>(<span class="ident">MULTIPLE</span>)
             .<span class="ident">rotate_right</span>(<span class="number">31</span>);
         <span class="ident">SEED</span>.<span class="ident">store</span>(<span class="ident">current_seed</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">Ordering::Relaxed</span>);
-        <span class="kw">let</span> (<span class="ident">k0</span>, <span class="ident">k1</span>) <span class="op">=</span> <span class="ident">scramble_keys</span>(<span class="kw-2">&amp;</span><span class="ident">SEED</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">current_seed</span>);
+        <span class="kw">let</span> (<span class="ident">k0</span>, <span class="ident">k1</span>) = <span class="ident">scramble_keys</span>(<span class="kw-2">&amp;</span><span class="ident">SEED</span> <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span> <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">current_seed</span>);
         <span class="ident">RandomState</span> { <span class="ident">k0</span>, <span class="ident">k1</span> }
     }
 
@@ -170,10 +170,10 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">scramble_keys</span>(<span class="ident">k0</span>: <span class="ident">u64</span>, <span class="ident">k1</span>: <span class="ident">u64</span>) -&gt; (<span class="ident">u64</span>, <span class="ident">u64</span>) {
     <span class="comment">//Scramble seeds (based on xoroshiro128+)</span>
     <span class="comment">//This is intentionally not similar the hash algorithm</span>
-    <span class="kw">let</span> <span class="ident">result1</span> <span class="op">=</span> <span class="ident">k0</span>.<span class="ident">wrapping_add</span>(<span class="ident">k1</span>);
-    <span class="kw">let</span> <span class="ident">k1</span> <span class="op">=</span> <span class="ident">k1</span> <span class="op">^</span> <span class="ident">k0</span>;
-    <span class="kw">let</span> <span class="ident">k0</span> <span class="op">=</span> <span class="ident">k0</span>.<span class="ident">rotate_left</span>(<span class="number">24</span>) <span class="op">^</span> <span class="ident">k1</span> <span class="op">^</span> (<span class="ident">k1</span>.<span class="ident">wrapping_shl</span>(<span class="number">16</span>));
-    <span class="kw">let</span> <span class="ident">result2</span> <span class="op">=</span> <span class="ident">k0</span>.<span class="ident">wrapping_add</span>(<span class="ident">k1</span>.<span class="ident">rotate_left</span>(<span class="number">37</span>));
+    <span class="kw">let</span> <span class="ident">result1</span> = <span class="ident">k0</span>.<span class="ident">wrapping_add</span>(<span class="ident">k1</span>);
+    <span class="kw">let</span> <span class="ident">k1</span> = <span class="ident">k1</span> ^ <span class="ident">k0</span>;
+    <span class="kw">let</span> <span class="ident">k0</span> = <span class="ident">k0</span>.<span class="ident">rotate_left</span>(<span class="number">24</span>) ^ <span class="ident">k1</span> ^ (<span class="ident">k1</span>.<span class="ident">wrapping_shl</span>(<span class="number">16</span>));
+    <span class="kw">let</span> <span class="ident">result2</span> = <span class="ident">k0</span>.<span class="ident">wrapping_add</span>(<span class="ident">k1</span>.<span class="ident">rotate_left</span>(<span class="number">37</span>));
     (<span class="ident">result2</span>, <span class="ident">result1</span>)
 }
 
@@ -185,7 +185,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">BuildHasher</span> <span class="kw">for</span> <span class="ident">RandomState</span> {
-    <span class="kw">type</span> <span class="ident">Hasher</span> <span class="op">=</span> <span class="ident">AHasher</span>;
+    <span class="kw">type</span> <span class="ident">Hasher</span> = <span class="ident">AHasher</span>;
 
     <span class="doccomment">/// Constructs a new [AHasher] with keys based on compile time generated constants** and the location</span>
     <span class="doccomment">/// this object was constructed at in memory. This means that two different [BuildHasher]s will will generate</span>
@@ -223,4 +223,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ahash" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ahash" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

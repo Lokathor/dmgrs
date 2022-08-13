@@ -1403,8 +1403,8 @@
 <span id="1403">1403</span>
 <span id="1404">1404</span>
 <span id="1405">1405</span>
-</pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">rustc_attrs</span>))]</span>
-<span class="attribute">#![<span class="ident">doc</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
+</pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> = <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">rustc_attrs</span>))]</span>
+<span class="attribute">#![<span class="ident">doc</span> = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span> <span class="comment">// TODO: Don&#39;t allow this</span>
 
@@ -1473,7 +1473,7 @@
 }
 
 <span class="comment">// TODO: Replace with `std::ops::ControlFlow` when stable</span>
-<span class="kw">enum</span> <span class="ident">ControlFlow</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">enum</span> <span class="ident">ControlFlow</span>&lt;<span class="ident">C</span>, <span class="ident">B</span>&gt; {
     <span class="ident">Continue</span>(<span class="ident">C</span>),
     <span class="ident">Break</span>(<span class="ident">B</span>),
 }
@@ -1483,41 +1483,41 @@
 <span class="comment">// ([x, ...], Ok((out, alt_err)) =&gt; parsing failed, but recovery occurred so parsing may continue</span>
 <span class="comment">// ([...], Err(err)) =&gt; parsing failed, recovery failed, and one or more errors were produced</span>
 <span class="comment">// TODO: Change `alt_err` from `Option&lt;Located&lt;I, E&gt;&gt;` to `Vec&lt;Located&lt;I, E&gt;&gt;`</span>
-<span class="kw">type</span> <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span><span class="op">&gt;</span> <span class="op">=</span> (
-    <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">O</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>), <span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">type</span> <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; = (
+    <span class="ident">Vec</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;&gt;,
+    <span class="prelude-ty">Result</span>&lt;(<span class="ident">O</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;&gt;), <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;&gt;,
 );
 
 <span class="comment">// Shorthand for a stream with the given input and error type.</span>
-<span class="kw">type</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Stream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="op">&lt;</span><span class="ident">E</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span><span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">StreamOf</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; = <span class="ident">Stream</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, &lt;<span class="ident">E</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>&gt;;
 
 <span class="comment">// [`Parser::parse_recovery`], but generic across the debugger.</span>
-<span class="kw">fn</span> <span class="ident">parse_recovery_inner</span><span class="op">&lt;</span>
+<span class="kw">fn</span> <span class="ident">parse_recovery_inner</span>&lt;
     <span class="lifetime">&#39;a</span>,
     <span class="ident">I</span>: <span class="ident">Clone</span>,
     <span class="ident">O</span>,
-    <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span>,
+    <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;,
     <span class="ident">D</span>: <span class="ident">Debugger</span>,
-    <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">I</span>, <span class="op">&lt;</span><span class="ident">P::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
-    <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="op">&lt;</span><span class="ident">P::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>, <span class="ident">Iter</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-<span class="op">&gt;</span>(
+    <span class="ident">Iter</span>: <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = (<span class="ident">I</span>, &lt;<span class="ident">P::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>)&gt; + <span class="lifetime">&#39;a</span>,
+    <span class="ident">S</span>: <span class="ident">Into</span>&lt;<span class="ident">Stream</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, &lt;<span class="ident">P::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>, <span class="ident">Iter</span>&gt;&gt;,
+&gt;(
     <span class="ident">parser</span>: <span class="kw-2">&amp;</span><span class="ident">P</span>,
     <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
     <span class="ident">stream</span>: <span class="ident">S</span>,
-) -&gt; (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">P::Error</span><span class="op">&gt;</span>)
+) -&gt; (<span class="prelude-ty">Option</span>&lt;<span class="ident">O</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">P::Error</span>&gt;)
 <span class="kw">where</span>
     <span class="ident">P</span>: <span class="ident">Sized</span>,
 {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-    <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">errors</span>, <span class="ident">res</span>) <span class="op">=</span> <span class="ident">parser</span>.<span class="ident">parse_inner</span>(<span class="ident">debugger</span>, <span class="kw-2">&amp;mut</span> <span class="ident">stream</span>.<span class="ident">into</span>());
-    <span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">res</span> {
+    <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">errors</span>, <span class="ident">res</span>) = <span class="ident">parser</span>.<span class="ident">parse_inner</span>(<span class="ident">debugger</span>, <span class="kw-2">&amp;mut</span> <span class="ident">stream</span>.<span class="ident">into</span>());
+    <span class="kw">let</span> <span class="ident">out</span> = <span class="kw">match</span> <span class="ident">res</span> {
         <span class="prelude-val">Ok</span>((<span class="ident">out</span>, <span class="kw">_</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">out</span>),
         <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
             <span class="ident">errors</span>.<span class="ident">push</span>(<span class="ident">err</span>);
             <span class="prelude-val">None</span>
         }
     };
-    (<span class="ident">out</span>, <span class="ident">errors</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">error</span>).<span class="ident">collect</span>())
+    (<span class="ident">out</span>, <span class="ident">errors</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(|<span class="ident">e</span>| <span class="ident">e</span>.<span class="ident">error</span>).<span class="ident">collect</span>())
 }
 
 <span class="doccomment">/// A trait implemented by parsers.</span>
@@ -1532,17 +1532,17 @@
 <span class="doccomment">/// [open an issue](https://github.com/zesterer/chumsky/issues/new)! If you *really* need to implement this trait,</span>
 <span class="doccomment">/// please check the documentation in the source: some implementation details have been deliberately hidden.</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;nightly&quot;</span>,
     <span class="ident">rustc_on_unimplemented</span>(
-        <span class="ident">message</span> <span class="op">=</span> <span class="string">&quot;`{Self}` is not a parser from `{I}` to `{O}`&quot;</span>,
-        <span class="ident">label</span> <span class="op">=</span> <span class="string">&quot;This parser is not compatible because it does not implement `Parser&lt;{I}, {O}&gt;`&quot;</span>,
-        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;You should check that the output types of your parsers are consistent with combinator you&#39;re using&quot;</span>,
+        <span class="ident">message</span> = <span class="string">&quot;`{Self}` is not a parser from `{I}` to `{O}`&quot;</span>,
+        <span class="ident">label</span> = <span class="string">&quot;This parser is not compatible because it does not implement `Parser&lt;{I}, {O}&gt;`&quot;</span>,
+        <span class="ident">note</span> = <span class="string">&quot;You should check that the output types of your parsers are consistent with combinator you&#39;re using&quot;</span>,
     )
 )]</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::type_complexity</span>)]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Parser</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>&gt; {
     <span class="doccomment">/// The type of errors emitted by this parser.</span>
-    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>; <span class="comment">// TODO when default associated types are stable: = Cheap&lt;I&gt;;</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;; <span class="comment">// TODO when default associated types are stable: = Cheap&lt;I&gt;;</span>
 
     <span class="doccomment">/// Parse a stream with all the bells &amp; whistles. You can use this to implement your own parser combinators. Note</span>
     <span class="doccomment">/// that both the signature and semantic requirements of this function are very likely to change in later versions.</span>
@@ -1551,13 +1551,13 @@
     <span class="doccomment">/// covers your use-case.</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(
-        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;</span>
+        <span class="ident">note</span> = <span class="string">&quot;This method is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;</span>
     )]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>;
 
@@ -1566,26 +1566,26 @@
     <span class="doccomment">/// If you *really* need to implement this trait, this method should just directly invoke [`Parser::parse_inner`].</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(
-        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;</span>
+        <span class="ident">note</span> = <span class="string">&quot;This method is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;</span>
     )]</span>
     <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;;
 
     <span class="doccomment">/// [`Parser::parse_inner`], but specialised for silent output. Do not call this method directly.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If you *really* need to implement this trait, this method should just directly invoke [`Parser::parse_inner`].</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="attribute">#[<span class="ident">deprecated</span>(
-        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;This method is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;</span>
+        <span class="ident">note</span> = <span class="string">&quot;This method is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;</span>
     )]</span>
     <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>;
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;;
 
     <span class="doccomment">/// Parse a stream of tokens, yielding an output if possible, and any errors encountered along the way.</span>
     <span class="doccomment">///</span>
@@ -1594,11 +1594,11 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Although the signature of this function looks complicated, it&#39;s simpler than you think! You can pass a</span>
     <span class="doccomment">/// `&amp;[I]`, a [`&amp;str`], or a [`Stream`] to it.</span>
-    <span class="kw">fn</span> <span class="ident">parse_recovery</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Iter</span>, <span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">S</span>) -&gt; (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>)
+    <span class="kw">fn</span> <span class="ident">parse_recovery</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Iter</span>, <span class="ident">S</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">S</span>) -&gt; (<span class="prelude-ty">Option</span>&lt;<span class="ident">O</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident"><span class="self">Self</span>::Error</span>&gt;)
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">I</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
-        <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>, <span class="ident">Iter</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">Iter</span>: <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = (<span class="ident">I</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>)&gt; + <span class="lifetime">&#39;a</span>,
+        <span class="ident">S</span>: <span class="ident">Into</span>&lt;<span class="ident">Stream</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>, <span class="ident">Iter</span>&gt;&gt;,
     {
         <span class="ident">parse_recovery_inner</span>(<span class="self">self</span>, <span class="kw-2">&amp;mut</span> <span class="ident">Silent::new</span>(), <span class="ident">stream</span>)
     }
@@ -1616,14 +1616,14 @@
     <span class="doccomment">/// your parser. Additionally, its API is quite likely to change in future versions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method will receive more extensive documentation as the crate&#39;s debugging features mature.</span>
-    <span class="kw">fn</span> <span class="ident">parse_recovery_verbose</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Iter</span>, <span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">S</span>) -&gt; (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>)
+    <span class="kw">fn</span> <span class="ident">parse_recovery_verbose</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Iter</span>, <span class="ident">S</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">S</span>) -&gt; (<span class="prelude-ty">Option</span>&lt;<span class="ident">O</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident"><span class="self">Self</span>::Error</span>&gt;)
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">I</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
-        <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>, <span class="ident">Iter</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">Iter</span>: <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = (<span class="ident">I</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>)&gt; + <span class="lifetime">&#39;a</span>,
+        <span class="ident">S</span>: <span class="ident">Into</span>&lt;<span class="ident">Stream</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>, <span class="ident">Iter</span>&gt;&gt;,
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">debugger</span> <span class="op">=</span> <span class="ident">Verbose::new</span>();
-        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">parse_recovery_inner</span>(<span class="self">self</span>, <span class="kw-2">&amp;mut</span> <span class="ident">debugger</span>, <span class="ident">stream</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">debugger</span> = <span class="ident">Verbose::new</span>();
+        <span class="kw">let</span> <span class="ident">res</span> = <span class="ident">parse_recovery_inner</span>(<span class="self">self</span>, <span class="kw-2">&amp;mut</span> <span class="ident">debugger</span>, <span class="ident">stream</span>);
         <span class="ident">debugger</span>.<span class="ident">print</span>();
         <span class="ident">res</span>
     }
@@ -1634,13 +1634,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Although the signature of this function looks complicated, it&#39;s simpler than you think! You can pass a</span>
     <span class="doccomment">/// [`&amp;[I]`], a [`&amp;str`], or a [`Stream`] to it.</span>
-    <span class="kw">fn</span> <span class="ident">parse</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Iter</span>, <span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">O</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">parse</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Iter</span>, <span class="ident">S</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">O</span>, <span class="ident">Vec</span>&lt;<span class="ident"><span class="self">Self</span>::Error</span>&gt;&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">I</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
-        <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Stream</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>, <span class="ident">Iter</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">Iter</span>: <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = (<span class="ident">I</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>)&gt; + <span class="lifetime">&#39;a</span>,
+        <span class="ident">S</span>: <span class="ident">Into</span>&lt;<span class="ident">Stream</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>, <span class="ident">Iter</span>&gt;&gt;,
     {
-        <span class="kw">let</span> (<span class="ident">output</span>, <span class="ident">errors</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parse_recovery</span>(<span class="ident">stream</span>);
+        <span class="kw">let</span> (<span class="ident">output</span>, <span class="ident">errors</span>) = <span class="self">self</span>.<span class="ident">parse_recovery</span>(<span class="ident">stream</span>);
         <span class="kw">if</span> <span class="ident">errors</span>.<span class="ident">is_empty</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">output</span>.<span class="ident">expect</span>(
                 <span class="string">&quot;Parsing failed, but no errors were emitted. This is troubling, to say the least.&quot;</span>,
@@ -1658,10 +1658,10 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method will receive more extensive documentation as the crate&#39;s debugging features mature.</span>
     <span class="attribute">#[<span class="ident">track_caller</span>]</span>
-    <span class="kw">fn</span> <span class="ident">debug</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="ident">T</span>) -&gt; <span class="ident">Debug</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">debug</span>&lt;<span class="ident">T</span>&gt;(<span class="self">self</span>, <span class="ident">x</span>: <span class="ident">T</span>) -&gt; <span class="ident">Debug</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">T</span>: <span class="ident">fmt::Display</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="ident">T</span>: <span class="ident">fmt::Display</span> + <span class="lifetime">&#39;static</span>,
     {
         <span class="ident">Debug</span>(<span class="self">self</span>, <span class="ident">Rc::new</span>(<span class="ident">x</span>), <span class="kw-2">*</span><span class="ident">std::panic::Location::caller</span>())
     }
@@ -1692,7 +1692,7 @@
     <span class="doccomment">/// assert_eq!(token.parse(&quot;test&quot;), Ok(Token::Word(&quot;test&quot;.to_string())));</span>
     <span class="doccomment">/// assert_eq!(token.parse(&quot;42&quot;), Ok(Token::Num(42)));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">map</span>&lt;<span class="ident">U</span>, <span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Map</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">U</span>,
@@ -1723,10 +1723,10 @@
     <span class="doccomment">/// assert_eq!(ident.parse(&quot;hello&quot;), Ok(Spanned(&quot;hello&quot;.to_string(), 0..5)));</span>
     <span class="doccomment">/// assert_eq!(ident.parse(&quot;       hello   &quot;), Ok(Spanned(&quot;hello&quot;.to_string(), 7..12)));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">map_with_span</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">MapWithSpan</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">map_with_span</span>&lt;<span class="ident">U</span>, <span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">MapWithSpan</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>) -&gt; <span class="ident">U</span>,
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>) -&gt; <span class="ident">U</span>,
     {
         <span class="ident">MapWithSpan</span>(<span class="self">self</span>, <span class="ident">f</span>, <span class="ident">PhantomData</span>)
     }
@@ -1738,7 +1738,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The output type of this parser is `O`, the same as the original parser.</span>
     <span class="comment">// TODO: Map E -&gt; D, not E -&gt; E</span>
-    <span class="kw">fn</span> <span class="ident">map_err</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">MapErr</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">map_err</span>&lt;<span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">MapErr</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident"><span class="self">Self</span>::Error</span>) -&gt; <span class="ident"><span class="self">Self</span>::Error</span>,
@@ -1753,10 +1753,10 @@
     <span class="doccomment">/// the input stream to a known-good state (for example, [`take_until`]).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The output type of this parser is `U`, the [`Ok`] type of the result.</span>
-    <span class="kw">fn</span> <span class="ident">or_else</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">OrElse</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">or_else</span>&lt;<span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">OrElse</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident"><span class="self">Self</span>::Error</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident"><span class="self">Self</span>::Error</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">OrElse</span>(<span class="self">self</span>, <span class="ident">f</span>)
     }
@@ -1770,10 +1770,10 @@
     <span class="doccomment">/// The output type of this parser is `O`, the same as the original parser.</span>
     <span class="doccomment">///</span>
     <span class="comment">// TODO: Map E -&gt; D, not E -&gt; E</span>
-    <span class="kw">fn</span> <span class="ident">map_err_with_span</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">MapErrWithSpan</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">map_err_with_span</span>&lt;<span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">MapErrWithSpan</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident"><span class="self">Self</span>::Error</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>) -&gt; <span class="ident"><span class="self">Self</span>::Error</span>,
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident"><span class="self">Self</span>::Error</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>) -&gt; <span class="ident"><span class="self">Self</span>::Error</span>,
     {
         <span class="ident">MapErrWithSpan</span>(<span class="self">self</span>, <span class="ident">f</span>)
     }
@@ -1798,10 +1798,10 @@
     <span class="doccomment">/// assert!(byte.parse(&quot;255&quot;).is_ok());</span>
     <span class="doccomment">/// assert!(byte.parse(&quot;256&quot;).is_err()); // Out of range</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">try_map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">TryMap</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">try_map</span>&lt;<span class="ident">U</span>, <span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">TryMap</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">U</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">TryMap</span>(<span class="self">self</span>, <span class="ident">f</span>, <span class="ident">PhantomData</span>)
     }
@@ -1830,10 +1830,10 @@
     <span class="doccomment">/// assert_eq!(large_int.parse(&quot;537&quot;), Ok(537));</span>
     <span class="doccomment">/// assert!(large_int.parse(&quot;243&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">validate</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Validate</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">O</span>, <span class="ident">F</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>&lt;<span class="ident">F</span>, <span class="ident">U</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Validate</span>&lt;<span class="self">Self</span>, <span class="ident">O</span>, <span class="ident">F</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Span</span>, <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Error</span>)) -&gt; <span class="ident">U</span>,
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>, &lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Span</span>, <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>(<span class="ident"><span class="self">Self</span>::Error</span>)) -&gt; <span class="ident">U</span>,
     {
         <span class="ident">Validate</span>(<span class="self">self</span>, <span class="ident">f</span>, <span class="ident">PhantomData</span>)
     }
@@ -1869,10 +1869,10 @@
     <span class="doccomment">/// assert_eq!(frac.parse(&quot;hello&quot;), Err(vec![Cheap::expected_input_found(0..1, Vec::new(), Some(&#39;h&#39;)).with_label(&quot;number&quot;)]));</span>
     <span class="doccomment">/// assert_eq!(frac.parse(&quot;42!&quot;), Err(vec![Cheap::expected_input_found(2..3, vec![Some(&#39;.&#39;)], Some(&#39;!&#39;)).with_label(&quot;number&quot;)]));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">labelled</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">label</span>: <span class="ident">L</span>) -&gt; <span class="ident">Label</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">L</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">labelled</span>&lt;<span class="ident">L</span>&gt;(<span class="self">self</span>, <span class="ident">label</span>: <span class="ident">L</span>) -&gt; <span class="ident">Label</span>&lt;<span class="self">Self</span>, <span class="ident">L</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Label</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span>,
+        <span class="ident">L</span>: <span class="ident">Into</span>&lt;&lt;<span class="ident"><span class="self">Self</span>::Error</span> <span class="kw">as</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;<span class="ident">::Label</span>&gt; + <span class="ident">Clone</span>,
     {
         <span class="ident">Label</span>(<span class="self">self</span>, <span class="ident">label</span>)
     }
@@ -1896,7 +1896,7 @@
     <span class="doccomment">/// assert_eq!(op.parse(&quot;+&quot;), Ok(Op::Add));</span>
     <span class="doccomment">/// assert_eq!(op.parse(&quot;/&quot;), Ok(Op::Div));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">to</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">x</span>: <span class="ident">U</span>) -&gt; <span class="ident">To</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">O</span>, <span class="ident">U</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">to</span>&lt;<span class="ident">U</span>&gt;(<span class="self">self</span>, <span class="ident">x</span>: <span class="ident">U</span>) -&gt; <span class="ident">To</span>&lt;<span class="self">Self</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
         <span class="ident">U</span>: <span class="ident">Clone</span>,
@@ -1925,9 +1925,9 @@
     <span class="doccomment">/// assert_eq!(sum.parse(&quot;1+12+3+9&quot;), Ok(25));</span>
     <span class="doccomment">/// assert_eq!(sum.parse(&quot;6&quot;), Ok(6));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">foldl</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Foldl</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">foldl</span>&lt;<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Foldl</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">A</span>, <span class="ident">B</span>&gt;
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, (<span class="ident">A</span>, <span class="ident">B</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
+        <span class="self">Self</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, (<span class="ident">A</span>, <span class="ident">B</span>)&gt; + <span class="ident">Sized</span>,
         <span class="ident">B</span>: <span class="ident">IntoIterator</span>,
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">A</span>, <span class="ident">B::Item</span>) -&gt; <span class="ident">A</span>,
     {
@@ -1959,12 +1959,12 @@
     <span class="doccomment">/// assert_eq!(signed.parse(&quot;-17&quot;), Ok(-17));</span>
     <span class="doccomment">/// assert_eq!(signed.parse(&quot;--+-+-5&quot;), Ok(5));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">foldr</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Foldr</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">foldr</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">F</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Foldr</span>&lt;<span class="self">Self</span>, <span class="ident">F</span>, <span class="ident">A</span>, <span class="ident">B</span>&gt;
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, (<span class="ident">A</span>, <span class="ident">B</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
+        <span class="self">Self</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, (<span class="ident">A</span>, <span class="ident">B</span>)&gt; + <span class="ident">Sized</span>,
         <span class="ident">A</span>: <span class="ident">IntoIterator</span>,
         <span class="ident">A::IntoIter</span>: <span class="ident">DoubleEndedIterator</span>,
-        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">A::Item</span>, <span class="ident">B</span>) -&gt; <span class="ident">B</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">A::Item</span>, <span class="ident">B</span>) -&gt; <span class="ident">B</span> + <span class="lifetime">&#39;a</span>,
     {
         <span class="ident">Foldr</span>(<span class="self">self</span>, <span class="ident">f</span>, <span class="ident">PhantomData</span>)
     }
@@ -1990,7 +1990,7 @@
     <span class="doccomment">/// assert_eq!(whitespace.parse(&quot;    &quot;), Ok(vec![(); 4]));</span>
     <span class="doccomment">/// assert_eq!(whitespace.parse(&quot;  hello&quot;), Ok(vec![(); 2]));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">ignored</span>(<span class="self">self</span>) -&gt; <span class="ident">Ignored</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">ignored</span>(<span class="self">self</span>) -&gt; <span class="ident">Ignored</span>&lt;<span class="self">Self</span>, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2015,13 +2015,13 @@
     <span class="doccomment">/// assert_eq!(word.parse(&quot;hello&quot;), Ok(&quot;hello&quot;.to_string()));</span>
     <span class="doccomment">/// ```</span>
     <span class="comment">// TODO: Make `Parser::repeated` generic over an `impl FromIterator` to reduce required allocations</span>
-    <span class="kw">fn</span> <span class="ident">collect</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw">fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">C</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">collect</span>&lt;<span class="ident">C</span>&gt;(<span class="self">self</span>) -&gt; <span class="ident">Map</span>&lt;<span class="self">Self</span>, <span class="kw">fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">C</span>, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
         <span class="ident">O</span>: <span class="ident">IntoIterator</span>,
-        <span class="ident">C</span>: <span class="ident">core::iter::FromIterator</span><span class="op">&lt;</span><span class="ident">O::Item</span><span class="op">&gt;</span>,
+        <span class="ident">C</span>: <span class="ident">core::iter::FromIterator</span>&lt;<span class="ident">O::Item</span>&gt;,
     {
-        <span class="self">self</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">items</span><span class="op">|</span> <span class="ident">C::from_iter</span>(<span class="ident">items</span>.<span class="ident">into_iter</span>()))
+        <span class="self">self</span>.<span class="ident">map</span>(|<span class="ident">items</span>| <span class="ident">C::from_iter</span>(<span class="ident">items</span>.<span class="ident">into_iter</span>()))
     }
 
     <span class="doccomment">/// Parse one thing and then another thing, yielding a tuple of the two outputs.</span>
@@ -2040,10 +2040,10 @@
     <span class="doccomment">/// assert_eq!(two_words.parse(&quot;dog cat&quot;), Ok((&quot;dog&quot;.to_string(), &quot;cat&quot;.to_string())));</span>
     <span class="doccomment">/// assert!(two_words.parse(&quot;hedgehog&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">then</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">Then</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">then</span>&lt;<span class="ident">U</span>, <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">Then</span>&lt;<span class="self">Self</span>, <span class="ident">P</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">Then</span>(<span class="self">self</span>, <span class="ident">other</span>)
     }
@@ -2068,10 +2068,10 @@
     <span class="doccomment">/// assert_eq!(letter_up.parse(*b&quot;ab&quot;), Ok(b&#39;b&#39;));</span>
     <span class="doccomment">/// assert!(letter_up.parse(*b&quot;ac&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">then_with</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">F</span>) -&gt; <span class="ident">ThenWith</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">U</span>, <span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">F</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">then_with</span>&lt;<span class="ident">U</span>, <span class="ident">P</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">F</span>) -&gt; <span class="ident">ThenWith</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">U</span>, <span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">F</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">ThenWith</span>(<span class="self">self</span>, <span class="ident">other</span>, <span class="ident">PhantomData</span>)
     }
@@ -2099,15 +2099,15 @@
     <span class="doccomment">/// assert!(int.parse(&quot;-0&quot;).is_err());</span>
     <span class="doccomment">/// assert!(int.parse(&quot;05&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">chain</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span>, <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">Then</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span><span class="op">&gt;</span>, <span class="kw">fn</span>((<span class="ident">O</span>, <span class="ident">U</span>)) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, (<span class="ident">O</span>, <span class="ident">U</span>)<span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">chain</span>&lt;<span class="ident">T</span>, <span class="ident">U</span>, <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">Map</span>&lt;<span class="ident">Then</span>&lt;<span class="self">Self</span>, <span class="ident">P</span>&gt;, <span class="kw">fn</span>((<span class="ident">O</span>, <span class="ident">U</span>)) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;, (<span class="ident">O</span>, <span class="ident">U</span>)&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">U</span>: <span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-        <span class="ident">O</span>: <span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">U</span>: <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt;,
+        <span class="ident">O</span>: <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt;,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
-        <span class="self">self</span>.<span class="ident">then</span>(<span class="ident">other</span>).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">a</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">b</span>.<span class="ident">len</span>());
+        <span class="self">self</span>.<span class="ident">then</span>(<span class="ident">other</span>).<span class="ident">map</span>(|(<span class="ident">a</span>, <span class="ident">b</span>)| {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> = <span class="ident">Vec::with_capacity</span>(<span class="ident">a</span>.<span class="ident">len</span>() + <span class="ident">b</span>.<span class="ident">len</span>());
             <span class="ident">a</span>.<span class="ident">append_to</span>(<span class="kw-2">&amp;mut</span> <span class="ident">v</span>);
             <span class="ident">b</span>.<span class="ident">append_to</span>(<span class="kw-2">&amp;mut</span> <span class="ident">v</span>);
             <span class="ident">v</span>
@@ -2120,13 +2120,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The output type of this parser is `Vec&lt;T&gt;`, where the original parser output was</span>
     <span class="doccomment">/// `impl IntoIterator&lt;Item = impl IntoIterator&lt;Item = T&gt;&gt;`.</span>
-    <span class="kw">fn</span> <span class="ident">flatten</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Inner</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw">fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">flatten</span>&lt;<span class="ident">T</span>, <span class="ident">Inner</span>&gt;(<span class="self">self</span>) -&gt; <span class="ident">Map</span>&lt;<span class="self">Self</span>, <span class="kw">fn</span>(<span class="ident">O</span>) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">O</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Inner</span><span class="op">&gt;</span>,
-        <span class="ident">Inner</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
+        <span class="ident">O</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="ident">Inner</span>&gt;,
+        <span class="ident">Inner</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="ident">T</span>&gt;,
     {
-        <span class="self">self</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">xs</span><span class="op">|</span> <span class="ident">xs</span>.<span class="ident">into_iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">xs</span><span class="op">|</span> <span class="ident">xs</span>.<span class="ident">into_iter</span>()).<span class="ident">collect</span>())
+        <span class="self">self</span>.<span class="ident">map</span>(|<span class="ident">xs</span>| <span class="ident">xs</span>.<span class="ident">into_iter</span>().<span class="ident">flat_map</span>(|<span class="ident">xs</span>| <span class="ident">xs</span>.<span class="ident">into_iter</span>()).<span class="ident">collect</span>())
     }
 
     <span class="doccomment">/// Parse one thing and then another thing, yielding only the output of the latter.</span>
@@ -2148,12 +2148,12 @@
     <span class="doccomment">/// assert_eq!(integer.parse(&quot;00064&quot;), Ok(64));</span>
     <span class="doccomment">/// assert_eq!(integer.parse(&quot;32&quot;), Ok(32));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">ignore_then</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">IgnoreThen</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">O</span>, <span class="ident">U</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">ignore_then</span>&lt;<span class="ident">U</span>, <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">IgnoreThen</span>&lt;<span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
-        <span class="ident">Map</span>(<span class="ident">Then</span>(<span class="self">self</span>, <span class="ident">other</span>), <span class="op">|</span>(<span class="kw">_</span>, <span class="ident">u</span>)<span class="op">|</span> <span class="ident">u</span>, <span class="ident">PhantomData</span>)
+        <span class="ident">Map</span>(<span class="ident">Then</span>(<span class="self">self</span>, <span class="ident">other</span>), |(<span class="kw">_</span>, <span class="ident">u</span>)| <span class="ident">u</span>, <span class="ident">PhantomData</span>)
     }
 
     <span class="doccomment">/// Parse one thing and then another thing, yielding only the output of the former.</span>
@@ -2185,12 +2185,12 @@
     <span class="doccomment">///     ]),</span>
     <span class="doccomment">/// );</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">then_ignore</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">ThenIgnore</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">O</span>, <span class="ident">U</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">then_ignore</span>&lt;<span class="ident">U</span>, <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">ThenIgnore</span>&lt;<span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
-        <span class="ident">Map</span>(<span class="ident">Then</span>(<span class="self">self</span>, <span class="ident">other</span>), <span class="op">|</span>(<span class="ident">o</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">o</span>, <span class="ident">PhantomData</span>)
+        <span class="ident">Map</span>(<span class="ident">Then</span>(<span class="self">self</span>, <span class="ident">other</span>), |(<span class="ident">o</span>, <span class="kw">_</span>)| <span class="ident">o</span>, <span class="ident">PhantomData</span>)
     }
 
     <span class="doccomment">/// Parse a pattern, but with an instance of another pattern on either end, yielding the output of the inner.</span>
@@ -2209,10 +2209,10 @@
     <span class="doccomment">/// assert!(ident.parse(&quot;!hello&quot;).is_err());</span>
     <span class="doccomment">/// assert!(ident.parse(&quot;hello&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">padded_by</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">ThenIgnore</span><span class="op">&lt;</span><span class="ident">IgnoreThen</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="self">Self</span>, <span class="ident">U</span>, <span class="ident">O</span><span class="op">&gt;</span>, <span class="ident">P</span>, <span class="ident">O</span>, <span class="ident">U</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">padded_by</span>&lt;<span class="ident">U</span>, <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">ThenIgnore</span>&lt;<span class="ident">IgnoreThen</span>&lt;<span class="ident">P</span>, <span class="self">Self</span>, <span class="ident">U</span>, <span class="ident">O</span>&gt;, <span class="ident">P</span>, <span class="ident">O</span>, <span class="ident">U</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt; + <span class="ident">Clone</span>,
     {
         <span class="ident">other</span>.<span class="ident">clone</span>().<span class="ident">ignore_then</span>(<span class="self">self</span>).<span class="ident">then_ignore</span>(<span class="ident">other</span>)
     }
@@ -2266,11 +2266,11 @@
     <span class="doccomment">///     ),</span>
     <span class="doccomment">/// );</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">delimited_by</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">V</span>, <span class="ident">L</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">start</span>: <span class="ident">L</span>, <span class="ident">end</span>: <span class="ident">R</span>) -&gt; <span class="ident">DelimitedBy</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">L</span>, <span class="ident">R</span>, <span class="ident">U</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">delimited_by</span>&lt;<span class="ident">U</span>, <span class="ident">V</span>, <span class="ident">L</span>, <span class="ident">R</span>&gt;(<span class="self">self</span>, <span class="ident">start</span>: <span class="ident">L</span>, <span class="ident">end</span>: <span class="ident">R</span>) -&gt; <span class="ident">DelimitedBy</span>&lt;<span class="self">Self</span>, <span class="ident">L</span>, <span class="ident">R</span>, <span class="ident">U</span>, <span class="ident">V</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">L</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-        <span class="ident">R</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">V</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">L</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+        <span class="ident">R</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">V</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">DelimitedBy</span> {
             <span class="ident">item</span>: <span class="self">self</span>,
@@ -2310,10 +2310,10 @@
     <span class="doccomment">/// assert_eq!(op.parse(&quot;/&quot;), Ok(&#39;/&#39;));</span>
     <span class="doccomment">/// assert!(op.parse(&quot;!&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">or</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">Or</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">or</span>&lt;<span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">Or</span>&lt;<span class="self">Self</span>, <span class="ident">P</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">Or</span>(<span class="self">self</span>, <span class="ident">other</span>)
     }
@@ -2362,10 +2362,10 @@
     <span class="doccomment">/// // Additionally, the AST we get back still has useful information.</span>
     <span class="doccomment">/// assert_eq!(ast, Some(Expr::List(vec![Expr::Error, Expr::Error])));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">recover_with</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">strategy</span>: <span class="ident">S</span>) -&gt; <span class="ident">Recovery</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">S</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">recover_with</span>&lt;<span class="ident">S</span>&gt;(<span class="self">self</span>, <span class="ident">strategy</span>: <span class="ident">S</span>) -&gt; <span class="ident">Recovery</span>&lt;<span class="self">Self</span>, <span class="ident">S</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">S</span>: <span class="ident">Strategy</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">S</span>: <span class="ident">Strategy</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">Recovery</span>(<span class="self">self</span>, <span class="ident">strategy</span>)
     }
@@ -2390,7 +2390,7 @@
     <span class="doccomment">/// assert_eq!(word_or_question.parse(&quot;hello?&quot;), Ok((&quot;hello&quot;.to_string(), Some(&#39;?&#39;))));</span>
     <span class="doccomment">/// assert_eq!(word_or_question.parse(&quot;wednesday&quot;), Ok((&quot;wednesday&quot;.to_string(), None)));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">or_not</span>(<span class="self">self</span>) -&gt; <span class="ident">OrNot</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">or_not</span>(<span class="self">self</span>) -&gt; <span class="ident">OrNot</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2419,7 +2419,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// assert_eq!(sum.parse(&quot;2+13+4+0+5&quot;), Ok(24));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">repeated</span>(<span class="self">self</span>) -&gt; <span class="ident">Repeated</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">repeated</span>(<span class="self">self</span>) -&gt; <span class="ident">Repeated</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2446,10 +2446,10 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See [`SeparatedBy::allow_leading`] and [`SeparatedBy::allow_trailing`] for more examples.</span>
-    <span class="kw">fn</span> <span class="ident">separated_by</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">P</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">SeparatedBy</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">U</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">separated_by</span>&lt;<span class="ident">U</span>, <span class="ident">P</span>&gt;(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">P</span>) -&gt; <span class="ident">SeparatedBy</span>&lt;<span class="self">Self</span>, <span class="ident">P</span>, <span class="ident">U</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
-        <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
+        <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>, <span class="ident">Error</span> = <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
     {
         <span class="ident">SeparatedBy</span> {
             <span class="ident">item</span>: <span class="self">self</span>,
@@ -2482,7 +2482,7 @@
     <span class="doccomment">/// // 3 is not parsed because it&#39;s followed by &#39;+&#39;.</span>
     <span class="doccomment">/// assert_eq!(just_numbers.parse(&quot;1, 2, 3 + 4&quot;), Ok(vec![&quot;1&quot;.to_string(), &quot;2&quot;.to_string()]));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="self">self</span>) -&gt; <span class="ident">Rewind</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">rewind</span>(<span class="self">self</span>) -&gt; <span class="ident">Rewind</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2507,9 +2507,9 @@
     <span class="doccomment">/// Boxing a parser is broadly equivalent to boxing other combinators via dynamic dispatch, such as [`Iterator`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The output type of this parser is `O`, the same as the original parser.</span>
-    <span class="kw">fn</span> <span class="ident">boxed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">BoxedParser</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">boxed</span>&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="self">self</span>) -&gt; <span class="ident">BoxedParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
+        <span class="self">Self</span>: <span class="ident">Sized</span> + <span class="lifetime">&#39;a</span>,
     {
         <span class="ident">BoxedParser</span>(<span class="ident">Rc::new</span>(<span class="self">self</span>))
     }
@@ -2534,13 +2534,13 @@
     <span class="doccomment">/// assert_eq!(uint64.parse(&quot;42&quot;), Ok(42));</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::wrong_self_convention</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">from_str</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw">fn</span>(<span class="ident">O</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">U::Err</span><span class="op">&gt;</span>, <span class="ident">O</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">from_str</span>&lt;<span class="ident">U</span>&gt;(<span class="self">self</span>) -&gt; <span class="ident">Map</span>&lt;<span class="self">Self</span>, <span class="kw">fn</span>(<span class="ident">O</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">U</span>, <span class="ident">U::Err</span>&gt;, <span class="ident">O</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
         <span class="ident">U</span>: <span class="ident">FromStr</span>,
-        <span class="ident">O</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>,
+        <span class="ident">O</span>: <span class="ident">AsRef</span>&lt;<span class="ident">str</span>&gt;,
     {
-        <span class="self">self</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>.<span class="ident">as_ref</span>().<span class="ident">parse</span>())
+        <span class="self">self</span>.<span class="ident">map</span>(|<span class="ident">o</span>| <span class="ident">o</span>.<span class="ident">as_ref</span>().<span class="ident">parse</span>())
     }
 
     <span class="doccomment">/// For parsers that produce a [`Result`] as their output, unwrap the result (panicking if an [`Err`] is</span>
@@ -2567,126 +2567,126 @@
     <span class="doccomment">/// // Does not panic, because the original parser only accepts &quot;true&quot; or &quot;false&quot;</span>
     <span class="doccomment">/// assert!(boolean.parse(&quot;42&quot;).is_err());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">unwrapped</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw">fn</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="ident">U</span>, <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">unwrapped</span>&lt;<span class="ident">U</span>, <span class="ident">E</span>&gt;(<span class="self">self</span>) -&gt; <span class="ident">Map</span>&lt;<span class="self">Self</span>, <span class="kw">fn</span>(<span class="prelude-ty">Result</span>&lt;<span class="ident">U</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">U</span>, <span class="prelude-ty">Result</span>&lt;<span class="ident">U</span>, <span class="ident">E</span>&gt;&gt;
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="ident">Sized</span> + <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="prelude-ty">Result</span>&lt;<span class="ident">U</span>, <span class="ident">E</span>&gt;&gt;,
         <span class="ident">E</span>: <span class="ident">fmt::Debug</span>,
     {
-        <span class="self">self</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>.<span class="ident">unwrap</span>())
+        <span class="self">self</span>.<span class="ident">map</span>(|<span class="ident">o</span>| <span class="ident">o</span>.<span class="ident">unwrap</span>())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">T::Error</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; + <span class="question-mark">?</span><span class="ident">Sized</span>&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">T::Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="ident">debugger</span>.<span class="ident">invoke</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        <span class="ident">debugger</span>.<span class="ident">invoke</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span>&gt;(<span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
     <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">T::Error</span>;
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; + <span class="question-mark">?</span><span class="ident">Sized</span>&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Box</span>&lt;<span class="ident">T</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">T::Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="ident">debugger</span>.<span class="ident">invoke</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        <span class="ident">debugger</span>.<span class="ident">invoke</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span>&gt;(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
     <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">T::Error</span>;
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; + <span class="question-mark">?</span><span class="ident">Sized</span>&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Rc</span>&lt;<span class="ident">T</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">T::Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="ident">debugger</span>.<span class="ident">invoke</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        <span class="ident">debugger</span>.<span class="ident">invoke</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span>&gt;(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
     <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">T::Error</span>;
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">T</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; + <span class="question-mark">?</span><span class="ident">Sized</span>&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Arc</span>&lt;<span class="ident">T</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">T::Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="ident">debugger</span>.<span class="ident">invoke</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        <span class="ident">debugger</span>.<span class="ident">invoke</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">T</span>&gt;(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>, <span class="ident">stream</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
     <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
@@ -2702,22 +2702,22 @@
 <span class="doccomment">/// it is *currently* the same size as a raw pointer.</span>
 <span class="comment">// TODO: Don&#39;t use an Rc</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BoxedParser</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BoxedParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(<span class="ident">Rc</span>&lt;<span class="kw">dyn</span> <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="lifetime">&#39;a</span>&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">BoxedParser</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">BoxedParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>())
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BoxedParser</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">BoxedParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">stream</span>)
     }
@@ -2725,16 +2725,16 @@
     <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
     <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
@@ -2801,12 +2801,12 @@
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules!</span> <span class="ident">select</span> {
-    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">pat</span> $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">guard</span>:<span class="ident">expr</span>)<span class="question-mark">?</span> =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">out</span>:<span class="ident">expr</span>),<span class="op">+</span> $(,)<span class="question-mark">?</span>) =&gt; ({
-        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::primitive::filter_map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">span</span>, <span class="ident">x</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">x</span> {
-            $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span> $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">guard</span>)<span class="question-mark">?</span> =&gt; <span class="ident">::core::result::Result::Ok</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">out</span>)),<span class="op">+</span>,
+    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">pat</span> $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">guard</span>:<span class="ident">expr</span>)<span class="question-mark">?</span> =&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">out</span>:<span class="ident">expr</span>),+ $(,)<span class="question-mark">?</span>) =&gt; ({
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::primitive::filter_map</span>(<span class="kw">move</span> |<span class="ident">span</span>, <span class="ident">x</span>| <span class="kw">match</span> <span class="ident">x</span> {
+            $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span> $(<span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">guard</span>)<span class="question-mark">?</span> =&gt; <span class="ident">::core::result::Result::Ok</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">out</span>)),+,
             <span class="kw">_</span> =&gt; <span class="ident">::core::result::Result::Err</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::error::Error::expected_input_found</span>(<span class="ident">span</span>, <span class="ident">::core::option::Option::None</span>, <span class="ident">::core::option::Option::Some</span>(<span class="ident">x</span>))),
         })
     });
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -2,17 +2,17 @@
 <p>The output type of this parser is <code>(Vec&lt;I&gt;, O)</code>, a combination of the preceding inputs and the output of the
 final patterns.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">single_line</span> <span class="op">=</span> <span class="ident">just</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="string">&quot;//&quot;</span>)
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">single_line</span> = <span class="ident">just</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(<span class="string">&quot;//&quot;</span>)
     .<span class="ident">then</span>(<span class="ident">take_until</span>(<span class="ident">text::newline</span>()))
     .<span class="ident">ignored</span>();
 
-<span class="kw">let</span> <span class="ident">multi_line</span> <span class="op">=</span> <span class="ident">just</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="string">&quot;/*&quot;</span>)
+<span class="kw">let</span> <span class="ident">multi_line</span> = <span class="ident">just</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(<span class="string">&quot;/*&quot;</span>)
     .<span class="ident">then</span>(<span class="ident">take_until</span>(<span class="ident">just</span>(<span class="string">&quot;*/&quot;</span>)))
     .<span class="ident">ignored</span>();
 
-<span class="kw">let</span> <span class="ident">comment</span> <span class="op">=</span> <span class="ident">single_line</span>.<span class="ident">or</span>(<span class="ident">multi_line</span>);
+<span class="kw">let</span> <span class="ident">comment</span> = <span class="ident">single_line</span>.<span class="ident">or</span>(<span class="ident">multi_line</span>);
 
-<span class="kw">let</span> <span class="ident">tokens</span> <span class="op">=</span> <span class="ident">text::ident</span>()
+<span class="kw">let</span> <span class="ident">tokens</span> = <span class="ident">text::ident</span>()
     .<span class="ident">padded</span>()
     .<span class="ident">padded_by</span>(<span class="ident">comment</span>
         .<span class="ident">padded</span>()
@@ -30,4 +30,4 @@ final patterns.</p>
     tokens
     // ...comments between them
 &quot;#</span>), <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="string">&quot;these&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;are&quot;</span>.<span class="ident">to_string</span>(), <span class="string">&quot;tokens&quot;</span>.<span class="ident">to_string</span>()]));</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

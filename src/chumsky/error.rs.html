@@ -455,10 +455,10 @@
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashSet</span>, <span class="ident">hash::Hash</span>};
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;ahash&quot;</span>)]</span>
-<span class="kw">type</span> <span class="ident">RandomState</span> <span class="op">=</span> <span class="ident">ahash::RandomState</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;ahash&quot;</span>))]</span>
-<span class="kw">type</span> <span class="ident">RandomState</span> <span class="op">=</span> <span class="ident">std::collections::hash_map::RandomState</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;ahash&quot;</span>)]</span>
+<span class="kw">type</span> <span class="ident">RandomState</span> = <span class="ident">ahash::RandomState</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;ahash&quot;</span>))]</span>
+<span class="kw">type</span> <span class="ident">RandomState</span> = <span class="ident">std::collections::hash_map::RandomState</span>;
 
 <span class="doccomment">/// A trait that describes parser error types.</span>
 <span class="doccomment">///</span>
@@ -513,7 +513,7 @@
 <span class="doccomment">/// assert_eq!(numeral.parse(&quot;7&quot;), Ok(7));</span>
 <span class="doccomment">/// assert_eq!(numeral.parse(&quot;f&quot;), Err(vec![MyError::NotADigit(0..1, &#39;f&#39;)]));</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>: <span class="ident">Sized</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;: <span class="ident">Sized</span> {
     <span class="doccomment">/// The type of spans to be used in the error.</span>
     <span class="kw">type</span> <span class="ident">Span</span>: <span class="ident">Span</span>; <span class="comment">// TODO: Default to = Range&lt;usize&gt;;</span>
 
@@ -528,10 +528,10 @@
     <span class="doccomment">/// `found` having the value `None` indicates that the end of input was reached, but was not expected.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// An expected input having the value `None` indicates that the end of input was expected.</span>
-    <span class="kw">fn</span> <span class="ident">expected_input_found</span><span class="op">&lt;</span><span class="ident">Iter</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">expected_input_found</span>&lt;<span class="ident">Iter</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;&gt;&gt;(
         <span class="ident">span</span>: <span class="ident"><span class="self">Self</span>::Span</span>,
         <span class="ident">expected</span>: <span class="ident">Iter</span>,
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;,
     ) -&gt; <span class="self">Self</span>;
 
     <span class="doccomment">/// Create a new error describing a delimiter that was not correctly closed.</span>
@@ -547,7 +547,7 @@
         <span class="ident">unclosed</span>: <span class="ident">I</span>,
         <span class="ident">span</span>: <span class="ident"><span class="self">Self</span>::Span</span>,
         <span class="ident">expected</span>: <span class="ident">I</span>,
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;,
     ) -&gt; <span class="self">Self</span> {
         <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
         <span class="ident"><span class="self">Self</span>::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="ident">expected</span>)), <span class="ident">found</span>)
@@ -588,7 +588,7 @@
 
 <span class="doccomment">/// A type representing possible reasons for an error.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SimpleReason</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SimpleReason</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
     <span class="doccomment">/// An unexpected input was found.</span>
     <span class="ident">Unexpected</span>,
     <span class="doccomment">/// An unclosed delimiter was found.</span>
@@ -607,17 +607,17 @@
 <span class="doccomment">/// Please note that it uses a [`HashSet`] to remember expected symbols. If you find this to be too slow, you can</span>
 <span class="doccomment">/// implement [`Error`] for your own error type or use [`Cheap`] instead.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Hash</span>, <span class="ident">S</span> <span class="op">=</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Simple</span>&lt;<span class="ident">I</span>: <span class="ident">Hash</span>, <span class="ident">S</span> = <span class="ident">Range</span>&lt;<span class="ident">usize</span>&gt;&gt; {
     <span class="ident">span</span>: <span class="ident">S</span>,
-    <span class="ident">reason</span>: <span class="ident">SimpleReason</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span>,
-    <span class="ident">expected</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">RandomState</span><span class="op">&gt;</span>,
-    <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-    <span class="ident">label</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
+    <span class="ident">reason</span>: <span class="ident">SimpleReason</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt;,
+    <span class="ident">expected</span>: <span class="ident">HashSet</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">RandomState</span>&gt;,
+    <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;,
+    <span class="ident">label</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Eq</span>, <span class="ident">S</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Hash</span> + <span class="ident">Eq</span>, <span class="ident">S</span>: <span class="ident">Clone</span>&gt; <span class="ident">Simple</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
     <span class="doccomment">/// Create an error with a custom error message.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">ToString</span><span class="op">&gt;</span>(<span class="ident">span</span>: <span class="ident">S</span>, <span class="ident">msg</span>: <span class="ident">M</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span>&lt;<span class="ident">M</span>: <span class="ident">ToString</span>&gt;(<span class="ident">span</span>: <span class="ident">S</span>, <span class="ident">msg</span>: <span class="ident">M</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">span</span>,
             <span class="ident">reason</span>: <span class="ident">SimpleReason::Custom</span>(<span class="ident">msg</span>.<span class="ident">to_string</span>()),
@@ -633,22 +633,22 @@
     }
 
     <span class="doccomment">/// Returns an iterator over possible expected patterns.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span>&lt;<span class="ident">Item</span> = <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;&gt; + <span class="lifetime">&#39;_</span> {
         <span class="self">self</span>.<span class="ident">expected</span>.<span class="ident">iter</span>()
     }
 
     <span class="doccomment">/// Returns the input, if any, that was found instead of an expected pattern.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">found</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">I</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">found</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">I</span>&gt; {
         <span class="self">self</span>.<span class="ident">found</span>.<span class="ident">as_ref</span>()
     }
 
     <span class="doccomment">/// Returns the reason for the error.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SimpleReason</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SimpleReason</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reason</span>
     }
 
     <span class="doccomment">/// Returns the error&#39;s label, if any.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>&gt; {
         <span class="self">self</span>.<span class="ident">label</span>
     }
 
@@ -656,7 +656,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This can be used to unify the errors between parsing stages that operate upon two forms of input (for example,</span>
     <span class="doccomment">/// the initial lexing stage and the parsing stage in most compilers).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Eq</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">I</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span>&lt;<span class="ident">U</span>: <span class="ident">Hash</span> + <span class="ident">Eq</span>, <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">I</span>) -&gt; <span class="ident">U</span>&gt;(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Simple</span>&lt;<span class="ident">U</span>, <span class="ident">S</span>&gt; {
         <span class="ident">Simple</span> {
             <span class="ident">span</span>: <span class="self">self</span>.<span class="ident">span</span>,
             <span class="ident">reason</span>: <span class="kw">match</span> <span class="self">self</span>.<span class="ident">reason</span> {
@@ -667,21 +667,21 @@
                 <span class="ident">SimpleReason::Unexpected</span> =&gt; <span class="ident">SimpleReason::Unexpected</span>,
                 <span class="ident">SimpleReason::Custom</span>(<span class="ident">msg</span>) =&gt; <span class="ident">SimpleReason::Custom</span>(<span class="ident">msg</span>),
             },
-            <span class="ident">expected</span>: <span class="self">self</span>.<span class="ident">expected</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">map</span>(<span class="kw-2">&amp;mut</span> <span class="ident">f</span>)).<span class="ident">collect</span>(),
+            <span class="ident">expected</span>: <span class="self">self</span>.<span class="ident">expected</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(|<span class="ident">e</span>| <span class="ident">e</span>.<span class="ident">map</span>(<span class="kw-2">&amp;mut</span> <span class="ident">f</span>)).<span class="ident">collect</span>(),
             <span class="ident">found</span>: <span class="self">self</span>.<span class="ident">found</span>.<span class="ident">map</span>(<span class="ident">f</span>),
             <span class="ident">label</span>: <span class="self">self</span>.<span class="ident">label</span>,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Eq</span>, <span class="ident">S</span>: <span class="ident">Span</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Span</span> <span class="op">=</span> <span class="ident">S</span>;
-    <span class="kw">type</span> <span class="ident">Label</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Hash</span> + <span class="ident">Eq</span>, <span class="ident">S</span>: <span class="ident">Span</span> + <span class="ident">Clone</span> + <span class="ident">fmt::Debug</span>&gt; <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt; <span class="kw">for</span> <span class="ident">Simple</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Span</span> = <span class="ident">S</span>;
+    <span class="kw">type</span> <span class="ident">Label</span> = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
 
-    <span class="kw">fn</span> <span class="ident">expected_input_found</span><span class="op">&lt;</span><span class="ident">Iter</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">expected_input_found</span>&lt;<span class="ident">Iter</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;&gt;&gt;(
         <span class="ident">span</span>: <span class="ident"><span class="self">Self</span>::Span</span>,
         <span class="ident">expected</span>: <span class="ident">Iter</span>,
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;,
     ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">span</span>,
@@ -697,7 +697,7 @@
         <span class="ident">delimiter</span>: <span class="ident">I</span>,
         <span class="ident">span</span>: <span class="ident"><span class="self">Self</span>::Span</span>,
         <span class="ident">expected</span>: <span class="ident">I</span>,
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;,
     ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">span</span>,
@@ -718,7 +718,7 @@
 
     <span class="kw">fn</span> <span class="ident">merge</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) -&gt; <span class="self">Self</span> {
         <span class="comment">// TODO: Assert that `self.span == other.span` here?</span>
-        <span class="self">self</span>.<span class="ident">reason</span> <span class="op">=</span> <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reason</span>, <span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">reason</span>) {
+        <span class="self">self</span>.<span class="ident">reason</span> = <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reason</span>, <span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">reason</span>) {
             (<span class="ident">SimpleReason::Unclosed</span> { .. }, <span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="ident">reason</span>,
             (<span class="kw">_</span>, <span class="ident">SimpleReason::Unclosed</span> { .. }) =&gt; <span class="ident">other</span>.<span class="ident">reason</span>,
             <span class="kw">_</span> =&gt; <span class="self">self</span>.<span class="ident">reason</span>,
@@ -730,20 +730,20 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">PartialEq</span>, <span class="ident">S</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Hash</span> + <span class="ident">PartialEq</span>, <span class="ident">S</span>: <span class="ident">PartialEq</span>&gt; <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">Simple</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
     <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">span</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">span</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">found</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">found</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">reason</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">reason</span>
-            <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">label</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">label</span>
+        <span class="self">self</span>.<span class="ident">span</span> == <span class="ident">other</span>.<span class="ident">span</span>
+            &amp;&amp; <span class="self">self</span>.<span class="ident">found</span> == <span class="ident">other</span>.<span class="ident">found</span>
+            &amp;&amp; <span class="self">self</span>.<span class="ident">reason</span> == <span class="ident">other</span>.<span class="ident">reason</span>
+            &amp;&amp; <span class="self">self</span>.<span class="ident">label</span> == <span class="ident">other</span>.<span class="ident">label</span>
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">fmt::Display</span> <span class="op">+</span> <span class="ident">Hash</span>, <span class="ident">S</span>: <span class="ident">Span</span><span class="op">&gt;</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">fmt::Display</span> + <span class="ident">Hash</span>, <span class="ident">S</span>: <span class="ident">Span</span>&gt; <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Simple</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="comment">// TODO: Take `self.reason` into account</span>
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">found</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">found</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">found</span>) = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">found</span> {
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;found &#39;{}&#39;&quot;</span>, <span class="ident">found</span>)<span class="question-mark">?</span>;
         } <span class="kw">else</span> {
             <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;found end of input&quot;</span>)<span class="question-mark">?</span>;
@@ -764,11 +764,11 @@
                 <span class="string">&quot; but one of {} was expected&quot;</span>,
                 <span class="self">self</span>.<span class="ident">expected</span>
                     .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">expected</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">expected</span> {
+                    .<span class="ident">map</span>(|<span class="ident">expected</span>| <span class="kw">match</span> <span class="ident">expected</span> {
                         <span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">x</span>),
                         <span class="prelude-val">None</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;end of input&quot;</span>),
                     })
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                    .<span class="ident">collect</span>::&lt;<span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;&gt;()
                     .<span class="ident">join</span>(<span class="string">&quot;, &quot;</span>)
             )<span class="question-mark">?</span>,
         }
@@ -777,40 +777,40 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">fmt::Debug</span> <span class="op">+</span> <span class="ident">fmt::Display</span> <span class="op">+</span> <span class="ident">Hash</span>, <span class="ident">S</span>: <span class="ident">Span</span> <span class="op">+</span> <span class="ident">fmt::Display</span> <span class="op">+</span> <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">std::error::Error</span>
-    <span class="kw">for</span> <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span>
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">fmt::Debug</span> + <span class="ident">fmt::Display</span> + <span class="ident">Hash</span>, <span class="ident">S</span>: <span class="ident">Span</span> + <span class="ident">fmt::Display</span> + <span class="ident">fmt::Debug</span>&gt; <span class="ident">std::error::Error</span>
+    <span class="kw">for</span> <span class="ident">Simple</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt;
 {
 }
 
 <span class="doccomment">/// A minimal error type that tracks only the error span and label. This type is most useful when you want fast parsing</span>
 <span class="doccomment">/// but do not particularly care about the quality of error messages.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Cheap</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span> <span class="op">=</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Cheap</span>&lt;<span class="ident">I</span>, <span class="ident">S</span> = <span class="ident">Range</span>&lt;<span class="ident">usize</span>&gt;&gt; {
     <span class="ident">span</span>: <span class="ident">S</span>,
-    <span class="ident">label</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+    <span class="ident">label</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>&gt;,
+    <span class="ident">phantom</span>: <span class="ident">PhantomData</span>&lt;<span class="ident">I</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">Cheap</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>: <span class="ident">Clone</span>&gt; <span class="ident">Cheap</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
     <span class="doccomment">/// Returns the span that the error occured at.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">S</span> {
         <span class="self">self</span>.<span class="ident">span</span>.<span class="ident">clone</span>()
     }
 
     <span class="doccomment">/// Returns the error&#39;s label, if any.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">label</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>&gt; {
         <span class="self">self</span>.<span class="ident">label</span>
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span>: <span class="ident">Span</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Cheap</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Span</span> <span class="op">=</span> <span class="ident">S</span>;
-    <span class="kw">type</span> <span class="ident">Label</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
+<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>: <span class="ident">Span</span> + <span class="ident">Clone</span> + <span class="ident">fmt::Debug</span>&gt; <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt; <span class="kw">for</span> <span class="ident">Cheap</span>&lt;<span class="ident">I</span>, <span class="ident">S</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Span</span> = <span class="ident">S</span>;
+    <span class="kw">type</span> <span class="ident">Label</span> = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
 
-    <span class="kw">fn</span> <span class="ident">expected_input_found</span><span class="op">&lt;</span><span class="ident">Iter</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">expected_input_found</span>&lt;<span class="ident">Iter</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;&gt;&gt;(
         <span class="ident">span</span>: <span class="ident"><span class="self">Self</span>::Span</span>,
         <span class="kw">_</span>: <span class="ident">Iter</span>,
-        <span class="kw">_</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+        <span class="kw">_</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">I</span>&gt;,
     ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">span</span>,
@@ -831,13 +831,13 @@
 
 <span class="doccomment">/// An internal type used to facilitate error prioritisation. You shouldn&#39;t need to interact with this type during</span>
 <span class="doccomment">/// normal use of the crate.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">at</span>: <span class="ident">usize</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">error</span>: <span class="ident">E</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">phantom</span>: <span class="ident">PhantomData</span>&lt;<span class="ident">I</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; {
     <span class="doccomment">/// Create a new [`Located`] with the give input position and error.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">at</span>(<span class="ident">at</span>: <span class="ident">usize</span>, <span class="ident">error</span>: <span class="ident">E</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
@@ -848,8 +848,8 @@
     }
 
     <span class="doccomment">/// Get the maximum of two located errors. If they hold the same position in the input, merge them.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">other</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">other</span>.<span class="ident">into</span>() {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;&gt;) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">other</span> = <span class="kw">match</span> <span class="ident">other</span>.<span class="ident">into</span>() {
             <span class="prelude-val">Some</span>(<span class="ident">other</span>) =&gt; <span class="ident">other</span>,
             <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="self">self</span>,
         };
@@ -864,7 +864,7 @@
     }
 
     <span class="doccomment">/// Map the error with the given function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span><span class="op">&lt;</span><span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">E</span>) -&gt; <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">map</span>&lt;<span class="ident">U</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">E</span>) -&gt; <span class="ident">U</span>&gt;(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">U</span>&gt; {
         <span class="ident">Located</span> {
             <span class="ident">at</span>: <span class="self">self</span>.<span class="ident">at</span>,
             <span class="ident">error</span>: <span class="ident">f</span>(<span class="self">self</span>.<span class="ident">error</span>),
@@ -874,21 +874,21 @@
 }
 
 <span class="comment">// Merge two alternative errors</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">merge_alts</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-    <span class="kw-2">mut</span> <span class="ident">error</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">merge_alts</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">T</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;&gt;&gt;(
+    <span class="kw-2">mut</span> <span class="ident">error</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;&gt;,
     <span class="ident">errors</span>: <span class="ident">T</span>,
-) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Located</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;&gt; {
     <span class="kw">for</span> <span class="ident">other</span> <span class="kw">in</span> <span class="ident">errors</span> {
         <span class="kw">match</span> (<span class="ident">error</span>, <span class="ident">other</span>) {
             (<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="ident">b</span>) =&gt; {
-                <span class="ident">error</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">b</span>.<span class="ident">max</span>(<span class="ident">a</span>));
+                <span class="ident">error</span> = <span class="prelude-val">Some</span>(<span class="ident">b</span>.<span class="ident">max</span>(<span class="ident">a</span>));
             }
             (<span class="prelude-val">None</span>, <span class="ident">b</span>) =&gt; {
-                <span class="ident">error</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">b</span>);
+                <span class="ident">error</span> = <span class="prelude-val">Some</span>(<span class="ident">b</span>);
             }
         }
     }
     <span class="ident">error</span>
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

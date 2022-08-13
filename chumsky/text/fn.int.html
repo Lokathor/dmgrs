@@ -5,7 +5,7 @@ has length one.</p>
 when <code>C</code> is <a href="https://doc.rust-lang.org/nightly/std/primitive.u8.html" title="u8"><code>u8</code></a>).</p>
 <p>The <code>radix</code> parameter functions identically to <a href="https://doc.rust-lang.org/nightly/std/primitive.char.html#method.is_digit" title="char::is_digit"><code>char::is_digit</code></a>. If in doubt, choose <code>10</code>.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">dec</span> <span class="op">=</span> <span class="ident">text::int</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="number">10</span>)
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">dec</span> = <span class="ident">text::int</span>::&lt;<span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(<span class="number">10</span>)
     .<span class="ident">then_ignore</span>(<span class="ident">end</span>());
 
 <span class="macro">assert_eq!</span>(<span class="ident">dec</span>.<span class="ident">parse</span>(<span class="string">&quot;0&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;0&quot;</span>.<span class="ident">to_string</span>()));
@@ -14,11 +14,11 @@ when <code>C</code> is <a href="https://doc.rust-lang.org/nightly/std/primitive.
 <span class="comment">// No leading zeroes are permitted!</span>
 <span class="macro">assert!</span>(<span class="ident">dec</span>.<span class="ident">parse</span>(<span class="string">&quot;04&quot;</span>).<span class="ident">is_err</span>());
 
-<span class="kw">let</span> <span class="ident">hex</span> <span class="op">=</span> <span class="ident">text::int</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="number">16</span>)
+<span class="kw">let</span> <span class="ident">hex</span> = <span class="ident">text::int</span>::&lt;<span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(<span class="number">16</span>)
     .<span class="ident">then_ignore</span>(<span class="ident">end</span>());
 
 <span class="macro">assert_eq!</span>(<span class="ident">hex</span>.<span class="ident">parse</span>(<span class="string">&quot;2A&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;2A&quot;</span>.<span class="ident">to_string</span>()));
 <span class="macro">assert_eq!</span>(<span class="ident">hex</span>.<span class="ident">parse</span>(<span class="string">&quot;d&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;d&quot;</span>.<span class="ident">to_string</span>()));
 <span class="macro">assert_eq!</span>(<span class="ident">hex</span>.<span class="ident">parse</span>(<span class="string">&quot;b4&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;b4&quot;</span>.<span class="ident">to_string</span>()));
 <span class="macro">assert!</span>(<span class="ident">hex</span>.<span class="ident">parse</span>(<span class="string">&quot;0B&quot;</span>).<span class="ident">is_err</span>());</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

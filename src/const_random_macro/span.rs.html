@@ -102,18 +102,18 @@
 <span class="kw">use</span> <span class="ident">tiny_keccak</span>::{<span class="ident">Hasher</span>, <span class="ident">Sha3</span>};
 
 <span class="macro">lazy_static!</span> {
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SEED</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="macro">option_env!</span>(<span class="string">&quot;CONST_RANDOM_SEED&quot;</span>) {
+    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SEED</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt; = {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) = <span class="macro">option_env!</span>(<span class="string">&quot;CONST_RANDOM_SEED&quot;</span>) {
             <span class="ident">value</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>()
         } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">32</span>];
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> = [<span class="number">0u8</span>; <span class="number">32</span>];
             <span class="ident">getrandom::getrandom</span>(<span class="kw-2">&amp;mut</span> <span class="ident">value</span>).<span class="ident">unwrap</span>();
             <span class="ident">value</span>.<span class="ident">to_vec</span>()
         }
     };
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">gen_random</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Random</span><span class="op">&gt;</span>() -&gt; <span class="ident">T</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">gen_random</span>&lt;<span class="ident">T</span>: <span class="ident">Random</span>&gt;() -&gt; <span class="ident">T</span> {
     <span class="ident">Random::random</span>()
 }
 
@@ -122,8 +122,8 @@
 }
 
 <span class="kw">fn</span> <span class="ident">hash_stuff</span>() -&gt; <span class="kw">impl</span> <span class="ident">Hasher</span> {
-    <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="ident">Span::call_site</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha3::v256</span>();
+    <span class="kw">let</span> <span class="ident">span</span> = <span class="ident">Span::call_site</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> = <span class="ident">Sha3::v256</span>();
     <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">SEED</span>);
     <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">span</span>).<span class="ident">as_bytes</span>());
     <span class="ident">hasher</span>
@@ -131,7 +131,7 @@
 
 <span class="kw">impl</span> <span class="ident">Random</span> <span class="kw">for</span> <span class="ident">u64</span> {
     <span class="kw">fn</span> <span class="ident">random</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">8</span>];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> = [<span class="number">0</span>; <span class="number">8</span>];
         <span class="ident">hash_stuff</span>().<span class="ident">finalize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">output</span>);
         <span class="ident"><span class="self">Self</span>::from_ne_bytes</span>(<span class="ident">output</span>)
     }
@@ -139,7 +139,7 @@
 
 <span class="kw">impl</span> <span class="ident">Random</span> <span class="kw">for</span> <span class="ident">u128</span> {
     <span class="kw">fn</span> <span class="ident">random</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">16</span>];
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> = [<span class="number">0</span>; <span class="number">16</span>];
         <span class="ident">hash_stuff</span>().<span class="ident">finalize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">output</span>);
         <span class="ident"><span class="self">Self</span>::from_ne_bytes</span>(<span class="ident">output</span>)
     }
@@ -193,4 +193,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="const_random_macro" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="const_random_macro" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

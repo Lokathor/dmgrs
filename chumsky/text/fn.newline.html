@@ -12,7 +12,7 @@
 <li>Paragraph separator (<code>\u{2029}</code>)</li>
 </ul>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">newline</span> <span class="op">=</span> <span class="ident">text::newline</span>::<span class="op">&lt;</span><span class="ident">Simple</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">newline</span> = <span class="ident">text::newline</span>::&lt;<span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;()
     .<span class="ident">then_ignore</span>(<span class="ident">end</span>());
 
 <span class="macro">assert_eq!</span>(<span class="ident">newline</span>.<span class="ident">parse</span>(<span class="string">&quot;\n&quot;</span>), <span class="prelude-val">Ok</span>(()));
@@ -23,4 +23,4 @@
 <span class="macro">assert_eq!</span>(<span class="ident">newline</span>.<span class="ident">parse</span>(<span class="string">&quot;\u{0085}&quot;</span>), <span class="prelude-val">Ok</span>(()));
 <span class="macro">assert_eq!</span>(<span class="ident">newline</span>.<span class="ident">parse</span>(<span class="string">&quot;\u{2028}&quot;</span>), <span class="prelude-val">Ok</span>(()));
 <span class="macro">assert_eq!</span>(<span class="ident">newline</span>.<span class="ident">parse</span>(<span class="string">&quot;\u{2029}&quot;</span>), <span class="prelude-val">Ok</span>(()));</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

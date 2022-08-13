@@ -7,9 +7,9 @@ only support parsing linear streams of inputs).</p>
 <p>For reference, <a href="https://docs.rs/syn/0.11.1/syn/enum.TokenTree.html">here</a> is <code>syn</code>’s <code>TokenTree</code> type that it
 uses when parsing Rust syntax.</p>
 <h5 id="examples"><a href="#examples">Examples</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">type</span> <span class="ident">Span</span> <span class="op">=</span> <span class="ident">std::ops::Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">type</span> <span class="ident">Span</span> = <span class="ident">std::ops::Range</span>&lt;<span class="ident">usize</span>&gt;;
 
-<span class="kw">fn</span> <span class="ident">span_at</span>(<span class="ident">at</span>: <span class="ident">usize</span>) -&gt; <span class="ident">Span</span> { <span class="ident">at</span>..<span class="ident">at</span> <span class="op">+</span> <span class="number">1</span> }
+<span class="kw">fn</span> <span class="ident">span_at</span>(<span class="ident">at</span>: <span class="ident">usize</span>) -&gt; <span class="ident">Span</span> { <span class="ident">at</span>..<span class="ident">at</span> + <span class="number">1</span> }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">enum</span> <span class="ident">Token</span> {
@@ -34,28 +34,28 @@ uses when parsing Rust syntax.</p>
 <span class="comment">// See: https://docs.rs/syn/0.11.1/syn/enum.TokenTree.html</span>
 <span class="kw">enum</span> <span class="ident">TokenTree</span> {
     <span class="ident">Token</span>(<span class="ident">Token</span>),
-    <span class="ident">Tree</span>(<span class="ident">Delimiter</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">TokenTree</span>, <span class="ident">Span</span>)<span class="op">&gt;</span>),
+    <span class="ident">Tree</span>(<span class="ident">Delimiter</span>, <span class="ident">Vec</span>&lt;(<span class="ident">TokenTree</span>, <span class="ident">Span</span>)&gt;),
 }
 
 <span class="comment">// A function that turns a series of nested token trees into a linear stream that can be used for parsing.</span>
-<span class="kw">fn</span> <span class="ident">flatten_tts</span>(<span class="ident">eoi</span>: <span class="ident">Span</span>, <span class="ident">token_trees</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">TokenTree</span>, <span class="ident">Span</span>)<span class="op">&gt;</span>) -&gt; <span class="ident">BoxStream</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">Token</span>, <span class="ident">Span</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">flatten_tts</span>(<span class="ident">eoi</span>: <span class="ident">Span</span>, <span class="ident">token_trees</span>: <span class="ident">Vec</span>&lt;(<span class="ident">TokenTree</span>, <span class="ident">Span</span>)&gt;) -&gt; <span class="ident">BoxStream</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">Token</span>, <span class="ident">Span</span>&gt; {
     <span class="kw">use</span> <span class="ident">std::iter::once</span>;
     <span class="comment">// Currently, this is quite an explicit process: it will likely become easier in future versions of Chumsky.</span>
     <span class="ident">Stream::from_nested</span>(
         <span class="ident">eoi</span>,
         <span class="ident">token_trees</span>.<span class="ident">into_iter</span>(),
-        <span class="op">|</span>(<span class="ident">tt</span>, <span class="ident">span</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">tt</span> {
+        |(<span class="ident">tt</span>, <span class="ident">span</span>)| <span class="kw">match</span> <span class="ident">tt</span> {
             <span class="comment">// For token trees that contain just a single token, no flattening needs to occur!</span>
             <span class="ident">TokenTree::Token</span>(<span class="ident">token</span>) =&gt; <span class="ident">Flat::Single</span>((<span class="ident">token</span>, <span class="ident">span</span>)),
             <span class="comment">// Flatten a parenthesised token tree into an iterator of the inner token trees, surrounded by parenthesis tokens</span>
             <span class="ident">TokenTree::Tree</span>(<span class="ident">Delimiter::Paren</span>, <span class="ident">tree</span>) =&gt; <span class="ident">Flat::Many</span>(<span class="ident">once</span>((<span class="ident">TokenTree::Token</span>(<span class="ident">Token::OpenParen</span>), <span class="ident">span_at</span>(<span class="ident">span</span>.<span class="ident">start</span>)))
                 .<span class="ident">chain</span>(<span class="ident">tree</span>.<span class="ident">into_iter</span>())
-                .<span class="ident">chain</span>(<span class="ident">once</span>((<span class="ident">TokenTree::Token</span>(<span class="ident">Token::CloseParen</span>), <span class="ident">span_at</span>(<span class="ident">span</span>.<span class="ident">end</span> <span class="op">-</span> <span class="number">1</span>))))),
+                .<span class="ident">chain</span>(<span class="ident">once</span>((<span class="ident">TokenTree::Token</span>(<span class="ident">Token::CloseParen</span>), <span class="ident">span_at</span>(<span class="ident">span</span>.<span class="ident">end</span> - <span class="number">1</span>))))),
             <span class="comment">// Flatten a braced token tree into an iterator of the inner token trees, surrounded by brace tokens</span>
             <span class="ident">TokenTree::Tree</span>(<span class="ident">Delimiter::Brace</span>, <span class="ident">tree</span>) =&gt; <span class="ident">Flat::Many</span>(<span class="ident">once</span>((<span class="ident">TokenTree::Token</span>(<span class="ident">Token::OpenBrace</span>), <span class="ident">span_at</span>(<span class="ident">span</span>.<span class="ident">start</span>)))
                 .<span class="ident">chain</span>(<span class="ident">tree</span>.<span class="ident">into_iter</span>())
-                .<span class="ident">chain</span>(<span class="ident">once</span>((<span class="ident">TokenTree::Token</span>(<span class="ident">Token::CloseBrace</span>), <span class="ident">span_at</span>(<span class="ident">span</span>.<span class="ident">end</span> <span class="op">-</span> <span class="number">1</span>))))),
+                .<span class="ident">chain</span>(<span class="ident">once</span>((<span class="ident">TokenTree::Token</span>(<span class="ident">Token::CloseBrace</span>), <span class="ident">span_at</span>(<span class="ident">span</span>.<span class="ident">end</span> - <span class="number">1</span>))))),
         }
     )
 }</code></pre></div>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

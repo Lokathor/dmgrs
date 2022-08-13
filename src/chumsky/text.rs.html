@@ -358,7 +358,7 @@
 <span class="kw">use</span> <span class="ident">core::iter::FromIterator</span>;
 
 <span class="doccomment">/// The type of a parser that accepts (and ignores) any number of whitespace characters.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Padding</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Custom</span><span class="op">&lt;</span><span class="kw">fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">I</span>, (), <span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">E</span><span class="op">&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Padding</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; = <span class="ident">Custom</span>&lt;<span class="kw">fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt;, <span class="ident">E</span>&gt;;
 
 <span class="doccomment">/// The type of a parser that accepts (and ignores) any number of whitespace characters before or after another</span>
 <span class="doccomment">/// pattern.</span>
@@ -371,21 +371,21 @@
 
 <span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters before or after another pattern.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Padded</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="ident">A</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Padded</span>&lt;<span class="ident">A</span>&gt;(<span class="ident">A</span>);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Padded</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span>;
+<span class="kw">impl</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Padded</span>&lt;<span class="ident">A</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Debugger</span><span class="op">&gt;</span>(
+    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span><span class="op">&gt;</span> {
-        <span class="kw">while</span> <span class="ident">stream</span>.<span class="ident">skip_if</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_whitespace</span>()) {}
+        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;,
+    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
+        <span class="kw">while</span> <span class="ident">stream</span>.<span class="ident">skip_if</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="ident">is_whitespace</span>()) {}
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">parse_inner</span>(<span class="ident">debugger</span>, <span class="ident">stream</span>) {
             (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>((<span class="ident">a_out</span>, <span class="ident">a_alt</span>))) =&gt; {
-                <span class="kw">while</span> <span class="ident">stream</span>.<span class="ident">skip_if</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_whitespace</span>()) {}
+                <span class="kw">while</span> <span class="ident">stream</span>.<span class="ident">skip_if</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="ident">is_whitespace</span>()) {}
                 (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>((<span class="ident">a_out</span>, <span class="ident">a_alt</span>)))
             }
             (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)),
@@ -393,12 +393,12 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="ident">PResult</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
     }
@@ -414,16 +414,16 @@
 <span class="doccomment">/// A trait implemented by textual character types (currently, [`u8`] and [`char`]).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Avoid implementing this trait yourself if you can: it&#39;s *very* likely to be expanded in future versions!</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Character</span>: <span class="ident">private::Sealed</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">PartialEq</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Character</span>: <span class="ident">private::Sealed</span> + <span class="ident">Copy</span> + <span class="ident">PartialEq</span> {
     <span class="doccomment">/// The default unsized [`str`]-like type of a linear sequence of this character.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// For [`char`], this is [`str`]. For [`u8`], this is [`[u8]`].</span>
-    <span class="kw">type</span> <span class="ident">Str</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">PartialEq</span>;
+    <span class="kw">type</span> <span class="ident">Str</span>: <span class="question-mark">?</span><span class="ident">Sized</span> + <span class="ident">PartialEq</span>;
 
     <span class="doccomment">/// The default type that this character collects into.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// For [`char`], this is [`String`]. For [`u8`], this is [`Vec&lt;u8&gt;`].</span>
-    <span class="kw">type</span> <span class="ident">Collection</span>: <span class="ident">Chain</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">FromIterator</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Str</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
+    <span class="kw">type</span> <span class="ident">Collection</span>: <span class="ident">Chain</span>&lt;<span class="self">Self</span>&gt; + <span class="ident">FromIterator</span>&lt;<span class="self">Self</span>&gt; + <span class="ident">AsRef</span>&lt;<span class="ident"><span class="self">Self</span>::Str</span>&gt; + <span class="lifetime">&#39;static</span>;
 
     <span class="doccomment">/// Returns true if the character is canonically considered to be whitespace.</span>
     <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
@@ -439,8 +439,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Character</span> <span class="kw">for</span> <span class="ident">u8</span> {
-    <span class="kw">type</span> <span class="ident">Str</span> <span class="op">=</span> [<span class="ident">u8</span>];
-    <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Str</span> = [<span class="ident">u8</span>];
+    <span class="kw">type</span> <span class="ident">Collection</span> = <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;;
 
     <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">is_ascii_whitespace</span>()
@@ -457,8 +457,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Character</span> <span class="kw">for</span> <span class="ident">char</span> {
-    <span class="kw">type</span> <span class="ident">Str</span> <span class="op">=</span> <span class="ident">str</span>;
-    <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">String</span>;
+    <span class="kw">type</span> <span class="ident">Str</span> = <span class="ident">str</span>;
+    <span class="kw">type</span> <span class="ident">Collection</span> = <span class="ident">String</span>;
 
     <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="ident">char::is_whitespace</span>(<span class="kw-2">*</span><span class="self">self</span>)
@@ -475,7 +475,7 @@
 }
 
 <span class="doccomment">/// A trait containing text-specific functionality that extends the [`Parser`] trait.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TextParser</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Character</span>, <span class="ident">O</span><span class="op">&gt;</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TextParser</span>&lt;<span class="ident">I</span>: <span class="ident">Character</span>, <span class="ident">O</span>&gt;: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; {
     <span class="doccomment">/// Parse a pattern, ignoring any amount of whitespace both before and after the pattern.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The output type of this parser is `O`, the same as the original parser.</span>
@@ -491,7 +491,7 @@
     <span class="doccomment">/// // A pattern with arbitrary whitespace surrounding it is also accepted</span>
     <span class="doccomment">/// assert_eq!(ident.parse(&quot; \t \n  \t   world  \t  &quot;), Ok(&quot;world&quot;.to_string()));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">padded</span>(<span class="self">self</span>) -&gt; <span class="ident">Padded</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">padded</span>(<span class="self">self</span>) -&gt; <span class="ident">Padded</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -500,7 +500,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Character</span>, <span class="ident">O</span>, <span class="ident">P</span>: <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">TextParser</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">P</span> {}
+<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Character</span>, <span class="ident">O</span>, <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;&gt; <span class="ident">TextParser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">P</span> {}
 
 <span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters.</span>
 <span class="doccomment">///</span>
@@ -517,10 +517,10 @@
 <span class="doccomment">/// // ...including none at all!</span>
 <span class="doccomment">/// assert_eq!(whitespace.parse(&quot;&quot;), Ok(()));</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span>() -&gt; <span class="ident">Padding</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span><span class="op">&gt;</span> {
-    <span class="ident">custom</span>(<span class="op">|</span><span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span><span class="op">&gt;</span><span class="op">|</span> <span class="kw">loop</span> {
-        <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">stream</span>.<span class="ident">save</span>();
-        <span class="kw">if</span> <span class="ident">stream</span>.<span class="ident">next</span>().<span class="number">2</span>.<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="op">!</span><span class="ident">b</span>.<span class="ident">is_whitespace</span>()) {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;() -&gt; <span class="ident">Padding</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt; {
+    <span class="ident">custom</span>(|<span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;| <span class="kw">loop</span> {
+        <span class="kw">let</span> <span class="ident">state</span> = <span class="ident">stream</span>.<span class="ident">save</span>();
+        <span class="kw">if</span> <span class="ident">stream</span>.<span class="ident">next</span>().<span class="number">2</span>.<span class="ident">map_or</span>(<span class="bool-val">true</span>, |<span class="ident">b</span>| !<span class="ident">b</span>.<span class="ident">is_whitespace</span>()) {
             <span class="ident">stream</span>.<span class="ident">revert</span>(<span class="ident">state</span>);
             <span class="kw">break</span> (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>)));
         }
@@ -558,7 +558,7 @@
 <span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{2028}&quot;), Ok(()));</span>
 <span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{2029}&quot;), Ok(()));</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">newline</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span><span class="op">&gt;</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">char</span>, (), <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">newline</span>&lt;<span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">char</span>&gt;&gt;() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
     <span class="ident">just</span>(<span class="string">&#39;\r&#39;</span>)
         .<span class="ident">or_not</span>()
         .<span class="ident">ignore_then</span>(<span class="ident">just</span>(<span class="string">&#39;\n&#39;</span>))
@@ -592,10 +592,10 @@
 <span class="doccomment">/// assert_eq!(digits.parse(&quot;0000&quot;), Ok(&quot;0000&quot;.to_string()));</span>
 <span class="doccomment">/// assert!(digits.parse(&quot;&quot;).is_err());</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">digits</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">digits</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;(
     <span class="ident">radix</span>: <span class="ident">u32</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> {
-    <span class="ident">filter</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>))
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
+    <span class="ident">filter</span>(<span class="kw">move</span> |<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>))
         .<span class="ident">repeated</span>()
         .<span class="ident">at_least</span>(<span class="number">1</span>)
         .<span class="ident">collect</span>()
@@ -632,14 +632,14 @@
 <span class="doccomment">/// assert_eq!(hex.parse(&quot;b4&quot;), Ok(&quot;b4&quot;.to_string()));</span>
 <span class="doccomment">/// assert!(hex.parse(&quot;0B&quot;).is_err());</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">int</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">int</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;(
     <span class="ident">radix</span>: <span class="ident">u32</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> {
-    <span class="ident">filter</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>) <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">C::digit_zero</span>())
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
+    <span class="ident">filter</span>(<span class="kw">move</span> |<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>) &amp;&amp; <span class="ident">c</span> != <span class="kw-2">&amp;</span><span class="ident">C::digit_zero</span>())
         .<span class="ident">map</span>(<span class="prelude-val">Some</span>)
-        .<span class="ident">chain</span>::<span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">filter</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>)).<span class="ident">repeated</span>())
+        .<span class="ident">chain</span>::&lt;<span class="ident">C</span>, <span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;(<span class="ident">filter</span>(<span class="kw">move</span> |<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>)).<span class="ident">repeated</span>())
         .<span class="ident">collect</span>()
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="ident">C::digit_zero</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">core::iter::once</span>(<span class="ident">c</span>).<span class="ident">collect</span>()))
+        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="ident">C::digit_zero</span>()).<span class="ident">map</span>(|<span class="ident">c</span>| <span class="ident">core::iter::once</span>(<span class="ident">c</span>).<span class="ident">collect</span>()))
 }
 
 <span class="doccomment">/// A parser that accepts a C-style identifier.</span>
@@ -649,12 +649,12 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// An identifier is defined as an ASCII alphabetic character or an underscore followed by any number of alphanumeric</span>
 <span class="doccomment">/// characters or underscores. The regex pattern for it is `[a-zA-Z_][a-zA-Z0-9_]*`.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ident</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ident</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span>
 {
-    <span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphabetic</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">to_char</span>() <span class="op">==</span> <span class="string">&#39;_&#39;</span>)
+    <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphabetic</span>() || <span class="ident">c</span>.<span class="ident">to_char</span>() == <span class="string">&#39;_&#39;</span>)
         .<span class="ident">map</span>(<span class="prelude-val">Some</span>)
-        .<span class="ident">chain</span>::<span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-            <span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphanumeric</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">to_char</span>() <span class="op">==</span> <span class="string">&#39;_&#39;</span>).<span class="ident">repeated</span>(),
+        .<span class="ident">chain</span>::&lt;<span class="ident">C</span>, <span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;(
+            <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphanumeric</span>() || <span class="ident">c</span>.<span class="ident">to_char</span>() == <span class="string">&#39;_&#39;</span>).<span class="ident">repeated</span>(),
         )
         .<span class="ident">collect</span>()
 }
@@ -676,12 +676,12 @@
 <span class="doccomment">/// // &#39;def&#39; was found, but only as part of a larger identifier, so this fails to parse</span>
 <span class="doccomment">/// assert!(def.parse(&quot;define&quot;).is_err());</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyword</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>, <span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">C::Str</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyword</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">S</span>: <span class="ident">AsRef</span>&lt;<span class="ident">C::Str</span>&gt; + <span class="lifetime">&#39;a</span> + <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
     <span class="ident">keyword</span>: <span class="ident">S</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="ident">C</span>, (), <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> {
+) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span> {
     <span class="comment">// TODO: use .filter(...), improve error messages</span>
-    <span class="ident">ident</span>().<span class="ident">try_map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">s</span>: <span class="ident">C::Collection</span>, <span class="ident">span</span><span class="op">|</span> {
-        <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">as_ref</span>() <span class="op">==</span> <span class="ident">keyword</span>.<span class="ident">as_ref</span>() {
+    <span class="ident">ident</span>().<span class="ident">try_map</span>(<span class="kw">move</span> |<span class="ident">s</span>: <span class="ident">C::Collection</span>, <span class="ident">span</span>| {
+        <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">as_ref</span>() == <span class="ident">keyword</span>.<span class="ident">as_ref</span>() {
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(<span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>))
@@ -689,4 +689,4 @@
     })
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (20ffea693 2022-08-11)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
