@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["lexer","This “lexes” source files."],["parser","Parses stuff, mostly with the [chumsky] crate."]]};
+window.SIDEBAR_ITEMS = {"mod":[["lexer","Stuff that “lexes” source text into “lexemes”."],["parser","Parses stuff, mostly with the [chumsky] crate."]]};
