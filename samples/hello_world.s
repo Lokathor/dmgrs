@@ -10,6 +10,10 @@
 // The code is based on the CC0 licensed hello-world, from the GB Asm Tutorial:
 // https://eldred.fr/gb-asm-tutorial/assets/hello-world.asm
 
+// Theoretically some sort of `use` and module system could be nice? but
+// "everything in one file" is also fine enough since probably i'll be the only
+// person ever to program with this goofy thing.
+
 // Like in rust, a `const` is a value that you can use during compilaion
 // anywhere that you'd need an integer literal. They don't take up any runtime
 // space. Limited math is supported within const expressions, using `u16` as the
@@ -20,11 +24,6 @@
 
 const NR52 = $FF26; // hex literals start with $
 const LCDC = $FF40;
-// an example use of a "macro", in this case it just gives `1<<N`, but the name
-// helps make the intent clear. Macros are just functions built into the
-// compiler that do various bespoke things. I should really stop calling them
-// macros and come up with some other name because every time i say it people
-// think they're something different. Directives? Builtins? Something else?
 const LCDC_LCD_ON = bit!(7); 
 const LCDC_WIN_TILEMAP1 = bit!(6);
 const LCDC_WIN_ON = bit!(5);
@@ -37,6 +36,21 @@ const LY = $FF44;
 const BGP = $FF47;
 const VRAM_BLOCK2 = $9000;
 const TILEMAP0 = $9800;
+
+// The "macros" are made to look like rust macros, but they're just built-in
+// functions of the compiler you can use. They're not intended to be anything
+// that the user can create themselves. I probably should *stop* calling them
+// macros, since everyone has a separate idea of what that means anyway. Maybe
+// calling them the "directives" of this compiler might work. Or "intrinsics"?
+// * `bit` turns a number of a bit (0-7) into the correct bit value. Not fancy,
+//   but lets you signal the intent.
+// * `size_of_val` gets you the byte size of a static, and i guess it could work
+//   on functions too.
+// * `include_bytes` lets you grab a file on disk and stick the raw bytes as the
+//   value of a `static`.
+// * `gfx` lets you make an ascii art and then it's turned into data usable for
+//   graphics. We might want two different things here, one for declaring tiles,
+//   and another for declaring the tile maps.
 
 // Each function is its own output section and label.
 
