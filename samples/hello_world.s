@@ -6,6 +6,7 @@
 // aren't really planned because this is all more like an experiment to goof
 // around with the language part of things.
 #![mbc(rom_only)]
+#![title="demo title"]
 
 // The code is based on the CC0 licensed hello-world, from the GB Asm Tutorial:
 // https://eldred.fr/gb-asm-tutorial/assets/hello-world.asm
@@ -229,7 +230,6 @@ static TileMap: [u8] = [
 	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0,
 	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00,  0,0,0,0,0,0,0,0,0,0,0,0,
 ];
-
 
 // Here is the list of supported instruction mnemonics. Within an actual program
 // they're case-insensitive, but for this example list the case matters.
