@@ -214,7 +214,7 @@ impl core::fmt::Debug for DmgToken {
       // other payload variants print their payload
       DmgToken::Punctuation(p) => write!(f, "Punctuation({p:?})"),
       DmgToken::Ident(i) => write!(f, "Ident({i:?})"),
-      DmgToken::StrLiteral(s) => write!(f, "Punctuation({s:?})"),
+      DmgToken::StrLiteral(s) => write!(f, "StrLiteral({s:?})"),
 
       // empty variants just print their name
       DmgToken::Error => write!(f, stringify!(Error)),
