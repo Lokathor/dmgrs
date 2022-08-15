@@ -226,8 +226,6 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Stuff that &quot;lexes&quot; source text into &quot;lexemes&quot;.
 //!
 //! Use the `DmgToken` enum and the [`Logos`](logos::Logos) trait to lex a
@@ -265,9 +263,7 @@
 
 <span class="kw">use crate</span>::{intern_str_impl::intern_str, StaticStr};
 
-<span class="comment">// TODO: probably the register names should ALSO have empty variants.
-
-</span><span class="doccomment">/// The possible tokens within a Dmgrs program.
+<span class="doccomment">/// The possible tokens within a Dmgrs program.
 ///
 /// At this early stage of the processing all keywords, instructions, and
 /// register names just count as an &quot;ident&quot;. A simple string interning mechanism
