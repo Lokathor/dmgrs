@@ -23,7 +23,7 @@
 // const fits into that smaller integer type (127 fits into a `u8`, and 5 fits
 // into a `u3`). If the value does not fit, a compile error is generated.
 
-const NR52 = $FF26; // hex literals start with $
+const NR52 = $FF26; // hex literals start with $ or 0x, interior _ is allowed
 const LCDC = $FF40;
 const LCDC_LCD_ON = bit!(7); 
 const LCDC_WIN_TILEMAP1 = bit!(6);
@@ -73,7 +73,7 @@ fn main -> ! {
   // Wait for VBlank to turn off LCD
   loop {
     ld a, [LY]
-    cp 144
+    cp 144 // decimal literals don't have a prefix, interior _ is allowed.
     // the end of every loop must explicitly state when to break or continue the
     // loop. You could also use break or continue at other points of the loop
     // body if you want to continue the loop early for example.
@@ -105,7 +105,7 @@ fn main -> ! {
 
   // set the four background palette indexes:
   // 2-bits each, low to high bits
-  ld a, %11_10_01_00 // binary literals start with %
+  ld a, %11_10_01_00 // binary literals start with % or 0b, interior _ is allowed
   ld [BGP], a
 
   // just spin loop, our demo has nothing else to do.
