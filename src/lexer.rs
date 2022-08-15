@@ -40,7 +40,7 @@ use crate::{intern_str_impl::intern_str, StaticStr};
 /// At this early stage of the processing all keywords, instructions, and
 /// register names just count as an "ident". A simple string interning mechanism
 /// is used, so it's not a super allocation fest to do this.
-#[derive(Clone, Copy, PartialEq, Eq, Logos)] // Note: custom Debug at the end of the file
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Logos)] // Note: custom Debug at the end of the file
 pub enum DmgToken {
   /// An error during lexing.
   #[error]
@@ -69,7 +69,7 @@ pub enum DmgToken {
   /// A punctuation character (using the `[:punct:]` regex class) that does
   /// *not* match any other case.
   #[regex(r"[[:punct:]]", |lex| lex.slice().chars().next().unwrap())]
-  Punctuation(char),
+  Punct(char),
 
   /// A standard identifier in C-style langs: `[_a-zA-Z][_a-zA-Z0-9]*`
   ///
@@ -88,7 +88,7 @@ pub enum DmgToken {
   /// front and then requiring the rest of the literal to not be a quote or
   /// escape (that would start with `\`)"
   #[regex(r#""((\\"|\\\\)|[^\\"])*""#, |lex| {let s = lex.slice(); intern_str(&s[1..s.len()-1]) })]
-  StrLiteral(StaticStr),
+  Str(StaticStr),
 
   /// The digits of a binary literal (no prefix).
   ///
@@ -113,20 +113,38 @@ pub enum DmgToken {
   HexLiteral(u16),
 }
 impl DmgToken {
-  /// Gets the number out of the lexeme, if any.
-  ///
-  /// ```
-  /// # use dmgrs::lexer::DmgToken;
-  /// use DmgToken::*;
-  /// assert_eq!(DecimalLiteral(123).get_number(), Some(123));
-  /// assert_eq!(Punctuation('.').get_number(), None);
-  /// ```
-  pub const fn get_number(&self) -> Option<u16> {
+  /// If this token is an `Ident`
+  pub const fn is_ident(&self) -> bool {
     match self {
-      Self::BinaryLiteral(n) => Some(*n),
-      Self::DecimalLiteral(n) => Some(*n),
-      Self::HexLiteral(n) => Some(*n),
-      _ => None,
+      Self::Ident(_) => true,
+      _ => false,
+    }
+  }
+
+  /// Unwraps the `Ident` content
+  pub const fn unwrap_ident(self) -> StaticStr {
+    match self {
+      Self::Ident(i) => i,
+      _ => panic!("unwrapped a non-ident"),
+    }
+  }
+
+  /// If this token is any number token
+  pub const fn is_number(&self) -> bool {
+    match self {
+      Self::BinaryLiteral(_) => true,
+      Self::DecimalLiteral(_) => true,
+      Self::HexLiteral(_) => true,
+      _ => false,
+    }
+  }
+  /// Unwraps the number inside.
+  pub const fn unwrap_number(self) -> u16 {
+    match self {
+      Self::BinaryLiteral(n) => n,
+      Self::DecimalLiteral(n) => n,
+      Self::HexLiteral(n) => n,
+      _ => panic!("unwrapped a non-number"),
     }
   }
 }
@@ -210,9 +228,9 @@ impl core::fmt::Debug for DmgToken {
       DmgToken::HexLiteral(n) => write!(f, "HexLiteral(0x{n:X})"),
 
       // other payload variants print their payload
-      DmgToken::Punctuation(p) => write!(f, "Punctuation({p:?})"),
+      DmgToken::Punct(p) => write!(f, "Punct({p:?})"),
       DmgToken::Ident(i) => write!(f, "Ident({i:?})"),
-      DmgToken::StrLiteral(s) => write!(f, "StrLiteral({s:?})"),
+      DmgToken::Str(s) => write!(f, "Str({s:?})"),
 
       // empty variants just print their name
       DmgToken::Error => write!(f, stringify!(Error)),
