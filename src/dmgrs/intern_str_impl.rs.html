@@ -117,15 +117,15 @@
 ///
 /// Most importantly, this will allocate a new RwLock on the first call.
 </span><span class="kw">fn </span>get_str_db_rw_lock_ref() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>RwLockHashSetStaticStr {
-  <span class="kw">let </span>p: <span class="kw-2">*mut </span>RwLockHashSetStaticStr = STR_DB_PTR.load(Ordering::SeqCst);
+  <span class="kw">let </span>p: <span class="kw-2">*mut </span>RwLockHashSetStaticStr = STR_DB_PTR.load(Ordering::Acquire);
   <span class="kw">if </span>p.is_null() {
     <span class="kw">let </span>new_p: <span class="kw-2">*mut </span>RwLockHashSetStaticStr =
       Box::leak(Box::new(RwLock::default()));
     <span class="kw">match </span>STR_DB_PTR.compare_exchange(
       null_mut(),
       new_p,
-      Ordering::SeqCst,
-      Ordering::SeqCst,
+      Ordering::AcqRel,
+      Ordering::Acquire,
     ) {
       <span class="prelude-val">Ok</span>(_old_p) =&gt; <span class="kw">unsafe </span>{
         <span class="comment">// if ok, then old_p is a null, and we return the reference to new_p
