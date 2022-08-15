@@ -2,235 +2,117 @@
 
 use std::ops::Range;
 
+#[allow(unused)]
 use chumsky::{
-  prelude::*,
-  text::{ident, newline},
+  prelude::Simple,
+  primitive::{end, filter, just},
+  Parser,
+};
+use chumsky::{primitive::none_of, recursive::recursive};
+
+use crate::{
+  lexer::{DmgToken, DmgToken::*},
+  StaticStr,
 };
 
-/// Boxed str, but easier to type without the `<>`.
-pub type BoxStr = Box<str>;
-
-/// GB Binary literals are prefixed with `%`, then 0-1, with `_` allowed.
-pub fn gb_binary_literal() -> impl Parser<char, u16, Error = Simple<char>> {
-  let underscores = just('_').ignored().repeated();
-  just('%').ignore_then(
-    filter(|c: &char| c.is_digit(2))
-      .padded_by(underscores)
-      .repeated()
-      .at_least(1)
-      .collect::<String>()
-      .try_map(|s: String, span| {
-        u16::from_str_radix(&s, 2)
-          .map_err(|why| Simple::custom(span, format!("{why:?}")))
-      }),
-  )
-}
-#[test]
-fn test_gb_binary_literal() {
-  let p = gb_binary_literal().then_ignore(end());
-  for num in [0, 1, 76, 89, 255, 256, 492, 11489, u16::MAX] {
-    assert_eq!(p.parse(format!("%{num:b}")), Ok(num));
-    assert_eq!(p.parse(format!("%{num:016b}")), Ok(num));
-  }
-  assert_eq!(p.parse(format!("%1010_1111")), Ok(0b1010_1111));
-  assert_eq!(p.parse(format!("%__1010_1111")), Ok(0b1010_1111));
-  assert_eq!(p.parse(format!("%1010_1111____")), Ok(0b1010_1111));
-}
-
-/// GB Hex literals are prefixed with `$`, then 0-F, with `_` allowed.
-pub fn gb_hex_literal() -> impl Parser<char, u16, Error = Simple<char>> {
-  let underscores = just('_').ignored().repeated();
-  just('$').ignore_then(
-    filter(|c: &char| c.is_digit(16))
-      .padded_by(underscores)
-      .repeated()
-      .at_least(1)
-      .collect::<String>()
-      .try_map(|s: String, span| {
-        u16::from_str_radix(&s, 16)
-          .map_err(|why| Simple::custom(span, format!("{why:?}")))
-      }),
-  )
-}
-#[test]
-fn test_gb_hex_literal() {
-  let p = gb_hex_literal().then_ignore(end());
-  for num in [0, 1, 76, 89, 255, 256, 492, 11489, u16::MAX] {
-    assert_eq!(p.parse(format!("${num:x}")), Ok(num));
-    assert_eq!(p.parse(format!("${num:08x}")), Ok(num));
-    assert_eq!(p.parse(format!("${num:X}")), Ok(num));
-    assert_eq!(p.parse(format!("${num:08X}")), Ok(num));
-  }
-  assert_eq!(p.parse(format!("$CF_AB")), Ok(0xCF_AB));
-  assert_eq!(p.parse(format!("$__00_FF")), Ok(0x__00_FF));
-  assert_eq!(p.parse(format!("$A___")), Ok(0xA___));
-}
-
-/// Multi-line comments start with `/*` and end with `*/`
-///
-/// As the name implies, there can be newlines within the comment
-pub fn multi_line_comment() -> impl Parser<char, (), Error = Simple<char>> {
-  just("/*").then(take_until(just("*/"))).ignored()
-}
-#[test]
-fn test_multi_line_comment() {
-  let p = multi_line_comment().then_ignore(end());
-  assert_eq!(p.parse("/* multi \n line \n comment */"), Ok(()));
-}
-
-/// Horizontal space doesn't advance to the next statement
-///
-/// * spaces
-/// * tabs
-/// * multi-line comments (which "count as" one space).
-pub fn horizontal_space() -> impl Parser<char, (), Error = Simple<char>> {
-  let space = just(' ').ignored();
-  let tab = just('\t').ignored();
-  let multi = multi_line_comment();
-  choice((space, tab, multi)).repeated().ignored()
-}
-#[test]
-fn test_horizontal_space() {
-  let p = horizontal_space().then_ignore(end());
-  assert_eq!(p.parse(""), Ok(()));
-  assert_eq!(p.parse(" "), Ok(()));
-  assert_eq!(p.parse("\t"), Ok(()));
-  assert_eq!(p.parse("   \t   \t  "), Ok(()));
-  assert_eq!(p.parse("  /* hello there \n general kenobi */ \t  "), Ok(()));
-}
-
-/// A [`newline`](chumsky::text::newline) implicitly ends all statements in
-/// Dmgrs.
-///
-/// * [`horizontal_space`] can come before the end of the statement.
-/// * By using `//`, text until the newline becomes a comment.
-/// * For these purposes, the end of input counts as "a newline".
-pub fn end_of_statement() -> impl Parser<char, (), Error = Simple<char>> {
-  let instant_newline = newline();
-  let eol_comment =
-    just("//").ignored().then(take_until(newline().or(end()))).ignored();
-
-  horizontal_space()
-    .ignored()
-    .then(choice((end(), instant_newline, eol_comment)))
-    .ignored()
-}
-#[test]
-fn test_end_of_statement() {
-  let p = end_of_statement().then_ignore(end());
-  assert_eq!(p.parse(""), Ok(()));
-  assert_eq!(p.parse(" \t "), Ok(()));
-  assert_eq!(p.parse("\n"), Ok(()));
-  assert_eq!(p.parse(" // EOL comment before EOF"), Ok(()));
-  assert_eq!(p.parse(" // EOL comment then newline\n"), Ok(()));
-}
-
-/// See [`program_attribute`]
-#[derive(Debug, Clone)]
-pub struct ProgramAttribute {
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct ProgramAttr {
   span: Range<usize>,
-  text: BoxStr,
+  tokens: Vec<DmgToken>,
 }
-
-/// Program attributes are like `#![words here]`.
-///
-/// The output is the text between the brackets.
-pub fn program_attribute(
-) -> impl Parser<char, ProgramAttribute, Error = Simple<char>> {
-  just("#!")
-    .ignore_then(
-      filter(|c: &char| *c != ']')
+impl ProgramAttr {
+  fn parser() -> impl Parser<DmgToken, Self, Error = Simple<DmgToken>> {
+    just(Punct('#')).ignore_then(just(Punct('!'))).ignore_then(
+      filter(|t: &DmgToken| *t != Punct(']'))
         .repeated()
-        .collect::<String>()
-        .delimited_by(just('['), just(']')),
+        .collect::<Vec<_>>()
+        .delimited_by(just(Punct('[')), just(Punct(']')))
+        .map_with_span(|tokens, span| ProgramAttr { span, tokens }),
     )
-    .map_with_span(|string, span| ProgramAttribute {
-      text: string.into_boxed_str(),
-      span,
-    })
-}
-#[test]
-fn test_program_attribute() {
-  let p = program_attribute().then_ignore(end());
-  assert_eq!(p.parse("#![]").unwrap().text, box_str!(""));
-  assert_eq!(p.parse("#![foo bar]").unwrap().text, box_str!("foo bar"));
-}
-
-/// See [`macro_invocation`]
-#[derive(Debug, Clone)]
-pub struct MacroInvocation {
-  span: Range<usize>,
-  name: BoxStr,
-  content: BoxStr,
-}
-/// Macros are invoked with `name!(words here)`
-///
-/// The output is the text between the brackets.
-pub fn macro_invocation(
-) -> impl Parser<char, MacroInvocation, Error = Simple<char>> {
-  ident()
-    .then_ignore(just('!'))
-    .then(
-      filter(|c: &char| *c != ')')
-        .repeated()
-        .collect::<String>()
-        .delimited_by(just('('), just(')')),
-    )
-    .map_with_span(|(name, content), span| MacroInvocation {
-      span,
-      name: name.into_boxed_str(),
-      content: content.into_boxed_str(),
-    })
-}
-#[test]
-fn test_macro_invocation() {
-  let p = macro_invocation().then_ignore(end());
-  //
-  let MacroInvocation { name, content, span } = p.parse("bit!(7)").unwrap();
-  assert_eq!(name, box_str!("bit"));
-  assert_eq!(content, box_str!("7"));
-  drop(span);
-  //
-  let MacroInvocation { name, content, span } =
-    p.parse(r#"gfx!(".X", ..XX..X.)"#).unwrap();
-  assert_eq!(name, box_str!("gfx"));
-  assert_eq!(content, box_str!(r#"".X", ..XX..X."#));
-  drop(span);
-}
-
-/// Tries to grab up all the text inside of a paren group.
-///
-/// * This is including any inner parens
-/// * The outermost parens won't be in the output
-/// * This is janky because it can't tell what a string literal is so it's
-///   easily confused
-/// * Also if the inner tokens are like a huge pile of unbalanced parens for
-///   some reason that would confuse it.
-fn paren_delimited_text() -> impl Parser<char, Vec<char>, Error = Simple<char>>
-{
-  recursive::<_, _, _, _, Simple<char>>(|tree| {
-    let text = one_of("()").not().repeated().at_least(1);
-
-    let group = just('(').chain(tree.repeated().flatten()).chain(just(')'));
-
-    text.or(group)
-  })
-  .repeated()
-  .flatten()
-  .delimited_by(just('('), just(')'))
-}
-#[test]
-fn test_paren_delimited_text() {
-  let p = paren_delimited_text().then_ignore(end());
-  fn str_as_vec(s: &str) -> Vec<char> {
-    s.chars().collect()
   }
-  assert_eq!(p.parse("()"), Ok(str_as_vec("")));
-  assert_eq!(p.parse("( )"), Ok(str_as_vec(" ")));
-  assert_eq!(p.parse("(foo)"), Ok(str_as_vec("foo")));
-  assert_eq!(p.parse("(foo(bar)baz)"), Ok(str_as_vec("foo(bar)baz")));
+}
+#[test]
+fn test_ProgramAttr_parser() {
+  let p = ProgramAttr::parser().then_ignore(end());
   assert_eq!(
-    p.parse("(foo(bar)(baz(biz))boz)"),
-    Ok(str_as_vec("foo(bar)(baz(biz))boz"))
+    p.parse(vec![Punct('#'), Punct('!'), Punct('['), Punct(']'),])
+      .unwrap()
+      .tokens,
+    vec![]
+  );
+  assert_eq!(
+    p.parse(
+      vec![Punct('#'), Punct('!'), Punct('['), Str("hello"), Punct(']'),]
+    )
+    .unwrap()
+    .tokens,
+    vec![Str("hello")]
   );
 }
+
+struct MultiLineComment;
+impl MultiLineComment {
+  fn parser() -> impl Parser<DmgToken, (), Error = Simple<DmgToken>> {
+    recursive(|multiline_comment| {
+      none_of([StartMultiComment, EndMultiComment])
+        .ignored()
+        .or(multiline_comment)
+        .ignored()
+        .repeated()
+        .ignored()
+        .delimited_by(just(StartMultiComment), just(EndMultiComment))
+        .ignored()
+    })
+  }
+}
+#[test]
+fn test_MultiLineComment_parser() {
+  let p = MultiLineComment::parser().then_ignore(end());
+  p.parse(vec![
+    StartMultiComment,
+    Punct('#'),
+    Punct('!'),
+    StartMultiComment,
+    Punct('['),
+    EndMultiComment,
+    Punct(']'),
+    EndMultiComment,
+  ])
+  .unwrap();
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct ConstDecl {
+  span: Range<usize>,
+  label: StaticStr,
+  value: u16,
+}
+impl ConstDecl {
+  // TODO: this should eventually handle at least simple constant integer
+  // expressions, right now it can only take a single number.
+  fn parser() -> impl Parser<DmgToken, Self, Error = Simple<DmgToken>> {
+    just(Ident("const"))
+      .ignore_then(filter(DmgToken::is_ident).map(DmgToken::unwrap_ident))
+      .then_ignore(just(Punct('=')))
+      .then(filter(DmgToken::is_number).map(DmgToken::unwrap_number))
+      .then_ignore(just(Punct(';')))
+      .map_with_span(|(label, value), span| ConstDecl { span, label, value })
+  }
+}
+#[test]
+fn test_ConstDecl_parser() {
+  let p = ConstDecl::parser().then_ignore(end());
+  let decl = p
+    .parse(vec![
+      Ident("const"),
+      Ident("NR52"),
+      Punct('='),
+      HexLiteral(0xFF26),
+      Punct(';'),
+    ])
+    .unwrap();
+  assert_eq!(decl.label, "NR52");
+  assert_eq!(decl.value, 0xFF26);
+}
+
+// TODO: directive!(patterns)
