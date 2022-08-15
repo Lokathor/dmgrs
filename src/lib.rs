@@ -11,8 +11,8 @@ macro_rules! box_str {
   };
 }
 
-pub mod intern_str_impl;
 pub mod lexer;
 pub mod parser;
+pub mod str_cache_impl;
 
 type StaticStr = &'static str;

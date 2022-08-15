@@ -1,6 +1,6 @@
 #![allow(unsafe_code)]
 
-//! Module with a very simple str interning implementation.
+//! Module with a very simple str caching implementation.
 
 use std::{
   collections::HashSet,
@@ -53,7 +53,7 @@ fn get_str_db_rw_lock_ref() -> &'static RwLockHashSetStaticStr {
 /// allocations.
 ///
 /// This works by utilizing a global set of interned `str` values. When a
-/// request comes in for a str to be interned it is looked up in the set. If the
+/// request comes in for a str to be cached it is looked up in the set. If the
 /// str is *not* already in the set then it's automatically added to the set.
 /// Then a reference to the str in the set is returned to you.
 ///
@@ -61,7 +61,7 @@ fn get_str_db_rw_lock_ref() -> &'static RwLockHashSetStaticStr {
 /// cannot shrink the intern set, since there's no way to know which str values
 /// might still be in use. However, it's generally sufficient for short lived
 /// programs.
-pub fn intern_str(s: &str) -> &'static str {
+pub fn cache_str(s: &str) -> &'static str {
   let db: &RwLockHashSetStaticStr = get_str_db_rw_lock_ref();
   let read_guard: RwLockReadGuard<_> =
     db.read().unwrap_or_else(PoisonError::into_inner);

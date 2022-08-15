@@ -33,7 +33,7 @@
 
 use logos::Logos;
 
-use crate::{intern_str_impl::intern_str, StaticStr};
+use crate::{str_cache_impl::cache_str, StaticStr};
 
 /// The possible tokens within a Dmgrs program.
 ///
@@ -75,7 +75,7 @@ pub enum DmgToken {
   ///
   /// The lone character `_` ends up matching as an Ident rather than a
   /// Punctuation.
-  #[regex(r"[_a-zA-Z][_a-zA-Z0-9]*", |lex| intern_str(lex.slice()), priority=2)]
+  #[regex(r"[_a-zA-Z][_a-zA-Z0-9]*", |lex| cache_str(lex.slice()), priority=2)]
   Ident(StaticStr),
 
   /// Holds all the stuff *between* `"`.
@@ -87,7 +87,7 @@ pub enum DmgToken {
   /// escape sequences you allow (here just `\"`, and `\\` for a `\` itself) up
   /// front and then requiring the rest of the literal to not be a quote or
   /// escape (that would start with `\`)"
-  #[regex(r#""((\\"|\\\\)|[^\\"])*""#, |lex| {let s = lex.slice(); intern_str(&s[1..s.len()-1]) })]
+  #[regex(r#""((\\"|\\\\)|[^\\"])*""#, |lex| {let s = lex.slice(); cache_str(&s[1..s.len()-1]) })]
   Str(StaticStr),
 
   /// The digits of a binary literal (no prefix).
