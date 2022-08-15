@@ -33,16 +33,16 @@
 
 use logos::Logos;
 
+use crate::{intern_str_impl::intern_str, StaticStr};
+
 // TODO: probably the register names should ALSO have empty variants.
 
 /// The possible tokens within a Dmgrs program.
 ///
-/// There's many no-data variants in this enum. Theoretically these are not
-/// needed, they could be captured as `Ident` values. However, `Ident` stores
-/// the identifier as a `Box<str>`, and the instructions and keywords are
-/// presumed to be quite common, so we give them each their own empty variant to
-/// avoid excess allocations.
-#[derive(Clone, PartialEq, Eq, Logos)] // custom Debug at the end of the file
+/// At this early stage of the processing all keywords, instructions, and
+/// register names just count as an "ident". A simple string interning mechanism
+/// is used, so it's not a super allocation fest to do this.
+#[derive(Clone, Copy, PartialEq, Eq, Logos)] // Note: custom Debug at the end of the file
 pub enum DmgToken {
   /// An error during lexing.
   #[error]
@@ -77,8 +77,20 @@ pub enum DmgToken {
   ///
   /// The lone character `_` ends up matching as an Ident rather than a
   /// Punctuation.
-  #[regex(r"[_a-zA-Z][_a-zA-Z0-9]*", |lex| lex.slice().to_string().into_boxed_str(), priority=2)]
-  Ident(Box<str>),
+  #[regex(r"[_a-zA-Z][_a-zA-Z0-9]*", |lex| intern_str(lex.slice()), priority=2)]
+  Ident(StaticStr),
+
+  /// Holds all the stuff *between* `"`.
+  ///
+  /// This allows `\"` and `\\` within the string literal that's collected, but
+  /// doesn't actually handle escape sequence processing.
+  ///
+  /// Thanks to `Quirl`, who made this regex: "works by specifying all of the
+  /// escape sequences you allow (here just `\"`, and `\\` for a `\` itself) up
+  /// front and then requiring the rest of the literal to not be a quote or
+  /// escape (that would start with `\`)"
+  #[regex(r#""((\\"|\\\\)|[^\\"])*""#, |lex| {let s = lex.slice(); intern_str(&s[1..s.len()-1]) })]
+  StrLiteral(StaticStr),
 
   /// The digits of a binary literal (no prefix).
   ///
@@ -101,222 +113,6 @@ pub enum DmgToken {
   /// * Use of `_` is allowed in the literal, but they don't change the value.
   #[regex(r"(\$|0x)[0-9a-fA-F_]+", |lex| {let s = lex.slice(); try_hex_str_to_u16(if s.starts_with('$') { &s[1..] } else { &s[2..] }) })]
   HexLiteral(u16),
-
-  /// Holds all the stuff *between* `"`.
-  ///
-  /// This allows `\"` and `\\` within the string literal that's collected, but
-  /// doesn't actually handle escape sequence processing.
-  ///
-  /// Thanks to `Quirl`, who made this regex: "works by specifying all of the
-  /// escape sequences you allow (here just `\"`, and `\\` for a `\` itself) up
-  /// front and then requiring the rest of the literal to not be a quote or
-  /// escape (that would start with `\`)"
-  #[regex(r#""((\\"|\\\\)|[^\\"])*""#, |lex| {let s = lex.slice(); s[1..s.len()-1].to_string().into_boxed_str() })]
-  StrLiteral(Box<str>),
-
-  /// `const`
-  #[regex(r"const")]
-  KeywordConst,
-
-  /// `static`
-  #[regex(r"static")]
-  KeywordStatic,
-
-  /// `fn`
-  #[regex(r"fn")]
-  KeywordFn,
-
-  /// `if`
-  #[regex(r"if")]
-  KeywordIf,
-
-  /// `else`
-  #[regex(r"else")]
-  KeywordElse,
-
-  /// `loop`
-  #[regex(r"loop")]
-  KeywordLoop,
-
-  /// `continue`
-  #[regex(r"continue")]
-  KeywordContinue,
-
-  /// `break`
-  #[regex(r"break")]
-  KeywordBreak,
-
-  /// `return`
-  #[regex(r"return")]
-  KeywordReturn,
-
-  /// `adc` or `ADC`
-  #[regex(r"(adc|ADC)", priority = 3)]
-  InstructionAdc,
-
-  /// `add` or `ADD`
-  #[regex(r"(add|ADD)", priority = 3)]
-  InstructionAdd,
-
-  /// `and` or `AND`
-  #[regex(r"(and|AND)", priority = 3)]
-  InstructionAnd,
-
-  /// `bit` or `BIT`
-  #[regex(r"(bit|BIT)", priority = 3)]
-  InstructionBit,
-
-  /// `call` or `CALL`
-  #[regex(r"(call|CALL)", priority = 3)]
-  InstructionCall,
-
-  /// `ccf` or `CCF`
-  #[regex(r"(ccf|CCF)", priority = 3)]
-  InstructionCcf,
-
-  /// `daa` or `DAA`
-  #[regex(r"(daa|DAA)", priority = 3)]
-  InstructionDaa,
-
-  /// `dec` or `DEC`
-  #[regex(r"(dec|DEC)", priority = 3)]
-  InstructionDec,
-
-  /// `di` or `DI`
-  #[regex(r"(di|DI)", priority = 3)]
-  InstructionDi,
-
-  /// `ei` or `EI`
-  #[regex(r"(ei|EI)", priority = 3)]
-  InstructionEi,
-
-  /// `halt` or `HALT`
-  #[regex(r"(halt|HALT)", priority = 3)]
-  InstructionHalt,
-
-  /// `inc` or `INC`
-  #[regex(r"(inc|INC)", priority = 3)]
-  InstructionInc,
-
-  /// `jp` or `JP`
-  #[regex(r"(jp|JP)", priority = 3)]
-  InstructionJp,
-
-  /// `jr` or `JR`
-  #[regex(r"(jr|JR)", priority = 3)]
-  InstructionJr,
-
-  /// `ld` or `LD`
-  #[regex(r"(ld|LD)", priority = 3)]
-  InstructionLd,
-
-  /// `ldh` or `LDH`
-  #[regex(r"(ldh|LDH)", priority = 3)]
-  InstructionLdh,
-
-  /// `nop` or `NOP`
-  #[regex(r"(nop|NOP)", priority = 3)]
-  InstructionNop,
-
-  /// `or` or `OR`
-  #[regex(r"(or|OR)", priority = 3)]
-  InstructionOr,
-
-  /// `pop` or `POP`
-  #[regex(r"(pop|POP)", priority = 3)]
-  InstructionPop,
-
-  /// `push` or `PUSH`
-  #[regex(r"(push|PUSH)", priority = 3)]
-  InstructionPush,
-
-  /// `res` or `RES`
-  #[regex(r"(res|RES)", priority = 3)]
-  InstructionRes,
-
-  /// `ret` or `RET`
-  #[regex(r"(ret|RET)", priority = 3)]
-  InstructionRet,
-
-  /// `reti` or `RETI`
-  #[regex(r"(reti|RETI)", priority = 3)]
-  InstructionReti,
-
-  /// `rl` or `RL`
-  #[regex(r"(rl|RL)", priority = 3)]
-  InstructionRl,
-
-  /// `rla` or `RLA`
-  #[regex(r"(rla|RLA)", priority = 3)]
-  InstructionRla,
-
-  /// `rlc` or `RLC`
-  #[regex(r"(rlc|RLC)", priority = 3)]
-  InstructionRlc,
-
-  /// `rlca` or `RLCA`
-  #[regex(r"(rlca|RLCA)", priority = 3)]
-  InstructionRlca,
-
-  /// `rr` or `RR`
-  #[regex(r"(rr|RR)", priority = 3)]
-  InstructionRr,
-
-  /// `rra` or `RRA`
-  #[regex(r"(rra|RRA)", priority = 3)]
-  InstructionRra,
-
-  /// `rrc` or `RRC`
-  #[regex(r"(rrc|RRC)", priority = 3)]
-  InstructionRrc,
-
-  /// `rrca` or `RRCA`
-  #[regex(r"(rrca|RRCA)", priority = 3)]
-  InstructionRrca,
-
-  /// `rst` or `RST`
-  #[regex(r"(rst|RST)", priority = 3)]
-  InstructionRst,
-
-  /// `sbc` or `SBC`
-  #[regex(r"(sbc|SBC)", priority = 3)]
-  InstructionSbc,
-
-  /// `scf` or `SCF`
-  #[regex(r"(scf|SCF)", priority = 3)]
-  InstructionScf,
-
-  /// `set` or `SET`
-  #[regex(r"(set|SET)", priority = 3)]
-  InstructionSet,
-
-  /// `sla` or `SLA`
-  #[regex(r"(sla|SLA)", priority = 3)]
-  InstructionSla,
-
-  /// `sra` or `SRA`
-  #[regex(r"(sra|SRA)", priority = 3)]
-  InstructionSra,
-
-  /// `srl` or `SRL`
-  #[regex(r"(srl|SRL)", priority = 3)]
-  InstructionSrl,
-
-  /// `stop` or `STOP`
-  #[regex(r"(stop|STOP)", priority = 3)]
-  InstructionStop,
-
-  /// `sub` or `SUB`
-  #[regex(r"(sub|SUB)", priority = 3)]
-  InstructionSub,
-
-  /// `swap` or `SWAP`
-  #[regex(r"(swap|SWAP)", priority = 3)]
-  InstructionSwap,
-
-  /// `xor` or `XOR`
-  #[regex(r"(xor|XOR)", priority = 3)]
-  InstructionXor,
 }
 impl DmgToken {
   /// Gets the number out of the lexeme, if any.
@@ -325,7 +121,7 @@ impl DmgToken {
   /// # use dmgrs::lexer::DmgToken;
   /// use DmgToken::*;
   /// assert_eq!(DecimalLiteral(123).get_number(), Some(123));
-  /// assert_eq!(InstructionXor.get_number(), None);
+  /// assert_eq!(Punctuation('.').get_number(), None);
   /// ```
   pub const fn get_number(&self) -> Option<u16> {
     match self {
@@ -429,57 +225,6 @@ impl core::fmt::Debug for DmgToken {
       DmgToken::StartMultiComment => write!(f, stringify!(StartMultiComment)),
       DmgToken::EndMultiComment => write!(f, stringify!(EndMultiComment)),
       DmgToken::EndOfLine => write!(f, stringify!(EndOfLine)),
-      DmgToken::KeywordConst => write!(f, stringify!(KeywordConst)),
-      DmgToken::KeywordStatic => write!(f, stringify!(KeywordStatic)),
-      DmgToken::KeywordFn => write!(f, stringify!(KeywordFn)),
-      DmgToken::KeywordIf => write!(f, stringify!(KeywordIf)),
-      DmgToken::KeywordElse => write!(f, stringify!(KeywordElse)),
-      DmgToken::KeywordLoop => write!(f, stringify!(KeywordLoop)),
-      DmgToken::KeywordContinue => write!(f, stringify!(KeywordContinue)),
-      DmgToken::KeywordBreak => write!(f, stringify!(KeywordBreak)),
-      DmgToken::KeywordReturn => write!(f, stringify!(KeywordReturn)),
-      DmgToken::InstructionAdc => write!(f, stringify!(InstructionAdc)),
-      DmgToken::InstructionAdd => write!(f, stringify!(InstructionAdd)),
-      DmgToken::InstructionAnd => write!(f, stringify!(InstructionAnd)),
-      DmgToken::InstructionBit => write!(f, stringify!(InstructionBit)),
-      DmgToken::InstructionCall => write!(f, stringify!(InstructionCall)),
-      DmgToken::InstructionCcf => write!(f, stringify!(InstructionCcf)),
-      DmgToken::InstructionDaa => write!(f, stringify!(InstructionDaa)),
-      DmgToken::InstructionDec => write!(f, stringify!(InstructionDec)),
-      DmgToken::InstructionDi => write!(f, stringify!(InstructionDi)),
-      DmgToken::InstructionEi => write!(f, stringify!(InstructionEi)),
-      DmgToken::InstructionHalt => write!(f, stringify!(InstructionHalt)),
-      DmgToken::InstructionInc => write!(f, stringify!(InstructionInc)),
-      DmgToken::InstructionJp => write!(f, stringify!(InstructionJp)),
-      DmgToken::InstructionJr => write!(f, stringify!(InstructionJr)),
-      DmgToken::InstructionLd => write!(f, stringify!(InstructionLd)),
-      DmgToken::InstructionLdh => write!(f, stringify!(InstructionLdh)),
-      DmgToken::InstructionNop => write!(f, stringify!(InstructionNop)),
-      DmgToken::InstructionOr => write!(f, stringify!(InstructionOr)),
-      DmgToken::InstructionPop => write!(f, stringify!(InstructionPop)),
-      DmgToken::InstructionPush => write!(f, stringify!(InstructionPush)),
-      DmgToken::InstructionRes => write!(f, stringify!(InstructionRes)),
-      DmgToken::InstructionRet => write!(f, stringify!(InstructionRet)),
-      DmgToken::InstructionReti => write!(f, stringify!(InstructionReti)),
-      DmgToken::InstructionRl => write!(f, stringify!(InstructionRl)),
-      DmgToken::InstructionRla => write!(f, stringify!(InstructionRla)),
-      DmgToken::InstructionRlc => write!(f, stringify!(InstructionRlc)),
-      DmgToken::InstructionRlca => write!(f, stringify!(InstructionRlca)),
-      DmgToken::InstructionRr => write!(f, stringify!(InstructionRr)),
-      DmgToken::InstructionRra => write!(f, stringify!(InstructionRra)),
-      DmgToken::InstructionRrc => write!(f, stringify!(InstructionRrc)),
-      DmgToken::InstructionRrca => write!(f, stringify!(InstructionRrca)),
-      DmgToken::InstructionRst => write!(f, stringify!(InstructionRst)),
-      DmgToken::InstructionSbc => write!(f, stringify!(InstructionSbc)),
-      DmgToken::InstructionScf => write!(f, stringify!(InstructionScf)),
-      DmgToken::InstructionSet => write!(f, stringify!(InstructionSet)),
-      DmgToken::InstructionSla => write!(f, stringify!(InstructionSla)),
-      DmgToken::InstructionSra => write!(f, stringify!(InstructionSra)),
-      DmgToken::InstructionSrl => write!(f, stringify!(InstructionSrl)),
-      DmgToken::InstructionStop => write!(f, stringify!(InstructionStop)),
-      DmgToken::InstructionSub => write!(f, stringify!(InstructionSub)),
-      DmgToken::InstructionSwap => write!(f, stringify!(InstructionSwap)),
-      DmgToken::InstructionXor => write!(f, stringify!(InstructionXor)),
     }
   }
 }
