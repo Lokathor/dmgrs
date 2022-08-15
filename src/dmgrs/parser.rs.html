@@ -116,359 +116,123 @@
 <span id="116">116</span>
 <span id="117">117</span>
 <span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-<span id="126">126</span>
-<span id="127">127</span>
-<span id="128">128</span>
-<span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Parses stuff, mostly with the [chumsky] crate.
 
 </span><span class="kw">use </span>std::ops::Range;
 
+<span class="attribute">#[allow(unused)]</span>
 <span class="kw">use </span>chumsky::{
-  prelude::<span class="kw-2">*</span>,
-  text::{ident, newline},
+  prelude::Simple,
+  primitive::{end, filter, just},
+  Parser,
+};
+<span class="kw">use </span>chumsky::{primitive::none_of, recursive::recursive};
+
+<span class="kw">use crate</span>::{
+  lexer::{DmgToken, DmgToken::<span class="kw-2">*</span>},
+  StaticStr,
 };
 
-<span class="doccomment">/// Boxed str, but easier to type without the `&lt;&gt;`.
-</span><span class="kw">pub type </span>BoxStr = Box&lt;str&gt;;
-
-<span class="doccomment">/// GB Binary literals are prefixed with `%`, then 0-1, with `_` allowed.
-</span><span class="kw">pub fn </span>gb_binary_literal() -&gt; <span class="kw">impl </span>Parser&lt;char, u16, Error = Simple&lt;char&gt;&gt; {
-  <span class="kw">let </span>underscores = just(<span class="string">&#39;_&#39;</span>).ignored().repeated();
-  just(<span class="string">&#39;%&#39;</span>).ignore_then(
-    filter(|c: <span class="kw-2">&amp;</span>char| c.is_digit(<span class="number">2</span>))
-      .padded_by(underscores)
-      .repeated()
-      .at_least(<span class="number">1</span>)
-      .collect::&lt;String&gt;()
-      .try_map(|s: String, span| {
-        u16::from_str_radix(<span class="kw-2">&amp;</span>s, <span class="number">2</span>)
-          .map_err(|why| Simple::custom(span, <span class="macro">format!</span>(<span class="string">&quot;{why:?}&quot;</span>)))
-      }),
-  )
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_gb_binary_literal() {
-  <span class="kw">let </span>p = gb_binary_literal().then_ignore(end());
-  <span class="kw">for </span>num <span class="kw">in </span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">76</span>, <span class="number">89</span>, <span class="number">255</span>, <span class="number">256</span>, <span class="number">492</span>, <span class="number">11489</span>, u16::MAX] {
-    <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;%{num:b}&quot;</span>)), <span class="prelude-val">Ok</span>(num));
-    <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;%{num:016b}&quot;</span>)), <span class="prelude-val">Ok</span>(num));
-  }
-  <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;%1010_1111&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0b1010_1111</span>));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;%__1010_1111&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0b1010_1111</span>));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;%1010_1111____&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0b1010_1111</span>));
-}
-
-<span class="doccomment">/// GB Hex literals are prefixed with `$`, then 0-F, with `_` allowed.
-</span><span class="kw">pub fn </span>gb_hex_literal() -&gt; <span class="kw">impl </span>Parser&lt;char, u16, Error = Simple&lt;char&gt;&gt; {
-  <span class="kw">let </span>underscores = just(<span class="string">&#39;_&#39;</span>).ignored().repeated();
-  just(<span class="string">&#39;$&#39;</span>).ignore_then(
-    filter(|c: <span class="kw-2">&amp;</span>char| c.is_digit(<span class="number">16</span>))
-      .padded_by(underscores)
-      .repeated()
-      .at_least(<span class="number">1</span>)
-      .collect::&lt;String&gt;()
-      .try_map(|s: String, span| {
-        u16::from_str_radix(<span class="kw-2">&amp;</span>s, <span class="number">16</span>)
-          .map_err(|why| Simple::custom(span, <span class="macro">format!</span>(<span class="string">&quot;{why:?}&quot;</span>)))
-      }),
-  )
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_gb_hex_literal() {
-  <span class="kw">let </span>p = gb_hex_literal().then_ignore(end());
-  <span class="kw">for </span>num <span class="kw">in </span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">76</span>, <span class="number">89</span>, <span class="number">255</span>, <span class="number">256</span>, <span class="number">492</span>, <span class="number">11489</span>, u16::MAX] {
-    <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;${num:x}&quot;</span>)), <span class="prelude-val">Ok</span>(num));
-    <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;${num:08x}&quot;</span>)), <span class="prelude-val">Ok</span>(num));
-    <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;${num:X}&quot;</span>)), <span class="prelude-val">Ok</span>(num));
-    <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;${num:08X}&quot;</span>)), <span class="prelude-val">Ok</span>(num));
-  }
-  <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;$CF_AB&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0xCF_AB</span>));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;$__00_FF&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0x__00_FF</span>));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="macro">format!</span>(<span class="string">&quot;$A___&quot;</span>)), <span class="prelude-val">Ok</span>(<span class="number">0xA___</span>));
-}
-
-<span class="doccomment">/// Multi-line comments start with `/*` and end with `*/`
-///
-/// As the name implies, there can be newlines within the comment
-</span><span class="kw">pub fn </span>multi_line_comment() -&gt; <span class="kw">impl </span>Parser&lt;char, (), Error = Simple&lt;char&gt;&gt; {
-  just(<span class="string">&quot;/*&quot;</span>).then(take_until(just(<span class="string">&quot;*/&quot;</span>))).ignored()
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_multi_line_comment() {
-  <span class="kw">let </span>p = multi_line_comment().then_ignore(end());
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;/* multi \n line \n comment */&quot;</span>), <span class="prelude-val">Ok</span>(()));
-}
-
-<span class="doccomment">/// Horizontal space doesn&#39;t advance to the next statement
-///
-/// * spaces
-/// * tabs
-/// * multi-line comments (which &quot;count as&quot; one space).
-</span><span class="kw">pub fn </span>horizontal_space() -&gt; <span class="kw">impl </span>Parser&lt;char, (), Error = Simple&lt;char&gt;&gt; {
-  <span class="kw">let </span>space = just(<span class="string">&#39; &#39;</span>).ignored();
-  <span class="kw">let </span>tab = just(<span class="string">&#39;\t&#39;</span>).ignored();
-  <span class="kw">let </span>multi = multi_line_comment();
-  choice((space, tab, multi)).repeated().ignored()
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_horizontal_space() {
-  <span class="kw">let </span>p = horizontal_space().then_ignore(end());
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot; &quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;\t&quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;   \t   \t  &quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;  /* hello there \n general kenobi */ \t  &quot;</span>), <span class="prelude-val">Ok</span>(()));
-}
-
-<span class="doccomment">/// A [`newline`](chumsky::text::newline) implicitly ends all statements in
-/// Dmgrs.
-///
-/// * [`horizontal_space`] can come before the end of the statement.
-/// * By using `//`, text until the newline becomes a comment.
-/// * For these purposes, the end of input counts as &quot;a newline&quot;.
-</span><span class="kw">pub fn </span>end_of_statement() -&gt; <span class="kw">impl </span>Parser&lt;char, (), Error = Simple&lt;char&gt;&gt; {
-  <span class="kw">let </span>instant_newline = newline();
-  <span class="kw">let </span>eol_comment =
-    just(<span class="string">&quot;//&quot;</span>).ignored().then(take_until(newline().or(end()))).ignored();
-
-  horizontal_space()
-    .ignored()
-    .then(choice((end(), instant_newline, eol_comment)))
-    .ignored()
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_end_of_statement() {
-  <span class="kw">let </span>p = end_of_statement().then_ignore(end());
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot; \t &quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;\n&quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot; // EOL comment before EOF&quot;</span>), <span class="prelude-val">Ok</span>(()));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot; // EOL comment then newline\n&quot;</span>), <span class="prelude-val">Ok</span>(()));
-}
-
-<span class="doccomment">/// See [`program_attribute`]
-</span><span class="attribute">#[derive(Debug, Clone)]</span>
-<span class="kw">pub struct </span>ProgramAttribute {
+<span class="attribute">#[derive(Debug, Clone, Default, PartialEq, Eq)]</span>
+<span class="kw">struct </span>ProgramAttr {
   span: Range&lt;usize&gt;,
-  text: BoxStr,
+  tokens: Vec&lt;DmgToken&gt;,
 }
-
-<span class="doccomment">/// Program attributes are like `#![words here]`.
-///
-/// The output is the text between the brackets.
-</span><span class="kw">pub fn </span>program_attribute(
-) -&gt; <span class="kw">impl </span>Parser&lt;char, ProgramAttribute, Error = Simple&lt;char&gt;&gt; {
-  just(<span class="string">&quot;#!&quot;</span>)
-    .ignore_then(
-      filter(|c: <span class="kw-2">&amp;</span>char| <span class="kw-2">*</span>c != <span class="string">&#39;]&#39;</span>)
+<span class="kw">impl </span>ProgramAttr {
+  <span class="kw">fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;DmgToken, <span class="self">Self</span>, Error = Simple&lt;DmgToken&gt;&gt; {
+    just(Punct(<span class="string">&#39;#&#39;</span>)).ignore_then(just(Punct(<span class="string">&#39;!&#39;</span>))).ignore_then(
+      filter(|t: <span class="kw-2">&amp;</span>DmgToken| <span class="kw-2">*</span>t != Punct(<span class="string">&#39;]&#39;</span>))
         .repeated()
-        .collect::&lt;String&gt;()
-        .delimited_by(just(<span class="string">&#39;[&#39;</span>), just(<span class="string">&#39;]&#39;</span>)),
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+        .delimited_by(just(Punct(<span class="string">&#39;[&#39;</span>)), just(Punct(<span class="string">&#39;]&#39;</span>)))
+        .map_with_span(|tokens, span| ProgramAttr { span, tokens }),
     )
-    .map_with_span(|string, span| ProgramAttribute {
-      text: string.into_boxed_str(),
-      span,
-    })
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_program_attribute() {
-  <span class="kw">let </span>p = program_attribute().then_ignore(end());
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;#![]&quot;</span>).unwrap().text, <span class="macro">box_str!</span>(<span class="string">&quot;&quot;</span>));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;#![foo bar]&quot;</span>).unwrap().text, <span class="macro">box_str!</span>(<span class="string">&quot;foo bar&quot;</span>));
-}
-
-<span class="doccomment">/// See [`macro_invocation`]
-</span><span class="attribute">#[derive(Debug, Clone)]</span>
-<span class="kw">pub struct </span>MacroInvocation {
-  span: Range&lt;usize&gt;,
-  name: BoxStr,
-  content: BoxStr,
-}
-<span class="doccomment">/// Macros are invoked with `name!(words here)`
-///
-/// The output is the text between the brackets.
-</span><span class="kw">pub fn </span>macro_invocation(
-) -&gt; <span class="kw">impl </span>Parser&lt;char, MacroInvocation, Error = Simple&lt;char&gt;&gt; {
-  ident()
-    .then_ignore(just(<span class="string">&#39;!&#39;</span>))
-    .then(
-      filter(|c: <span class="kw-2">&amp;</span>char| <span class="kw-2">*</span>c != <span class="string">&#39;)&#39;</span>)
-        .repeated()
-        .collect::&lt;String&gt;()
-        .delimited_by(just(<span class="string">&#39;(&#39;</span>), just(<span class="string">&#39;)&#39;</span>)),
-    )
-    .map_with_span(|(name, content), span| MacroInvocation {
-      span,
-      name: name.into_boxed_str(),
-      content: content.into_boxed_str(),
-    })
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_macro_invocation() {
-  <span class="kw">let </span>p = macro_invocation().then_ignore(end());
-  <span class="comment">//
-  </span><span class="kw">let </span>MacroInvocation { name, content, span } = p.parse(<span class="string">&quot;bit!(7)&quot;</span>).unwrap();
-  <span class="macro">assert_eq!</span>(name, <span class="macro">box_str!</span>(<span class="string">&quot;bit&quot;</span>));
-  <span class="macro">assert_eq!</span>(content, <span class="macro">box_str!</span>(<span class="string">&quot;7&quot;</span>));
-  drop(span);
-  <span class="comment">//
-  </span><span class="kw">let </span>MacroInvocation { name, content, span } =
-    p.parse(<span class="string">r#&quot;gfx!(&quot;.X&quot;, ..XX..X.)&quot;#</span>).unwrap();
-  <span class="macro">assert_eq!</span>(name, <span class="macro">box_str!</span>(<span class="string">&quot;gfx&quot;</span>));
-  <span class="macro">assert_eq!</span>(content, <span class="macro">box_str!</span>(<span class="string">r#&quot;&quot;.X&quot;, ..XX..X.&quot;#</span>));
-  drop(span);
-}
-
-<span class="doccomment">/// Tries to grab up all the text inside of a paren group.
-///
-/// * This is including any inner parens
-/// * The outermost parens won&#39;t be in the output
-/// * This is janky because it can&#39;t tell what a string literal is so it&#39;s
-///   easily confused
-/// * Also if the inner tokens are like a huge pile of unbalanced parens for
-///   some reason that would confuse it.
-</span><span class="kw">fn </span>paren_delimited_text() -&gt; <span class="kw">impl </span>Parser&lt;char, Vec&lt;char&gt;, Error = Simple&lt;char&gt;&gt;
-{
-  recursive::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, Simple&lt;char&gt;&gt;(|tree| {
-    <span class="kw">let </span>text = one_of(<span class="string">&quot;()&quot;</span>).not().repeated().at_least(<span class="number">1</span>);
-
-    <span class="kw">let </span>group = just(<span class="string">&#39;(&#39;</span>).chain(tree.repeated().flatten()).chain(just(<span class="string">&#39;)&#39;</span>));
-
-    text.or(group)
-  })
-  .repeated()
-  .flatten()
-  .delimited_by(just(<span class="string">&#39;(&#39;</span>), just(<span class="string">&#39;)&#39;</span>))
-}
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_paren_delimited_text() {
-  <span class="kw">let </span>p = paren_delimited_text().then_ignore(end());
-  <span class="kw">fn </span>str_as_vec(s: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;char&gt; {
-    s.chars().collect()
   }
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;()&quot;</span>), <span class="prelude-val">Ok</span>(str_as_vec(<span class="string">&quot;&quot;</span>)));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;( )&quot;</span>), <span class="prelude-val">Ok</span>(str_as_vec(<span class="string">&quot; &quot;</span>)));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;(foo)&quot;</span>), <span class="prelude-val">Ok</span>(str_as_vec(<span class="string">&quot;foo&quot;</span>)));
-  <span class="macro">assert_eq!</span>(p.parse(<span class="string">&quot;(foo(bar)baz)&quot;</span>), <span class="prelude-val">Ok</span>(str_as_vec(<span class="string">&quot;foo(bar)baz&quot;</span>)));
+}
+<span class="attribute">#[test]</span>
+<span class="kw">fn </span>test_ProgramAttr_parser() {
+  <span class="kw">let </span>p = ProgramAttr::parser().then_ignore(end());
   <span class="macro">assert_eq!</span>(
-    p.parse(<span class="string">&quot;(foo(bar)(baz(biz))boz)&quot;</span>),
-    <span class="prelude-val">Ok</span>(str_as_vec(<span class="string">&quot;foo(bar)(baz(biz))boz&quot;</span>))
+    p.parse(<span class="macro">vec!</span>[Punct(<span class="string">&#39;#&#39;</span>), Punct(<span class="string">&#39;!&#39;</span>), Punct(<span class="string">&#39;[&#39;</span>), Punct(<span class="string">&#39;]&#39;</span>),])
+      .unwrap()
+      .tokens,
+    <span class="macro">vec!</span>[]
+  );
+  <span class="macro">assert_eq!</span>(
+    p.parse(
+      <span class="macro">vec!</span>[Punct(<span class="string">&#39;#&#39;</span>), Punct(<span class="string">&#39;!&#39;</span>), Punct(<span class="string">&#39;[&#39;</span>), Str(<span class="string">&quot;hello&quot;</span>), Punct(<span class="string">&#39;]&#39;</span>),]
+    )
+    .unwrap()
+    .tokens,
+    <span class="macro">vec!</span>[Str(<span class="string">&quot;hello&quot;</span>)]
   );
 }
-</code></pre></div>
+
+<span class="kw">struct </span>MultiLineComment;
+<span class="kw">impl </span>MultiLineComment {
+  <span class="kw">fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;DmgToken, (), Error = Simple&lt;DmgToken&gt;&gt; {
+    recursive(|multiline_comment| {
+      none_of([StartMultiComment, EndMultiComment])
+        .ignored()
+        .or(multiline_comment)
+        .ignored()
+        .repeated()
+        .ignored()
+        .delimited_by(just(StartMultiComment), just(EndMultiComment))
+        .ignored()
+    })
+  }
+}
+<span class="attribute">#[test]</span>
+<span class="kw">fn </span>test_MultiLineComment_parser() {
+  <span class="kw">let </span>p = MultiLineComment::parser().then_ignore(end());
+  p.parse(<span class="macro">vec!</span>[
+    StartMultiComment,
+    Punct(<span class="string">&#39;#&#39;</span>),
+    Punct(<span class="string">&#39;!&#39;</span>),
+    StartMultiComment,
+    Punct(<span class="string">&#39;[&#39;</span>),
+    EndMultiComment,
+    Punct(<span class="string">&#39;]&#39;</span>),
+    EndMultiComment,
+  ])
+  .unwrap();
+}
+
+<span class="attribute">#[derive(Debug, Clone, Default, PartialEq, Eq)]</span>
+<span class="kw">struct </span>ConstDecl {
+  span: Range&lt;usize&gt;,
+  label: StaticStr,
+  value: u16,
+}
+<span class="kw">impl </span>ConstDecl {
+  <span class="comment">// TODO: this should eventually handle at least simple constant integer
+  // expressions, right now it can only take a single number.
+  </span><span class="kw">fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;DmgToken, <span class="self">Self</span>, Error = Simple&lt;DmgToken&gt;&gt; {
+    just(Ident(<span class="string">&quot;const&quot;</span>))
+      .ignore_then(filter(DmgToken::is_ident).map(DmgToken::unwrap_ident))
+      .then_ignore(just(Punct(<span class="string">&#39;=&#39;</span>)))
+      .then(filter(DmgToken::is_number).map(DmgToken::unwrap_number))
+      .then_ignore(just(Punct(<span class="string">&#39;;&#39;</span>)))
+      .map_with_span(|(label, value), span| ConstDecl { span, label, value })
+  }
+}
+<span class="attribute">#[test]</span>
+<span class="kw">fn </span>test_ConstDecl_parser() {
+  <span class="kw">let </span>p = ConstDecl::parser().then_ignore(end());
+  <span class="kw">let </span>decl = p
+    .parse(<span class="macro">vec!</span>[
+      Ident(<span class="string">&quot;const&quot;</span>),
+      Ident(<span class="string">&quot;NR52&quot;</span>),
+      Punct(<span class="string">&#39;=&#39;</span>),
+      HexLiteral(<span class="number">0xFF26</span>),
+      Punct(<span class="string">&#39;;&#39;</span>),
+    ])
+    .unwrap();
+  <span class="macro">assert_eq!</span>(decl.label, <span class="string">&quot;NR52&quot;</span>);
+  <span class="macro">assert_eq!</span>(decl.value, <span class="number">0xFF26</span>);
+}
+
+<span class="comment">// TODO: directive!(patterns)
+</span></code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

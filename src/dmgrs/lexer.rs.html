@@ -226,6 +226,24 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Stuff that &quot;lexes&quot; source text into &quot;lexemes&quot;.
 //!
 //! Use the `DmgToken` enum and the [`Logos`](logos::Logos) trait to lex a
@@ -268,7 +286,7 @@
 /// At this early stage of the processing all keywords, instructions, and
 /// register names just count as an &quot;ident&quot;. A simple string interning mechanism
 /// is used, so it&#39;s not a super allocation fest to do this.
-</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, Logos)]</span> <span class="comment">// Note: custom Debug at the end of the file
+</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Logos)]</span> <span class="comment">// Note: custom Debug at the end of the file
 </span><span class="kw">pub enum </span>DmgToken {
   <span class="doccomment">/// An error during lexing.
   </span><span class="attribute">#[error]</span>
@@ -297,7 +315,7 @@
   <span class="doccomment">/// A punctuation character (using the `[:punct:]` regex class) that does
   /// *not* match any other case.
   </span><span class="attribute">#[regex(<span class="string">r&quot;[[:punct:]]&quot;</span>, |lex| lex.slice().chars().next().unwrap())]</span>
-  Punctuation(char),
+  Punct(char),
 
   <span class="doccomment">/// A standard identifier in C-style langs: `[_a-zA-Z][_a-zA-Z0-9]*`
   ///
@@ -316,7 +334,7 @@
   /// front and then requiring the rest of the literal to not be a quote or
   /// escape (that would start with `\`)&quot;
   </span><span class="attribute">#[regex(<span class="string">r#&quot;&quot;((\\&quot;|\\\\)|[^\\&quot;])*&quot;&quot;#</span>, |lex| {<span class="kw">let </span>s = lex.slice(); intern_str(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..s.len()-<span class="number">1</span>]</span>) })]
-  StrLiteral(StaticStr),
+  Str(StaticStr),
 
   <span class="doccomment">/// The digits of a binary literal (no prefix).
   ///
@@ -341,20 +359,38 @@
   HexLiteral(u16),
 }
 <span class="kw">impl </span>DmgToken {
-  <span class="doccomment">/// Gets the number out of the lexeme, if any.
-  ///
-  /// ```
-  /// # use dmgrs::lexer::DmgToken;
-  /// use DmgToken::*;
-  /// assert_eq!(DecimalLiteral(123).get_number(), Some(123));
-  /// assert_eq!(Punctuation(&#39;.&#39;).get_number(), None);
-  /// ```
-  </span><span class="kw">pub const fn </span>get_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u16&gt; {
+  <span class="doccomment">/// If this token is an `Ident`
+  </span><span class="kw">pub const fn </span>is_ident(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
     <span class="kw">match </span><span class="self">self </span>{
-      <span class="self">Self</span>::BinaryLiteral(n) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>n),
-      <span class="self">Self</span>::DecimalLiteral(n) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>n),
-      <span class="self">Self</span>::HexLiteral(n) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>n),
-      <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+      <span class="self">Self</span>::Ident(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
+      <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
+    }
+  }
+
+  <span class="doccomment">/// Unwraps the `Ident` content
+  </span><span class="kw">pub const fn </span>unwrap_ident(<span class="self">self</span>) -&gt; StaticStr {
+    <span class="kw">match </span><span class="self">self </span>{
+      <span class="self">Self</span>::Ident(i) =&gt; i,
+      <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;unwrapped a non-ident&quot;</span>),
+    }
+  }
+
+  <span class="doccomment">/// If this token is any number token
+  </span><span class="kw">pub const fn </span>is_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="kw">match </span><span class="self">self </span>{
+      <span class="self">Self</span>::BinaryLiteral(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
+      <span class="self">Self</span>::DecimalLiteral(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
+      <span class="self">Self</span>::HexLiteral(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
+      <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
+    }
+  }
+  <span class="doccomment">/// Unwraps the number inside.
+  </span><span class="kw">pub const fn </span>unwrap_number(<span class="self">self</span>) -&gt; u16 {
+    <span class="kw">match </span><span class="self">self </span>{
+      <span class="self">Self</span>::BinaryLiteral(n) =&gt; n,
+      <span class="self">Self</span>::DecimalLiteral(n) =&gt; n,
+      <span class="self">Self</span>::HexLiteral(n) =&gt; n,
+      <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;unwrapped a non-number&quot;</span>),
     }
   }
 }
@@ -438,9 +474,9 @@
       DmgToken::HexLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;HexLiteral(0x{n:X})&quot;</span>),
 
       <span class="comment">// other payload variants print their payload
-      </span>DmgToken::Punctuation(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punctuation({p:?})&quot;</span>),
+      </span>DmgToken::Punct(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punct({p:?})&quot;</span>),
       DmgToken::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Ident({i:?})&quot;</span>),
-      DmgToken::StrLiteral(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;StrLiteral({s:?})&quot;</span>),
+      DmgToken::Str(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Str({s:?})&quot;</span>),
 
       <span class="comment">// empty variants just print their name
       </span>DmgToken::Error =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(Error)),
