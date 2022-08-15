@@ -1,5 +1,6 @@
 #![warn(missing_docs)]
 #![allow(dead_code)]
+#![cfg_attr(test, allow(nonstandard_style))]
 
 //! Stuff to work with Dmgrs assembly files.
 
