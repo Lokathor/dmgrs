@@ -444,7 +444,7 @@
       <span class="comment">// other payload variants print their payload
       </span>DmgToken::Punctuation(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punctuation({p:?})&quot;</span>),
       DmgToken::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Ident({i:?})&quot;</span>),
-      DmgToken::StrLiteral(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punctuation({s:?})&quot;</span>),
+      DmgToken::StrLiteral(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;StrLiteral({s:?})&quot;</span>),
 
       <span class="comment">// empty variants just print their name
       </span>DmgToken::Error =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(Error)),
