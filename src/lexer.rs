@@ -35,8 +35,6 @@ use logos::Logos;
 
 use crate::{intern_str_impl::intern_str, StaticStr};
 
-// TODO: probably the register names should ALSO have empty variants.
-
 /// The possible tokens within a Dmgrs program.
 ///
 /// At this early stage of the processing all keywords, instructions, and
