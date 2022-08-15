@@ -244,23 +244,50 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Stuff that &quot;lexes&quot; source text into &quot;lexemes&quot;.
 //!
 //! Use the `DmgToken` enum and the [`Logos`](logos::Logos) trait to lex a
 //! string into its tokens.
 //!
 //! ```no_run
-//! use dmgrs::lexer::DmgToken;
+//! use dmgrs::lexer::Lexeme;
 //! use logos::Logos; // trait, provides the `lexer` function
 //!
 //! const SRC: &amp;str = &quot;ld a, 0&quot;;
-//! for (span, token) in DmgToken::lexer(SRC).spanned() {
-//!   println!(&quot;{span:?} =&gt; {token:?}&quot;);
+//! for (span, lexeme) in Lexeme::lexer(SRC).spanned() {
+//!   println!(&quot;{span:?} =&gt; {lexeme:?}&quot;);
 //! }
 //! ```
 //!
 //! Most likely you&#39;ll want to *parse* the token stream that come out of lexing.
-//! You can pass the `DmgToken::lexer(SRC).spanned()` iterator over to
+//! You can pass the `Lexeme::lexer(SRC).spanned()` iterator over to
 //! [`chumsky::Stream::from_iter`](chumsky::Stream::from_iter). You&#39;ll also need
 //! to tell chumsky what the &quot;span&quot; value will be when you&#39;ve reached the
 //! end-of-input, which will generally be the source string length as both sides
@@ -268,12 +295,12 @@
 //!
 //! ```no_run
 //! use chumsky::stream::Stream;
-//! use dmgrs::lexer::DmgToken;
+//! use dmgrs::lexer::Lexeme;
 //! use logos::Logos; // trait, provides the `lexer` function
 //!
 //! const SRC: &amp;str = &quot;ld a, 0&quot;;
 //! let len = SRC.len();
-//! let lex_iter = DmgToken::lexer(SRC).spanned();
+//! let lex_iter = Lexeme::lexer(SRC).spanned();
 //! let stream = Stream::from_iter(len..len, lex_iter);
 //! ```
 
@@ -287,7 +314,7 @@
 /// register names just count as an &quot;ident&quot;. A simple string interning mechanism
 /// is used, so it&#39;s not a super allocation fest to do this.
 </span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Logos)]</span> <span class="comment">// Note: custom Debug at the end of the file
-</span><span class="kw">pub enum </span>DmgToken {
+</span><span class="kw">pub enum </span>Lexeme {
   <span class="doccomment">/// An error during lexing.
   </span><span class="attribute">#[error]</span>
   Error,
@@ -358,7 +385,7 @@
   </span><span class="attribute">#[regex(<span class="string">r&quot;(\$|0x)[0-9a-fA-F_]+&quot;</span>, |lex| {<span class="kw">let </span>s = lex.slice(); try_hex_str_to_u16(<span class="kw">if </span>s.starts_with(<span class="string">&#39;$&#39;</span>) { <span class="kw-2">&amp;</span>s[<span class="number">1</span>..]</span> } <span class="kw">else </span>{ <span class="kw-2">&amp;</span>s[<span class="number">2</span>..] }) })]
   HexLiteral(u16),
 }
-<span class="kw">impl </span>DmgToken {
+<span class="kw">impl </span>Lexeme {
   <span class="doccomment">/// If this token is an `Ident`
   </span><span class="kw">pub const fn </span>is_ident(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
     <span class="kw">match </span><span class="self">self </span>{
@@ -464,29 +491,56 @@
   <span class="macro">assert_eq!</span>(try_hex_str_to_u16(<span class="string">&quot;FF26&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">0xFF26</span>));
 }
 
-<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>DmgToken {
+<span class="kw">impl </span>core::fmt::Debug <span class="kw">for </span>Lexeme {
   <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
     <span class="kw">match </span><span class="self">self </span>{
       <span class="comment">// numbers print out using the correct radix (rust-style) for maximum
       // recognizability
-      </span>DmgToken::BinaryLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;BinaryLiteral(0b{n:b})&quot;</span>),
-      DmgToken::DecimalLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;DecimalLiteral({n})&quot;</span>),
-      DmgToken::HexLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;HexLiteral(0x{n:X})&quot;</span>),
+      </span>Lexeme::BinaryLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;BinaryLiteral(0b{n:b})&quot;</span>),
+      Lexeme::DecimalLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;DecimalLiteral({n})&quot;</span>),
+      Lexeme::HexLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;HexLiteral(0x{n:X})&quot;</span>),
 
       <span class="comment">// other payload variants print their payload
-      </span>DmgToken::Punct(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punct({p:?})&quot;</span>),
-      DmgToken::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Ident({i:?})&quot;</span>),
-      DmgToken::Str(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Str({s:?})&quot;</span>),
+      </span>Lexeme::Punct(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punct({p:?})&quot;</span>),
+      Lexeme::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Ident({i:?})&quot;</span>),
+      Lexeme::Str(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Str({s:?})&quot;</span>),
 
       <span class="comment">// empty variants just print their name
-      </span>DmgToken::Error =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(Error)),
-      DmgToken::HorizontalWhitespace =&gt; {
+      </span>Lexeme::Error =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(Error)),
+      Lexeme::HorizontalWhitespace =&gt; {
         <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(HorizontalWhitespace))
       }
-      DmgToken::EndOfLineComment =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(EndOfLineComment)),
-      DmgToken::StartMultiComment =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(StartMultiComment)),
-      DmgToken::EndMultiComment =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(EndMultiComment)),
-      DmgToken::EndOfLine =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(EndOfLine)),
+      Lexeme::EndOfLineComment =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(EndOfLineComment)),
+      Lexeme::StartMultiComment =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(StartMultiComment)),
+      Lexeme::EndMultiComment =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(EndMultiComment)),
+      Lexeme::EndOfLine =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(EndOfLine)),
+    }
+  }
+}
+
+<span class="kw">impl </span>core::fmt::Display <span class="kw">for </span>Lexeme {
+  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+    <span class="kw">match </span><span class="self">self </span>{
+      <span class="comment">// numbers print out using the correct radix (rust-style) for maximum
+      // recognizability
+      </span>Lexeme::BinaryLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;%{n:b}&quot;</span>),
+      Lexeme::DecimalLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{n}&quot;</span>),
+      Lexeme::HexLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;${n:X}&quot;</span>),
+
+      <span class="comment">// other payload variants print their payload
+      </span>Lexeme::Punct(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{p}&quot;</span>),
+      Lexeme::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{i}&quot;</span>),
+      Lexeme::Str(s) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{s:?}&quot;</span>),
+
+      <span class="comment">// empty variants just print their name
+      </span>Lexeme::Error =&gt; <span class="macro">write!</span>(f, <span class="macro">stringify!</span>(Error)),
+      Lexeme::HorizontalWhitespace =&gt; {
+        <span class="macro">write!</span>(f, <span class="string">&quot; &quot;</span>)
+      }
+      Lexeme::EndOfLineComment =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;//...&quot;</span>),
+      Lexeme::StartMultiComment =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;/*&quot;</span>),
+      Lexeme::EndMultiComment =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;*/&quot;</span>),
+      Lexeme::EndOfLine =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;\n&quot;</span>),
     }
   }
 }

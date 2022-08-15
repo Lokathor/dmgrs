@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["MultiLineCommentFilter","This iterator adapter will remove all multi-line comments from the lexeme stream."]]};

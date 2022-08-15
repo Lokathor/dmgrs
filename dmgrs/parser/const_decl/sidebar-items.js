@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["AstConstDecl","A const declaration is like `const NAME = EXPR;`"]]};

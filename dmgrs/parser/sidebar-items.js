@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {};
+window.SIDEBAR_ITEMS = {"enum":[["AstTopLevelItem",""]],"mod":[["const_decl",""],["fn_decl",""],["instruction",""],["multi_line_comments","A multi-line comment is any amount of stuff between `/*` and `*/`, nesting allowed."],["program_attr",""],["repeated_newline_filter","Repeated newlines are not needed, it’s better to handle them early."],["static_decl",""]]};
