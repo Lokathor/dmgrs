@@ -273,278 +273,278 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">beef::lean::Cow</span>;
-<span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Span</span>, <span class="ident">TokenStream</span>, <span class="ident">TokenTree</span>};
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
-<span class="kw">use</span> <span class="ident">syn::spanned::Spanned</span>;
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">Attribute</span>, <span class="ident">GenericParam</span>, <span class="ident">Lit</span>, <span class="ident">Type</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>beef::lean::Cow;
+<span class="kw">use </span>proc_macro2::{Span, TokenStream, TokenTree};
+<span class="kw">use </span>quote::quote;
+<span class="kw">use </span>syn::spanned::Spanned;
+<span class="kw">use </span>syn::{Attribute, GenericParam, Lit, Type};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::Errors</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::leaf</span>::{<span class="ident">Callback</span>, <span class="ident">InlineCallback</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util</span>::{<span class="ident">expect_punct</span>, <span class="ident">MaybeVoid</span>};
+<span class="kw">use </span><span class="kw">crate</span>::error::Errors;
+<span class="kw">use </span><span class="kw">crate</span>::leaf::{Callback, InlineCallback};
+<span class="kw">use </span><span class="kw">crate</span>::util::{expect_punct, MaybeVoid};
 
-<span class="kw">mod</span> <span class="ident">definition</span>;
-<span class="kw">mod</span> <span class="ident">ignore_flags</span>;
-<span class="kw">mod</span> <span class="ident">nested</span>;
-<span class="kw">mod</span> <span class="ident">subpattern</span>;
-<span class="kw">mod</span> <span class="ident">type_params</span>;
+<span class="kw">mod </span>definition;
+<span class="kw">mod </span>ignore_flags;
+<span class="kw">mod </span>nested;
+<span class="kw">mod </span>subpattern;
+<span class="kw">mod </span>type_params;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::definition</span>::{<span class="ident">Definition</span>, <span class="ident">Literal</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::ignore_flags::IgnoreFlags</span>;
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::nested</span>::{<span class="ident">AttributeParser</span>, <span class="ident">Nested</span>, <span class="ident">NestedValue</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::subpattern::Subpatterns</span>;
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::type_params</span>::{<span class="ident">replace_lifetime</span>, <span class="ident">traverse_type</span>, <span class="ident">TypeParams</span>};
+<span class="kw">pub use </span><span class="self">self</span>::definition::{Definition, Literal};
+<span class="kw">pub use </span><span class="self">self</span>::ignore_flags::IgnoreFlags;
+<span class="kw">use </span><span class="self">self</span>::nested::{AttributeParser, Nested, NestedValue};
+<span class="kw">pub use </span><span class="self">self</span>::subpattern::Subpatterns;
+<span class="kw">use </span><span class="self">self</span>::type_params::{replace_lifetime, traverse_type, TypeParams};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Parser</span> {
-    <span class="kw">pub</span> <span class="ident">errors</span>: <span class="ident">Errors</span>,
-    <span class="kw">pub</span> <span class="ident">mode</span>: <span class="ident">Mode</span>,
-    <span class="kw">pub</span> <span class="ident">extras</span>: <span class="ident">MaybeVoid</span>,
-    <span class="kw">pub</span> <span class="ident">subpatterns</span>: <span class="ident">Subpatterns</span>,
-    <span class="ident">types</span>: <span class="ident">TypeParams</span>,
+<span class="attribute">#[derive(Default)]</span>
+<span class="kw">pub struct </span>Parser {
+    <span class="kw">pub </span>errors: Errors,
+    <span class="kw">pub </span>mode: Mode,
+    <span class="kw">pub </span>extras: MaybeVoid,
+    <span class="kw">pub </span>subpatterns: Subpatterns,
+    types: TypeParams,
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Mode</span> {
-    <span class="ident">Utf8</span>,
-    <span class="ident">Binary</span>,
+<span class="kw">pub enum </span>Mode {
+    Utf8,
+    Binary,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Mode</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="ident">Mode</span> {
-        <span class="ident">Mode::Utf8</span>
+<span class="kw">impl </span>Default <span class="kw">for </span>Mode {
+    <span class="kw">fn </span>default() -&gt; Mode {
+        Mode::Utf8
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Parser</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_generic</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">param</span>: <span class="ident">GenericParam</span>) {
-        <span class="kw">match</span> <span class="ident">param</span> {
-            <span class="ident">GenericParam::Lifetime</span>(<span class="ident">lt</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">types</span>.<span class="ident">explicit_lifetime</span>(<span class="ident">lt</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">errors</span>);
+<span class="kw">impl </span>Parser {
+    <span class="kw">pub fn </span>parse_generic(<span class="kw-2">&amp;mut </span><span class="self">self</span>, param: GenericParam) {
+        <span class="kw">match </span>param {
+            GenericParam::Lifetime(lt) =&gt; {
+                <span class="self">self</span>.types.explicit_lifetime(lt, <span class="kw-2">&amp;mut </span><span class="self">self</span>.errors);
             }
-            <span class="ident">GenericParam::Type</span>(<span class="ident">ty</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">types</span>.<span class="ident">add</span>(<span class="ident">ty</span>.<span class="ident">ident</span>);
+            GenericParam::Type(ty) =&gt; {
+                <span class="self">self</span>.types.add(ty.ident);
             }
-            <span class="ident">GenericParam::Const</span>(<span class="ident">c</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Logos doesn&#39;t support const generics.&quot;</span>, <span class="ident">c</span>.<span class="ident">span</span>());
+            GenericParam::Const(c) =&gt; {
+                <span class="self">self</span>.err(<span class="string">&quot;Logos doesn&#39;t support const generics.&quot;</span>, c.span());
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generics</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">TokenStream</span>&gt; {
-        <span class="self">self</span>.<span class="ident">types</span>.<span class="ident">generics</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">errors</span>)
+    <span class="kw">pub fn </span>generics(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TokenStream&gt; {
+        <span class="self">self</span>.types.generics(<span class="kw-2">&amp;mut </span><span class="self">self</span>.errors)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_attr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attr</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Attribute</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">AttributeParser</span>&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tokens</span> = <span class="ident">std::mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="ident">attr</span>.<span class="ident">tokens</span>, <span class="ident">TokenStream::new</span>()).<span class="ident">into_iter</span>();
+    <span class="kw">fn </span>parse_attr(<span class="kw-2">&amp;mut </span><span class="self">self</span>, attr: <span class="kw-2">&amp;mut </span>Attribute) -&gt; <span class="prelude-ty">Option</span>&lt;AttributeParser&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>tokens = std::mem::replace(<span class="kw-2">&amp;mut </span>attr.tokens, TokenStream::new()).into_iter();
 
-        <span class="kw">match</span> <span class="ident">tokens</span>.<span class="ident">next</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">TokenTree::Group</span>(<span class="ident">group</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">AttributeParser::new</span>(<span class="ident">group</span>.<span class="ident">stream</span>())),
-            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+        <span class="kw">match </span>tokens.next() {
+            <span class="prelude-val">Some</span>(TokenTree::Group(group)) =&gt; <span class="prelude-val">Some</span>(AttributeParser::new(group.stream())),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="doccomment">/// Try to parse the main `#[logos(...)]`, does nothing if</span>
-    <span class="doccomment">/// the attribute&#39;s name isn&#39;t `logos`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_parse_logos</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attr</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Attribute</span>) {
-        <span class="kw">if</span> !<span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">is_ident</span>(<span class="string">&quot;logos&quot;</span>) {
+    <span class="doccomment">/// Try to parse the main `#[logos(...)]`, does nothing if
+    /// the attribute&#39;s name isn&#39;t `logos`.
+    </span><span class="kw">pub fn </span>try_parse_logos(<span class="kw-2">&amp;mut </span><span class="self">self</span>, attr: <span class="kw-2">&amp;mut </span>Attribute) {
+        <span class="kw">if </span>!attr.path.is_ident(<span class="string">&quot;logos&quot;</span>) {
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">nested</span> = <span class="kw">match</span> <span class="self">self</span>.<span class="ident">parse_attr</span>(<span class="ident">attr</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">tokens</span>) =&gt; <span class="ident">tokens</span>,
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Expected #[logos(...)]&quot;</span>, <span class="ident">attr</span>.<span class="ident">span</span>());
+        <span class="kw">let </span>nested = <span class="kw">match </span><span class="self">self</span>.parse_attr(attr) {
+            <span class="prelude-val">Some</span>(tokens) =&gt; tokens,
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="self">self</span>.err(<span class="string">&quot;Expected #[logos(...)]&quot;</span>, attr.span());
                 <span class="kw">return</span>;
             }
         };
 
-        <span class="kw">for</span> <span class="ident">nested</span> <span class="kw">in</span> <span class="ident">nested</span> {
-            <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">value</span>) = <span class="kw">match</span> <span class="ident">nested</span> {
-                <span class="ident">Nested::Named</span>(<span class="ident">name</span>, <span class="ident">value</span>) =&gt; (<span class="ident">name</span>, <span class="ident">value</span>),
-                <span class="ident">Nested::Unexpected</span>(<span class="ident">tokens</span>) | <span class="ident">Nested::Unnamed</span>(<span class="ident">tokens</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Invalid nested attribute&quot;</span>, <span class="ident">tokens</span>.<span class="ident">span</span>());
+        <span class="kw">for </span>nested <span class="kw">in </span>nested {
+            <span class="kw">let </span>(name, value) = <span class="kw">match </span>nested {
+                Nested::Named(name, value) =&gt; (name, value),
+                Nested::Unexpected(tokens) | Nested::Unnamed(tokens) =&gt; {
+                    <span class="self">self</span>.err(<span class="string">&quot;Invalid nested attribute&quot;</span>, tokens.span());
                     <span class="kw">continue</span>;
                 }
             };
 
-            <span class="kw">match</span> (<span class="ident">name</span>.<span class="ident">to_string</span>().<span class="ident">as_str</span>(), <span class="ident">value</span>) {
-                (<span class="string">&quot;extras&quot;</span>, <span class="ident">NestedValue::Assign</span>(<span class="ident">value</span>)) =&gt; {
-                    <span class="kw">let</span> <span class="ident">span</span> = <span class="ident">value</span>.<span class="ident">span</span>();
+            <span class="kw">match </span>(name.to_string().as_str(), value) {
+                (<span class="string">&quot;extras&quot;</span>, NestedValue::Assign(value)) =&gt; {
+                    <span class="kw">let </span>span = value.span();
 
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">MaybeVoid::Some</span>(<span class="ident">previous</span>) = <span class="self">self</span>.<span class="ident">extras</span>.<span class="ident">replace</span>(<span class="ident">value</span>) {
-                        <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Extras can be defined only once&quot;</span>, <span class="ident">span</span>)
-                            .<span class="ident">err</span>(<span class="string">&quot;Previous definition here&quot;</span>, <span class="ident">previous</span>.<span class="ident">span</span>());
+                    <span class="kw">if let </span>MaybeVoid::Some(previous) = <span class="self">self</span>.extras.replace(value) {
+                        <span class="self">self</span>.err(<span class="string">&quot;Extras can be defined only once&quot;</span>, span)
+                            .err(<span class="string">&quot;Previous definition here&quot;</span>, previous.span());
                     }
                 }
                 (<span class="string">&quot;extras&quot;</span>, <span class="kw">_</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Expected: extras = SomeType&quot;</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.err(<span class="string">&quot;Expected: extras = SomeType&quot;</span>, name.span());
                 }
-                (<span class="string">&quot;type&quot;</span>, <span class="ident">NestedValue::KeywordAssign</span>(<span class="ident">generic</span>, <span class="ident">ty</span>)) =&gt; {
-                    <span class="self">self</span>.<span class="ident">types</span>.<span class="ident">set</span>(<span class="ident">generic</span>, <span class="ident">ty</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">errors</span>);
+                (<span class="string">&quot;type&quot;</span>, NestedValue::KeywordAssign(generic, ty)) =&gt; {
+                    <span class="self">self</span>.types.set(generic, ty, <span class="kw-2">&amp;mut </span><span class="self">self</span>.errors);
                 }
                 (<span class="string">&quot;type&quot;</span>, <span class="kw">_</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Expected: type T = SomeType&quot;</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.err(<span class="string">&quot;Expected: type T = SomeType&quot;</span>, name.span());
                 }
                 (<span class="string">&quot;trivia&quot;</span>, <span class="kw">_</span>) =&gt; {
-                    <span class="comment">// TODO: Remove in future versions</span>
-                    <span class="self">self</span>.<span class="ident">err</span>(
+                    <span class="comment">// TODO: Remove in future versions
+                    </span><span class="self">self</span>.err(
                         <span class="string">&quot;\
                         trivia are no longer supported.\n\
                         \n\
                         For help with migration see release notes: \
                         https://github.com/maciejhirsz/logos/releases\
                         &quot;</span>,
-                        <span class="ident">name</span>.<span class="ident">span</span>(),
+                        name.span(),
                     );
                 }
-                (<span class="string">&quot;subpattern&quot;</span>, <span class="ident">NestedValue::KeywordAssign</span>(<span class="ident">name</span>, <span class="ident">value</span>)) =&gt; {
-                    <span class="self">self</span>.<span class="ident">subpatterns</span>.<span class="ident">add</span>(<span class="ident">name</span>, <span class="ident">value</span>, <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">errors</span>);
+                (<span class="string">&quot;subpattern&quot;</span>, NestedValue::KeywordAssign(name, value)) =&gt; {
+                    <span class="self">self</span>.subpatterns.add(name, value, <span class="kw-2">&amp;mut </span><span class="self">self</span>.errors);
                 }
                 (<span class="string">&quot;subpattern&quot;</span>, <span class="kw">_</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(<span class="string">r#&quot;Expected: subpattern name = r&quot;regex&quot;&quot;#</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+                    <span class="self">self</span>.err(<span class="string">r#&quot;Expected: subpattern name = r&quot;regex&quot;&quot;#</span>, name.span());
                 }
-                (<span class="ident">unknown</span>, <span class="kw">_</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(
-                        <span class="macro">format!</span>(<span class="string">&quot;Unknown nested attribute: {}&quot;</span>, <span class="ident">unknown</span>),
-                        <span class="ident">name</span>.<span class="ident">span</span>(),
+                (unknown, <span class="kw">_</span>) =&gt; {
+                    <span class="self">self</span>.err(
+                        <span class="macro">format!</span>(<span class="string">&quot;Unknown nested attribute: {}&quot;</span>, unknown),
+                        name.span(),
                     );
                 }
             }
         }
     }
 
-    <span class="doccomment">/// Parse attribute definition of a token:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// + `#[token(literal[, callback])]`</span>
-    <span class="doccomment">/// + `#[regex(literal[, callback])]`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_definition</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">attr</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Attribute</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Definition</span>&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nested</span> = <span class="self">self</span>.<span class="ident">parse_attr</span>(<span class="ident">attr</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Parse attribute definition of a token:
+    ///
+    /// + `#[token(literal[, callback])]`
+    /// + `#[regex(literal[, callback])]`
+    </span><span class="kw">pub fn </span>parse_definition(<span class="kw-2">&amp;mut </span><span class="self">self</span>, attr: <span class="kw-2">&amp;mut </span>Attribute) -&gt; <span class="prelude-ty">Option</span>&lt;Definition&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>nested = <span class="self">self</span>.parse_attr(attr)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">literal</span> = <span class="kw">match</span> <span class="ident">nested</span>.<span class="ident">parsed</span>::&lt;<span class="ident">Lit</span>&gt;()<span class="question-mark">?</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">lit</span>) =&gt; <span class="kw">match</span> <span class="ident">lit</span> {
-                <span class="ident">Lit::Str</span>(<span class="ident">string</span>) =&gt; <span class="ident">Literal::Utf8</span>(<span class="ident">string</span>),
-                <span class="ident">Lit::ByteStr</span>(<span class="ident">bytes</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">mode</span> = <span class="ident">Mode::Binary</span>;
+        <span class="kw">let </span>literal = <span class="kw">match </span>nested.parsed::&lt;Lit&gt;()<span class="question-mark">? </span>{
+            <span class="prelude-val">Ok</span>(lit) =&gt; <span class="kw">match </span>lit {
+                Lit::Str(string) =&gt; Literal::Utf8(string),
+                Lit::ByteStr(bytes) =&gt; {
+                    <span class="self">self</span>.mode = Mode::Binary;
 
-                    <span class="ident">Literal::Bytes</span>(<span class="ident">bytes</span>)
+                    Literal::Bytes(bytes)
                 }
-                <span class="kw">_</span> =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Expected a &amp;str or &amp;[u8] slice&quot;</span>, <span class="ident">lit</span>.<span class="ident">span</span>());
+                <span class="kw">_ </span>=&gt; {
+                    <span class="self">self</span>.err(<span class="string">&quot;Expected a &amp;str or &amp;[u8] slice&quot;</span>, lit.span());
 
-                    <span class="kw">return</span> <span class="prelude-val">None</span>;
+                    <span class="kw">return </span><span class="prelude-val">None</span>;
                 }
             },
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">err</span>(<span class="ident">err</span>.<span class="ident">to_string</span>(), <span class="ident">err</span>.<span class="ident">span</span>());
+            <span class="prelude-val">Err</span>(err) =&gt; {
+                <span class="self">self</span>.err(err.to_string(), err.span());
 
-                <span class="kw">return</span> <span class="prelude-val">None</span>;
+                <span class="kw">return </span><span class="prelude-val">None</span>;
             }
         };
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">def</span> = <span class="ident">Definition::new</span>(<span class="ident">literal</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>def = Definition::new(literal);
 
-        <span class="kw">for</span> (<span class="ident">position</span>, <span class="ident">next</span>) <span class="kw">in</span> <span class="ident">nested</span>.<span class="ident">enumerate</span>() {
-            <span class="kw">match</span> <span class="ident">next</span> {
-                <span class="ident">Nested::Unexpected</span>(<span class="ident">tokens</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Unexpected token in attribute&quot;</span>, <span class="ident">tokens</span>.<span class="ident">span</span>());
+        <span class="kw">for </span>(position, next) <span class="kw">in </span>nested.enumerate() {
+            <span class="kw">match </span>next {
+                Nested::Unexpected(tokens) =&gt; {
+                    <span class="self">self</span>.err(<span class="string">&quot;Unexpected token in attribute&quot;</span>, tokens.span());
                 }
-                <span class="ident">Nested::Unnamed</span>(<span class="ident">tokens</span>) =&gt; <span class="kw">match</span> <span class="ident">position</span> {
-                    <span class="number">0</span> =&gt; <span class="ident">def</span>.<span class="ident">callback</span> = <span class="self">self</span>.<span class="ident">parse_callback</span>(<span class="ident">tokens</span>),
-                    <span class="kw">_</span> =&gt; {
-                        <span class="self">self</span>.<span class="ident">err</span>(
+                Nested::Unnamed(tokens) =&gt; <span class="kw">match </span>position {
+                    <span class="number">0 </span>=&gt; def.callback = <span class="self">self</span>.parse_callback(tokens),
+                    <span class="kw">_ </span>=&gt; {
+                        <span class="self">self</span>.err(
                             <span class="string">&quot;\
                             Expected a named argument at this position\n\
                             \n\
                             hint: If you are trying to define a callback here use: callback = ...\
                             &quot;</span>,
-                            <span class="ident">tokens</span>.<span class="ident">span</span>(),
+                            tokens.span(),
                         );
                     }
                 },
-                <span class="ident">Nested::Named</span>(<span class="ident">name</span>, <span class="ident">value</span>) =&gt; {
-                    <span class="ident">def</span>.<span class="ident">named_attr</span>(<span class="ident">name</span>, <span class="ident">value</span>, <span class="self">self</span>);
+                Nested::Named(name, value) =&gt; {
+                    def.named_attr(name, value, <span class="self">self</span>);
                 }
             }
         }
 
-        <span class="prelude-val">Some</span>(<span class="ident">def</span>)
+        <span class="prelude-val">Some</span>(def)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_callback</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">tokens</span>: <span class="ident">TokenStream</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Callback</span>&gt; {
-        <span class="kw">let</span> <span class="ident">span</span> = <span class="ident">tokens</span>.<span class="ident">span</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tokens</span> = <span class="ident">tokens</span>.<span class="ident">into_iter</span>();
+    <span class="kw">fn </span>parse_callback(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tokens: TokenStream) -&gt; <span class="prelude-ty">Option</span>&lt;Callback&gt; {
+        <span class="kw">let </span>span = tokens.span();
+        <span class="kw">let </span><span class="kw-2">mut </span>tokens = tokens.into_iter();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tt</span>) = <span class="ident">expect_punct</span>(<span class="ident">tokens</span>.<span class="ident">next</span>(), <span class="string">&#39;|&#39;</span>) {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">label</span> = <span class="ident">TokenStream::from</span>(<span class="ident">tt</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(tt) = expect_punct(tokens.next(), <span class="string">&#39;|&#39;</span>) {
+            <span class="kw">let </span><span class="kw-2">mut </span>label = TokenStream::from(tt);
 
-            <span class="ident">label</span>.<span class="ident">extend</span>(<span class="ident">tokens</span>);
+            label.extend(tokens);
 
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Callback::Label</span>(<span class="ident">label</span>));
+            <span class="kw">return </span><span class="prelude-val">Some</span>(Callback::Label(label));
         }
 
-        <span class="kw">let</span> <span class="ident">first</span> = <span class="ident">tokens</span>.<span class="ident">next</span>();
-        <span class="kw">let</span> <span class="ident">error</span> = <span class="ident">expect_punct</span>(<span class="ident">tokens</span>.<span class="ident">next</span>(), <span class="string">&#39;|&#39;</span>);
+        <span class="kw">let </span>first = tokens.next();
+        <span class="kw">let </span>error = expect_punct(tokens.next(), <span class="string">&#39;|&#39;</span>);
 
-        <span class="kw">let</span> <span class="ident">arg</span> = <span class="kw">match</span> (<span class="ident">error</span>, <span class="ident">first</span>) {
-            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">TokenTree::Ident</span>(<span class="ident">arg</span>))) =&gt; <span class="ident">arg</span>,
-            <span class="kw">_</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">err</span>(
+        <span class="kw">let </span>arg = <span class="kw">match </span>(error, first) {
+            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(TokenTree::Ident(arg))) =&gt; arg,
+            <span class="kw">_ </span>=&gt; {
+                <span class="self">self</span>.err(
                     <span class="string">&quot;Inline callbacks must use closure syntax with exactly one parameter&quot;</span>,
-                    <span class="ident">span</span>,
+                    span,
                 );
-                <span class="kw">return</span> <span class="prelude-val">None</span>;
+                <span class="kw">return </span><span class="prelude-val">None</span>;
             }
         };
 
-        <span class="kw">let</span> <span class="ident">body</span> = <span class="kw">match</span> <span class="ident">tokens</span>.<span class="ident">next</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">TokenTree::Group</span>(<span class="ident">group</span>)) =&gt; <span class="ident">group</span>.<span class="ident">stream</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">first</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">body</span> = <span class="ident">TokenStream::from</span>(<span class="ident">first</span>);
+        <span class="kw">let </span>body = <span class="kw">match </span>tokens.next() {
+            <span class="prelude-val">Some</span>(TokenTree::Group(group)) =&gt; group.stream(),
+            <span class="prelude-val">Some</span>(first) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>body = TokenStream::from(first);
 
-                <span class="ident">body</span>.<span class="ident">extend</span>(<span class="ident">tokens</span>);
-                <span class="ident">body</span>
+                body.extend(tokens);
+                body
             }
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">err</span>(<span class="string">&quot;Callback missing a body&quot;</span>, <span class="ident">span</span>);
-                <span class="kw">return</span> <span class="prelude-val">None</span>;
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="self">self</span>.err(<span class="string">&quot;Callback missing a body&quot;</span>, span);
+                <span class="kw">return </span><span class="prelude-val">None</span>;
             }
         };
 
-        <span class="kw">let</span> <span class="ident">inline</span> = <span class="ident">InlineCallback</span> { <span class="ident">arg</span>, <span class="ident">body</span>, <span class="ident">span</span> };
+        <span class="kw">let </span>inline = InlineCallback { arg, body, span };
 
-        <span class="prelude-val">Some</span>(<span class="ident">inline</span>.<span class="ident">into</span>())
+        <span class="prelude-val">Some</span>(inline.into())
     }
 
-    <span class="doccomment">/// Checks if `ty` is a declared generic param, if so replaces it</span>
-    <span class="doccomment">/// with a concrete type defined using #[logos(type T = Type)]</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If no matching generic param is found, all lifetimes are fixed</span>
-    <span class="doccomment">/// to the source lifetime</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ty</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Type</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="ident">traverse_type</span>(<span class="ident">ty</span>, <span class="kw-2">&amp;mut</span> |<span class="ident">ty</span>| {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Type::Path</span>(<span class="ident">tp</span>) = <span class="ident">ty</span> {
-                <span class="comment">// Skip types that begin with `self::`</span>
-                <span class="kw">if</span> <span class="ident">tp</span>.<span class="ident">qself</span>.<span class="ident">is_none</span>() {
-                    <span class="comment">// If `ty` is a generic type parameter, try to find</span>
-                    <span class="comment">// its concrete type defined with #[logos(type T = Type)]</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">substitue</span>) = <span class="self">self</span>.<span class="ident">types</span>.<span class="ident">find</span>(<span class="kw-2">&amp;</span><span class="ident">tp</span>.<span class="ident">path</span>) {
-                        <span class="kw-2">*</span><span class="ident">ty</span> = <span class="ident">substitue</span>;
+    <span class="doccomment">/// Checks if `ty` is a declared generic param, if so replaces it
+    /// with a concrete type defined using #[logos(type T = Type)]
+    ///
+    /// If no matching generic param is found, all lifetimes are fixed
+    /// to the source lifetime
+    </span><span class="kw">pub fn </span>get_type(<span class="kw-2">&amp;</span><span class="self">self</span>, ty: <span class="kw-2">&amp;mut </span>Type) -&gt; TokenStream {
+        traverse_type(ty, <span class="kw-2">&amp;mut </span>|ty| {
+            <span class="kw">if let </span>Type::Path(tp) = ty {
+                <span class="comment">// Skip types that begin with `self::`
+                </span><span class="kw">if </span>tp.qself.is_none() {
+                    <span class="comment">// If `ty` is a generic type parameter, try to find
+                    // its concrete type defined with #[logos(type T = Type)]
+                    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(substitue) = <span class="self">self</span>.types.find(<span class="kw-2">&amp;</span>tp.path) {
+                        <span class="kw-2">*</span>ty = substitue;
                     }
                 }
             }
-            <span class="comment">// If `ty` is a concrete type, fix its lifetimes to &#39;source</span>
-            <span class="ident">replace_lifetime</span>(<span class="ident">ty</span>);
+            <span class="comment">// If `ty` is a concrete type, fix its lifetimes to &#39;source
+            </span>replace_lifetime(ty);
         });
 
-        <span class="macro">quote!</span>(#<span class="ident">ty</span>)
+        <span class="macro">quote!</span>(#ty)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">err</span>&lt;<span class="ident">M</span>&gt;(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="ident">M</span>, <span class="ident">span</span>: <span class="ident">Span</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Errors</span>
-    <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Into</span>&lt;<span class="ident">Cow</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">str</span>&gt;&gt;,
+    <span class="kw">pub fn </span>err&lt;M&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, span: Span) -&gt; <span class="kw-2">&amp;mut </span>Errors
+    <span class="kw">where
+        </span>M: Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;,
     {
-        <span class="self">self</span>.<span class="ident">errors</span>.<span class="ident">err</span>(<span class="ident">message</span>, <span class="ident">span</span>)
+        <span class="self">self</span>.errors.err(message, span)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

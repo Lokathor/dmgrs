@@ -268,273 +268,273 @@
 <span id="266">266</span>
 <span id="267">267</span>
 <span id="268">268</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::fmt::Debug;
 
-<span class="kw">use</span> <span class="ident">regex_syntax::utf8::Utf8Sequences</span>;
+<span class="kw">use </span>regex_syntax::utf8::Utf8Sequences;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::graph</span>::{<span class="ident">Disambiguate</span>, <span class="ident">Fork</span>, <span class="ident">Graph</span>, <span class="ident">Node</span>, <span class="ident">NodeId</span>, <span class="ident">Range</span>, <span class="ident">ReservedId</span>, <span class="ident">Rope</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mir</span>::{<span class="ident">Class</span>, <span class="ident">ClassUnicode</span>, <span class="ident">Literal</span>, <span class="ident">Mir</span>};
+<span class="kw">use </span><span class="kw">crate</span>::graph::{Disambiguate, Fork, Graph, Node, NodeId, Range, ReservedId, Rope};
+<span class="kw">use </span><span class="kw">crate</span>::mir::{Class, ClassUnicode, Literal, Mir};
 
-<span class="kw">impl</span>&lt;<span class="ident">Leaf</span>: <span class="ident">Disambiguate</span> + <span class="ident">Debug</span>&gt; <span class="ident">Graph</span>&lt;<span class="ident">Leaf</span>&gt; {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">regex</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">mir</span>: <span class="ident">Mir</span>, <span class="ident">then</span>: <span class="ident">NodeId</span>) -&gt; <span class="ident">NodeId</span> {
-        <span class="self">self</span>.<span class="ident">parse_mir</span>(<span class="ident">mir</span>, <span class="ident">then</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+<span class="kw">impl</span>&lt;Leaf: Disambiguate + Debug&gt; Graph&lt;Leaf&gt; {
+    <span class="kw">pub fn </span>regex(<span class="kw-2">&amp;mut </span><span class="self">self</span>, mir: Mir, then: NodeId) -&gt; NodeId {
+        <span class="self">self</span>.parse_mir(mir, then, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_mir</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">mir</span>: <span class="ident">Mir</span>,
-        <span class="ident">then</span>: <span class="ident">NodeId</span>,
-        <span class="ident">miss</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">NodeId</span>&gt;,
-        <span class="ident">reserved</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ReservedId</span>&gt;,
-    ) -&gt; <span class="ident">NodeId</span> {
-        <span class="kw">match</span> <span class="ident">mir</span> {
-            <span class="ident">Mir::Empty</span> =&gt; <span class="ident">then</span>,
-            <span class="ident">Mir::Loop</span>(<span class="ident">mir</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">miss</span> = <span class="kw">match</span> <span class="ident">miss</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">id</span>) =&gt; <span class="self">self</span>.<span class="ident">merge</span>(<span class="ident">id</span>, <span class="ident">then</span>),
-                    <span class="prelude-val">None</span> =&gt; <span class="ident">then</span>,
+    <span class="kw">fn </span>parse_mir(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        mir: Mir,
+        then: NodeId,
+        miss: <span class="prelude-ty">Option</span>&lt;NodeId&gt;,
+        reserved: <span class="prelude-ty">Option</span>&lt;ReservedId&gt;,
+    ) -&gt; NodeId {
+        <span class="kw">match </span>mir {
+            Mir::Empty =&gt; then,
+            Mir::Loop(mir) =&gt; {
+                <span class="kw">let </span>miss = <span class="kw">match </span>miss {
+                    <span class="prelude-val">Some</span>(id) =&gt; <span class="self">self</span>.merge(id, then),
+                    <span class="prelude-val">None </span>=&gt; then,
                 };
-                <span class="kw">let</span> <span class="ident">this</span> = <span class="kw">match</span> <span class="ident">reserved</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">rid</span>) =&gt; <span class="ident">rid</span>,
-                    <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">reserve</span>(),
+                <span class="kw">let </span>this = <span class="kw">match </span>reserved {
+                    <span class="prelude-val">Some</span>(rid) =&gt; rid,
+                    <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.reserve(),
                 };
 
-                <span class="self">self</span>.<span class="ident">parse_mir</span>(<span class="kw-2">*</span><span class="ident">mir</span>, <span class="ident">this</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="ident">miss</span>), <span class="prelude-val">Some</span>(<span class="ident">this</span>))
+                <span class="self">self</span>.parse_mir(<span class="kw-2">*</span>mir, this.get(), <span class="prelude-val">Some</span>(miss), <span class="prelude-val">Some</span>(this))
             }
-            <span class="ident">Mir::Maybe</span>(<span class="ident">mir</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">miss</span> = <span class="kw">match</span> <span class="ident">miss</span> {
-                    <span class="prelude-val">Some</span>(<span class="ident">id</span>) =&gt; <span class="self">self</span>.<span class="ident">merge</span>(<span class="ident">id</span>, <span class="ident">then</span>),
-                    <span class="prelude-val">None</span> =&gt; <span class="ident">then</span>,
+            Mir::Maybe(mir) =&gt; {
+                <span class="kw">let </span>miss = <span class="kw">match </span>miss {
+                    <span class="prelude-val">Some</span>(id) =&gt; <span class="self">self</span>.merge(id, then),
+                    <span class="prelude-val">None </span>=&gt; then,
                 };
 
-                <span class="self">self</span>.<span class="ident">parse_mir</span>(<span class="kw-2">*</span><span class="ident">mir</span>, <span class="ident">then</span>, <span class="prelude-val">Some</span>(<span class="ident">miss</span>), <span class="ident">reserved</span>)
+                <span class="self">self</span>.parse_mir(<span class="kw-2">*</span>mir, then, <span class="prelude-val">Some</span>(miss), reserved)
             }
-            <span class="ident">Mir::Alternation</span>(<span class="ident">alternation</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fork</span> = <span class="ident">Fork::new</span>().<span class="ident">miss</span>(<span class="ident">miss</span>);
+            Mir::Alternation(alternation) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>fork = Fork::new().miss(miss);
 
-                <span class="kw">for</span> <span class="ident">mir</span> <span class="kw">in</span> <span class="ident">alternation</span> {
-                    <span class="kw">let</span> <span class="ident">id</span> = <span class="self">self</span>.<span class="ident">parse_mir</span>(<span class="ident">mir</span>, <span class="ident">then</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
-                    <span class="kw">let</span> <span class="ident">alt</span> = <span class="self">self</span>.<span class="ident">fork_off</span>(<span class="ident">id</span>);
+                <span class="kw">for </span>mir <span class="kw">in </span>alternation {
+                    <span class="kw">let </span>id = <span class="self">self</span>.parse_mir(mir, then, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
+                    <span class="kw">let </span>alt = <span class="self">self</span>.fork_off(id);
 
-                    <span class="ident">fork</span>.<span class="ident">merge</span>(<span class="ident">alt</span>, <span class="self">self</span>);
+                    fork.merge(alt, <span class="self">self</span>);
                 }
 
-                <span class="self">self</span>.<span class="ident">insert_or_push</span>(<span class="ident">reserved</span>, <span class="ident">fork</span>)
+                <span class="self">self</span>.insert_or_push(reserved, fork)
             }
-            <span class="ident">Mir::Literal</span>(<span class="ident">literal</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">pattern</span> = <span class="kw">match</span> <span class="ident">literal</span> {
-                    <span class="ident">Literal::Unicode</span>(<span class="ident">unicode</span>) =&gt; {
-                        <span class="ident">unicode</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;mut</span> [<span class="number">0</span>; <span class="number">4</span>]).<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>()
+            Mir::Literal(literal) =&gt; {
+                <span class="kw">let </span>pattern = <span class="kw">match </span>literal {
+                    Literal::Unicode(unicode) =&gt; {
+                        unicode.encode_utf8(<span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">4</span>]).as_bytes().to_vec()
                     }
-                    <span class="ident">Literal::Byte</span>(<span class="ident">byte</span>) =&gt; [<span class="ident">byte</span>].<span class="ident">to_vec</span>(),
+                    Literal::Byte(byte) =&gt; [byte].to_vec(),
                 };
 
-                <span class="self">self</span>.<span class="ident">insert_or_push</span>(<span class="ident">reserved</span>, <span class="ident">Rope::new</span>(<span class="ident">pattern</span>, <span class="ident">then</span>).<span class="ident">miss</span>(<span class="ident">miss</span>))
+                <span class="self">self</span>.insert_or_push(reserved, Rope::new(pattern, then).miss(miss))
             }
-            <span class="ident">Mir::Concat</span>(<span class="kw-2">mut</span> <span class="ident">concat</span>) =&gt; {
-                <span class="comment">// We&#39;ll be writing from the back, so need to allocate enough</span>
-                <span class="comment">// space here. Worst case scenario is all unicode codepoints</span>
-                <span class="comment">// producing 4 byte utf8 sequences</span>
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ropebuf</span> = <span class="macro">vec!</span>[<span class="ident">Range::from</span>(<span class="number">0</span>); <span class="ident">concat</span>.<span class="ident">len</span>() * <span class="number">4</span>];
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cur</span> = <span class="ident">ropebuf</span>.<span class="ident">len</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">end</span> = <span class="ident">ropebuf</span>.<span class="ident">len</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">then</span> = <span class="ident">then</span>;
+            Mir::Concat(<span class="kw-2">mut </span>concat) =&gt; {
+                <span class="comment">// We&#39;ll be writing from the back, so need to allocate enough
+                // space here. Worst case scenario is all unicode codepoints
+                // producing 4 byte utf8 sequences
+                </span><span class="kw">let </span><span class="kw-2">mut </span>ropebuf = <span class="macro">vec!</span>[Range::from(<span class="number">0</span>); concat.len() * <span class="number">4</span>];
+                <span class="kw">let </span><span class="kw-2">mut </span>cur = ropebuf.len();
+                <span class="kw">let </span><span class="kw-2">mut </span>end = ropebuf.len();
+                <span class="kw">let </span><span class="kw-2">mut </span>then = then;
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handle_bytes</span> = |<span class="ident">graph</span>: <span class="kw-2">&amp;mut</span> <span class="self">Self</span>, <span class="ident">mir</span>, <span class="ident">then</span>: <span class="kw-2">&amp;mut</span> <span class="ident">NodeId</span>| <span class="kw">match</span> <span class="ident">mir</span> {
-                    <span class="ident">Mir::Literal</span>(<span class="ident">Literal::Unicode</span>(<span class="ident">u</span>)) =&gt; {
-                        <span class="ident">cur</span> -= <span class="ident">u</span>.<span class="ident">len_utf8</span>();
-                        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">byte</span>) <span class="kw">in</span> <span class="ident">u</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;mut</span> [<span class="number">0</span>; <span class="number">4</span>]).<span class="ident">bytes</span>().<span class="ident">enumerate</span>() {
-                            <span class="ident">ropebuf</span>[<span class="ident">cur</span> + <span class="ident">i</span>] = <span class="ident">byte</span>.<span class="ident">into</span>();
+                <span class="kw">let </span><span class="kw-2">mut </span>handle_bytes = |graph: <span class="kw-2">&amp;mut </span><span class="self">Self</span>, mir, then: <span class="kw-2">&amp;mut </span>NodeId| <span class="kw">match </span>mir {
+                    Mir::Literal(Literal::Unicode(u)) =&gt; {
+                        cur -= u.len_utf8();
+                        <span class="kw">for </span>(i, byte) <span class="kw">in </span>u.encode_utf8(<span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">4</span>]).bytes().enumerate() {
+                            ropebuf[cur + i] = byte.into();
                         }
-                        <span class="prelude-val">None</span>
-                    }
-                    <span class="ident">Mir::Literal</span>(<span class="ident">Literal::Byte</span>(<span class="ident">byte</span>)) =&gt; {
-                        <span class="ident">cur</span> -= <span class="number">1</span>;
-                        <span class="ident">ropebuf</span>[<span class="ident">cur</span>] = <span class="ident">byte</span>.<span class="ident">into</span>();
-                        <span class="prelude-val">None</span>
-                    }
-                    <span class="ident">Mir::Class</span>(<span class="ident">Class::Unicode</span>(<span class="ident">class</span>)) <span class="kw">if</span> <span class="ident">is_one_ascii</span>(<span class="kw-2">&amp;</span><span class="ident">class</span>) =&gt; {
-                        <span class="ident">cur</span> -= <span class="number">1</span>;
-                        <span class="ident">ropebuf</span>[<span class="ident">cur</span>] = <span class="ident">class</span>.<span class="ident">ranges</span>()[<span class="number">0</span>].<span class="ident">into</span>();
-                        <span class="prelude-val">None</span>
-                    }
-                    <span class="ident">Mir::Class</span>(<span class="ident">Class::Bytes</span>(<span class="ident">class</span>)) <span class="kw">if</span> <span class="ident">class</span>.<span class="ident">ranges</span>().<span class="ident">len</span>() == <span class="number">1</span> =&gt; {
-                        <span class="ident">cur</span> -= <span class="number">1</span>;
-                        <span class="ident">ropebuf</span>[<span class="ident">cur</span>] = <span class="ident">class</span>.<span class="ident">ranges</span>()[<span class="number">0</span>].<span class="ident">into</span>();
-                        <span class="prelude-val">None</span>
-                    }
-                    <span class="ident">mir</span> =&gt; {
-                        <span class="kw">if</span> <span class="ident">end</span> &gt; <span class="ident">cur</span> {
-                            <span class="kw">let</span> <span class="ident">rope</span> = <span class="ident">Rope::new</span>(<span class="kw-2">&amp;</span><span class="ident">ropebuf</span>[<span class="ident">cur</span>..<span class="ident">end</span>], <span class="kw-2">*</span><span class="ident">then</span>);
+                        <span class="prelude-val">None
+                    </span>}
+                    Mir::Literal(Literal::Byte(byte)) =&gt; {
+                        cur -= <span class="number">1</span>;
+                        ropebuf[cur] = byte.into();
+                        <span class="prelude-val">None
+                    </span>}
+                    Mir::Class(Class::Unicode(class)) <span class="kw">if </span>is_one_ascii(<span class="kw-2">&amp;</span>class) =&gt; {
+                        cur -= <span class="number">1</span>;
+                        ropebuf[cur] = class.ranges()[<span class="number">0</span>].into();
+                        <span class="prelude-val">None
+                    </span>}
+                    Mir::Class(Class::Bytes(class)) <span class="kw">if </span>class.ranges().len() == <span class="number">1 </span>=&gt; {
+                        cur -= <span class="number">1</span>;
+                        ropebuf[cur] = class.ranges()[<span class="number">0</span>].into();
+                        <span class="prelude-val">None
+                    </span>}
+                    mir =&gt; {
+                        <span class="kw">if </span>end &gt; cur {
+                            <span class="kw">let </span>rope = Rope::new(<span class="kw-2">&amp;</span>ropebuf[cur..end], <span class="kw-2">*</span>then);
 
-                            <span class="kw-2">*</span><span class="ident">then</span> = <span class="ident">graph</span>.<span class="ident">push</span>(<span class="ident">rope</span>);
-                            <span class="ident">end</span> = <span class="ident">cur</span>;
+                            <span class="kw-2">*</span>then = graph.push(rope);
+                            end = cur;
                         }
 
-                        <span class="prelude-val">Some</span>(<span class="ident">mir</span>)
+                        <span class="prelude-val">Some</span>(mir)
                     }
                 };
 
-                <span class="kw">for</span> <span class="ident">mir</span> <span class="kw">in</span> <span class="ident">concat</span>.<span class="ident">drain</span>(<span class="number">1</span>..).<span class="ident">rev</span>() {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mir</span>) = <span class="ident">handle_bytes</span>(<span class="self">self</span>, <span class="ident">mir</span>, <span class="kw-2">&amp;mut</span> <span class="ident">then</span>) {
-                        <span class="ident">then</span> = <span class="self">self</span>.<span class="ident">parse_mir</span>(<span class="ident">mir</span>, <span class="ident">then</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
+                <span class="kw">for </span>mir <span class="kw">in </span>concat.drain(<span class="number">1</span>..).rev() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(mir) = handle_bytes(<span class="self">self</span>, mir, <span class="kw-2">&amp;mut </span>then) {
+                        then = <span class="self">self</span>.parse_mir(mir, then, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
                     }
                 }
 
-                <span class="kw">match</span> <span class="ident">handle_bytes</span>(<span class="self">self</span>, <span class="ident">concat</span>.<span class="ident">remove</span>(<span class="number">0</span>), <span class="kw-2">&amp;mut</span> <span class="ident">then</span>) {
-                    <span class="prelude-val">None</span> =&gt; {
-                        <span class="kw">let</span> <span class="ident">rope</span> = <span class="ident">Rope::new</span>(<span class="kw-2">&amp;</span><span class="ident">ropebuf</span>[<span class="ident">cur</span>..<span class="ident">end</span>], <span class="ident">then</span>).<span class="ident">miss</span>(<span class="ident">miss</span>);
+                <span class="kw">match </span>handle_bytes(<span class="self">self</span>, concat.remove(<span class="number">0</span>), <span class="kw-2">&amp;mut </span>then) {
+                    <span class="prelude-val">None </span>=&gt; {
+                        <span class="kw">let </span>rope = Rope::new(<span class="kw-2">&amp;</span>ropebuf[cur..end], then).miss(miss);
 
-                        <span class="self">self</span>.<span class="ident">insert_or_push</span>(<span class="ident">reserved</span>, <span class="ident">rope</span>)
+                        <span class="self">self</span>.insert_or_push(reserved, rope)
                     }
-                    <span class="prelude-val">Some</span>(<span class="ident">mir</span>) =&gt; <span class="self">self</span>.<span class="ident">parse_mir</span>(<span class="ident">mir</span>, <span class="ident">then</span>, <span class="ident">miss</span>, <span class="ident">reserved</span>),
+                    <span class="prelude-val">Some</span>(mir) =&gt; <span class="self">self</span>.parse_mir(mir, then, miss, reserved),
                 }
             }
-            <span class="ident">Mir::Class</span>(<span class="ident">Class::Unicode</span>(<span class="ident">class</span>)) <span class="kw">if</span> !<span class="ident">is_ascii</span>(<span class="kw-2">&amp;</span><span class="ident">class</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ropes</span> = <span class="ident">class</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">flat_map</span>(|<span class="ident">range</span>| <span class="ident">Utf8Sequences::new</span>(<span class="ident">range</span>.<span class="ident">start</span>(), <span class="ident">range</span>.<span class="ident">end</span>()))
-                    .<span class="ident">map</span>(|<span class="ident">sequence</span>| <span class="ident">Rope::new</span>(<span class="ident">sequence</span>.<span class="ident">as_slice</span>(), <span class="ident">then</span>))
-                    .<span class="ident">collect</span>::&lt;<span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;&gt;();
+            Mir::Class(Class::Unicode(class)) <span class="kw">if </span>!is_ascii(<span class="kw-2">&amp;</span>class) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>ropes = class
+                    .iter()
+                    .flat_map(|range| Utf8Sequences::new(range.start(), range.end()))
+                    .map(|sequence| Rope::new(sequence.as_slice(), then))
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-                <span class="kw">if</span> <span class="ident">ropes</span>.<span class="ident">len</span>() == <span class="number">1</span> {
-                    <span class="kw">let</span> <span class="ident">rope</span> = <span class="ident">ropes</span>.<span class="ident">remove</span>(<span class="number">0</span>);
+                <span class="kw">if </span>ropes.len() == <span class="number">1 </span>{
+                    <span class="kw">let </span>rope = ropes.remove(<span class="number">0</span>);
 
-                    <span class="kw">return</span> <span class="self">self</span>.<span class="ident">insert_or_push</span>(<span class="ident">reserved</span>, <span class="ident">rope</span>.<span class="ident">miss</span>(<span class="ident">miss</span>));
+                    <span class="kw">return </span><span class="self">self</span>.insert_or_push(reserved, rope.miss(miss));
                 }
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> = <span class="ident">Fork::new</span>().<span class="ident">miss</span>(<span class="ident">miss</span>);
+                <span class="kw">let </span><span class="kw-2">mut </span>root = Fork::new().miss(miss);
 
-                <span class="kw">for</span> <span class="ident">rope</span> <span class="kw">in</span> <span class="ident">ropes</span> {
-                    <span class="kw">let</span> <span class="ident">fork</span> = <span class="ident">rope</span>.<span class="ident">into_fork</span>(<span class="self">self</span>);
-                    <span class="ident">root</span>.<span class="ident">merge</span>(<span class="ident">fork</span>, <span class="self">self</span>);
+                <span class="kw">for </span>rope <span class="kw">in </span>ropes {
+                    <span class="kw">let </span>fork = rope.into_fork(<span class="self">self</span>);
+                    root.merge(fork, <span class="self">self</span>);
                 }
 
-                <span class="self">self</span>.<span class="ident">insert_or_push</span>(<span class="ident">reserved</span>, <span class="ident">root</span>)
+                <span class="self">self</span>.insert_or_push(reserved, root)
             }
-            <span class="ident">Mir::Class</span>(<span class="ident">class</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fork</span> = <span class="ident">Fork::new</span>().<span class="ident">miss</span>(<span class="ident">miss</span>);
+            Mir::Class(class) =&gt; {
+                <span class="kw">let </span><span class="kw-2">mut </span>fork = Fork::new().miss(miss);
 
-                <span class="kw">let</span> <span class="ident">class</span>: <span class="ident">Vec</span>&lt;<span class="ident">Range</span>&gt; = <span class="kw">match</span> <span class="ident">class</span> {
-                    <span class="ident">Class::Unicode</span>(<span class="ident">u</span>) =&gt; <span class="ident">u</span>.<span class="ident">iter</span>().<span class="ident">copied</span>().<span class="ident">map</span>(<span class="ident">Into::into</span>).<span class="ident">collect</span>(),
-                    <span class="ident">Class::Bytes</span>(<span class="ident">b</span>) =&gt; <span class="ident">b</span>.<span class="ident">iter</span>().<span class="ident">copied</span>().<span class="ident">map</span>(<span class="ident">Into::into</span>).<span class="ident">collect</span>(),
+                <span class="kw">let </span>class: Vec&lt;Range&gt; = <span class="kw">match </span>class {
+                    Class::Unicode(u) =&gt; u.iter().copied().map(Into::into).collect(),
+                    Class::Bytes(b) =&gt; b.iter().copied().map(Into::into).collect(),
                 };
 
-                <span class="kw">for</span> <span class="ident">range</span> <span class="kw">in</span> <span class="ident">class</span> {
-                    <span class="ident">fork</span>.<span class="ident">add_branch</span>(<span class="ident">range</span>, <span class="ident">then</span>, <span class="self">self</span>);
+                <span class="kw">for </span>range <span class="kw">in </span>class {
+                    fork.add_branch(range, then, <span class="self">self</span>);
                 }
 
-                <span class="self">self</span>.<span class="ident">insert_or_push</span>(<span class="ident">reserved</span>, <span class="ident">fork</span>)
+                <span class="self">self</span>.insert_or_push(reserved, fork)
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">insert_or_push</span>&lt;<span class="ident">N</span>&gt;(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ReservedId</span>&gt;, <span class="ident">node</span>: <span class="ident">N</span>) -&gt; <span class="ident">NodeId</span>
-    <span class="kw">where</span>
-        <span class="ident">N</span>: <span class="ident">Into</span>&lt;<span class="ident">Node</span>&lt;<span class="ident">Leaf</span>&gt;&gt;,
+    <span class="kw">fn </span>insert_or_push&lt;N&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: <span class="prelude-ty">Option</span>&lt;ReservedId&gt;, node: N) -&gt; NodeId
+    <span class="kw">where
+        </span>N: Into&lt;Node&lt;Leaf&gt;&gt;,
     {
-        <span class="kw">match</span> <span class="ident">id</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">id</span>) =&gt; <span class="self">self</span>.<span class="ident">insert</span>(<span class="ident">id</span>, <span class="ident">node</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">node</span>),
+        <span class="kw">match </span>id {
+            <span class="prelude-val">Some</span>(id) =&gt; <span class="self">self</span>.insert(id, node),
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.push(node),
         }
     }
 }
 
-<span class="kw">fn</span> <span class="ident">is_ascii</span>(<span class="ident">class</span>: <span class="kw-2">&amp;</span><span class="ident">ClassUnicode</span>) -&gt; <span class="ident">bool</span> {
-    <span class="ident">class</span>.<span class="ident">iter</span>().<span class="ident">all</span>(|<span class="ident">range</span>| {
-        <span class="kw">let</span> <span class="ident">start</span> = <span class="ident">range</span>.<span class="ident">start</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-        <span class="kw">let</span> <span class="ident">end</span> = <span class="ident">range</span>.<span class="ident">end</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+<span class="kw">fn </span>is_ascii(class: <span class="kw-2">&amp;</span>ClassUnicode) -&gt; bool {
+    class.iter().all(|range| {
+        <span class="kw">let </span>start = range.start() <span class="kw">as </span>u32;
+        <span class="kw">let </span>end = range.end() <span class="kw">as </span>u32;
 
-        <span class="ident">start</span> &lt; <span class="number">128</span> &amp;&amp; (<span class="ident">end</span> &lt; <span class="number">128</span> || <span class="ident">end</span> == <span class="number">0x0010_FFFF</span>)
+        start &lt; <span class="number">128 </span>&amp;&amp; (end &lt; <span class="number">128 </span>|| end == <span class="number">0x0010_FFFF</span>)
     })
 }
 
-<span class="kw">fn</span> <span class="ident">is_one_ascii</span>(<span class="ident">class</span>: <span class="kw-2">&amp;</span><span class="ident">ClassUnicode</span>) -&gt; <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="ident">class</span>.<span class="ident">ranges</span>().<span class="ident">len</span>() != <span class="number">1</span> {
-        <span class="kw">return</span> <span class="bool-val">false</span>;
+<span class="kw">fn </span>is_one_ascii(class: <span class="kw-2">&amp;</span>ClassUnicode) -&gt; bool {
+    <span class="kw">if </span>class.ranges().len() != <span class="number">1 </span>{
+        <span class="kw">return </span><span class="bool-val">false</span>;
     }
 
-    <span class="kw">let</span> <span class="ident">range</span> = <span class="kw-2">&amp;</span><span class="ident">class</span>.<span class="ident">ranges</span>()[<span class="number">0</span>];
-    <span class="kw">let</span> <span class="ident">start</span> = <span class="ident">range</span>.<span class="ident">start</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-    <span class="kw">let</span> <span class="ident">end</span> = <span class="ident">range</span>.<span class="ident">end</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+    <span class="kw">let </span>range = <span class="kw-2">&amp;</span>class.ranges()[<span class="number">0</span>];
+    <span class="kw">let </span>start = range.start() <span class="kw">as </span>u32;
+    <span class="kw">let </span>end = range.end() <span class="kw">as </span>u32;
 
-    <span class="ident">start</span> &lt; <span class="number">128</span> &amp;&amp; (<span class="ident">end</span> &lt; <span class="number">128</span> || <span class="ident">end</span> == <span class="number">0x0010_FFFF</span>)
+    start &lt; <span class="number">128 </span>&amp;&amp; (end &lt; <span class="number">128 </span>|| end == <span class="number">0x0010_FFFF</span>)
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::graph::Node</span>;
-    <span class="kw">use</span> <span class="ident">pretty_assertions::assert_eq</span>;
+<span class="attribute">#[cfg(test)]</span>
+<span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::graph::Node;
+    <span class="kw">use </span>pretty_assertions::assert_eq;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">rope</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">graph</span> = <span class="ident">Graph::new</span>();
+    <span class="attribute">#[test]</span>
+    <span class="kw">fn </span>rope() {
+        <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
-        <span class="kw">let</span> <span class="ident">mir</span> = <span class="ident">Mir::utf8</span>(<span class="string">&quot;foobar&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;foobar&quot;</span>).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">mir</span>.<span class="ident">priority</span>(), <span class="number">12</span>);
+        <span class="macro">assert_eq!</span>(mir.priority(), <span class="number">12</span>);
 
-        <span class="kw">let</span> <span class="ident">leaf</span> = <span class="ident">graph</span>.<span class="ident">push</span>(<span class="ident">Node::Leaf</span>(<span class="string">&quot;LEAF&quot;</span>));
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">graph</span>.<span class="ident">regex</span>(<span class="ident">mir</span>, <span class="ident">leaf</span>);
+        <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
+        <span class="kw">let </span>id = graph.regex(mir, leaf);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">graph</span>[<span class="ident">id</span>], <span class="ident">Node::Rope</span>(<span class="ident">Rope::new</span>(<span class="string">&quot;foobar&quot;</span>, <span class="ident">leaf</span>)),)
+        <span class="macro">assert_eq!</span>(graph[id], Node::Rope(Rope::new(<span class="string">&quot;foobar&quot;</span>, leaf)),)
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">alternation</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">graph</span> = <span class="ident">Graph::new</span>();
+    <span class="attribute">#[test]</span>
+    <span class="kw">fn </span>alternation() {
+        <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
-        <span class="kw">let</span> <span class="ident">mir</span> = <span class="ident">Mir::utf8</span>(<span class="string">&quot;a|b&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;a|b&quot;</span>).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">mir</span>.<span class="ident">priority</span>(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(mir.priority(), <span class="number">2</span>);
 
-        <span class="kw">let</span> <span class="ident">leaf</span> = <span class="ident">graph</span>.<span class="ident">push</span>(<span class="ident">Node::Leaf</span>(<span class="string">&quot;LEAF&quot;</span>));
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">graph</span>.<span class="ident">regex</span>(<span class="ident">mir</span>, <span class="ident">leaf</span>);
+        <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
+        <span class="kw">let </span>id = graph.regex(mir, leaf);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">graph</span>[<span class="ident">id</span>],
-            <span class="ident">Node::Fork</span>(<span class="ident">Fork::new</span>().<span class="ident">branch</span>(<span class="string">b&#39;a&#39;</span>, <span class="ident">leaf</span>).<span class="ident">branch</span>(<span class="string">b&#39;b&#39;</span>, <span class="ident">leaf</span>)),
+            graph[id],
+            Node::Fork(Fork::new().branch(<span class="string">b&#39;a&#39;</span>, leaf).branch(<span class="string">b&#39;b&#39;</span>, leaf)),
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">repeat</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">graph</span> = <span class="ident">Graph::new</span>();
+    <span class="attribute">#[test]</span>
+    <span class="kw">fn </span>repeat() {
+        <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
-        <span class="kw">let</span> <span class="ident">mir</span> = <span class="ident">Mir::utf8</span>(<span class="string">&quot;[a-z]*&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;[a-z]*&quot;</span>).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">mir</span>.<span class="ident">priority</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(mir.priority(), <span class="number">0</span>);
 
-        <span class="kw">let</span> <span class="ident">leaf</span> = <span class="ident">graph</span>.<span class="ident">push</span>(<span class="ident">Node::Leaf</span>(<span class="string">&quot;LEAF&quot;</span>));
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">graph</span>.<span class="ident">regex</span>(<span class="ident">mir</span>, <span class="ident">leaf</span>);
+        <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
+        <span class="kw">let </span>id = graph.regex(mir, leaf);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">graph</span>[<span class="ident">id</span>],
-            <span class="ident">Node::Fork</span>(
-                <span class="ident">Fork::new</span>()
-                    .<span class="ident">branch</span>(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>, <span class="ident">id</span>) <span class="comment">// goto self == loop</span>
-                    .<span class="ident">miss</span>(<span class="ident">leaf</span>)
+            graph[id],
+            Node::Fork(
+                Fork::new()
+                    .branch(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>, id) <span class="comment">// goto self == loop
+                    </span>.miss(leaf)
             ),
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">maybe</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">graph</span> = <span class="ident">Graph::new</span>();
+    <span class="attribute">#[test]</span>
+    <span class="kw">fn </span>maybe() {
+        <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
-        <span class="kw">let</span> <span class="ident">mir</span> = <span class="ident">Mir::utf8</span>(<span class="string">&quot;[a-z]?&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;[a-z]?&quot;</span>).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">mir</span>.<span class="ident">priority</span>(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(mir.priority(), <span class="number">0</span>);
 
-        <span class="kw">let</span> <span class="ident">leaf</span> = <span class="ident">graph</span>.<span class="ident">push</span>(<span class="ident">Node::Leaf</span>(<span class="string">&quot;LEAF&quot;</span>));
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">graph</span>.<span class="ident">regex</span>(<span class="ident">mir</span>, <span class="ident">leaf</span>);
+        <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
+        <span class="kw">let </span>id = graph.regex(mir, leaf);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">graph</span>[<span class="ident">id</span>],
-            <span class="ident">Node::Fork</span>(<span class="ident">Fork::new</span>().<span class="ident">branch</span>(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>, <span class="ident">leaf</span>).<span class="ident">miss</span>(<span class="ident">leaf</span>)),
+            graph[id],
+            Node::Fork(Fork::new().branch(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>, leaf).miss(leaf)),
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

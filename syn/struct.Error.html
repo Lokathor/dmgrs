@@ -7,28 +7,28 @@ message than simply panicking the macro.</p>
 <p>When parsing macro input, the <a href="macro.parse_macro_input.html"><code>parse_macro_input!</code></a> macro handles the
 conversion to <code>compile_error!</code> automatically.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">proc_macro::TokenStream</span>;
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">parse_macro_input</span>, <span class="ident">AttributeArgs</span>, <span class="ident">ItemFn</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>proc_macro::TokenStream;
+<span class="kw">use </span>syn::{parse_macro_input, AttributeArgs, ItemFn};
 
-<span class="attribute">#[<span class="ident">proc_macro_attribute</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">my_attr</span>(<span class="ident">args</span>: <span class="ident">TokenStream</span>, <span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">args</span> = <span class="macro">parse_macro_input!</span>(<span class="ident">args</span> <span class="kw">as</span> <span class="ident">AttributeArgs</span>);
-    <span class="kw">let</span> <span class="ident">input</span> = <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">ItemFn</span>);
+<span class="attribute">#[proc_macro_attribute]</span>
+<span class="kw">pub fn </span>my_attr(args: TokenStream, input: TokenStream) -&gt; TokenStream {
+    <span class="kw">let </span>args = <span class="macro">parse_macro_input!</span>(args <span class="kw">as </span>AttributeArgs);
+    <span class="kw">let </span>input = <span class="macro">parse_macro_input!</span>(input <span class="kw">as </span>ItemFn);
 
-    <span class="comment">/* ... */</span>
-}</code></pre></div>
+    <span class="comment">/* ... */
+</span>}</code></pre></div>
 <p>For errors that arise later than the initial parsing stage, the
 <a href="parse/struct.Error.html#method.to_compile_error"><code>.to_compile_error()</code></a> or <a href="parse/struct.Error.html#method.into_compile_error"><code>.into_compile_error()</code></a> methods can be used to
 perform an explicit conversion to <code>compile_error!</code>.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[<span class="ident">proc_macro_derive</span>(<span class="ident">MyDerive</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">my_derive</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">input</span> = <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">DeriveInput</span>);
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[proc_macro_derive(MyDerive)]</span>
+<span class="kw">pub fn </span>my_derive(input: TokenStream) -&gt; TokenStream {
+    <span class="kw">let </span>input = <span class="macro">parse_macro_input!</span>(input <span class="kw">as </span>DeriveInput);
 
-    <span class="comment">// fn(DeriveInput) -&gt; syn::Result&lt;proc_macro2::TokenStream&gt;</span>
-    <span class="ident">expand::my_derive</span>(<span class="ident">input</span>)
-        .<span class="ident">unwrap_or_else</span>(<span class="ident">syn::Error::into_compile_error</span>)
-        .<span class="ident">into</span>()
+    <span class="comment">// fn(DeriveInput) -&gt; syn::Result&lt;proc_macro2::TokenStream&gt;
+    </span>expand::my_derive(input)
+        .unwrap_or_else(syn::Error::into_compile_error)
+        .into()
 }</code></pre></div>
 </div></details><h2 id="implementations" class="small-section-header">Implementations<a href="#implementations" class="anchor"></a></h2><div id="implementations-list"><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl-Error" class="impl has-srclink"><span class="rightside"><a class="srclink" href="../src/syn/error.rs.html#105-245">source</a></span><a href="#impl-Error" class="anchor"></a><h3 class="code-header in-band">impl <a class="struct" href="parse/struct.Error.html" title="struct syn::parse::Error">Error</a></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.new" class="method has-srclink"><span class="rightside"><a class="srclink" href="../src/syn/error.rs.html#136-144">source</a></span><h4 class="code-header">pub fn <a href="#method.new" class="fnname">new</a>&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a>&gt;(span: <a class="struct" href="../proc_macro2/struct.Span.html" title="struct proc_macro2::Span">Span</a>, message: T) -&gt; Self</h4></section></summary><div class="docblock"><p>Usually the <a href="parse/struct.ParseBuffer.html#method.error"><code>ParseStream::error</code></a> method will be used instead, which
 automatically uses the correct span from the current position of the
@@ -36,22 +36,22 @@ parse stream.</p>
 <p>Use <code>Error::new</code> when the error needs to be triggered on some span other
 than where the parse stream is currently positioned.</p>
 <h5 id="example"><a href="#example">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">Error</span>, <span class="ident">Ident</span>, <span class="ident">LitStr</span>, <span class="prelude-ty">Result</span>, <span class="ident">Token</span>};
-<span class="kw">use</span> <span class="ident">syn::parse::ParseStream</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>syn::{Error, Ident, LitStr, <span class="prelude-ty">Result</span>, Token};
+<span class="kw">use </span>syn::parse::ParseStream;
 
-<span class="comment">// Parses input that looks like `name = &quot;string&quot;` where the key must be</span>
-<span class="comment">// the identifier `name` and the value may be any string literal.</span>
-<span class="comment">// Returns the string literal.</span>
-<span class="kw">fn</span> <span class="ident">parse_name</span>(<span class="ident">input</span>: <span class="ident">ParseStream</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">LitStr</span>&gt; {
-    <span class="kw">let</span> <span class="ident">name_token</span>: <span class="ident">Ident</span> = <span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>;
-    <span class="kw">if</span> <span class="ident">name_token</span> != <span class="string">&quot;name&quot;</span> {
-        <span class="comment">// Trigger an error not on the current position of the stream,</span>
-        <span class="comment">// but on the position of the unexpected identifier.</span>
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::new</span>(<span class="ident">name_token</span>.<span class="ident">span</span>(), <span class="string">&quot;expected `name`&quot;</span>));
+<span class="comment">// Parses input that looks like `name = &quot;string&quot;` where the key must be
+// the identifier `name` and the value may be any string literal.
+// Returns the string literal.
+</span><span class="kw">fn </span>parse_name(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;LitStr&gt; {
+    <span class="kw">let </span>name_token: Ident = input.parse()<span class="question-mark">?</span>;
+    <span class="kw">if </span>name_token != <span class="string">&quot;name&quot; </span>{
+        <span class="comment">// Trigger an error not on the current position of the stream,
+        // but on the position of the unexpected identifier.
+        </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(name_token.span(), <span class="string">&quot;expected `name`&quot;</span>));
     }
-    <span class="ident">input</span>.<span class="ident">parse</span>::&lt;<span class="macro">Token!</span>[=]&gt;()<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">LitStr</span> = <span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">s</span>)
+    input.parse::&lt;<span class="macro">Token!</span>[=]&gt;()<span class="question-mark">?</span>;
+    <span class="kw">let </span>s: LitStr = input.parse()<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(s)
 }</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.new_spanned" class="method has-srclink"><span class="rightside"><a class="srclink" href="../src/syn/error.rs.html#160-171">source</a></span><h4 class="code-header">pub fn <a href="#method.new_spanned" class="fnname">new_spanned</a>&lt;T:&nbsp;<a class="trait" href="../quote/to_tokens/trait.ToTokens.html" title="trait quote::to_tokens::ToTokens">ToTokens</a>, U:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html" title="trait core::fmt::Display">Display</a>&gt;(tokens: T, message: U) -&gt; Self</h4></section></summary><div class="docblock"><p>Creates an error with the specified message spanning the given syntax
 tree node.</p>
@@ -73,24 +73,24 @@ originally created.</p>
 this method correctly in a procedural macro.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.into_compile_error" class="method has-srclink"><span class="rightside"><a class="srclink" href="../src/syn/error.rs.html#236-238">source</a></span><h4 class="code-header">pub fn <a href="#method.into_compile_error" class="fnname">into_compile_error</a>(self) -&gt; <a class="struct" href="../proc_macro2/struct.TokenStream.html" title="struct proc_macro2::TokenStream">TokenStream</a></h4></section></summary><div class="docblock"><p>Render the error as an invocation of <a href="https://doc.rust-lang.org/nightly/core/macro.compile_error.html"><code>compile_error!</code></a>.</p>
 <h5 id="example-1"><a href="#example-1">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">proc_macro::TokenStream</span>;
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">parse_macro_input</span>, <span class="ident">DeriveInput</span>, <span class="ident">Error</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>proc_macro::TokenStream;
+<span class="kw">use </span>syn::{parse_macro_input, DeriveInput, Error};
 
-<span class="attribute">#[<span class="ident">proc_macro_derive</span>(<span class="ident">MyTrait</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">derive_my_trait</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">input</span> = <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">DeriveInput</span>);
-    <span class="ident">my_trait::expand</span>(<span class="ident">input</span>)
-        .<span class="ident">unwrap_or_else</span>(<span class="ident">Error::into_compile_error</span>)
-        .<span class="ident">into</span>()
+<span class="attribute">#[proc_macro_derive(MyTrait)]</span>
+<span class="kw">pub fn </span>derive_my_trait(input: TokenStream) -&gt; TokenStream {
+    <span class="kw">let </span>input = <span class="macro">parse_macro_input!</span>(input <span class="kw">as </span>DeriveInput);
+    my_trait::expand(input)
+        .unwrap_or_else(Error::into_compile_error)
+        .into()
 }
 
-<span class="kw">mod</span> <span class="ident">my_trait</span> {
-    <span class="kw">use</span> <span class="ident">proc_macro2::TokenStream</span>;
-    <span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">DeriveInput</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">mod </span>my_trait {
+    <span class="kw">use </span>proc_macro2::TokenStream;
+    <span class="kw">use </span>syn::{DeriveInput, <span class="prelude-ty">Result</span>};
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">expand</span>(<span class="ident">input</span>: <span class="ident">DeriveInput</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">TokenStream</span>&gt; {
-        <span class="comment">/* ... */</span>
-    }
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>expand(input: DeriveInput) -&gt; <span class="prelude-ty">Result</span>&lt;TokenStream&gt; {
+        <span class="comment">/* ... */
+    </span>}
 }</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.combine" class="method has-srclink"><span class="rightside"><a class="srclink" href="../src/syn/error.rs.html#242-244">source</a></span><h4 class="code-header">pub fn <a href="#method.combine" class="fnname">combine</a>(&amp;mut self, another: <a class="struct" href="parse/struct.Error.html" title="struct syn::parse::Error">Error</a>)</h4></section></summary><div class="docblock"><p>Add another error message to self such that when <code>to_compile_error()</code> is
 called, both errors will be emitted together.</p>
@@ -127,4 +127,4 @@ called, both errors will be emitted together.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-Error" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-Error" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

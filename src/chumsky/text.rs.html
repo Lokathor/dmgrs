@@ -438,445 +438,445 @@
 <span id="438">438</span>
 <span id="439">439</span>
 <span id="440">440</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Text-specific parsers and utilities.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! *“Ford!&quot; he said, &quot;there&#39;s an infinite number of monkeys outside who want to talk to us about this script for</span>
-<span class="doccomment">//! Hamlet they&#39;ve worked out.”*</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The parsers in this module are generic over both Unicode ([`char`]) and ASCII ([`u8`]) characters. Most parsers take</span>
-<span class="doccomment">//! a type parameter, `C`, that can be either [`u8`] or [`char`] in order to handle either case.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The [`TextParser`] trait is an extension on top of the main [`Parser`] trait that adds combinators unique to the</span>
-<span class="doccomment">//! parsing of text.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Text-specific parsers and utilities.
+//!
+//! *“Ford!&quot; he said, &quot;there&#39;s an infinite number of monkeys outside who want to talk to us about this script for
+//! Hamlet they&#39;ve worked out.”*
+//!
+//! The parsers in this module are generic over both Unicode ([`char`]) and ASCII ([`u8`]) characters. Most parsers take
+//! a type parameter, `C`, that can be either [`u8`] or [`char`] in order to handle either case.
+//!
+//! The [`TextParser`] trait is an extension on top of the main [`Parser`] trait that adds combinators unique to the
+//! parsing of text.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">core::iter::FromIterator</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>core::iter::FromIterator;
 
-<span class="doccomment">/// The type of a parser that accepts (and ignores) any number of whitespace characters.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Padding</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; = <span class="ident">Custom</span>&lt;<span class="kw">fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt;, <span class="ident">E</span>&gt;;
+<span class="doccomment">/// The type of a parser that accepts (and ignores) any number of whitespace characters.
+</span><span class="kw">pub type </span>Padding&lt;I, E&gt; = Custom&lt;<span class="kw">fn</span>(<span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt;, E&gt;;
 
-<span class="doccomment">/// The type of a parser that accepts (and ignores) any number of whitespace characters before or after another</span>
-<span class="doccomment">/// pattern.</span>
-<span class="comment">// pub type Padded&lt;P, I, O&gt; = ThenIgnore&lt;</span>
-<span class="comment">//     IgnoreThen&lt;Padding&lt;I, &lt;P as Parser&lt;I, O&gt;&gt;::Error&gt;, P, (), O&gt;,</span>
-<span class="comment">//     Padding&lt;I, &lt;P as Parser&lt;I, O&gt;&gt;::Error&gt;,</span>
-<span class="comment">//     O,</span>
-<span class="comment">//     (),</span>
-<span class="comment">// &gt;;</span>
+<span class="doccomment">/// The type of a parser that accepts (and ignores) any number of whitespace characters before or after another
+/// pattern.
+</span><span class="comment">// pub type Padded&lt;P, I, O&gt; = ThenIgnore&lt;
+//     IgnoreThen&lt;Padding&lt;I, &lt;P as Parser&lt;I, O&gt;&gt;::Error&gt;, P, (), O&gt;,
+//     Padding&lt;I, &lt;P as Parser&lt;I, O&gt;&gt;::Error&gt;,
+//     O,
+//     (),
+// &gt;;
 
-<span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters before or after another pattern.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Padded</span>&lt;<span class="ident">A</span>&gt;(<span class="ident">A</span>);
+</span><span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters before or after another pattern.
+</span><span class="attribute">#[must_use]</span>
+<span class="attribute">#[derive(Copy, Clone)]</span>
+<span class="kw">pub struct </span>Padded&lt;A&gt;(A);
 
-<span class="kw">impl</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Padded</span>&lt;<span class="ident">A</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="kw">impl</span>&lt;C: Character, O, A: Parser&lt;C, O, Error = E&gt;, E: Error&lt;C&gt;&gt; Parser&lt;C, O&gt; <span class="kw">for </span>Padded&lt;A&gt; {
+    <span class="kw">type </span>Error = E;
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">while</span> <span class="ident">stream</span>.<span class="ident">skip_if</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="ident">is_whitespace</span>()) {}
-        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">parse_inner</span>(<span class="ident">debugger</span>, <span class="ident">stream</span>) {
-            (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>((<span class="ident">a_out</span>, <span class="ident">a_alt</span>))) =&gt; {
-                <span class="kw">while</span> <span class="ident">stream</span>.<span class="ident">skip_if</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="ident">is_whitespace</span>()) {}
-                (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>((<span class="ident">a_out</span>, <span class="ident">a_alt</span>)))
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;C, E&gt;,
+    ) -&gt; PResult&lt;C, O, E&gt; {
+        <span class="kw">while </span>stream.skip_if(|c| c.is_whitespace()) {}
+        <span class="kw">match </span><span class="self">self</span>.<span class="number">0</span>.parse_inner(debugger, stream) {
+            (a_errors, <span class="prelude-val">Ok</span>((a_out, a_alt))) =&gt; {
+                <span class="kw">while </span>stream.skip_if(|c| c.is_whitespace()) {}
+                (a_errors, <span class="prelude-val">Ok</span>((a_out, a_alt)))
             }
-            (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)),
+            (a_errors, <span class="prelude-val">Err</span>(err)) =&gt; (a_errors, <span class="prelude-val">Err</span>(err)),
         }
     }
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;C, E&gt;) -&gt; PResult&lt;C, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">C</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">C</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="kw">mod</span> <span class="ident">private</span> {
-    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sealed</span> {}
-
-    <span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">u8</span> {}
-    <span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">char</span> {}
-}
-
-<span class="doccomment">/// A trait implemented by textual character types (currently, [`u8`] and [`char`]).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Avoid implementing this trait yourself if you can: it&#39;s *very* likely to be expanded in future versions!</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Character</span>: <span class="ident">private::Sealed</span> + <span class="ident">Copy</span> + <span class="ident">PartialEq</span> {
-    <span class="doccomment">/// The default unsized [`str`]-like type of a linear sequence of this character.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For [`char`], this is [`str`]. For [`u8`], this is [`[u8]`].</span>
-    <span class="kw">type</span> <span class="ident">Str</span>: <span class="question-mark">?</span><span class="ident">Sized</span> + <span class="ident">PartialEq</span>;
-
-    <span class="doccomment">/// The default type that this character collects into.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For [`char`], this is [`String`]. For [`u8`], this is [`Vec&lt;u8&gt;`].</span>
-    <span class="kw">type</span> <span class="ident">Collection</span>: <span class="ident">Chain</span>&lt;<span class="self">Self</span>&gt; + <span class="ident">FromIterator</span>&lt;<span class="self">Self</span>&gt; + <span class="ident">AsRef</span>&lt;<span class="ident"><span class="self">Self</span>::Str</span>&gt; + <span class="lifetime">&#39;static</span>;
-
-    <span class="doccomment">/// Convert the given ASCII character to this character type.</span>
-    <span class="kw">fn</span> <span class="ident">from_ascii</span>(<span class="ident">c</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span>;
-
-    <span class="doccomment">/// Returns true if the character is canonically considered to be inline whitespace (i.e: not part of a newline).</span>
-    <span class="kw">fn</span> <span class="ident">is_inline_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
-
-    <span class="doccomment">/// Returns true if the character is canonically considered to be whitespace.</span>
-    <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span>;
-
-    <span class="doccomment">/// Return the &#39;0&#39; digit of the character.</span>
-    <span class="kw">fn</span> <span class="ident">digit_zero</span>() -&gt; <span class="self">Self</span>;
-
-    <span class="doccomment">/// Returns true if the character is canonically considered to be a numeric digit.</span>
-    <span class="kw">fn</span> <span class="ident">is_digit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">radix</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span>;
-
-    <span class="doccomment">/// Returns this character as a [`char`].</span>
-    <span class="kw">fn</span> <span class="ident">to_char</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">char</span>;
-}
-
-<span class="kw">impl</span> <span class="ident">Character</span> <span class="kw">for</span> <span class="ident">u8</span> {
-    <span class="kw">type</span> <span class="ident">Str</span> = [<span class="ident">u8</span>];
-    <span class="kw">type</span> <span class="ident">Collection</span> = <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;;
-
-    <span class="kw">fn</span> <span class="ident">from_ascii</span>(<span class="ident">c</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">c</span>
-    }
-    <span class="kw">fn</span> <span class="ident">is_inline_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span><span class="self">self</span> == <span class="string">b&#39; &#39;</span> || <span class="kw-2">*</span><span class="self">self</span> == <span class="string">b&#39;\t&#39;</span>
-    }
-    <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">is_ascii_whitespace</span>()
-    }
-    <span class="kw">fn</span> <span class="ident">digit_zero</span>() -&gt; <span class="self">Self</span> {
-        <span class="string">b&#39;0&#39;</span>
-    }
-    <span class="kw">fn</span> <span class="ident">is_digit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">radix</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
-        (<span class="kw-2">*</span><span class="self">self</span> <span class="kw">as</span> <span class="ident">char</span>).<span class="ident">is_digit</span>(<span class="ident">radix</span>)
-    }
-    <span class="kw">fn</span> <span class="ident">to_char</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">char</span> {
-        <span class="kw-2">*</span><span class="self">self</span> <span class="kw">as</span> <span class="ident">char</span>
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;C, E&gt;) -&gt; PResult&lt;C, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Character</span> <span class="kw">for</span> <span class="ident">char</span> {
-    <span class="kw">type</span> <span class="ident">Str</span> = <span class="ident">str</span>;
-    <span class="kw">type</span> <span class="ident">Collection</span> = <span class="ident">String</span>;
+<span class="kw">mod </span>private {
+    <span class="kw">pub trait </span>Sealed {}
 
-    <span class="kw">fn</span> <span class="ident">from_ascii</span>(<span class="ident">c</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">c</span> <span class="kw">as</span> <span class="ident">char</span>
+    <span class="kw">impl </span>Sealed <span class="kw">for </span>u8 {}
+    <span class="kw">impl </span>Sealed <span class="kw">for </span>char {}
+}
+
+<span class="doccomment">/// A trait implemented by textual character types (currently, [`u8`] and [`char`]).
+///
+/// Avoid implementing this trait yourself if you can: it&#39;s *very* likely to be expanded in future versions!
+</span><span class="kw">pub trait </span>Character: private::Sealed + Copy + PartialEq {
+    <span class="doccomment">/// The default unsized [`str`]-like type of a linear sequence of this character.
+    ///
+    /// For [`char`], this is [`str`]. For [`u8`], this is [`[u8]`].
+    </span><span class="kw">type </span>Str: <span class="question-mark">?</span>Sized + PartialEq;
+
+    <span class="doccomment">/// The default type that this character collects into.
+    ///
+    /// For [`char`], this is [`String`]. For [`u8`], this is [`Vec&lt;u8&gt;`].
+    </span><span class="kw">type </span>Collection: Chain&lt;<span class="self">Self</span>&gt; + FromIterator&lt;<span class="self">Self</span>&gt; + AsRef&lt;<span class="self">Self</span>::Str&gt; + <span class="lifetime">&#39;static</span>;
+
+    <span class="doccomment">/// Convert the given ASCII character to this character type.
+    </span><span class="kw">fn </span>from_ascii(c: u8) -&gt; <span class="self">Self</span>;
+
+    <span class="doccomment">/// Returns true if the character is canonically considered to be inline whitespace (i.e: not part of a newline).
+    </span><span class="kw">fn </span>is_inline_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
+
+    <span class="doccomment">/// Returns true if the character is canonically considered to be whitespace.
+    </span><span class="kw">fn </span>is_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
+
+    <span class="doccomment">/// Return the &#39;0&#39; digit of the character.
+    </span><span class="kw">fn </span>digit_zero() -&gt; <span class="self">Self</span>;
+
+    <span class="doccomment">/// Returns true if the character is canonically considered to be a numeric digit.
+    </span><span class="kw">fn </span>is_digit(<span class="kw-2">&amp;</span><span class="self">self</span>, radix: u32) -&gt; bool;
+
+    <span class="doccomment">/// Returns this character as a [`char`].
+    </span><span class="kw">fn </span>to_char(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char;
+}
+
+<span class="kw">impl </span>Character <span class="kw">for </span>u8 {
+    <span class="kw">type </span>Str = [u8];
+    <span class="kw">type </span>Collection = Vec&lt;u8&gt;;
+
+    <span class="kw">fn </span>from_ascii(c: u8) -&gt; <span class="self">Self </span>{
+        c
     }
-    <span class="kw">fn</span> <span class="ident">is_inline_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw-2">*</span><span class="self">self</span> == <span class="string">&#39; &#39;</span> || <span class="kw-2">*</span><span class="self">self</span> == <span class="string">&#39;\t&#39;</span>
+    <span class="kw">fn </span>is_inline_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw-2">*</span><span class="self">self </span>== <span class="string">b&#39; &#39; </span>|| <span class="kw-2">*</span><span class="self">self </span>== <span class="string">b&#39;\t&#39;
+    </span>}
+    <span class="kw">fn </span>is_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.is_ascii_whitespace()
     }
-    <span class="kw">fn</span> <span class="ident">is_whitespace</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">char::is_whitespace</span>(<span class="kw-2">*</span><span class="self">self</span>)
+    <span class="kw">fn </span>digit_zero() -&gt; <span class="self">Self </span>{
+        <span class="string">b&#39;0&#39;
+    </span>}
+    <span class="kw">fn </span>is_digit(<span class="kw-2">&amp;</span><span class="self">self</span>, radix: u32) -&gt; bool {
+        (<span class="kw-2">*</span><span class="self">self </span><span class="kw">as </span>char).is_digit(radix)
     }
-    <span class="kw">fn</span> <span class="ident">digit_zero</span>() -&gt; <span class="self">Self</span> {
-        <span class="string">&#39;0&#39;</span>
-    }
-    <span class="kw">fn</span> <span class="ident">is_digit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">radix</span>: <span class="ident">u32</span>) -&gt; <span class="ident">bool</span> {
-        <span class="ident">char::is_digit</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="ident">radix</span>)
-    }
-    <span class="kw">fn</span> <span class="ident">to_char</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">char</span> {
-        <span class="kw-2">*</span><span class="self">self</span>
+    <span class="kw">fn </span>to_char(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
+        <span class="kw-2">*</span><span class="self">self </span><span class="kw">as </span>char
     }
 }
 
-<span class="doccomment">/// A trait containing text-specific functionality that extends the [`Parser`] trait.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TextParser</span>&lt;<span class="ident">I</span>: <span class="ident">Character</span>, <span class="ident">O</span>&gt;: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; {
-    <span class="doccomment">/// Parse a pattern, ignoring any amount of whitespace both before and after the pattern.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The output type of this parser is `O`, the same as the original parser.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use chumsky::prelude::*;</span>
-    <span class="doccomment">/// let ident = text::ident::&lt;_, Simple&lt;char&gt;&gt;().padded();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // A pattern with no whitespace surrounding it is accepted</span>
-    <span class="doccomment">/// assert_eq!(ident.parse(&quot;hello&quot;), Ok(&quot;hello&quot;.to_string()));</span>
-    <span class="doccomment">/// // A pattern with arbitrary whitespace surrounding it is also accepted</span>
-    <span class="doccomment">/// assert_eq!(ident.parse(&quot; \t \n  \t   world  \t  &quot;), Ok(&quot;world&quot;.to_string()));</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">padded</span>(<span class="self">self</span>) -&gt; <span class="ident">Padded</span>&lt;<span class="self">Self</span>&gt;
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Sized</span>,
+<span class="kw">impl </span>Character <span class="kw">for </span>char {
+    <span class="kw">type </span>Str = str;
+    <span class="kw">type </span>Collection = String;
+
+    <span class="kw">fn </span>from_ascii(c: u8) -&gt; <span class="self">Self </span>{
+        c <span class="kw">as </span>char
+    }
+    <span class="kw">fn </span>is_inline_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw-2">*</span><span class="self">self </span>== <span class="string">&#39; &#39; </span>|| <span class="kw-2">*</span><span class="self">self </span>== <span class="string">&#39;\t&#39;
+    </span>}
+    <span class="kw">fn </span>is_whitespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        char::is_whitespace(<span class="kw-2">*</span><span class="self">self</span>)
+    }
+    <span class="kw">fn </span>digit_zero() -&gt; <span class="self">Self </span>{
+        <span class="string">&#39;0&#39;
+    </span>}
+    <span class="kw">fn </span>is_digit(<span class="kw-2">&amp;</span><span class="self">self</span>, radix: u32) -&gt; bool {
+        char::is_digit(<span class="kw-2">*</span><span class="self">self</span>, radix)
+    }
+    <span class="kw">fn </span>to_char(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
+        <span class="kw-2">*</span><span class="self">self
+    </span>}
+}
+
+<span class="doccomment">/// A trait containing text-specific functionality that extends the [`Parser`] trait.
+</span><span class="kw">pub trait </span>TextParser&lt;I: Character, O&gt;: Parser&lt;I, O&gt; {
+    <span class="doccomment">/// Parse a pattern, ignoring any amount of whitespace both before and after the pattern.
+    ///
+    /// The output type of this parser is `O`, the same as the original parser.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use chumsky::prelude::*;
+    /// let ident = text::ident::&lt;_, Simple&lt;char&gt;&gt;().padded();
+    ///
+    /// // A pattern with no whitespace surrounding it is accepted
+    /// assert_eq!(ident.parse(&quot;hello&quot;), Ok(&quot;hello&quot;.to_string()));
+    /// // A pattern with arbitrary whitespace surrounding it is also accepted
+    /// assert_eq!(ident.parse(&quot; \t \n  \t   world  \t  &quot;), Ok(&quot;world&quot;.to_string()));
+    /// ```
+    </span><span class="kw">fn </span>padded(<span class="self">self</span>) -&gt; Padded&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>: Sized,
     {
-        <span class="ident">Padded</span>(<span class="self">self</span>)
-        <span class="comment">// whitespace().ignore_then(self).then_ignore(whitespace())</span>
-    }
+        Padded(<span class="self">self</span>)
+        <span class="comment">// whitespace().ignore_then(self).then_ignore(whitespace())
+    </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Character</span>, <span class="ident">O</span>, <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;&gt; <span class="ident">TextParser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">P</span> {}
+<span class="kw">impl</span>&lt;I: Character, O, P: Parser&lt;I, O&gt;&gt; TextParser&lt;I, O&gt; <span class="kw">for </span>P {}
 
-<span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This parser is a `Parser::Repeated` and so methods such as `at_least()` can be called on it.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `Vec&lt;()&gt;`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let whitespace = text::whitespace::&lt;_, Simple&lt;char&gt;&gt;();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // Any amount of whitespace is parsed...</span>
-<span class="doccomment">/// assert_eq!(whitespace.parse(&quot;\t \n  \r &quot;), Ok(vec![(), (), (), (), (), (), ()]));</span>
-<span class="doccomment">/// // ...including none at all!</span>
-<span class="doccomment">/// assert_eq!(whitespace.parse(&quot;&quot;), Ok(vec![]));</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">whitespace</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
-) -&gt; <span class="ident">Repeated</span>&lt;<span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>&gt; {
-    <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_whitespace</span>()).<span class="ident">ignored</span>().<span class="ident">repeated</span>()
+<span class="doccomment">/// A parser that accepts (and ignores) any number of whitespace characters.
+///
+/// This parser is a `Parser::Repeated` and so methods such as `at_least()` can be called on it.
+///
+/// The output type of this parser is `Vec&lt;()&gt;`.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// let whitespace = text::whitespace::&lt;_, Simple&lt;char&gt;&gt;();
+///
+/// // Any amount of whitespace is parsed...
+/// assert_eq!(whitespace.parse(&quot;\t \n  \r &quot;), Ok(vec![(), (), (), (), (), (), ()]));
+/// // ...including none at all!
+/// assert_eq!(whitespace.parse(&quot;&quot;), Ok(vec![]));
+/// ```
+</span><span class="kw">pub fn </span>whitespace&lt;<span class="lifetime">&#39;a</span>, C: Character + <span class="lifetime">&#39;a</span>, E: Error&lt;C&gt; + <span class="lifetime">&#39;a</span>&gt;(
+) -&gt; Repeated&lt;<span class="kw">impl </span>Parser&lt;C, (), Error = E&gt; + Copy + Clone + <span class="lifetime">&#39;a</span>&gt; {
+    filter(|c: <span class="kw-2">&amp;</span>C| c.is_whitespace()).ignored().repeated()
 }
 
-<span class="doccomment">/// A parser that accepts (and ignores) any newline characters or character sequences.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `()`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This parser is quite extensive, recognising:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - Line feed (`\n`)</span>
-<span class="doccomment">/// - Carriage return (`\r`)</span>
-<span class="doccomment">/// - Carriage return + line feed (`\r\n`)</span>
-<span class="doccomment">/// - Vertical tab (`\x0B`)</span>
-<span class="doccomment">/// - Form feed (`\x0C`)</span>
-<span class="doccomment">/// - Next line (`\u{0085}`)</span>
-<span class="doccomment">/// - Line separator (`\u{2028}`)</span>
-<span class="doccomment">/// - Paragraph separator (`\u{2029}`)</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let newline = text::newline::&lt;char, Simple&lt;char&gt;&gt;()</span>
-<span class="doccomment">///     .then_ignore(end());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\n&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\r&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\r\n&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\x0B&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\x0C&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{0085}&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{2028}&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(newline.parse(&quot;\u{2029}&quot;), Ok(()));</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">newline</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span> {
-    <span class="ident">just</span>(<span class="ident">C::from_ascii</span>(<span class="string">b&#39;\r&#39;</span>))
-        .<span class="ident">or_not</span>()
-        .<span class="ident">ignore_then</span>(<span class="ident">just</span>(<span class="ident">C::from_ascii</span>(<span class="string">b&#39;\n&#39;</span>)))
-        .<span class="ident">or</span>(<span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| {
+<span class="doccomment">/// A parser that accepts (and ignores) any newline characters or character sequences.
+///
+/// The output type of this parser is `()`.
+///
+/// This parser is quite extensive, recognising:
+///
+/// - Line feed (`\n`)
+/// - Carriage return (`\r`)
+/// - Carriage return + line feed (`\r\n`)
+/// - Vertical tab (`\x0B`)
+/// - Form feed (`\x0C`)
+/// - Next line (`\u{0085}`)
+/// - Line separator (`\u{2028}`)
+/// - Paragraph separator (`\u{2029}`)
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// let newline = text::newline::&lt;char, Simple&lt;char&gt;&gt;()
+///     .then_ignore(end());
+///
+/// assert_eq!(newline.parse(&quot;\n&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\r&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\r\n&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\x0B&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\x0C&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\u{0085}&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\u{2028}&quot;), Ok(()));
+/// assert_eq!(newline.parse(&quot;\u{2029}&quot;), Ok(()));
+/// ```
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub fn </span>newline&lt;<span class="lifetime">&#39;a</span>, C: Character + <span class="lifetime">&#39;a</span>, E: Error&lt;C&gt; + <span class="lifetime">&#39;a</span>&gt;(
+) -&gt; <span class="kw">impl </span>Parser&lt;C, (), Error = E&gt; + Copy + Clone + <span class="lifetime">&#39;a </span>{
+    just(C::from_ascii(<span class="string">b&#39;\r&#39;</span>))
+        .or_not()
+        .ignore_then(just(C::from_ascii(<span class="string">b&#39;\n&#39;</span>)))
+        .or(filter(|c: <span class="kw-2">&amp;</span>C| {
             [
-                <span class="string">&#39;\r&#39;</span>,       <span class="comment">// Carriage return</span>
-                <span class="string">&#39;\x0B&#39;</span>,     <span class="comment">// Vertical tab</span>
-                <span class="string">&#39;\x0C&#39;</span>,     <span class="comment">// Form feed</span>
-                <span class="string">&#39;\u{0085}&#39;</span>, <span class="comment">// Next line</span>
-                <span class="string">&#39;\u{2028}&#39;</span>, <span class="comment">// Line separator</span>
-                <span class="string">&#39;\u{2029}&#39;</span>, <span class="comment">// Paragraph separator</span>
-            ]
-            .<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>.<span class="ident">to_char</span>())
+                <span class="string">&#39;\r&#39;</span>,       <span class="comment">// Carriage return
+                </span><span class="string">&#39;\x0B&#39;</span>,     <span class="comment">// Vertical tab
+                </span><span class="string">&#39;\x0C&#39;</span>,     <span class="comment">// Form feed
+                </span><span class="string">&#39;\u{0085}&#39;</span>, <span class="comment">// Next line
+                </span><span class="string">&#39;\u{2028}&#39;</span>, <span class="comment">// Line separator
+                </span><span class="string">&#39;\u{2029}&#39;</span>, <span class="comment">// Paragraph separator
+            </span>]
+            .contains(<span class="kw-2">&amp;</span>c.to_char())
         }))
-        .<span class="ident">ignored</span>()
+        .ignored()
 }
 
-<span class="doccomment">/// A parser that accepts one or more ASCII digits.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is [`Character::Collection`] (i.e: [`String`] when `C` is [`char`], and [`Vec&lt;u8&gt;`]</span>
-<span class="doccomment">/// when `C` is [`u8`]).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The `radix` parameter functions identically to [`char::is_digit`]. If in doubt, choose `10`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let digits = text::digits::&lt;_, Simple&lt;char&gt;&gt;(10);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;0&quot;), Ok(&quot;0&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;1&quot;), Ok(&quot;1&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;01234&quot;), Ok(&quot;01234&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;98345&quot;), Ok(&quot;98345&quot;.to_string()));</span>
-<span class="doccomment">/// // A string of zeroes is still valid. Use `int` if this is not desirable.</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;0000&quot;), Ok(&quot;0000&quot;.to_string()));</span>
-<span class="doccomment">/// assert!(digits.parse(&quot;&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">digits</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;(
-    <span class="ident">radix</span>: <span class="ident">u32</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
-    <span class="ident">filter</span>(<span class="kw">move</span> |<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>))
-        .<span class="ident">repeated</span>()
-        .<span class="ident">at_least</span>(<span class="number">1</span>)
-        .<span class="ident">collect</span>()
+<span class="doccomment">/// A parser that accepts one or more ASCII digits.
+///
+/// The output type of this parser is [`Character::Collection`] (i.e: [`String`] when `C` is [`char`], and [`Vec&lt;u8&gt;`]
+/// when `C` is [`u8`]).
+///
+/// The `radix` parameter functions identically to [`char::is_digit`]. If in doubt, choose `10`.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// let digits = text::digits::&lt;_, Simple&lt;char&gt;&gt;(10);
+///
+/// assert_eq!(digits.parse(&quot;0&quot;), Ok(&quot;0&quot;.to_string()));
+/// assert_eq!(digits.parse(&quot;1&quot;), Ok(&quot;1&quot;.to_string()));
+/// assert_eq!(digits.parse(&quot;01234&quot;), Ok(&quot;01234&quot;.to_string()));
+/// assert_eq!(digits.parse(&quot;98345&quot;), Ok(&quot;98345&quot;.to_string()));
+/// // A string of zeroes is still valid. Use `int` if this is not desirable.
+/// assert_eq!(digits.parse(&quot;0000&quot;), Ok(&quot;0000&quot;.to_string()));
+/// assert!(digits.parse(&quot;&quot;).is_err());
+/// ```
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub fn </span>digits&lt;C: Character, E: Error&lt;C&gt;&gt;(
+    radix: u32,
+) -&gt; <span class="kw">impl </span>Parser&lt;C, C::Collection, Error = E&gt; + Copy + Clone {
+    filter(<span class="kw">move </span>|c: <span class="kw-2">&amp;</span>C| c.is_digit(radix))
+        .repeated()
+        .at_least(<span class="number">1</span>)
+        .collect()
 }
 
-<span class="doccomment">/// A parser that accepts a non-negative integer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// An integer is defined as a non-empty sequence of ASCII digits, where the first digit is non-zero or the sequence</span>
-<span class="doccomment">/// has length one.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is [`Character::Collection`] (i.e: [`String`] when `C` is [`char`], and [`Vec&lt;u8&gt;`]</span>
-<span class="doccomment">/// when `C` is [`u8`]).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The `radix` parameter functions identically to [`char::is_digit`]. If in doubt, choose `10`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let dec = text::int::&lt;_, Simple&lt;char&gt;&gt;(10)</span>
-<span class="doccomment">///     .then_ignore(end());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(dec.parse(&quot;0&quot;), Ok(&quot;0&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(dec.parse(&quot;1&quot;), Ok(&quot;1&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(dec.parse(&quot;1452&quot;), Ok(&quot;1452&quot;.to_string()));</span>
-<span class="doccomment">/// // No leading zeroes are permitted!</span>
-<span class="doccomment">/// assert!(dec.parse(&quot;04&quot;).is_err());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let hex = text::int::&lt;_, Simple&lt;char&gt;&gt;(16)</span>
-<span class="doccomment">///     .then_ignore(end());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(hex.parse(&quot;2A&quot;), Ok(&quot;2A&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(hex.parse(&quot;d&quot;), Ok(&quot;d&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(hex.parse(&quot;b4&quot;), Ok(&quot;b4&quot;.to_string()));</span>
-<span class="doccomment">/// assert!(hex.parse(&quot;0B&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">int</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;(
-    <span class="ident">radix</span>: <span class="ident">u32</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span> {
-    <span class="ident">filter</span>(<span class="kw">move</span> |<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>) &amp;&amp; <span class="ident">c</span> != <span class="kw-2">&amp;</span><span class="ident">C::digit_zero</span>())
-        .<span class="ident">map</span>(<span class="prelude-val">Some</span>)
-        .<span class="ident">chain</span>::&lt;<span class="ident">C</span>, <span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;(<span class="ident">filter</span>(<span class="kw">move</span> |<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_digit</span>(<span class="ident">radix</span>)).<span class="ident">repeated</span>())
-        .<span class="ident">collect</span>()
-        .<span class="ident">or</span>(<span class="ident">just</span>(<span class="ident">C::digit_zero</span>()).<span class="ident">map</span>(|<span class="ident">c</span>| <span class="ident">core::iter::once</span>(<span class="ident">c</span>).<span class="ident">collect</span>()))
+<span class="doccomment">/// A parser that accepts a non-negative integer.
+///
+/// An integer is defined as a non-empty sequence of ASCII digits, where the first digit is non-zero or the sequence
+/// has length one.
+///
+/// The output type of this parser is [`Character::Collection`] (i.e: [`String`] when `C` is [`char`], and [`Vec&lt;u8&gt;`]
+/// when `C` is [`u8`]).
+///
+/// The `radix` parameter functions identically to [`char::is_digit`]. If in doubt, choose `10`.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// let dec = text::int::&lt;_, Simple&lt;char&gt;&gt;(10)
+///     .then_ignore(end());
+///
+/// assert_eq!(dec.parse(&quot;0&quot;), Ok(&quot;0&quot;.to_string()));
+/// assert_eq!(dec.parse(&quot;1&quot;), Ok(&quot;1&quot;.to_string()));
+/// assert_eq!(dec.parse(&quot;1452&quot;), Ok(&quot;1452&quot;.to_string()));
+/// // No leading zeroes are permitted!
+/// assert!(dec.parse(&quot;04&quot;).is_err());
+///
+/// let hex = text::int::&lt;_, Simple&lt;char&gt;&gt;(16)
+///     .then_ignore(end());
+///
+/// assert_eq!(hex.parse(&quot;2A&quot;), Ok(&quot;2A&quot;.to_string()));
+/// assert_eq!(hex.parse(&quot;d&quot;), Ok(&quot;d&quot;.to_string()));
+/// assert_eq!(hex.parse(&quot;b4&quot;), Ok(&quot;b4&quot;.to_string()));
+/// assert!(hex.parse(&quot;0B&quot;).is_err());
+/// ```
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub fn </span>int&lt;C: Character, E: Error&lt;C&gt;&gt;(
+    radix: u32,
+) -&gt; <span class="kw">impl </span>Parser&lt;C, C::Collection, Error = E&gt; + Copy + Clone {
+    filter(<span class="kw">move </span>|c: <span class="kw-2">&amp;</span>C| c.is_digit(radix) &amp;&amp; c != <span class="kw-2">&amp;</span>C::digit_zero())
+        .map(<span class="prelude-val">Some</span>)
+        .chain::&lt;C, Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;(filter(<span class="kw">move </span>|c: <span class="kw-2">&amp;</span>C| c.is_digit(radix)).repeated())
+        .collect()
+        .or(just(C::digit_zero()).map(|c| core::iter::once(c).collect()))
 }
 
-<span class="doccomment">/// A parser that accepts a C-style identifier.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is [`Character::Collection`] (i.e: [`String`] when `C` is [`char`], and [`Vec&lt;u8&gt;`]</span>
-<span class="doccomment">/// when `C` is [`u8`]).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// An identifier is defined as an ASCII alphabetic character or an underscore followed by any number of alphanumeric</span>
-<span class="doccomment">/// characters or underscores. The regex pattern for it is `[a-zA-Z_][a-zA-Z0-9_]*`.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ident</span>&lt;<span class="ident">C</span>: <span class="ident">Character</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt;&gt;() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">C::Collection</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Copy</span> + <span class="ident">Clone</span>
+<span class="doccomment">/// A parser that accepts a C-style identifier.
+///
+/// The output type of this parser is [`Character::Collection`] (i.e: [`String`] when `C` is [`char`], and [`Vec&lt;u8&gt;`]
+/// when `C` is [`u8`]).
+///
+/// An identifier is defined as an ASCII alphabetic character or an underscore followed by any number of alphanumeric
+/// characters or underscores. The regex pattern for it is `[a-zA-Z_][a-zA-Z0-9_]*`.
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub fn </span>ident&lt;C: Character, E: Error&lt;C&gt;&gt;() -&gt; <span class="kw">impl </span>Parser&lt;C, C::Collection, Error = E&gt; + Copy + Clone
 {
-    <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphabetic</span>() || <span class="ident">c</span>.<span class="ident">to_char</span>() == <span class="string">&#39;_&#39;</span>)
-        .<span class="ident">map</span>(<span class="prelude-val">Some</span>)
-        .<span class="ident">chain</span>::&lt;<span class="ident">C</span>, <span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;(
-            <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">to_char</span>().<span class="ident">is_ascii_alphanumeric</span>() || <span class="ident">c</span>.<span class="ident">to_char</span>() == <span class="string">&#39;_&#39;</span>).<span class="ident">repeated</span>(),
+    filter(|c: <span class="kw-2">&amp;</span>C| c.to_char().is_ascii_alphabetic() || c.to_char() == <span class="string">&#39;_&#39;</span>)
+        .map(<span class="prelude-val">Some</span>)
+        .chain::&lt;C, Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;(
+            filter(|c: <span class="kw-2">&amp;</span>C| c.to_char().is_ascii_alphanumeric() || c.to_char() == <span class="string">&#39;_&#39;</span>).repeated(),
         )
-        .<span class="ident">collect</span>()
+        .collect()
 }
 
-<span class="doccomment">/// Like [`ident`], but only accepts an exact identifier while ignoring trailing identifier characters.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `()`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let def = text::keyword::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;def&quot;);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // Exactly &#39;def&#39; was found</span>
-<span class="doccomment">/// assert_eq!(def.parse(&quot;def&quot;), Ok(()));</span>
-<span class="doccomment">/// // Exactly &#39;def&#39; was found, with non-identifier trailing characters</span>
-<span class="doccomment">/// assert_eq!(def.parse(&quot;def(foo, bar)&quot;), Ok(()));</span>
-<span class="doccomment">/// // &#39;def&#39; was found, but only as part of a larger identifier, so this fails to parse</span>
-<span class="doccomment">/// assert!(def.parse(&quot;define&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyword</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>, <span class="ident">S</span>: <span class="ident">AsRef</span>&lt;<span class="ident">C::Str</span>&gt; + <span class="lifetime">&#39;a</span> + <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
-    <span class="ident">keyword</span>: <span class="ident">S</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, (), <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span> {
-    <span class="comment">// TODO: use .filter(...), improve error messages</span>
-    <span class="ident">ident</span>().<span class="ident">try_map</span>(<span class="kw">move</span> |<span class="ident">s</span>: <span class="ident">C::Collection</span>, <span class="ident">span</span>| {
-        <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">as_ref</span>() == <span class="ident">keyword</span>.<span class="ident">as_ref</span>() {
+<span class="doccomment">/// Like [`ident`], but only accepts an exact identifier while ignoring trailing identifier characters.
+///
+/// The output type of this parser is `()`.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// let def = text::keyword::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;def&quot;);
+///
+/// // Exactly &#39;def&#39; was found
+/// assert_eq!(def.parse(&quot;def&quot;), Ok(()));
+/// // Exactly &#39;def&#39; was found, with non-identifier trailing characters
+/// assert_eq!(def.parse(&quot;def(foo, bar)&quot;), Ok(()));
+/// // &#39;def&#39; was found, but only as part of a larger identifier, so this fails to parse
+/// assert!(def.parse(&quot;define&quot;).is_err());
+/// ```
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub fn </span>keyword&lt;<span class="lifetime">&#39;a</span>, C: Character + <span class="lifetime">&#39;a</span>, S: AsRef&lt;C::Str&gt; + <span class="lifetime">&#39;a </span>+ Clone, E: Error&lt;C&gt; + <span class="lifetime">&#39;a</span>&gt;(
+    keyword: S,
+) -&gt; <span class="kw">impl </span>Parser&lt;C, (), Error = E&gt; + Clone + <span class="lifetime">&#39;a </span>{
+    <span class="comment">// TODO: use .filter(...), improve error messages
+    </span>ident().try_map(<span class="kw">move </span>|s: C::Collection, span| {
+        <span class="kw">if </span>s.as_ref() == keyword.as_ref() {
             <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(E::expected_input_found(span, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>))
         }
     })
 }
 
-<span class="doccomment">/// A parser that consumes text and generates tokens using semantic whitespace rules and the given token parser.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Also required is a function that collects a [`Vec`] of tokens into a whitespace-indicated token tree.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">semantic_indentation</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">C</span>, <span class="ident">Tok</span>, <span class="ident">T</span>, <span class="ident">F</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">C</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(
-    <span class="ident">token</span>: <span class="ident">T</span>,
-    <span class="ident">make_group</span>: <span class="ident">F</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>
-<span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">Character</span> + <span class="lifetime">&#39;a</span>,
-    <span class="ident">Tok</span>: <span class="lifetime">&#39;a</span>,
-    <span class="ident">T</span>: <span class="ident">Parser</span>&lt;<span class="ident">C</span>, <span class="ident">Tok</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>,
-    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="ident">E::Span</span>) -&gt; <span class="ident">Tok</span> + <span class="ident">Clone</span> + <span class="lifetime">&#39;a</span>,
+<span class="doccomment">/// A parser that consumes text and generates tokens using semantic whitespace rules and the given token parser.
+///
+/// Also required is a function that collects a [`Vec`] of tokens into a whitespace-indicated token tree.
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub fn </span>semantic_indentation&lt;<span class="lifetime">&#39;a</span>, C, Tok, T, F, E: Error&lt;C&gt; + <span class="lifetime">&#39;a</span>&gt;(
+    token: T,
+    make_group: F,
+) -&gt; <span class="kw">impl </span>Parser&lt;C, Vec&lt;Tok&gt;, Error = E&gt; + Clone + <span class="lifetime">&#39;a
+</span><span class="kw">where
+    </span>C: Character + <span class="lifetime">&#39;a</span>,
+    Tok: <span class="lifetime">&#39;a</span>,
+    T: Parser&lt;C, Tok, Error = E&gt; + Clone + <span class="lifetime">&#39;a</span>,
+    F: Fn(Vec&lt;Tok&gt;, E::Span) -&gt; Tok + Clone + <span class="lifetime">&#39;a</span>,
 {
-    <span class="kw">let</span> <span class="ident">line_ws</span> = <span class="ident">filter</span>(|<span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>| <span class="ident">c</span>.<span class="ident">is_inline_whitespace</span>());
+    <span class="kw">let </span>line_ws = filter(|c: <span class="kw-2">&amp;</span>C| c.is_inline_whitespace());
 
-    <span class="kw">let</span> <span class="ident">line</span> = <span class="ident">token</span>.<span class="ident">padded_by</span>(<span class="ident">line_ws</span>.<span class="ident">ignored</span>().<span class="ident">repeated</span>()).<span class="ident">repeated</span>();
+    <span class="kw">let </span>line = token.padded_by(line_ws.ignored().repeated()).repeated();
 
-    <span class="kw">let</span> <span class="ident">lines</span> = <span class="ident">line_ws</span>
-        .<span class="ident">repeated</span>()
-        .<span class="ident">then</span>(<span class="ident">line</span>.<span class="ident">map_with_span</span>(|<span class="ident">line</span>, <span class="ident">span</span>| (<span class="ident">line</span>, <span class="ident">span</span>)))
-        .<span class="ident">separated_by</span>(<span class="ident">newline</span>())
-        .<span class="ident">padded</span>();
+    <span class="kw">let </span>lines = line_ws
+        .repeated()
+        .then(line.map_with_span(|line, span| (line, span)))
+        .separated_by(newline())
+        .padded();
 
-    <span class="ident">lines</span>.<span class="ident">map</span>(<span class="kw">move</span> |<span class="ident">lines</span>| {
-        <span class="kw">fn</span> <span class="ident">collapse</span>&lt;<span class="ident">C</span>, <span class="ident">Tok</span>, <span class="ident">F</span>, <span class="ident">S</span>&gt;(
-            <span class="kw-2">mut</span> <span class="ident">tree</span>: <span class="ident">Vec</span>&lt;(<span class="ident">Vec</span>&lt;<span class="ident">C</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="prelude-ty">Option</span>&lt;<span class="ident">S</span>&gt;)&gt;,
-            <span class="ident">make_group</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>,
-        ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Tok</span>&gt;
-        <span class="kw">where</span>
-            <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Vec</span>&lt;<span class="ident">Tok</span>&gt;, <span class="ident">S</span>) -&gt; <span class="ident">Tok</span>,
+    lines.map(<span class="kw">move </span>|lines| {
+        <span class="kw">fn </span>collapse&lt;C, Tok, F, S&gt;(
+            <span class="kw-2">mut </span>tree: Vec&lt;(Vec&lt;C&gt;, Vec&lt;Tok&gt;, <span class="prelude-ty">Option</span>&lt;S&gt;)&gt;,
+            make_group: <span class="kw-2">&amp;</span>F,
+        ) -&gt; <span class="prelude-ty">Option</span>&lt;Tok&gt;
+        <span class="kw">where
+            </span>F: Fn(Vec&lt;Tok&gt;, S) -&gt; Tok,
         {
-            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">tts</span>, <span class="ident">line_span</span>)) = <span class="ident">tree</span>.<span class="ident">pop</span>() {
-                <span class="kw">let</span> <span class="ident">tt</span> = <span class="ident">make_group</span>(<span class="ident">tts</span>, <span class="ident">line_span</span><span class="question-mark">?</span>);
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last</span>) = <span class="ident">tree</span>.<span class="ident">last_mut</span>() {
-                    <span class="ident">last</span>.<span class="number">1</span>.<span class="ident">push</span>(<span class="ident">tt</span>);
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">tt</span>);
+            <span class="kw">while let </span><span class="prelude-val">Some</span>((<span class="kw">_</span>, tts, line_span)) = tree.pop() {
+                <span class="kw">let </span>tt = make_group(tts, line_span<span class="question-mark">?</span>);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(last) = tree.last_mut() {
+                    last.<span class="number">1</span>.push(tt);
+                } <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Some</span>(tt);
                 }
             }
-            <span class="prelude-val">None</span>
-        }
+            <span class="prelude-val">None
+        </span>}
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nesting</span> = <span class="macro">vec!</span>[(<span class="ident">Vec::new</span>(), <span class="ident">Vec::new</span>(), <span class="prelude-val">None</span>)];
-        <span class="kw">for</span> (<span class="ident">indent</span>, (<span class="kw-2">mut</span> <span class="ident">line</span>, <span class="ident">line_span</span>)) <span class="kw">in</span> <span class="ident">lines</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">indent</span> = <span class="ident">indent</span>.<span class="ident">as_slice</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> = <span class="number">0</span>;
-            <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tail</span>) = <span class="ident">nesting</span>
-                .<span class="ident">get</span>(<span class="ident">i</span>)
-                .<span class="ident">and_then</span>(|(<span class="ident">n</span>, <span class="kw">_</span>, <span class="kw">_</span>)| <span class="ident">indent</span>.<span class="ident">strip_prefix</span>(<span class="ident">n</span>.<span class="ident">as_slice</span>()))
+        <span class="kw">let </span><span class="kw-2">mut </span>nesting = <span class="macro">vec!</span>[(Vec::new(), Vec::new(), <span class="prelude-val">None</span>)];
+        <span class="kw">for </span>(indent, (<span class="kw-2">mut </span>line, line_span)) <span class="kw">in </span>lines {
+            <span class="kw">let </span><span class="kw-2">mut </span>indent = indent.as_slice();
+            <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
+            <span class="kw">while let </span><span class="prelude-val">Some</span>(tail) = nesting
+                .get(i)
+                .and_then(|(n, <span class="kw">_</span>, <span class="kw">_</span>)| indent.strip_prefix(n.as_slice()))
             {
-                <span class="ident">indent</span> = <span class="ident">tail</span>;
-                <span class="ident">i</span> += <span class="number">1</span>;
+                indent = tail;
+                i += <span class="number">1</span>;
             }
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tail</span>) = <span class="ident">collapse</span>(<span class="ident">nesting</span>.<span class="ident">split_off</span>(<span class="ident">i</span>), <span class="kw-2">&amp;</span><span class="ident">make_group</span>) {
-                <span class="ident">nesting</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="number">1</span>.<span class="ident">push</span>(<span class="ident">tail</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(tail) = collapse(nesting.split_off(i), <span class="kw-2">&amp;</span>make_group) {
+                nesting.last_mut().unwrap().<span class="number">1</span>.push(tail);
             }
-            <span class="kw">if</span> !<span class="ident">indent</span>.<span class="ident">is_empty</span>() {
-                <span class="ident">nesting</span>.<span class="ident">push</span>((<span class="ident">indent</span>.<span class="ident">to_vec</span>(), <span class="ident">line</span>, <span class="prelude-val">Some</span>(<span class="ident">line_span</span>)));
-            } <span class="kw">else</span> {
-                <span class="ident">nesting</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="number">1</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">line</span>);
+            <span class="kw">if </span>!indent.is_empty() {
+                nesting.push((indent.to_vec(), line, <span class="prelude-val">Some</span>(line_span)));
+            } <span class="kw">else </span>{
+                nesting.last_mut().unwrap().<span class="number">1</span>.append(<span class="kw-2">&amp;mut </span>line);
             }
         }
 
-        <span class="ident">nesting</span>.<span class="ident">remove</span>(<span class="number">0</span>).<span class="number">1</span>
-    })
+        nesting.remove(<span class="number">0</span>).<span class="number">1
+    </span>})
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

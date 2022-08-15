@@ -39,44 +39,44 @@
 <span id="37">37</span>
 <span id="38">38</span>
 <span id="39">39</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">proc_macro2::TokenStream</span>;
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>proc_macro2::TokenStream;
+<span class="kw">use </span>quote::quote;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::generator</span>::{<span class="ident">Context</span>, <span class="ident">Generator</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::graph::Rope</span>;
+<span class="kw">use </span><span class="kw">crate</span>::generator::{Context, Generator};
+<span class="kw">use </span><span class="kw">crate</span>::graph::Rope;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">Generator</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_rope</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">rope</span>: <span class="kw-2">&amp;</span><span class="ident">Rope</span>, <span class="kw-2">mut</span> <span class="ident">ctx</span>: <span class="ident">Context</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="kw">let</span> <span class="ident">miss</span> = <span class="ident">ctx</span>.<span class="ident">miss</span>(<span class="ident">rope</span>.<span class="ident">miss</span>.<span class="ident">first</span>(), <span class="self">self</span>);
-        <span class="kw">let</span> <span class="ident">read</span> = <span class="ident">ctx</span>.<span class="ident">read</span>(<span class="ident">rope</span>.<span class="ident">pattern</span>.<span class="ident">len</span>());
-        <span class="kw">let</span> <span class="ident">then</span> = <span class="self">self</span>.<span class="ident">goto</span>(<span class="ident">rope</span>.<span class="ident">then</span>, <span class="ident">ctx</span>.<span class="ident">advance</span>(<span class="ident">rope</span>.<span class="ident">pattern</span>.<span class="ident">len</span>()));
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Generator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>generate_rope(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rope: <span class="kw-2">&amp;</span>Rope, <span class="kw-2">mut </span>ctx: Context) -&gt; TokenStream {
+        <span class="kw">let </span>miss = ctx.miss(rope.miss.first(), <span class="self">self</span>);
+        <span class="kw">let </span>read = ctx.read(rope.pattern.len());
+        <span class="kw">let </span>then = <span class="self">self</span>.goto(rope.then, ctx.advance(rope.pattern.len()));
 
-        <span class="kw">let</span> <span class="ident">pat</span> = <span class="kw">match</span> <span class="ident">rope</span>.<span class="ident">pattern</span>.<span class="ident">to_bytes</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">byte_slice_literal</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>),
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">ranges</span> = <span class="ident">rope</span>.<span class="ident">pattern</span>.<span class="ident">iter</span>();
+        <span class="kw">let </span>pat = <span class="kw">match </span>rope.pattern.to_bytes() {
+            <span class="prelude-val">Some</span>(bytes) =&gt; byte_slice_literal(<span class="kw-2">&amp;</span>bytes),
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">let </span>ranges = rope.pattern.iter();
 
-                <span class="macro">quote!</span>([#(#<span class="ident">ranges</span>),<span class="kw-2">*</span>])
+                <span class="macro">quote!</span>([#(#ranges),<span class="kw-2">*</span>])
             }
         };
 
-        <span class="kw">return</span> <span class="macro">quote!</span> {
-            <span class="kw">match</span> #<span class="ident">read</span> {
-                <span class="prelude-val">Some</span>(#<span class="ident">pat</span>) =&gt; #<span class="ident">then</span>,
-                <span class="kw">_</span> =&gt; #<span class="ident">miss</span>,
+        <span class="kw">return </span><span class="macro">quote!</span> {
+            <span class="kw">match </span>#read {
+                <span class="prelude-val">Some</span>(#pat) =&gt; #then,
+                <span class="kw">_ </span>=&gt; #miss,
             }
         };
     }
 }
 
-<span class="kw">fn</span> <span class="ident">byte_slice_literal</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">if</span> <span class="ident">bytes</span>.<span class="ident">iter</span>().<span class="ident">any</span>(|<span class="kw-2">&amp;</span><span class="ident">b</span>| <span class="ident">b</span> &lt; <span class="number">0x20</span> || <span class="ident">b</span> &gt;= <span class="number">0x7F</span>) {
-        <span class="kw">return</span> <span class="macro">quote!</span>(<span class="kw-2">&amp;</span>[#(#<span class="ident">bytes</span>),<span class="kw-2">*</span>]);
+<span class="kw">fn </span>byte_slice_literal(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; TokenStream {
+    <span class="kw">if </span>bytes.iter().any(|<span class="kw-2">&amp;</span>b| b &lt; <span class="number">0x20 </span>|| b &gt;= <span class="number">0x7F</span>) {
+        <span class="kw">return </span><span class="macro">quote!</span>(<span class="kw-2">&amp;</span>[#(#bytes),<span class="kw-2">*</span>]);
     }
 
-    <span class="kw">let</span> <span class="ident">slice</span> = <span class="ident">std::str::from_utf8</span>(<span class="ident">bytes</span>).<span class="ident">unwrap</span>();
+    <span class="kw">let </span>slice = std::str::from_utf8(bytes).unwrap();
 
-    <span class="ident">syn::parse_str</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;b{:?}&quot;</span>, <span class="ident">slice</span>)).<span class="ident">unwrap</span>()
+    syn::parse_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;b{:?}&quot;</span>, slice)).unwrap()
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

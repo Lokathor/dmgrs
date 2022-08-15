@@ -117,122 +117,122 @@
 <span id="115">115</span>
 <span id="116">116</span>
 <span id="117">117</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>std::fmt;
 
-<span class="kw">use</span> <span class="ident">beef::lean::Cow</span>;
-<span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Span</span>, <span class="ident">TokenStream</span>};
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
-<span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote_spanned</span>, <span class="ident">ToTokens</span>, <span class="ident">TokenStreamExt</span>};
+<span class="kw">use </span>beef::lean::Cow;
+<span class="kw">use </span>proc_macro2::{Span, TokenStream};
+<span class="kw">use </span>quote::quote;
+<span class="kw">use </span>quote::{quote_spanned, ToTokens, TokenStreamExt};
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span>&lt;<span class="ident">T</span>&gt; = <span class="ident">std::result::Result</span>&lt;<span class="ident">T</span>, <span class="ident">Error</span>&gt;;
+<span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T&gt; = std::result::Result&lt;T, Error&gt;;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Errors</span> {
-    <span class="ident">collected</span>: <span class="ident">Vec</span>&lt;<span class="ident">SpannedError</span>&gt;,
+<span class="kw">pub struct </span>Errors {
+    collected: Vec&lt;SpannedError&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Errors</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">Errors</span> {
-            <span class="ident">collected</span>: <span class="ident">Vec::new</span>(),
+<span class="kw">impl </span>Default <span class="kw">for </span>Errors {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        Errors {
+            collected: Vec::new(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Errors</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">err</span>&lt;<span class="ident">M</span>&gt;(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="ident">M</span>, <span class="ident">span</span>: <span class="ident">Span</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Into</span>&lt;<span class="ident">Cow</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">str</span>&gt;&gt;,
+<span class="kw">impl </span>Errors {
+    <span class="kw">pub fn </span>err&lt;M&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, message: M, span: Span) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self
+    </span><span class="kw">where
+        </span>M: Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;,
     {
-        <span class="self">self</span>.<span class="ident">collected</span>.<span class="ident">push</span>(<span class="ident">SpannedError</span> {
-            <span class="ident">message</span>: <span class="ident">message</span>.<span class="ident">into</span>(),
-            <span class="ident">span</span>,
+        <span class="self">self</span>.collected.push(SpannedError {
+            message: message.into(),
+            span,
         });
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">render</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">TokenStream</span>&gt; {
-        <span class="kw">let</span> <span class="ident">errors</span> = <span class="self">self</span>.<span class="ident">collected</span>;
+    <span class="kw">pub fn </span>render(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TokenStream&gt; {
+        <span class="kw">let </span>errors = <span class="self">self</span>.collected;
 
-        <span class="kw">match</span> <span class="ident">errors</span>.<span class="ident">len</span>() {
-            <span class="number">0</span> =&gt; <span class="prelude-val">None</span>,
-            <span class="kw">_</span> =&gt; <span class="prelude-val">Some</span>(<span class="macro">quote!</span> {
-                <span class="kw">fn</span> <span class="ident">_logos_derive_compile_errors</span>() {
-                    #(#<span class="ident">errors</span>)*
+        <span class="kw">match </span>errors.len() {
+            <span class="number">0 </span>=&gt; <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Some</span>(<span class="macro">quote!</span> {
+                <span class="kw">fn </span>_logos_derive_compile_errors() {
+                    #(#errors)*
                 }
             }),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span>(<span class="ident">Cow</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">str</span>&gt;);
+<span class="kw">pub struct </span>Error(Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SpannedError</span> {
-    <span class="ident">message</span>: <span class="ident">Cow</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">str</span>&gt;,
-    <span class="ident">span</span>: <span class="ident">Span</span>,
+<span class="attribute">#[derive(Debug)]</span>
+<span class="kw">pub struct </span>SpannedError {
+    message: Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;,
+    span: Span,
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>&lt;<span class="ident">M</span>&gt;(<span class="ident">message</span>: <span class="ident">M</span>) -&gt; <span class="self">Self</span>
-    <span class="kw">where</span>
-        <span class="ident">M</span>: <span class="ident">Into</span>&lt;<span class="ident">Cow</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">str</span>&gt;&gt;,
+<span class="kw">impl </span>Error {
+    <span class="kw">pub fn </span>new&lt;M&gt;(message: M) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>M: Into&lt;Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;&gt;,
     {
-        <span class="ident">Error</span>(<span class="ident">message</span>.<span class="ident">into</span>())
+        Error(message.into())
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">span</span>(<span class="self">self</span>, <span class="ident">span</span>: <span class="ident">Span</span>) -&gt; <span class="ident">SpannedError</span> {
-        <span class="ident">SpannedError</span> {
-            <span class="ident">message</span>: <span class="self">self</span>.<span class="number">0</span>,
-            <span class="ident">span</span>,
+    <span class="kw">pub fn </span>span(<span class="self">self</span>, span: Span) -&gt; SpannedError {
+        SpannedError {
+            message: <span class="self">self</span>.<span class="number">0</span>,
+            span,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>Error {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        <span class="self">self</span>.<span class="number">0</span>.fmt(f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="ident">fmt::Display::fmt</span>(<span class="self">self</span>, <span class="ident">f</span>)
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>Error {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        fmt::Display::fmt(<span class="self">self</span>, f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span>&lt;<span class="ident">regex_syntax::Error</span>&gt; <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">regex_syntax::Error</span>) -&gt; <span class="ident">Error</span> {
-        <span class="ident">Error</span>(<span class="ident">err</span>.<span class="ident">to_string</span>().<span class="ident">into</span>())
+<span class="kw">impl </span>From&lt;regex_syntax::Error&gt; <span class="kw">for </span>Error {
+    <span class="kw">fn </span>from(err: regex_syntax::Error) -&gt; Error {
+        Error(err.to_string().into())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>&gt; <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="ident">Error</span> {
-        <span class="ident">Error</span>(<span class="ident">err</span>.<span class="ident">into</span>())
+<span class="kw">impl </span>From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; <span class="kw">for </span>Error {
+    <span class="kw">fn </span>from(err: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; Error {
+        Error(err.into())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span>&lt;<span class="ident">String</span>&gt; <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">String</span>) -&gt; <span class="ident">Error</span> {
-        <span class="ident">Error</span>(<span class="ident">err</span>.<span class="ident">into</span>())
+<span class="kw">impl </span>From&lt;String&gt; <span class="kw">for </span>Error {
+    <span class="kw">fn </span>from(err: String) -&gt; Error {
+        Error(err.into())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span>&lt;<span class="ident">Error</span>&gt; <span class="kw">for</span> <span class="ident">Cow</span>&lt;<span class="lifetime">&#39;static</span>, <span class="ident">str</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">err</span>.<span class="number">0</span>
-    }
+<span class="kw">impl </span>From&lt;Error&gt; <span class="kw">for </span>Cow&lt;<span class="lifetime">&#39;static</span>, str&gt; {
+    <span class="kw">fn </span>from(err: Error) -&gt; <span class="self">Self </span>{
+        err.<span class="number">0
+    </span>}
 }
 
-<span class="kw">impl</span> <span class="ident">ToTokens</span> <span class="kw">for</span> <span class="ident">SpannedError</span> {
-    <span class="kw">fn</span> <span class="ident">to_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tokens</span>: <span class="kw-2">&amp;mut</span> <span class="ident">TokenStream</span>) {
-        <span class="kw">let</span> <span class="ident">message</span> = <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">message</span>;
+<span class="kw">impl </span>ToTokens <span class="kw">for </span>SpannedError {
+    <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
+        <span class="kw">let </span>message = <span class="kw-2">&amp;*</span><span class="self">self</span>.message;
 
-        <span class="ident">tokens</span>.<span class="ident">append_all</span>(<span class="macro">quote_spanned!</span>(<span class="self">self</span>.<span class="ident">span</span> =&gt; {
-            <span class="macro">compile_error!</span>(#<span class="ident">message</span>)
+        tokens.append_all(<span class="macro">quote_spanned!</span>(<span class="self">self</span>.span =&gt; {
+            <span class="macro">compile_error!</span>(#message)
         }))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

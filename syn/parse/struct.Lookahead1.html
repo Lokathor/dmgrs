@@ -7,37 +7,37 @@ go ahead and use <code>ParseStream::peek</code> instead.</p>
 <p>Consuming tokens from the source stream after constructing a lookahead
 object does not also advance the lookahead object.</p>
 <h2 id="example"><a href="#example">Example</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">ConstParam</span>, <span class="ident">Ident</span>, <span class="ident">Lifetime</span>, <span class="ident">LifetimeDef</span>, <span class="prelude-ty">Result</span>, <span class="ident">Token</span>, <span class="ident">TypeParam</span>};
-<span class="kw">use</span> <span class="ident">syn::parse</span>::{<span class="ident">Parse</span>, <span class="ident">ParseStream</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>syn::{ConstParam, Ident, Lifetime, LifetimeDef, <span class="prelude-ty">Result</span>, Token, TypeParam};
+<span class="kw">use </span>syn::parse::{Parse, ParseStream};
 
-<span class="comment">// A generic parameter, a single one of the comma-separated elements inside</span>
-<span class="comment">// angle brackets in:</span>
-<span class="comment">//</span>
-<span class="comment">//     fn f&lt;T: Clone, &#39;a, &#39;b: &#39;a, const N: usize&gt;() { ... }</span>
-<span class="comment">//</span>
-<span class="comment">// On invalid input, lookahead gives us a reasonable error message.</span>
-<span class="comment">//</span>
-<span class="comment">//     error: expected one of: identifier, lifetime, `const`</span>
-<span class="comment">//       |</span>
-<span class="comment">//     5 |     fn f&lt;!Sized&gt;() {}</span>
-<span class="comment">//       |          ^</span>
-<span class="kw">enum</span> <span class="ident">GenericParam</span> {
-    <span class="ident">Type</span>(<span class="ident">TypeParam</span>),
-    <span class="ident">Lifetime</span>(<span class="ident">LifetimeDef</span>),
-    <span class="ident">Const</span>(<span class="ident">ConstParam</span>),
+<span class="comment">// A generic parameter, a single one of the comma-separated elements inside
+// angle brackets in:
+//
+//     fn f&lt;T: Clone, &#39;a, &#39;b: &#39;a, const N: usize&gt;() { ... }
+//
+// On invalid input, lookahead gives us a reasonable error message.
+//
+//     error: expected one of: identifier, lifetime, `const`
+//       |
+//     5 |     fn f&lt;!Sized&gt;() {}
+//       |          ^
+</span><span class="kw">enum </span>GenericParam {
+    Type(TypeParam),
+    Lifetime(LifetimeDef),
+    Const(ConstParam),
 }
 
-<span class="kw">impl</span> <span class="ident">Parse</span> <span class="kw">for</span> <span class="ident">GenericParam</span> {
-    <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">input</span>: <span class="ident">ParseStream</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let</span> <span class="ident">lookahead</span> = <span class="ident">input</span>.<span class="ident">lookahead1</span>();
-        <span class="kw">if</span> <span class="ident">lookahead</span>.<span class="ident">peek</span>(<span class="ident">Ident</span>) {
-            <span class="ident">input</span>.<span class="ident">parse</span>().<span class="ident">map</span>(<span class="ident">GenericParam::Type</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">lookahead</span>.<span class="ident">peek</span>(<span class="ident">Lifetime</span>) {
-            <span class="ident">input</span>.<span class="ident">parse</span>().<span class="ident">map</span>(<span class="ident">GenericParam::Lifetime</span>)
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">lookahead</span>.<span class="ident">peek</span>(<span class="macro">Token!</span>[<span class="kw">const</span>]) {
-            <span class="ident">input</span>.<span class="ident">parse</span>().<span class="ident">map</span>(<span class="ident">GenericParam::Const</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">lookahead</span>.<span class="ident">error</span>())
+<span class="kw">impl </span>Parse <span class="kw">for </span>GenericParam {
+    <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>lookahead = input.lookahead1();
+        <span class="kw">if </span>lookahead.peek(Ident) {
+            input.parse().map(GenericParam::Type)
+        } <span class="kw">else if </span>lookahead.peek(Lifetime) {
+            input.parse().map(GenericParam::Lifetime)
+        } <span class="kw">else if </span>lookahead.peek(<span class="macro">Token!</span>[<span class="kw">const</span>]) {
+            input.parse().map(GenericParam::Const)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(lookahead.error())
         }
     }
 }</code></pre></div>
@@ -68,4 +68,4 @@ have been peeked against this lookahead instance.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-Lookahead1%3C%27a%3E" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-Lookahead1%3C%27a%3E" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

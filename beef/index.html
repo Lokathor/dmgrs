@@ -3,13 +3,13 @@
 <strong><a href="https://crates.io/crates/beef">Cargo</a> -</strong>
 <strong><a href="https://github.com/maciejhirsz/beef">Repository</a></strong></p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">beef::Cow</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>beef::Cow;
 
-<span class="kw">let</span> <span class="ident">borrowed</span>: <span class="ident">Cow</span>&lt;<span class="ident">str</span>&gt; = <span class="ident">Cow::borrowed</span>(<span class="string">&quot;Hello&quot;</span>);
-<span class="kw">let</span> <span class="ident">owned</span>: <span class="ident">Cow</span>&lt;<span class="ident">str</span>&gt; = <span class="ident">Cow::owned</span>(<span class="ident">String::from</span>(<span class="string">&quot;World&quot;</span>));
+<span class="kw">let </span>borrowed: Cow&lt;str&gt; = Cow::borrowed(<span class="string">&quot;Hello&quot;</span>);
+<span class="kw">let </span>owned: Cow&lt;str&gt; = Cow::owned(String::from(<span class="string">&quot;World&quot;</span>));
 
 <span class="macro">assert_eq!</span>(
-    <span class="macro">format!</span>(<span class="string">&quot;{} {}!&quot;</span>, <span class="ident">borrowed</span>, <span class="ident">owned</span>),
+    <span class="macro">format!</span>(<span class="string">&quot;{} {}!&quot;</span>, borrowed, owned),
     <span class="string">&quot;Hello World!&quot;</span>,
 );</code></pre></div>
 <p>There are two versions of <code>Cow</code> exposed by this crate:</p>
@@ -19,19 +19,19 @@
 </ul>
 <p>Both versions are leaner than the <code>std::borrow::Cow</code>:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">std::mem::size_of</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::mem::size_of;
 
-<span class="kw">const</span> <span class="ident">WORD</span>: <span class="ident">usize</span> = <span class="ident">size_of</span>::&lt;<span class="ident">usize</span>&gt;();
+<span class="kw">const </span>WORD: usize = size_of::&lt;usize&gt;();
 
-<span class="macro">assert_eq!</span>(<span class="ident">size_of</span>::&lt;<span class="ident">std::borrow::Cow</span>&lt;<span class="ident">str</span>&gt;&gt;(), <span class="number">4</span> * <span class="ident">WORD</span>);
-<span class="macro">assert_eq!</span>(<span class="ident">size_of</span>::&lt;<span class="ident">beef::Cow</span>&lt;<span class="ident">str</span>&gt;&gt;(), <span class="number">3</span> * <span class="ident">WORD</span>);
+<span class="macro">assert_eq!</span>(size_of::&lt;std::borrow::Cow&lt;str&gt;&gt;(), <span class="number">4 </span>* WORD);
+<span class="macro">assert_eq!</span>(size_of::&lt;beef::Cow&lt;str&gt;&gt;(), <span class="number">3 </span>* WORD);
 
-<span class="comment">// Lean variant is two words on 64-bit architecture</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_pointer_width</span> = <span class="string">&quot;64&quot;</span>)]</span>
-<span class="macro">assert_eq!</span>(<span class="ident">size_of</span>::&lt;<span class="ident">beef::lean::Cow</span>&lt;<span class="ident">str</span>&gt;&gt;(), <span class="number">2</span> * <span class="ident">WORD</span>);</code></pre></div>
+<span class="comment">// Lean variant is two words on 64-bit architecture
+</span><span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
+<span class="macro">assert_eq!</span>(size_of::&lt;beef::lean::Cow&lt;str&gt;&gt;(), <span class="number">2 </span>* WORD);</code></pre></div>
 </div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="generic/index.html" title="beef::generic mod">generic</a></div><div class="item-right docblock-short"><p>This module contains the actual, albeit generic, implementaiton of the <code>Cow</code>,
 and the traits that are available to it.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="lean/index.html" title="beef::lean mod">lean</a></div><div class="item-right docblock-short"><p>Namespace containing the 2-word <code>Cow</code> implementation.</p>
 </div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.Cow.html" title="beef::Cow type">Cow</a></div><div class="item-right docblock-short"><p>Compact three word <code>Cow</code> that puts the ownership tag in capacity.
 This is a type alias, for documentation see <a href="./generic/struct.Cow.html"><code>beef::generic::Cow</code></a>.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="beef" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="beef" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

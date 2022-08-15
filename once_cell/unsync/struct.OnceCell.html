@@ -2,16 +2,16 @@
 <p>Unlike <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code>std::cell::RefCell</code></a>, a <code>OnceCell</code> provides simple <code>&amp;</code>
 references to the contents.</p>
 <h2 id="example"><a href="#example">Example</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_none</span>());
+<span class="kw">let </span>cell = OnceCell::new();
+<span class="macro">assert!</span>(cell.get().is_none());
 
-<span class="kw">let</span> <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">String</span> = <span class="ident">cell</span>.<span class="ident">get_or_init</span>(|| {
-    <span class="string">&quot;Hello, World!&quot;</span>.<span class="ident">to_string</span>()
+<span class="kw">let </span>value: <span class="kw-2">&amp;</span>String = cell.get_or_init(|| {
+    <span class="string">&quot;Hello, World!&quot;</span>.to_string()
 });
-<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="string">&quot;Hello, World!&quot;</span>);
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_some</span>());</code></pre></div>
+<span class="macro">assert_eq!</span>(value, <span class="string">&quot;Hello, World!&quot;</span>);
+<span class="macro">assert!</span>(cell.get().is_some());</code></pre></div>
 </div></details><h2 id="implementations" class="small-section-header">Implementations<a href="#implementations" class="anchor"></a></h2><div id="implementations-list"><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl-OnceCell%3CT%3E" class="impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#435-656">source</a></span><a href="#impl-OnceCell%3CT%3E" class="anchor"></a><h3 class="code-header in-band">impl&lt;T&gt; <a class="struct" href="struct.OnceCell.html" title="struct once_cell::unsync::OnceCell">OnceCell</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.new" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#437-439">source</a></span><h4 class="code-header">pub const fn <a href="#method.new" class="fnname">new</a>() -&gt; <a class="struct" href="struct.OnceCell.html" title="struct once_cell::unsync::OnceCell">OnceCell</a>&lt;T&gt;</h4></section></summary><div class="docblock"><p>Creates a new empty cell.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.with_value" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#442-444">source</a></span><h4 class="code-header">pub const fn <a href="#method.with_value" class="fnname">with_value</a>(value: T) -&gt; <a class="struct" href="struct.OnceCell.html" title="struct once_cell::unsync::OnceCell">OnceCell</a>&lt;T&gt;</h4></section></summary><div class="docblock"><p>Creates a new initialized cell.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.get" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#449-452">source</a></span><h4 class="code-header">pub fn <a href="#method.get" class="fnname">get</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.reference.html">&amp;</a>T&gt;</h4></section></summary><div class="docblock"><p>Gets a reference to the underlying value.</p>
@@ -22,36 +22,36 @@ references to the contents.</p>
 at most once because it requires <code>&amp;mut</code> access to <code>self</code>. As with all
 interior mutability, <code>&amp;mut</code> access permits arbitrary modification:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cell</span>: <span class="ident">OnceCell</span>&lt;<span class="ident">u32</span>&gt; = <span class="ident">OnceCell::new</span>();
-<span class="ident">cell</span>.<span class="ident">set</span>(<span class="number">92</span>).<span class="ident">unwrap</span>();
-<span class="kw-2">*</span><span class="ident">cell</span>.<span class="ident">get_mut</span>().<span class="ident">unwrap</span>() = <span class="number">93</span>;
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">93</span>));</code></pre></div>
+<span class="kw">let </span><span class="kw-2">mut </span>cell: OnceCell&lt;u32&gt; = OnceCell::new();
+cell.set(<span class="number">92</span>).unwrap();
+<span class="kw-2">*</span>cell.get_mut().unwrap() = <span class="number">93</span>;
+<span class="macro">assert_eq!</span>(cell.get(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">93</span>));</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.set" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#492-497">source</a></span><h4 class="code-header">pub fn <a href="#method.set" class="fnname">set</a>(&amp;self, value: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.unit.html">()</a>, T&gt;</h4></section></summary><div class="docblock"><p>Sets the contents of this cell to <code>value</code>.</p>
 <p>Returns <code>Ok(())</code> if the cell was empty and <code>Err(value)</code> if it was
 full.</p>
 <h5 id="example-1"><a href="#example-1">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_none</span>());
+<span class="kw">let </span>cell = OnceCell::new();
+<span class="macro">assert!</span>(cell.get().is_none());
 
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">set</span>(<span class="number">92</span>), <span class="prelude-val">Ok</span>(()));
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">set</span>(<span class="number">62</span>), <span class="prelude-val">Err</span>(<span class="number">62</span>));
+<span class="macro">assert_eq!</span>(cell.set(<span class="number">92</span>), <span class="prelude-val">Ok</span>(()));
+<span class="macro">assert_eq!</span>(cell.set(<span class="number">62</span>), <span class="prelude-val">Err</span>(<span class="number">62</span>));
 
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_some</span>());</code></pre></div>
+<span class="macro">assert!</span>(cell.get().is_some());</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_insert" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#513-527">source</a></span><h4 class="code-header">pub fn <a href="#method.try_insert" class="fnname">try_insert</a>(&amp;self, value: T) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.reference.html">&amp;</a>T, (<a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.reference.html">&amp;</a>T, T)&gt;</h4></section></summary><div class="docblock"><p>Like <a href="struct.OnceCell.html#method.set"><code>set</code></a>, but also returns a reference to the final cell value.</p>
 <h5 id="example-2"><a href="#example-2">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_none</span>());
+<span class="kw">let </span>cell = OnceCell::new();
+<span class="macro">assert!</span>(cell.get().is_none());
 
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">try_insert</span>(<span class="number">92</span>), <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="number">92</span>));
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">try_insert</span>(<span class="number">62</span>), <span class="prelude-val">Err</span>((<span class="kw-2">&amp;</span><span class="number">92</span>, <span class="number">62</span>)));
+<span class="macro">assert_eq!</span>(cell.try_insert(<span class="number">92</span>), <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="number">92</span>));
+<span class="macro">assert_eq!</span>(cell.try_insert(<span class="number">62</span>), <span class="prelude-val">Err</span>((<span class="kw-2">&amp;</span><span class="number">92</span>, <span class="number">62</span>)));
 
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_some</span>());</code></pre></div>
+<span class="macro">assert!</span>(cell.get().is_some());</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.get_or_init" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#550-559">source</a></span><h4 class="code-header">pub fn <a href="#method.get_or_init" class="fnname">get_or_init</a>&lt;F&gt;(&amp;self, f: F) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.reference.html">&amp;</a>T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; T,&nbsp;</span></h4></section></summary><div class="docblock"><p>Gets the contents of the cell, initializing it with <code>f</code>
 if the cell was empty.</p>
 <h5 id="panics"><a href="#panics">Panics</a></h5>
@@ -60,13 +60,13 @@ remains uninitialized.</p>
 <p>It is an error to reentrantly initialize the cell from <code>f</code>. Doing
 so results in a panic.</p>
 <h5 id="example-3"><a href="#example-3">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="kw">let</span> <span class="ident">value</span> = <span class="ident">cell</span>.<span class="ident">get_or_init</span>(|| <span class="number">92</span>);
-<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="kw-2">&amp;</span><span class="number">92</span>);
-<span class="kw">let</span> <span class="ident">value</span> = <span class="ident">cell</span>.<span class="ident">get_or_init</span>(|| <span class="macro">unreachable!</span>());
-<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="kw-2">&amp;</span><span class="number">92</span>);</code></pre></div>
+<span class="kw">let </span>cell = OnceCell::new();
+<span class="kw">let </span>value = cell.get_or_init(|| <span class="number">92</span>);
+<span class="macro">assert_eq!</span>(value, <span class="kw-2">&amp;</span><span class="number">92</span>);
+<span class="kw">let </span>value = cell.get_or_init(|| <span class="macro">unreachable!</span>());
+<span class="macro">assert_eq!</span>(value, <span class="kw-2">&amp;</span><span class="number">92</span>);</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.get_or_try_init" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#586-600">source</a></span><h4 class="code-header">pub fn <a href="#method.get_or_try_init" class="fnname">get_or_try_init</a>&lt;F, E&gt;(&amp;self, f: F) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.reference.html">&amp;</a>T, E&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, E&gt;,&nbsp;</span></h4></section></summary><div class="docblock"><p>Gets the contents of the cell, initializing it with <code>f</code> if
 the cell was empty. If the cell was empty and <code>f</code> failed, an
 error is returned.</p>
@@ -76,48 +76,48 @@ remains uninitialized.</p>
 <p>It is an error to reentrantly initialize the cell from <code>f</code>. Doing
 so results in a panic.</p>
 <h5 id="example-4"><a href="#example-4">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">get_or_try_init</span>(|| <span class="prelude-val">Err</span>(())), <span class="prelude-val">Err</span>(()));
-<span class="macro">assert!</span>(<span class="ident">cell</span>.<span class="ident">get</span>().<span class="ident">is_none</span>());
-<span class="kw">let</span> <span class="ident">value</span> = <span class="ident">cell</span>.<span class="ident">get_or_try_init</span>(|| -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">i32</span>, ()&gt; {
+<span class="kw">let </span>cell = OnceCell::new();
+<span class="macro">assert_eq!</span>(cell.get_or_try_init(|| <span class="prelude-val">Err</span>(())), <span class="prelude-val">Err</span>(()));
+<span class="macro">assert!</span>(cell.get().is_none());
+<span class="kw">let </span>value = cell.get_or_try_init(|| -&gt; <span class="prelude-ty">Result</span>&lt;i32, ()&gt; {
     <span class="prelude-val">Ok</span>(<span class="number">92</span>)
 });
-<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="number">92</span>));
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">get</span>(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">92</span>))</code></pre></div>
+<span class="macro">assert_eq!</span>(value, <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="number">92</span>));
+<span class="macro">assert_eq!</span>(cell.get(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">92</span>))</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.take" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#631-633">source</a></span><h4 class="code-header">pub fn <a href="#method.take" class="fnname">take</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;</h4></section></summary><div class="docblock"><p>Takes the value out of this <code>OnceCell</code>, moving it back to an uninitialized state.</p>
 <p>Has no effect and returns <code>None</code> if the <code>OnceCell</code> hasn’t been initialized.</p>
 <h5 id="examples"><a href="#examples">Examples</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cell</span>: <span class="ident">OnceCell</span>&lt;<span class="ident">String</span>&gt; = <span class="ident">OnceCell::new</span>();
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">take</span>(), <span class="prelude-val">None</span>);
+<span class="kw">let </span><span class="kw-2">mut </span>cell: OnceCell&lt;String&gt; = OnceCell::new();
+<span class="macro">assert_eq!</span>(cell.take(), <span class="prelude-val">None</span>);
 
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="ident">cell</span>.<span class="ident">set</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>()).<span class="ident">unwrap</span>();
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">take</span>(), <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>()));
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">get</span>(), <span class="prelude-val">None</span>);</code></pre></div>
+<span class="kw">let </span><span class="kw-2">mut </span>cell = OnceCell::new();
+cell.set(<span class="string">&quot;hello&quot;</span>.to_string()).unwrap();
+<span class="macro">assert_eq!</span>(cell.take(), <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>.to_string()));
+<span class="macro">assert_eq!</span>(cell.get(), <span class="prelude-val">None</span>);</code></pre></div>
 <p>This method is allowed to violate the invariant of writing to a <code>OnceCell</code>
 at most once because it requires <code>&amp;mut</code> access to <code>self</code>. As with all
 interior mutability, <code>&amp;mut</code> access permits arbitrary modification:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cell</span>: <span class="ident">OnceCell</span>&lt;<span class="ident">u32</span>&gt; = <span class="ident">OnceCell::new</span>();
-<span class="ident">cell</span>.<span class="ident">set</span>(<span class="number">92</span>).<span class="ident">unwrap</span>();
-<span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();</code></pre></div>
+<span class="kw">let </span><span class="kw-2">mut </span>cell: OnceCell&lt;u32&gt; = OnceCell::new();
+cell.set(<span class="number">92</span>).unwrap();
+cell = OnceCell::new();</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.into_inner" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#651-655">source</a></span><h4 class="code-header">pub fn <a href="#method.into_inner" class="fnname">into_inner</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;</h4></section></summary><div class="docblock"><p>Consumes the <code>OnceCell</code>, returning the wrapped value.</p>
 <p>Returns <code>None</code> if the cell was empty.</p>
 <h5 id="examples-1"><a href="#examples-1">Examples</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">once_cell::unsync::OnceCell</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::unsync::OnceCell;
 
-<span class="kw">let</span> <span class="ident">cell</span>: <span class="ident">OnceCell</span>&lt;<span class="ident">String</span>&gt; = <span class="ident">OnceCell::new</span>();
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">into_inner</span>(), <span class="prelude-val">None</span>);
+<span class="kw">let </span>cell: OnceCell&lt;String&gt; = OnceCell::new();
+<span class="macro">assert_eq!</span>(cell.into_inner(), <span class="prelude-val">None</span>);
 
-<span class="kw">let</span> <span class="ident">cell</span> = <span class="ident">OnceCell::new</span>();
-<span class="ident">cell</span>.<span class="ident">set</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>()).<span class="ident">unwrap</span>();
-<span class="macro">assert_eq!</span>(<span class="ident">cell</span>.<span class="ident">into_inner</span>(), <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>()));</code></pre></div>
+<span class="kw">let </span>cell = OnceCell::new();
+cell.set(<span class="string">&quot;hello&quot;</span>.to_string()).unwrap();
+<span class="macro">assert_eq!</span>(cell.into_inner(), <span class="prelude-val">Some</span>(<span class="string">&quot;hello&quot;</span>.to_string()));</code></pre></div>
 </div></details></div></details></div><h2 id="trait-implementations" class="small-section-header">Trait Implementations<a href="#trait-implementations" class="anchor"></a></h2><div id="trait-implementations-list"><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl-Clone-for-OnceCell%3CT%3E" class="impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#405-419">source</a></span><a href="#impl-Clone-for-OnceCell%3CT%3E" class="anchor"></a><h3 class="code-header in-band">impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="struct.OnceCell.html" title="struct once_cell::unsync::OnceCell">OnceCell</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.clone" class="method trait-impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#406-411">source</a></span><a href="#method.clone" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone" class="fnname">clone</a>(&amp;self) -&gt; <a class="struct" href="struct.OnceCell.html" title="struct once_cell::unsync::OnceCell">OnceCell</a>&lt;T&gt;</h4></section></summary><div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.clone_from" class="method trait-impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#413-418">source</a></span><a href="#method.clone_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from" class="fnname">clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.reference.html">&amp;</a>Self)</h4></section></summary><div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl-Debug-for-OnceCell%3CT%3E" class="impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#396-403">source</a></span><a href="#impl-Debug-for-OnceCell%3CT%3E" class="anchor"></a><h3 class="code-header in-band">impl&lt;T:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="struct.OnceCell.html" title="struct once_cell::unsync::OnceCell">OnceCell</a>&lt;T&gt;</h3></section></summary><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.fmt" class="method trait-impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/once_cell/lib.rs.html#397-402">source</a></span><a href="#method.fmt" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt" class="fnname">fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>&lt;'_&gt;) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></h4></section></summary><div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
@@ -141,4 +141,4 @@ by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Pa
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-OnceCell%3CT%3E" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-OnceCell%3CT%3E" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

@@ -139,144 +139,144 @@
 <span id="137">137</span>
 <span id="138">138</span>
 <span id="139">139</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::source::Chunk</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Filter</span>, <span class="ident">FilterResult</span>, <span class="ident">Lexer</span>, <span class="ident">Logos</span>, <span class="ident">Skip</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::source::Chunk;
+<span class="kw">use crate</span>::{Filter, FilterResult, Lexer, Logos, Skip};
 
-<span class="doccomment">/// Trait used by the functions contained in the `Lexicon`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # WARNING!</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// **This trait, and it&#39;s methods, are not meant to be used outside of the</span>
-<span class="doccomment">/// code produced by `#[derive(Logos)]` macro.**</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">LexerInternal</span>&lt;<span class="lifetime">&#39;source</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Token</span>;
+<span class="doccomment">/// Trait used by the functions contained in the `Lexicon`.
+///
+/// # WARNING!
+///
+/// **This trait, and it&#39;s methods, are not meant to be used outside of the
+/// code produced by `#[derive(Logos)]` macro.**
+</span><span class="kw">pub trait </span>LexerInternal&lt;<span class="lifetime">&#39;source</span>&gt; {
+    <span class="kw">type </span>Token;
 
-    <span class="doccomment">/// Read a chunk at current position.</span>
-    <span class="kw">fn</span> <span class="ident">read</span>&lt;<span class="ident">T</span>: <span class="ident">Chunk</span>&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">T</span>&gt;;
+    <span class="doccomment">/// Read a chunk at current position.
+    </span><span class="kw">fn </span>read&lt;T: Chunk&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt;;
 
-    <span class="doccomment">/// Read a chunk at current position, offset by `n`.</span>
-    <span class="kw">fn</span> <span class="ident">read_at</span>&lt;<span class="ident">T</span>: <span class="ident">Chunk</span>&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">T</span>&gt;;
+    <span class="doccomment">/// Read a chunk at current position, offset by `n`.
+    </span><span class="kw">fn </span>read_at&lt;T: Chunk&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt;;
 
-    <span class="doccomment">/// Unchecked read a chunk at current position, offset by `n`.</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">read_unchecked</span>&lt;<span class="ident">T</span>: <span class="ident">Chunk</span>&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="ident">T</span>;
+    <span class="doccomment">/// Unchecked read a chunk at current position, offset by `n`.
+    </span><span class="kw">unsafe fn </span>read_unchecked&lt;T: Chunk&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; T;
 
-    <span class="doccomment">/// Test a chunk at current position with a closure.</span>
-    <span class="kw">fn</span> <span class="ident">test</span>&lt;<span class="ident">T</span>: <span class="ident">Chunk</span>&lt;<span class="lifetime">&#39;source</span>&gt;, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) -&gt; <span class="ident">bool</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">test</span>: <span class="ident">F</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Test a chunk at current position with a closure.
+    </span><span class="kw">fn </span>test&lt;T: Chunk&lt;<span class="lifetime">&#39;source</span>&gt;, F: FnOnce(T) -&gt; bool&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, test: F) -&gt; bool;
 
-    <span class="doccomment">/// Test a chunk at current position offset by `n` with a closure.</span>
-    <span class="kw">fn</span> <span class="ident">test_at</span>&lt;<span class="ident">T</span>: <span class="ident">Chunk</span>&lt;<span class="lifetime">&#39;source</span>&gt;, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">T</span>) -&gt; <span class="ident">bool</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>, <span class="ident">test</span>: <span class="ident">F</span>) -&gt; <span class="ident">bool</span>;
+    <span class="doccomment">/// Test a chunk at current position offset by `n` with a closure.
+    </span><span class="kw">fn </span>test_at&lt;T: Chunk&lt;<span class="lifetime">&#39;source</span>&gt;, F: FnOnce(T) -&gt; bool&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize, test: F) -&gt; bool;
 
-    <span class="doccomment">/// Bump the position by `size`.</span>
-    <span class="kw">fn</span> <span class="ident">bump_unchecked</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">usize</span>);
+    <span class="doccomment">/// Bump the position by `size`.
+    </span><span class="kw">fn </span>bump_unchecked(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: usize);
 
-    <span class="doccomment">/// Reset `token_start` to `token_end`.</span>
-    <span class="kw">fn</span> <span class="ident">trivia</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
+    <span class="doccomment">/// Reset `token_start` to `token_end`.
+    </span><span class="kw">fn </span>trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>);
 
-    <span class="doccomment">/// Set the current token to appropriate `#[error]` variant.</span>
-    <span class="doccomment">/// Guarantee that `token_end` is at char boundary for `&amp;str`.</span>
-    <span class="kw">fn</span> <span class="ident">error</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
+    <span class="doccomment">/// Set the current token to appropriate `#[error]` variant.
+    /// Guarantee that `token_end` is at char boundary for `&amp;str`.
+    </span><span class="kw">fn </span>error(<span class="kw-2">&amp;mut </span><span class="self">self</span>);
 
-    <span class="kw">fn</span> <span class="ident">end</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
+    <span class="kw">fn </span>end(<span class="kw-2">&amp;mut </span><span class="self">self</span>);
 
-    <span class="kw">fn</span> <span class="ident">set</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident"><span class="self">Self</span>::Token</span>);
+    <span class="kw">fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: <span class="self">Self</span>::Token);
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; {
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(<span class="ident">P</span>) -&gt; <span class="ident">T</span>;
+<span class="kw">pub trait </span>CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; {
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(P) -&gt; T;
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">P</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(<span class="ident">P</span>) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span>P {
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(P) -&gt; T,
     {
-        <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">c</span>(<span class="self">self</span>))
+        lex.set(c(<span class="self">self</span>))
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, (), <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">bool</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(()) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, (), T&gt; <span class="kw">for </span>bool {
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(()) -&gt; T,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="bool-val">true</span> =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">c</span>(())),
-            <span class="bool-val">false</span> =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">T::ERROR</span>),
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="bool-val">true </span>=&gt; lex.set(c(())),
+            <span class="bool-val">false </span>=&gt; lex.set(T::ERROR),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="prelude-ty">Option</span>&lt;<span class="ident">P</span>&gt; {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(<span class="ident">P</span>) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;P&gt; {
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(P) -&gt; T,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">product</span>) =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">c</span>(<span class="ident">product</span>)),
-            <span class="prelude-val">None</span> =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">T::ERROR</span>),
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="prelude-val">Some</span>(product) =&gt; lex.set(c(product)),
+            <span class="prelude-val">None </span>=&gt; lex.set(T::ERROR),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">E</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="prelude-ty">Result</span>&lt;<span class="ident">P</span>, <span class="ident">E</span>&gt; {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(<span class="ident">P</span>) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, E, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span><span class="prelude-ty">Result</span>&lt;P, E&gt; {
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(P) -&gt; T,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">product</span>) =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">c</span>(<span class="ident">product</span>)),
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">T::ERROR</span>),
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="prelude-val">Ok</span>(product) =&gt; lex.set(c(product)),
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; lex.set(T::ERROR),
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, (), <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">Skip</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(()) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, (), T&gt; <span class="kw">for </span>Skip {
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, <span class="kw">_</span>: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(()) -&gt; T,
     {
-        <span class="ident">lex</span>.<span class="ident">trivia</span>();
-        <span class="ident">T::lex</span>(<span class="ident">lex</span>);
+        lex.trivia();
+        T::lex(lex);
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">Filter</span>&lt;<span class="ident">P</span>&gt; {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(<span class="ident">P</span>) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span>Filter&lt;P&gt; {
+    <span class="attribute">#[inline]</span>
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(P) -&gt; T,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Filter::Emit</span>(<span class="ident">product</span>) =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">c</span>(<span class="ident">product</span>)),
-            <span class="ident">Filter::Skip</span> =&gt; {
-                <span class="ident">lex</span>.<span class="ident">trivia</span>();
-                <span class="ident">T::lex</span>(<span class="ident">lex</span>);
+        <span class="kw">match </span><span class="self">self </span>{
+            Filter::Emit(product) =&gt; lex.set(c(product)),
+            Filter::Skip =&gt; {
+                lex.trivia();
+                T::lex(lex);
             }
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt;&gt; <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">P</span>, <span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">FilterResult</span>&lt;<span class="ident">P</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">construct</span>&lt;<span class="ident">Constructor</span>&gt;(<span class="self">self</span>, <span class="ident">c</span>: <span class="ident">Constructor</span>, <span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="ident">T</span>&gt;)
-    <span class="kw">where</span>
-        <span class="ident">Constructor</span>: <span class="ident">Fn</span>(<span class="ident">P</span>) -&gt; <span class="ident">T</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span>FilterResult&lt;P&gt; {
+    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="kw">where
+        </span>Constructor: Fn(P) -&gt; T,
     {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">FilterResult::Emit</span>(<span class="ident">product</span>) =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">c</span>(<span class="ident">product</span>)),
-            <span class="ident">FilterResult::Skip</span> =&gt; {
-                <span class="ident">lex</span>.<span class="ident">trivia</span>();
-                <span class="ident">T::lex</span>(<span class="ident">lex</span>);
+        <span class="kw">match </span><span class="self">self </span>{
+            FilterResult::Emit(product) =&gt; lex.set(c(product)),
+            FilterResult::Skip =&gt; {
+                lex.trivia();
+                T::lex(lex);
             }
-            <span class="ident">FilterResult::Error</span> =&gt; <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">T::ERROR</span>),
+            FilterResult::Error =&gt; lex.set(T::ERROR),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

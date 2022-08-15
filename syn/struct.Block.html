@@ -9,45 +9,45 @@ including one trailing expression.</p>
 <p><em>This function is available only if Syn is built with the <code>&quot;parsing&quot;</code>
 feature.</em></p>
 <h5 id="example"><a href="#example">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">braced</span>, <span class="ident">token</span>, <span class="ident">Attribute</span>, <span class="ident">Block</span>, <span class="ident">Ident</span>, <span class="prelude-ty">Result</span>, <span class="ident">Stmt</span>, <span class="ident">Token</span>};
-<span class="kw">use</span> <span class="ident">syn::parse</span>::{<span class="ident">Parse</span>, <span class="ident">ParseStream</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>syn::{braced, token, Attribute, Block, Ident, <span class="prelude-ty">Result</span>, Stmt, Token};
+<span class="kw">use </span>syn::parse::{Parse, ParseStream};
 
-<span class="comment">// Parse a function with no generics or parameter list.</span>
-<span class="comment">//</span>
-<span class="comment">//     fn playground {</span>
-<span class="comment">//         let mut x = 1;</span>
-<span class="comment">//         x += 1;</span>
-<span class="comment">//         println!(&quot;{}&quot;, x);</span>
-<span class="comment">//     }</span>
-<span class="kw">struct</span> <span class="ident">MiniFunction</span> {
-    <span class="ident">attrs</span>: <span class="ident">Vec</span>&lt;<span class="ident">Attribute</span>&gt;,
-    <span class="ident">fn_token</span>: <span class="macro">Token!</span>[<span class="kw">fn</span>],
-    <span class="ident">name</span>: <span class="ident">Ident</span>,
-    <span class="ident">brace_token</span>: <span class="ident">token::Brace</span>,
-    <span class="ident">stmts</span>: <span class="ident">Vec</span>&lt;<span class="ident">Stmt</span>&gt;,
+<span class="comment">// Parse a function with no generics or parameter list.
+//
+//     fn playground {
+//         let mut x = 1;
+//         x += 1;
+//         println!(&quot;{}&quot;, x);
+//     }
+</span><span class="kw">struct </span>MiniFunction {
+    attrs: Vec&lt;Attribute&gt;,
+    fn_token: <span class="macro">Token!</span>[<span class="kw">fn</span>],
+    name: Ident,
+    brace_token: token::Brace,
+    stmts: Vec&lt;Stmt&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Parse</span> <span class="kw">for</span> <span class="ident">MiniFunction</span> {
-    <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">input</span>: <span class="ident">ParseStream</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let</span> <span class="ident">outer_attrs</span> = <span class="ident">input</span>.<span class="ident">call</span>(<span class="ident">Attribute::parse_outer</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">fn_token</span>: <span class="macro">Token!</span>[<span class="kw">fn</span>] = <span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">name</span>: <span class="ident">Ident</span> = <span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>;
+<span class="kw">impl </span>Parse <span class="kw">for </span>MiniFunction {
+    <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>outer_attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
+        <span class="kw">let </span>fn_token: <span class="macro">Token!</span>[<span class="kw">fn</span>] = input.parse()<span class="question-mark">?</span>;
+        <span class="kw">let </span>name: Ident = input.parse()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">content</span>;
-        <span class="kw">let</span> <span class="ident">brace_token</span> = <span class="macro">braced!</span>(<span class="ident">content</span> <span class="kw">in</span> <span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">inner_attrs</span> = <span class="ident">content</span>.<span class="ident">call</span>(<span class="ident">Attribute::parse_inner</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">stmts</span> = <span class="ident">content</span>.<span class="ident">call</span>(<span class="ident">Block::parse_within</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>content;
+        <span class="kw">let </span>brace_token = <span class="macro">braced!</span>(content <span class="kw">in </span>input);
+        <span class="kw">let </span>inner_attrs = content.call(Attribute::parse_inner)<span class="question-mark">?</span>;
+        <span class="kw">let </span>stmts = content.call(Block::parse_within)<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">MiniFunction</span> {
-            <span class="ident">attrs</span>: {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attrs</span> = <span class="ident">outer_attrs</span>;
-                <span class="ident">attrs</span>.<span class="ident">extend</span>(<span class="ident">inner_attrs</span>);
-                <span class="ident">attrs</span>
+        <span class="prelude-val">Ok</span>(MiniFunction {
+            attrs: {
+                <span class="kw">let </span><span class="kw-2">mut </span>attrs = outer_attrs;
+                attrs.extend(inner_attrs);
+                attrs
             },
-            <span class="ident">fn_token</span>,
-            <span class="ident">name</span>,
-            <span class="ident">brace_token</span>,
-            <span class="ident">stmts</span>,
+            fn_token,
+            name,
+            brace_token,
+            stmts,
         })
     }
 }</code></pre></div>
@@ -72,4 +72,4 @@ node, or <a href="../proc_macro2/struct.Span.html#method.call_site"><code>Span::
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-Block" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-Block" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

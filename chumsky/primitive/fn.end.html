@@ -3,23 +3,23 @@
 with <a href="../trait.Parser.html#method.then_ignore" title="Parser::then_ignore"><code>Parser::then_ignore</code></a>.</p>
 <p>The output type of this parser is <code>()</code>.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">assert_eq!</span>(<span class="ident">end</span>::&lt;<span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;().<span class="ident">parse</span>(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Ok</span>(()));
-<span class="macro">assert!</span>(<span class="ident">end</span>::&lt;<span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;().<span class="ident">parse</span>(<span class="string">&quot;hello&quot;</span>).<span class="ident">is_err</span>());</code></pre></div>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">assert_eq!</span>(end::&lt;Simple&lt;char&gt;&gt;().parse(<span class="string">&quot;&quot;</span>), <span class="prelude-val">Ok</span>(()));
+<span class="macro">assert!</span>(end::&lt;Simple&lt;char&gt;&gt;().parse(<span class="string">&quot;hello&quot;</span>).is_err());</code></pre></div>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">digits</span> = <span class="ident">text::digits</span>::&lt;<span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(<span class="number">10</span>);
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>digits = text::digits::&lt;<span class="kw">_</span>, Simple&lt;char&gt;&gt;(<span class="number">10</span>);
 
-<span class="comment">// This parser parses digits!</span>
-<span class="macro">assert_eq!</span>(<span class="ident">digits</span>.<span class="ident">parse</span>(<span class="string">&quot;1234&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;1234&quot;</span>.<span class="ident">to_string</span>()));
+<span class="comment">// This parser parses digits!
+</span><span class="macro">assert_eq!</span>(digits.parse(<span class="string">&quot;1234&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;1234&quot;</span>.to_string()));
 
-<span class="comment">// However, parsers are lazy and do not consume trailing input.</span>
-<span class="comment">// This can be inconvenient if we want to validate all of the input.</span>
-<span class="macro">assert_eq!</span>(<span class="ident">digits</span>.<span class="ident">parse</span>(<span class="string">&quot;1234AhasjADSJAlaDJKSDAK&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;1234&quot;</span>.<span class="ident">to_string</span>()));
+<span class="comment">// However, parsers are lazy and do not consume trailing input.
+// This can be inconvenient if we want to validate all of the input.
+</span><span class="macro">assert_eq!</span>(digits.parse(<span class="string">&quot;1234AhasjADSJAlaDJKSDAK&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;1234&quot;</span>.to_string()));
 
-<span class="comment">// To fix this problem, we require that the end of input follows any successfully parsed input</span>
-<span class="kw">let</span> <span class="ident">only_digits</span> = <span class="ident">digits</span>.<span class="ident">then_ignore</span>(<span class="ident">end</span>());
+<span class="comment">// To fix this problem, we require that the end of input follows any successfully parsed input
+</span><span class="kw">let </span>only_digits = digits.then_ignore(end());
 
-<span class="comment">// Now our parser correctly produces an error if any trailing input is found...</span>
-<span class="macro">assert!</span>(<span class="ident">only_digits</span>.<span class="ident">parse</span>(<span class="string">&quot;1234AhasjADSJAlaDJKSDAK&quot;</span>).<span class="ident">is_err</span>());
-<span class="comment">// ...while still behaving correctly for inputs that only consist of valid patterns</span>
-<span class="macro">assert_eq!</span>(<span class="ident">only_digits</span>.<span class="ident">parse</span>(<span class="string">&quot;1234&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;1234&quot;</span>.<span class="ident">to_string</span>()));</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+<span class="comment">// Now our parser correctly produces an error if any trailing input is found...
+</span><span class="macro">assert!</span>(only_digits.parse(<span class="string">&quot;1234AhasjADSJAlaDJKSDAK&quot;</span>).is_err());
+<span class="comment">// ...while still behaving correctly for inputs that only consist of valid patterns
+</span><span class="macro">assert_eq!</span>(only_digits.parse(<span class="string">&quot;1234&quot;</span>), <span class="prelude-val">Ok</span>(<span class="string">&quot;1234&quot;</span>.to_string()));</code></pre></div>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

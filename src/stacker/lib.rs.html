@@ -457,464 +457,464 @@
 <span id="457">457</span>
 <span id="458">458</span>
 <span id="459">459</span>
-</pre><pre class="rust"><code><span class="doccomment">//! A library to help grow the stack when it runs out of space.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This is an implementation of manually instrumented segmented stacks where points in a program&#39;s</span>
-<span class="doccomment">//! control flow are annotated with &quot;maybe grow the stack here&quot;. Each point of annotation indicates</span>
-<span class="doccomment">//! how far away from the end of the stack it&#39;s allowed to be, plus the amount of stack to allocate</span>
-<span class="doccomment">//! if it does reach the end.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Once a program has reached the end of its stack, a temporary stack on the heap is allocated and</span>
-<span class="doccomment">//! is switched to for the duration of a closure.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! For a set of lower-level primitives, consider the `psm` crate.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Examples</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! // Grow the stack if we are within the &quot;red zone&quot; of 32K, and if we allocate</span>
-<span class="doccomment">//! // a new stack allocate 1MB of stack space.</span>
-<span class="doccomment">//! //</span>
-<span class="doccomment">//! // If we&#39;re already in bounds, just run the provided closure on current stack.</span>
-<span class="doccomment">//! stacker::maybe_grow(32 * 1024, 1024 * 1024, || {</span>
-<span class="doccomment">//!     // guaranteed to have at least 32K of stack</span>
-<span class="doccomment">//! });</span>
-<span class="doccomment">//! ```</span>
+</pre><pre class="rust"><code><span class="doccomment">//! A library to help grow the stack when it runs out of space.
+//!
+//! This is an implementation of manually instrumented segmented stacks where points in a program&#39;s
+//! control flow are annotated with &quot;maybe grow the stack here&quot;. Each point of annotation indicates
+//! how far away from the end of the stack it&#39;s allowed to be, plus the amount of stack to allocate
+//! if it does reach the end.
+//!
+//! Once a program has reached the end of its stack, a temporary stack on the heap is allocated and
+//! is switched to for the duration of a closure.
+//!
+//! For a set of lower-level primitives, consider the `psm` crate.
+//!
+//! # Examples
+//!
+//! ```
+//! // Grow the stack if we are within the &quot;red zone&quot; of 32K, and if we allocate
+//! // a new stack allocate 1MB of stack space.
+//! //
+//! // If we&#39;re already in bounds, just run the provided closure on current stack.
+//! stacker::maybe_grow(32 * 1024, 1024 * 1024, || {
+//!     // guaranteed to have at least 32K of stack
+//! });
+//! ```
 
-<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">improper_ctypes</span>)]</span>
+</span><span class="attribute">#![allow(improper_ctypes)]</span>
 
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">cfg_if</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">winapi</span>;
-<span class="attribute">#[<span class="ident">macro_use</span>]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">psm</span>;
+<span class="attribute">#[macro_use]</span>
+<span class="kw">extern crate </span>cfg_if;
+<span class="kw">extern crate </span>libc;
+<span class="attribute">#[cfg(windows)]</span>
+<span class="kw">extern crate </span>winapi;
+<span class="attribute">#[macro_use]</span>
+<span class="kw">extern crate </span>psm;
 
-<span class="kw">use</span> <span class="ident">std::cell::Cell</span>;
+<span class="kw">use </span>std::cell::Cell;
 
-<span class="doccomment">/// Grows the call stack if necessary.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This function is intended to be called at manually instrumented points in a program where</span>
-<span class="doccomment">/// recursion is known to happen quite a bit. This function will check to see if we&#39;re within</span>
-<span class="doccomment">/// `red_zone` bytes of the end of the stack, and if so it will allocate a new stack of at least</span>
-<span class="doccomment">/// `stack_size` bytes.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The closure `f` is guaranteed to run on a stack with at least `red_zone` bytes, and it will be</span>
-<span class="doccomment">/// run on the current stack if there&#39;s space available.</span>
-<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">maybe_grow</span>&lt;<span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span>&gt;(<span class="ident">red_zone</span>: <span class="ident">usize</span>, <span class="ident">stack_size</span>: <span class="ident">usize</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span> {
-    <span class="comment">// if we can&#39;t guess the remaining stack (unsupported on some platforms) we immediately grow</span>
-    <span class="comment">// the stack and then cache the new stack size (which we do know now because we allocated it.</span>
-    <span class="kw">let</span> <span class="ident">enough_space</span> = <span class="kw">match</span> <span class="ident">remaining_stack</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">remaining</span>) =&gt; <span class="ident">remaining</span> &gt;= <span class="ident">red_zone</span>,
-        <span class="prelude-val">None</span> =&gt; <span class="bool-val">false</span>,
+<span class="doccomment">/// Grows the call stack if necessary.
+///
+/// This function is intended to be called at manually instrumented points in a program where
+/// recursion is known to happen quite a bit. This function will check to see if we&#39;re within
+/// `red_zone` bytes of the end of the stack, and if so it will allocate a new stack of at least
+/// `stack_size` bytes.
+///
+/// The closure `f` is guaranteed to run on a stack with at least `red_zone` bytes, and it will be
+/// run on the current stack if there&#39;s space available.
+</span><span class="attribute">#[inline(always)]</span>
+<span class="kw">pub fn </span>maybe_grow&lt;R, F: FnOnce() -&gt; R&gt;(red_zone: usize, stack_size: usize, callback: F) -&gt; R {
+    <span class="comment">// if we can&#39;t guess the remaining stack (unsupported on some platforms) we immediately grow
+    // the stack and then cache the new stack size (which we do know now because we allocated it.
+    </span><span class="kw">let </span>enough_space = <span class="kw">match </span>remaining_stack() {
+        <span class="prelude-val">Some</span>(remaining) =&gt; remaining &gt;= red_zone,
+        <span class="prelude-val">None </span>=&gt; <span class="bool-val">false</span>,
     };
-    <span class="kw">if</span> <span class="ident">enough_space</span> {
-        <span class="ident">callback</span>()
-    } <span class="kw">else</span> {
-        <span class="ident">grow</span>(<span class="ident">stack_size</span>, <span class="ident">callback</span>)
+    <span class="kw">if </span>enough_space {
+        callback()
+    } <span class="kw">else </span>{
+        grow(stack_size, callback)
     }
 }
 
-<span class="doccomment">/// Always creates a new stack for the passed closure to run on.</span>
-<span class="doccomment">/// The closure will still be on the same thread as the caller of `grow`.</span>
-<span class="doccomment">/// This will allocate a new stack with at least `stack_size` bytes.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">grow</span>&lt;<span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span>&gt;(<span class="ident">stack_size</span>: <span class="ident">usize</span>, <span class="ident">callback</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span> {
-    <span class="comment">// To avoid monomorphizing `_grow()` and everything it calls,</span>
-    <span class="comment">// we convert the generic callback to a dynamic one.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">opt_callback</span> = <span class="prelude-val">Some</span>(<span class="ident">callback</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> = <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="ident">ret_ref</span> = <span class="kw-2">&amp;mut</span> <span class="ident">ret</span>;
+<span class="doccomment">/// Always creates a new stack for the passed closure to run on.
+/// The closure will still be on the same thread as the caller of `grow`.
+/// This will allocate a new stack with at least `stack_size` bytes.
+</span><span class="kw">pub fn </span>grow&lt;R, F: FnOnce() -&gt; R&gt;(stack_size: usize, callback: F) -&gt; R {
+    <span class="comment">// To avoid monomorphizing `_grow()` and everything it calls,
+    // we convert the generic callback to a dynamic one.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>opt_callback = <span class="prelude-val">Some</span>(callback);
+    <span class="kw">let </span><span class="kw-2">mut </span>ret = <span class="prelude-val">None</span>;
+    <span class="kw">let </span>ret_ref = <span class="kw-2">&amp;mut </span>ret;
 
-    <span class="comment">// This wrapper around `callback` achieves two things:</span>
-    <span class="comment">// * It converts the `impl FnOnce` to a `dyn FnMut`.</span>
-    <span class="comment">//   `dyn` because we want it to not be generic, and</span>
-    <span class="comment">//   `FnMut` because we can&#39;t pass a `dyn FnOnce` around without boxing it.</span>
-    <span class="comment">// * It eliminates the generic return value, by writing it to the stack of this function.</span>
-    <span class="comment">//   Otherwise the closure would have to return an unsized value, which isn&#39;t possible.</span>
-    <span class="kw">let</span> <span class="ident">dyn_callback</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>() = <span class="kw-2">&amp;mut</span> || {
-        <span class="kw">let</span> <span class="ident">taken_callback</span> = <span class="ident">opt_callback</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
-        <span class="kw-2">*</span><span class="ident">ret_ref</span> = <span class="prelude-val">Some</span>(<span class="ident">taken_callback</span>());
+    <span class="comment">// This wrapper around `callback` achieves two things:
+    // * It converts the `impl FnOnce` to a `dyn FnMut`.
+    //   `dyn` because we want it to not be generic, and
+    //   `FnMut` because we can&#39;t pass a `dyn FnOnce` around without boxing it.
+    // * It eliminates the generic return value, by writing it to the stack of this function.
+    //   Otherwise the closure would have to return an unsized value, which isn&#39;t possible.
+    </span><span class="kw">let </span>dyn_callback: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>FnMut() = <span class="kw-2">&amp;mut </span>|| {
+        <span class="kw">let </span>taken_callback = opt_callback.take().unwrap();
+        <span class="kw-2">*</span>ret_ref = <span class="prelude-val">Some</span>(taken_callback());
     };
 
-    <span class="ident">_grow</span>(<span class="ident">stack_size</span>, <span class="ident">dyn_callback</span>);
-    <span class="ident">ret</span>.<span class="ident">unwrap</span>()
+    _grow(stack_size, dyn_callback);
+    ret.unwrap()
 }
 
-<span class="doccomment">/// Queries the amount of remaining stack as interpreted by this library.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This function will return the amount of stack space left which will be used</span>
-<span class="doccomment">/// to determine whether a stack switch should be made or not.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remaining_stack</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-    <span class="kw">let</span> <span class="ident">current_ptr</span> = <span class="ident">current_stack_ptr</span>();
-    <span class="ident">get_stack_limit</span>().<span class="ident">map</span>(|<span class="ident">limit</span>| <span class="ident">current_ptr</span> - <span class="ident">limit</span>)
+<span class="doccomment">/// Queries the amount of remaining stack as interpreted by this library.
+///
+/// This function will return the amount of stack space left which will be used
+/// to determine whether a stack switch should be made or not.
+</span><span class="kw">pub fn </span>remaining_stack() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+    <span class="kw">let </span>current_ptr = current_stack_ptr();
+    get_stack_limit().map(|limit| current_ptr - limit)
 }
 
 <span class="macro">psm_stack_information!</span> (
-    <span class="ident">yes</span> {
-        <span class="kw">fn</span> <span class="ident">current_stack_ptr</span>() -&gt; <span class="ident">usize</span> {
-            <span class="ident">psm::stack_pointer</span>() <span class="kw">as</span> <span class="ident">usize</span>
+    yes {
+        <span class="kw">fn </span>current_stack_ptr() -&gt; usize {
+            psm::stack_pointer() <span class="kw">as </span>usize
         }
     }
-    <span class="ident">no</span> {
-        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">current_stack_ptr</span>() -&gt; <span class="ident">usize</span> {
-            <span class="kw">unsafe</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> = <span class="ident">std::mem::MaybeUninit</span>::&lt;<span class="ident">u8</span>&gt;<span class="ident">::uninit</span>();
-                <span class="comment">// Unlikely to be ever exercised. As a fallback we execute a volatile read to a</span>
-                <span class="comment">// local (to hopefully defeat the optimisations that would make this local a static</span>
-                <span class="comment">// global) and take its address. This way we get a very approximate address of the</span>
-                <span class="comment">// current frame.</span>
-                <span class="ident">x</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">write_volatile</span>(<span class="number">42</span>);
-                <span class="ident">x</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="ident">usize</span>
+    no {
+        <span class="attribute">#[inline(always)]</span>
+        <span class="kw">fn </span>current_stack_ptr() -&gt; usize {
+            <span class="kw">unsafe </span>{
+                <span class="kw">let </span><span class="kw-2">mut </span>x = std::mem::MaybeUninit::&lt;u8&gt;::uninit();
+                <span class="comment">// Unlikely to be ever exercised. As a fallback we execute a volatile read to a
+                // local (to hopefully defeat the optimisations that would make this local a static
+                // global) and take its address. This way we get a very approximate address of the
+                // current frame.
+                </span>x.as_mut_ptr().write_volatile(<span class="number">42</span>);
+                x.as_ptr() <span class="kw">as </span>usize
             }
         }
     }
 );
 
 <span class="macro">thread_local!</span> {
-    <span class="kw">static</span> <span class="ident">STACK_LIMIT</span>: <span class="ident">Cell</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt;&gt; = <span class="ident">Cell::new</span>(<span class="kw">unsafe</span> {
-        <span class="ident">guess_os_stack_limit</span>()
+    <span class="kw">static </span>STACK_LIMIT: Cell&lt;<span class="prelude-ty">Option</span>&lt;usize&gt;&gt; = Cell::new(<span class="kw">unsafe </span>{
+        guess_os_stack_limit()
     })
 }
 
-<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">fn</span> <span class="ident">get_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-    <span class="ident">STACK_LIMIT</span>.<span class="ident">with</span>(|<span class="ident">s</span>| <span class="ident">s</span>.<span class="ident">get</span>())
+<span class="attribute">#[inline(always)]</span>
+<span class="kw">fn </span>get_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+    STACK_LIMIT.with(|s| s.get())
 }
 
-<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-<span class="kw">fn</span> <span class="ident">set_stack_limit</span>(<span class="ident">l</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt;) {
-    <span class="ident">STACK_LIMIT</span>.<span class="ident">with</span>(|<span class="ident">s</span>| <span class="ident">s</span>.<span class="ident">set</span>(<span class="ident">l</span>))
+<span class="attribute">#[inline(always)]</span>
+<span class="attribute">#[allow(unused)]</span>
+<span class="kw">fn </span>set_stack_limit(l: <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    STACK_LIMIT.with(|s| s.set(l))
 }
 
 <span class="macro">psm_stack_manipulation!</span> {
-    <span class="ident">yes</span> {
-        <span class="kw">struct</span> <span class="ident">StackRestoreGuard</span> {
-            <span class="ident">new_stack</span>: <span class="kw-2">*mut</span> <span class="ident">std::ffi::c_void</span>,
-            <span class="ident">stack_bytes</span>: <span class="ident">usize</span>,
-            <span class="ident">old_stack_limit</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt;,
+    yes {
+        <span class="kw">struct </span>StackRestoreGuard {
+            new_stack: <span class="kw-2">*mut </span>std::ffi::c_void,
+            stack_bytes: usize,
+            old_stack_limit: <span class="prelude-ty">Option</span>&lt;usize&gt;,
         }
 
-        <span class="kw">impl</span> <span class="ident">StackRestoreGuard</span> {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_arch</span> = <span class="string">&quot;wasm32&quot;</span>)]</span>
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">stack_bytes</span>: <span class="ident">usize</span>, <span class="ident">_page_size</span>: <span class="ident">usize</span>) -&gt; <span class="ident">StackRestoreGuard</span> {
-                <span class="kw">let</span> <span class="ident">layout</span> = <span class="ident">std::alloc::Layout::from_size_align</span>(<span class="ident">stack_bytes</span>, <span class="number">16</span>).<span class="ident">unwrap</span>();
-                <span class="kw">let</span> <span class="ident">ptr</span> = <span class="ident">std::alloc::alloc</span>(<span class="ident">layout</span>);
-                <span class="macro">assert!</span>(!<span class="ident">ptr</span>.<span class="ident">is_null</span>(), <span class="string">&quot;unable to allocate stack&quot;</span>);
-                <span class="ident">StackRestoreGuard</span> {
-                    <span class="ident">new_stack</span>: <span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>,
-                    <span class="ident">stack_bytes</span>,
-                    <span class="ident">old_stack_limit</span>: <span class="ident">get_stack_limit</span>(),
+        <span class="kw">impl </span>StackRestoreGuard {
+            <span class="attribute">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]</span>
+            <span class="kw">unsafe fn </span>new(stack_bytes: usize, _page_size: usize) -&gt; StackRestoreGuard {
+                <span class="kw">let </span>layout = std::alloc::Layout::from_size_align(stack_bytes, <span class="number">16</span>).unwrap();
+                <span class="kw">let </span>ptr = std::alloc::alloc(layout);
+                <span class="macro">assert!</span>(!ptr.is_null(), <span class="string">&quot;unable to allocate stack&quot;</span>);
+                StackRestoreGuard {
+                    new_stack: ptr <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>,
+                    stack_bytes,
+                    old_stack_limit: get_stack_limit(),
                 }
             }
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> = <span class="string">&quot;wasm32&quot;</span>))]</span>
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">stack_bytes</span>: <span class="ident">usize</span>, <span class="ident">page_size</span>: <span class="ident">usize</span>) -&gt; <span class="ident">StackRestoreGuard</span> {
-                <span class="kw">let</span> <span class="ident">new_stack</span> = <span class="ident">libc::mmap</span>(
-                    <span class="ident">std::ptr::null_mut</span>(),
-                    <span class="ident">stack_bytes</span>,
-                    <span class="ident">libc::PROT_NONE</span>,
-                    <span class="ident">libc::MAP_PRIVATE</span> |
-                    <span class="ident">libc::MAP_ANON</span>,
-                    -<span class="number">1</span>, <span class="comment">// Some implementations assert fd = -1 if MAP_ANON is specified</span>
-                    <span class="number">0</span>
-                );
-                <span class="kw">if</span> <span class="ident">new_stack</span> == <span class="ident">libc::MAP_FAILED</span> {
-                    <span class="kw">let</span> <span class="ident">error</span> = <span class="ident">std::io::Error::last_os_error</span>();
-                    <span class="macro">panic!</span>(<span class="string">&quot;allocating stack failed with: {}&quot;</span>, <span class="ident">error</span>)
+            <span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]</span>
+            <span class="kw">unsafe fn </span>new(stack_bytes: usize, page_size: usize) -&gt; StackRestoreGuard {
+                <span class="kw">let </span>new_stack = libc::mmap(
+                    std::ptr::null_mut(),
+                    stack_bytes,
+                    libc::PROT_NONE,
+                    libc::MAP_PRIVATE |
+                    libc::MAP_ANON,
+                    -<span class="number">1</span>, <span class="comment">// Some implementations assert fd = -1 if MAP_ANON is specified
+                    </span><span class="number">0
+                </span>);
+                <span class="kw">if </span>new_stack == libc::MAP_FAILED {
+                    <span class="kw">let </span>error = std::io::Error::last_os_error();
+                    <span class="macro">panic!</span>(<span class="string">&quot;allocating stack failed with: {}&quot;</span>, error)
                 }
-                <span class="kw">let</span> <span class="ident">guard</span> = <span class="ident">StackRestoreGuard</span> {
-                    <span class="ident">new_stack</span>,
-                    <span class="ident">stack_bytes</span>,
-                    <span class="ident">old_stack_limit</span>: <span class="ident">get_stack_limit</span>(),
+                <span class="kw">let </span>guard = StackRestoreGuard {
+                    new_stack,
+                    stack_bytes,
+                    old_stack_limit: get_stack_limit(),
                 };
-                <span class="kw">let</span> <span class="ident">above_guard_page</span> = <span class="ident">new_stack</span>.<span class="ident">add</span>(<span class="ident">page_size</span>);
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> = <span class="string">&quot;openbsd&quot;</span>))]</span>
-                <span class="kw">let</span> <span class="ident">result</span> = <span class="ident">libc::mprotect</span>(
-                    <span class="ident">above_guard_page</span>,
-                    <span class="ident">stack_bytes</span> - <span class="ident">page_size</span>,
-                    <span class="ident">libc::PROT_READ</span> | <span class="ident">libc::PROT_WRITE</span>
+                <span class="kw">let </span>above_guard_page = new_stack.add(page_size);
+                <span class="attribute">#[cfg(not(target_os = <span class="string">&quot;openbsd&quot;</span>))]</span>
+                <span class="kw">let </span>result = libc::mprotect(
+                    above_guard_page,
+                    stack_bytes - page_size,
+                    libc::PROT_READ | libc::PROT_WRITE
                 );
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;openbsd&quot;</span>)]</span>
-                <span class="kw">let</span> <span class="ident">result</span> = <span class="kw">if</span> <span class="ident">libc::mmap</span>(
-                        <span class="ident">above_guard_page</span>,
-                        <span class="ident">stack_bytes</span> - <span class="ident">page_size</span>,
-                        <span class="ident">libc::PROT_READ</span> | <span class="ident">libc::PROT_WRITE</span>,
-                        <span class="ident">libc::MAP_FIXED</span> | <span class="ident">libc::MAP_PRIVATE</span> | <span class="ident">libc::MAP_ANON</span> | <span class="ident">libc::MAP_STACK</span>,
+                <span class="attribute">#[cfg(target_os = <span class="string">&quot;openbsd&quot;</span>)]</span>
+                <span class="kw">let </span>result = <span class="kw">if </span>libc::mmap(
+                        above_guard_page,
+                        stack_bytes - page_size,
+                        libc::PROT_READ | libc::PROT_WRITE,
+                        libc::MAP_FIXED | libc::MAP_PRIVATE | libc::MAP_ANON | libc::MAP_STACK,
                         -<span class="number">1</span>,
-                        <span class="number">0</span>) == <span class="ident">above_guard_page</span> {
-                    <span class="number">0</span>
-                } <span class="kw">else</span> {
-                    -<span class="number">1</span>
-                };
-                <span class="kw">if</span> <span class="ident">result</span> == -<span class="number">1</span> {
-                    <span class="kw">let</span> <span class="ident">error</span> = <span class="ident">std::io::Error::last_os_error</span>();
-                    <span class="ident">drop</span>(<span class="ident">guard</span>);
-                    <span class="macro">panic!</span>(<span class="string">&quot;setting stack permissions failed with: {}&quot;</span>, <span class="ident">error</span>)
+                        <span class="number">0</span>) == above_guard_page {
+                    <span class="number">0
+                </span>} <span class="kw">else </span>{
+                    -<span class="number">1
+                </span>};
+                <span class="kw">if </span>result == -<span class="number">1 </span>{
+                    <span class="kw">let </span>error = std::io::Error::last_os_error();
+                    drop(guard);
+                    <span class="macro">panic!</span>(<span class="string">&quot;setting stack permissions failed with: {}&quot;</span>, error)
                 }
-                <span class="ident">guard</span>
+                guard
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">StackRestoreGuard</span> {
-            <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_arch</span> = <span class="string">&quot;wasm32&quot;</span>)]</span>
-                <span class="kw">unsafe</span> {
-                    <span class="ident">std::alloc::dealloc</span>(
-                        <span class="self">self</span>.<span class="ident">new_stack</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">u8</span>,
-                        <span class="ident">std::alloc::Layout::from_size_align_unchecked</span>(<span class="self">self</span>.<span class="ident">stack_bytes</span>, <span class="number">16</span>),
+        <span class="kw">impl </span>Drop <span class="kw">for </span>StackRestoreGuard {
+            <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+                <span class="attribute">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]</span>
+                <span class="kw">unsafe </span>{
+                    std::alloc::dealloc(
+                        <span class="self">self</span>.new_stack <span class="kw">as </span><span class="kw-2">*mut </span>u8,
+                        std::alloc::Layout::from_size_align_unchecked(<span class="self">self</span>.stack_bytes, <span class="number">16</span>),
                     );
                 }
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> = <span class="string">&quot;wasm32&quot;</span>))]</span>
-                <span class="kw">unsafe</span> {
-                    <span class="comment">// FIXME: check the error code and decide what to do with it.</span>
-                    <span class="comment">// Perhaps a debug_assertion?</span>
-                    <span class="ident">libc::munmap</span>(<span class="self">self</span>.<span class="ident">new_stack</span>, <span class="self">self</span>.<span class="ident">stack_bytes</span>);
+                <span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]</span>
+                <span class="kw">unsafe </span>{
+                    <span class="comment">// FIXME: check the error code and decide what to do with it.
+                    // Perhaps a debug_assertion?
+                    </span>libc::munmap(<span class="self">self</span>.new_stack, <span class="self">self</span>.stack_bytes);
                 }
-                <span class="ident">set_stack_limit</span>(<span class="self">self</span>.<span class="ident">old_stack_limit</span>);
+                set_stack_limit(<span class="self">self</span>.old_stack_limit);
             }
         }
 
-        <span class="kw">fn</span> <span class="ident">_grow</span>(<span class="ident">stack_size</span>: <span class="ident">usize</span>, <span class="ident">callback</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>()) {
-            <span class="comment">// Calculate a number of pages we want to allocate for the new stack.</span>
-            <span class="comment">// For maximum portability we want to produce a stack that is aligned to a page and has</span>
-            <span class="comment">// a size that’s a multiple of page size. Furthermore we want to allocate two extras pages</span>
-            <span class="comment">// for the stack guard. To achieve that we do our calculations in number of pages and</span>
-            <span class="comment">// convert to bytes last.</span>
-            <span class="kw">let</span> <span class="ident">page_size</span> = <span class="ident">page_size</span>();
-            <span class="kw">let</span> <span class="ident">requested_pages</span> = <span class="ident">stack_size</span>
-                .<span class="ident">checked_add</span>(<span class="ident">page_size</span> - <span class="number">1</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;unreasonably large stack requested&quot;</span>) / <span class="ident">page_size</span>;
-            <span class="kw">let</span> <span class="ident">stack_pages</span> = <span class="ident">std::cmp::max</span>(<span class="number">1</span>, <span class="ident">requested_pages</span>) + <span class="number">2</span>;
-            <span class="kw">let</span> <span class="ident">stack_bytes</span> = <span class="ident">stack_pages</span>.<span class="ident">checked_mul</span>(<span class="ident">page_size</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;unreasonably large stack requesteed&quot;</span>);
+        <span class="kw">fn </span>_grow(stack_size: usize, callback: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>FnMut()) {
+            <span class="comment">// Calculate a number of pages we want to allocate for the new stack.
+            // For maximum portability we want to produce a stack that is aligned to a page and has
+            // a size that’s a multiple of page size. Furthermore we want to allocate two extras pages
+            // for the stack guard. To achieve that we do our calculations in number of pages and
+            // convert to bytes last.
+            </span><span class="kw">let </span>page_size = page_size();
+            <span class="kw">let </span>requested_pages = stack_size
+                .checked_add(page_size - <span class="number">1</span>)
+                .expect(<span class="string">&quot;unreasonably large stack requested&quot;</span>) / page_size;
+            <span class="kw">let </span>stack_pages = std::cmp::max(<span class="number">1</span>, requested_pages) + <span class="number">2</span>;
+            <span class="kw">let </span>stack_bytes = stack_pages.checked_mul(page_size)
+                .expect(<span class="string">&quot;unreasonably large stack requesteed&quot;</span>);
 
-            <span class="comment">// Next, there are a couple of approaches to how we allocate the new stack. We take the</span>
-            <span class="comment">// most obvious path and use `mmap`. We also `mprotect` a guard page into our</span>
-            <span class="comment">// allocation.</span>
-            <span class="comment">//</span>
-            <span class="comment">// We use a guard pattern to ensure we deallocate the allocated stack when we leave</span>
-            <span class="comment">// this function and also try to uphold various safety invariants required by `psm`</span>
-            <span class="comment">// (such as not unwinding from the callback we pass to it).</span>
-            <span class="comment">//</span>
-            <span class="comment">// Other than that this code has no meaningful gotchas.</span>
-            <span class="kw">unsafe</span> {
-                <span class="kw">let</span> <span class="ident">guard</span> = <span class="ident">StackRestoreGuard::new</span>(<span class="ident">stack_bytes</span>, <span class="ident">page_size</span>);
-                <span class="kw">let</span> <span class="ident">above_guard_page</span> = <span class="ident">guard</span>.<span class="ident">new_stack</span>.<span class="ident">add</span>(<span class="ident">page_size</span>);
-                <span class="ident">set_stack_limit</span>(<span class="prelude-val">Some</span>(<span class="ident">above_guard_page</span> <span class="kw">as</span> <span class="ident">usize</span>));
-                <span class="kw">let</span> <span class="ident">panic</span> = <span class="ident">psm::on_stack</span>(<span class="ident">above_guard_page</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>, <span class="ident">stack_size</span>, <span class="kw">move</span> || {
-                    <span class="ident">std::panic::catch_unwind</span>(<span class="ident">std::panic::AssertUnwindSafe</span>(<span class="ident">callback</span>)).<span class="ident">err</span>()
+            <span class="comment">// Next, there are a couple of approaches to how we allocate the new stack. We take the
+            // most obvious path and use `mmap`. We also `mprotect` a guard page into our
+            // allocation.
+            //
+            // We use a guard pattern to ensure we deallocate the allocated stack when we leave
+            // this function and also try to uphold various safety invariants required by `psm`
+            // (such as not unwinding from the callback we pass to it).
+            //
+            // Other than that this code has no meaningful gotchas.
+            </span><span class="kw">unsafe </span>{
+                <span class="kw">let </span>guard = StackRestoreGuard::new(stack_bytes, page_size);
+                <span class="kw">let </span>above_guard_page = guard.new_stack.add(page_size);
+                set_stack_limit(<span class="prelude-val">Some</span>(above_guard_page <span class="kw">as </span>usize));
+                <span class="kw">let </span>panic = psm::on_stack(above_guard_page <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>, stack_size, <span class="kw">move </span>|| {
+                    std::panic::catch_unwind(std::panic::AssertUnwindSafe(callback)).err()
                 });
-                <span class="ident">drop</span>(<span class="ident">guard</span>);
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) = <span class="ident">panic</span> {
-                    <span class="ident">std::panic::resume_unwind</span>(<span class="ident">p</span>);
+                drop(guard);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(p) = panic {
+                    std::panic::resume_unwind(p);
                 }
             }
         }
 
-        <span class="kw">fn</span> <span class="ident">page_size</span>() -&gt; <span class="ident">usize</span> {
-            <span class="comment">// FIXME: consider caching the page size.</span>
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> = <span class="string">&quot;wasm32&quot;</span>))]</span>
-            <span class="kw">unsafe</span> { <span class="ident">libc::sysconf</span>(<span class="ident">libc::_SC_PAGE_SIZE</span>) <span class="kw">as</span> <span class="ident">usize</span> }
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_arch</span> = <span class="string">&quot;wasm32&quot;</span>)]</span>
-            { <span class="number">65536</span> }
+        <span class="kw">fn </span>page_size() -&gt; usize {
+            <span class="comment">// FIXME: consider caching the page size.
+            </span><span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;wasm32&quot;</span>))]</span>
+            <span class="kw">unsafe </span>{ libc::sysconf(libc::_SC_PAGE_SIZE) <span class="kw">as </span>usize }
+            <span class="attribute">#[cfg(target_arch = <span class="string">&quot;wasm32&quot;</span>)]</span>
+            { <span class="number">65536 </span>}
         }
     }
 
-    <span class="ident">no</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
-        <span class="kw">fn</span> <span class="ident">_grow</span>(<span class="ident">stack_size</span>: <span class="ident">usize</span>, <span class="ident">callback</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>()) {
-            <span class="ident">drop</span>(<span class="ident">stack_size</span>);
-            <span class="ident">callback</span>();
+    no {
+        <span class="attribute">#[cfg(not(windows))]</span>
+        <span class="kw">fn </span>_grow(stack_size: usize, callback: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>FnMut()) {
+            drop(stack_size);
+            callback();
         }
     }
 }
 
 <span class="macro">cfg_if!</span> {
-    <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> {
-        <span class="kw">use</span> <span class="ident">std::ptr</span>;
-        <span class="kw">use</span> <span class="ident">std::io</span>;
+    <span class="kw">if </span><span class="attribute">#[cfg(windows)]</span> {
+        <span class="kw">use </span>std::ptr;
+        <span class="kw">use </span>std::io;
 
-        <span class="kw">use</span> <span class="ident">winapi::shared::basetsd</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">winapi::shared::minwindef</span>::{<span class="ident">LPVOID</span>, <span class="ident">BOOL</span>};
-        <span class="kw">use</span> <span class="ident">winapi::shared::ntdef</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">winapi::um::fibersapi</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">winapi::um::memoryapi</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">winapi::um::processthreadsapi</span>::<span class="kw-2">*</span>;
-        <span class="kw">use</span> <span class="ident">winapi::um::winbase</span>::<span class="kw-2">*</span>;
+        <span class="kw">use </span>winapi::shared::basetsd::<span class="kw-2">*</span>;
+        <span class="kw">use </span>winapi::shared::minwindef::{LPVOID, BOOL};
+        <span class="kw">use </span>winapi::shared::ntdef::<span class="kw-2">*</span>;
+        <span class="kw">use </span>winapi::um::fibersapi::<span class="kw-2">*</span>;
+        <span class="kw">use </span>winapi::um::memoryapi::<span class="kw-2">*</span>;
+        <span class="kw">use </span>winapi::um::processthreadsapi::<span class="kw-2">*</span>;
+        <span class="kw">use </span>winapi::um::winbase::<span class="kw-2">*</span>;
 
-        <span class="comment">// Make sure the libstacker.a (implemented in C) is linked.</span>
-        <span class="comment">// See https://github.com/rust-lang/rust/issues/65610</span>
-        <span class="attribute">#[<span class="ident">link</span>(<span class="ident">name</span>=<span class="string">&quot;stacker&quot;</span>)]</span>
-        <span class="kw">extern</span> {
-            <span class="kw">fn</span> <span class="ident">__stacker_get_current_fiber</span>() -&gt; <span class="ident">PVOID</span>;
+        <span class="comment">// Make sure the libstacker.a (implemented in C) is linked.
+        // See https://github.com/rust-lang/rust/issues/65610
+        </span><span class="attribute">#[link(name=<span class="string">&quot;stacker&quot;</span>)]</span>
+        <span class="kw">extern </span>{
+            <span class="kw">fn </span>__stacker_get_current_fiber() -&gt; PVOID;
         }
 
-        <span class="kw">struct</span> <span class="ident">FiberInfo</span>&lt;<span class="ident">F</span>&gt; {
-            <span class="ident">callback</span>: <span class="ident">std::mem::MaybeUninit</span>&lt;<span class="ident">F</span>&gt;,
-            <span class="ident">panic</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">std::any::Any</span> + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;,
-            <span class="ident">parent_fiber</span>: <span class="ident">LPVOID</span>,
+        <span class="kw">struct </span>FiberInfo&lt;F&gt; {
+            callback: std::mem::MaybeUninit&lt;F&gt;,
+            panic: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>std::any::Any + Send + <span class="lifetime">&#39;static</span>&gt;&gt;,
+            parent_fiber: LPVOID,
         }
 
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;system&quot;</span> <span class="kw">fn</span> <span class="ident">fiber_proc</span>&lt;<span class="ident">F</span>: <span class="ident">FnOnce</span>()&gt;(<span class="ident">data</span>: <span class="ident">LPVOID</span>) {
-            <span class="comment">// This function is the entry point to our inner fiber, and as argument we get an</span>
-            <span class="comment">// instance of `FiberInfo`. We will set-up the &quot;runtime&quot; for the callback and execute</span>
-            <span class="comment">// it.</span>
-            <span class="kw">let</span> <span class="ident">data</span> = <span class="kw-2">&amp;mut</span> <span class="kw-2">*</span>(<span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">FiberInfo</span>&lt;<span class="ident">F</span>&gt;);
-            <span class="kw">let</span> <span class="ident">old_stack_limit</span> = <span class="ident">get_stack_limit</span>();
-            <span class="ident">set_stack_limit</span>(<span class="ident">guess_os_stack_limit</span>());
-            <span class="kw">let</span> <span class="ident">callback</span> = <span class="ident">data</span>.<span class="ident">callback</span>.<span class="ident">as_ptr</span>();
-            <span class="ident">data</span>.<span class="ident">panic</span> = <span class="ident">std::panic::catch_unwind</span>(<span class="ident">std::panic::AssertUnwindSafe</span>(<span class="ident">callback</span>.<span class="ident">read</span>())).<span class="ident">err</span>();
+        <span class="kw">unsafe extern </span><span class="string">&quot;system&quot; </span><span class="kw">fn </span>fiber_proc&lt;F: FnOnce()&gt;(data: LPVOID) {
+            <span class="comment">// This function is the entry point to our inner fiber, and as argument we get an
+            // instance of `FiberInfo`. We will set-up the &quot;runtime&quot; for the callback and execute
+            // it.
+            </span><span class="kw">let </span>data = <span class="kw-2">&amp;mut *</span>(data <span class="kw">as </span><span class="kw-2">*mut </span>FiberInfo&lt;F&gt;);
+            <span class="kw">let </span>old_stack_limit = get_stack_limit();
+            set_stack_limit(guess_os_stack_limit());
+            <span class="kw">let </span>callback = data.callback.as_ptr();
+            data.panic = std::panic::catch_unwind(std::panic::AssertUnwindSafe(callback.read())).err();
 
-            <span class="comment">// Restore to the previous Fiber</span>
-            <span class="ident">set_stack_limit</span>(<span class="ident">old_stack_limit</span>);
-            <span class="ident">SwitchToFiber</span>(<span class="ident">data</span>.<span class="ident">parent_fiber</span>);
+            <span class="comment">// Restore to the previous Fiber
+            </span>set_stack_limit(old_stack_limit);
+            SwitchToFiber(data.parent_fiber);
             <span class="kw">return</span>;
         }
 
-        <span class="kw">fn</span> <span class="ident">_grow</span>(<span class="ident">stack_size</span>: <span class="ident">usize</span>, <span class="ident">callback</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>()) {
-            <span class="comment">// Fibers (or stackful coroutines) is the only official way to create new stacks on the</span>
-            <span class="comment">// same thread on Windows. So in order to extend the stack we create fiber and switch</span>
-            <span class="comment">// to it so we can use it&#39;s stack. After running `callback` within our fiber, we switch</span>
-            <span class="comment">// back to the current stack and destroy the fiber and its associated stack.</span>
-            <span class="kw">unsafe</span> {
-                <span class="kw">let</span> <span class="ident">was_fiber</span> = <span class="ident">IsThreadAFiber</span>() == <span class="ident">TRUE</span> <span class="kw">as</span> <span class="ident">BOOL</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> = <span class="ident">FiberInfo</span> {
-                    <span class="ident">callback</span>: <span class="ident">std::mem::MaybeUninit::new</span>(<span class="ident">callback</span>),
-                    <span class="ident">panic</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">parent_fiber</span>: {
-                        <span class="kw">if</span> <span class="ident">was_fiber</span> {
-                            <span class="comment">// Get a handle to the current fiber. We need to use a C implementation</span>
-                            <span class="comment">// for this as GetCurrentFiber is an header only function.</span>
-                            <span class="ident">__stacker_get_current_fiber</span>()
-                        } <span class="kw">else</span> {
-                            <span class="comment">// Convert the current thread to a fiber, so we are able to switch back</span>
-                            <span class="comment">// to the current stack. Threads coverted to fibers still act like</span>
-                            <span class="comment">// regular threads, but they have associated fiber data. We later</span>
-                            <span class="comment">// convert it back to a regular thread and free the fiber data.</span>
-                            <span class="ident">ConvertThreadToFiber</span>(<span class="ident">ptr::null_mut</span>())
+        <span class="kw">fn </span>_grow(stack_size: usize, callback: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>FnMut()) {
+            <span class="comment">// Fibers (or stackful coroutines) is the only official way to create new stacks on the
+            // same thread on Windows. So in order to extend the stack we create fiber and switch
+            // to it so we can use it&#39;s stack. After running `callback` within our fiber, we switch
+            // back to the current stack and destroy the fiber and its associated stack.
+            </span><span class="kw">unsafe </span>{
+                <span class="kw">let </span>was_fiber = IsThreadAFiber() == TRUE <span class="kw">as </span>BOOL;
+                <span class="kw">let </span><span class="kw-2">mut </span>data = FiberInfo {
+                    callback: std::mem::MaybeUninit::new(callback),
+                    panic: <span class="prelude-val">None</span>,
+                    parent_fiber: {
+                        <span class="kw">if </span>was_fiber {
+                            <span class="comment">// Get a handle to the current fiber. We need to use a C implementation
+                            // for this as GetCurrentFiber is an header only function.
+                            </span>__stacker_get_current_fiber()
+                        } <span class="kw">else </span>{
+                            <span class="comment">// Convert the current thread to a fiber, so we are able to switch back
+                            // to the current stack. Threads coverted to fibers still act like
+                            // regular threads, but they have associated fiber data. We later
+                            // convert it back to a regular thread and free the fiber data.
+                            </span>ConvertThreadToFiber(ptr::null_mut())
                         }
                     },
                 };
 
-                <span class="kw">if</span> <span class="ident">data</span>.<span class="ident">parent_fiber</span>.<span class="ident">is_null</span>() {
-                    <span class="macro">panic!</span>(<span class="string">&quot;unable to convert thread to fiber: {}&quot;</span>, <span class="ident">io::Error::last_os_error</span>());
+                <span class="kw">if </span>data.parent_fiber.is_null() {
+                    <span class="macro">panic!</span>(<span class="string">&quot;unable to convert thread to fiber: {}&quot;</span>, io::Error::last_os_error());
                 }
 
-                <span class="kw">let</span> <span class="ident">fiber</span> = <span class="ident">CreateFiber</span>(
-                    <span class="ident">stack_size</span> <span class="kw">as</span> <span class="ident">SIZE_T</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">fiber_proc</span>::&lt;<span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>()&gt;),
-                    <span class="kw-2">&amp;mut</span> <span class="ident">data</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">FiberInfo</span>&lt;<span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">FnMut</span>()&gt; <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>,
+                <span class="kw">let </span>fiber = CreateFiber(
+                    stack_size <span class="kw">as </span>SIZE_T,
+                    <span class="prelude-val">Some</span>(fiber_proc::&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>FnMut()&gt;),
+                    <span class="kw-2">&amp;mut </span>data <span class="kw">as </span><span class="kw-2">*mut </span>FiberInfo&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>FnMut()&gt; <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>,
                 );
-                <span class="kw">if</span> <span class="ident">fiber</span>.<span class="ident">is_null</span>() {
-                    <span class="macro">panic!</span>(<span class="string">&quot;unable to allocate fiber: {}&quot;</span>, <span class="ident">io::Error::last_os_error</span>());
+                <span class="kw">if </span>fiber.is_null() {
+                    <span class="macro">panic!</span>(<span class="string">&quot;unable to allocate fiber: {}&quot;</span>, io::Error::last_os_error());
                 }
 
-                <span class="comment">// Switch to the fiber we created. This changes stacks and starts executing</span>
-                <span class="comment">// fiber_proc on it. fiber_proc will run `callback` and then switch back to run the</span>
-                <span class="comment">// next statement.</span>
-                <span class="ident">SwitchToFiber</span>(<span class="ident">fiber</span>);
-                <span class="ident">DeleteFiber</span>(<span class="ident">fiber</span>);
+                <span class="comment">// Switch to the fiber we created. This changes stacks and starts executing
+                // fiber_proc on it. fiber_proc will run `callback` and then switch back to run the
+                // next statement.
+                </span>SwitchToFiber(fiber);
+                DeleteFiber(fiber);
 
-                <span class="comment">// Clean-up.</span>
-                <span class="kw">if</span> !<span class="ident">was_fiber</span> {
-                    <span class="kw">if</span> <span class="ident">ConvertFiberToThread</span>() == <span class="number">0</span> {
-                        <span class="comment">// FIXME: Perhaps should not panic here?</span>
-                        <span class="macro">panic!</span>(<span class="string">&quot;unable to convert back to thread: {}&quot;</span>, <span class="ident">io::Error::last_os_error</span>());
+                <span class="comment">// Clean-up.
+                </span><span class="kw">if </span>!was_fiber {
+                    <span class="kw">if </span>ConvertFiberToThread() == <span class="number">0 </span>{
+                        <span class="comment">// FIXME: Perhaps should not panic here?
+                        </span><span class="macro">panic!</span>(<span class="string">&quot;unable to convert back to thread: {}&quot;</span>, io::Error::last_os_error());
                     }
                 }
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>) = <span class="ident">data</span>.<span class="ident">panic</span> {
-                    <span class="ident">std::panic::resume_unwind</span>(<span class="ident">p</span>);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(p) = data.panic {
+                    std::panic::resume_unwind(p);
                 }
             }
         }
 
-        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">get_thread_stack_guarantee</span>() -&gt; <span class="ident">usize</span> {
-            <span class="kw">let</span> <span class="ident">min_guarantee</span> = <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">target_pointer_width</span> = <span class="string">&quot;32&quot;</span>) {
-                <span class="number">0x1000</span>
-            } <span class="kw">else</span> {
-                <span class="number">0x2000</span>
+        <span class="attribute">#[inline(always)]</span>
+        <span class="kw">fn </span>get_thread_stack_guarantee() -&gt; usize {
+            <span class="kw">let </span>min_guarantee = <span class="kw">if </span><span class="macro">cfg!</span>(target_pointer_width = <span class="string">&quot;32&quot;</span>) {
+                <span class="number">0x1000
+            </span>} <span class="kw">else </span>{
+                <span class="number">0x2000
+            </span>};
+            <span class="kw">let </span><span class="kw-2">mut </span>stack_guarantee = <span class="number">0</span>;
+            <span class="kw">unsafe </span>{
+                <span class="comment">// Read the current thread stack guarantee
+                // This is the stack reserved for stack overflow
+                // exception handling.
+                // This doesn&#39;t return the true value so we need
+                // some further logic to calculate the real stack
+                // guarantee. This logic is what is used on x86-32 and
+                // x86-64 Windows 10. Other versions and platforms may differ
+                </span>SetThreadStackGuarantee(<span class="kw-2">&amp;mut </span>stack_guarantee)
             };
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stack_guarantee</span> = <span class="number">0</span>;
-            <span class="kw">unsafe</span> {
-                <span class="comment">// Read the current thread stack guarantee</span>
-                <span class="comment">// This is the stack reserved for stack overflow</span>
-                <span class="comment">// exception handling.</span>
-                <span class="comment">// This doesn&#39;t return the true value so we need</span>
-                <span class="comment">// some further logic to calculate the real stack</span>
-                <span class="comment">// guarantee. This logic is what is used on x86-32 and</span>
-                <span class="comment">// x86-64 Windows 10. Other versions and platforms may differ</span>
-                <span class="ident">SetThreadStackGuarantee</span>(<span class="kw-2">&amp;mut</span> <span class="ident">stack_guarantee</span>)
-            };
-            <span class="ident">std::cmp::max</span>(<span class="ident">stack_guarantee</span>, <span class="ident">min_guarantee</span>) <span class="kw">as</span> <span class="ident">usize</span> + <span class="number">0x1000</span>
-        }
+            std::cmp::max(stack_guarantee, min_guarantee) <span class="kw">as </span>usize + <span class="number">0x1000
+        </span>}
 
-        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">guess_os_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-            <span class="comment">// Query the allocation which contains our stack pointer in order</span>
-            <span class="comment">// to discover the size of the stack</span>
-            <span class="comment">//</span>
-            <span class="comment">// FIXME: we could read stack base from the TIB, specifically the 3rd element of it.</span>
-            <span class="kw">type</span> <span class="ident">QueryT</span> = <span class="ident">winapi::um::winnt::MEMORY_BASIC_INFORMATION</span>;
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mi</span> = <span class="ident">std::mem::MaybeUninit</span>::&lt;<span class="ident">QueryT</span>&gt;<span class="ident">::uninit</span>();
-            <span class="ident">VirtualQuery</span>(
-                <span class="ident">psm::stack_pointer</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="kw">_</span>,
-                <span class="ident">mi</span>.<span class="ident">as_mut_ptr</span>(),
-                <span class="ident">std::mem::size_of</span>::&lt;<span class="ident">QueryT</span>&gt;() <span class="kw">as</span> <span class="ident">SIZE_T</span>,
+        <span class="attribute">#[inline(always)]</span>
+        <span class="kw">unsafe fn </span>guess_os_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+            <span class="comment">// Query the allocation which contains our stack pointer in order
+            // to discover the size of the stack
+            //
+            // FIXME: we could read stack base from the TIB, specifically the 3rd element of it.
+            </span><span class="kw">type </span>QueryT = winapi::um::winnt::MEMORY_BASIC_INFORMATION;
+            <span class="kw">let </span><span class="kw-2">mut </span>mi = std::mem::MaybeUninit::&lt;QueryT&gt;::uninit();
+            VirtualQuery(
+                psm::stack_pointer() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>,
+                mi.as_mut_ptr(),
+                std::mem::size_of::&lt;QueryT&gt;() <span class="kw">as </span>SIZE_T,
             );
-            <span class="prelude-val">Some</span>(<span class="ident">mi</span>.<span class="ident">assume_init</span>().<span class="ident">AllocationBase</span> <span class="kw">as</span> <span class="ident">usize</span> + <span class="ident">get_thread_stack_guarantee</span>() + <span class="number">0x1000</span>)
+            <span class="prelude-val">Some</span>(mi.assume_init().AllocationBase <span class="kw">as </span>usize + get_thread_stack_guarantee() + <span class="number">0x1000</span>)
         }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> = <span class="string">&quot;linux&quot;</span>, <span class="ident">target_os</span>=<span class="string">&quot;solaris&quot;</span>, <span class="ident">target_os</span> = <span class="string">&quot;netbsd&quot;</span>))]</span> {
-        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">guess_os_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attr</span> = <span class="ident">std::mem::MaybeUninit</span>::&lt;<span class="ident">libc::pthread_attr_t</span>&gt;<span class="ident">::uninit</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_init</span>(<span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_getattr_np</span>(<span class="ident">libc::pthread_self</span>(),
-                                                <span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stackaddr</span> = <span class="ident">std::ptr::null_mut</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stacksize</span> = <span class="number">0</span>;
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_getstack</span>(
-                <span class="ident">attr</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">stackaddr</span>, <span class="kw-2">&amp;mut</span> <span class="ident">stacksize</span>
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;linux&quot;</span>, target_os=<span class="string">&quot;solaris&quot;</span>, target_os = <span class="string">&quot;netbsd&quot;</span>))]</span> {
+        <span class="kw">unsafe fn </span>guess_os_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>attr = std::mem::MaybeUninit::&lt;libc::pthread_attr_t&gt;::uninit();
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_init(attr.as_mut_ptr()), <span class="number">0</span>);
+            <span class="macro">assert_eq!</span>(libc::pthread_getattr_np(libc::pthread_self(),
+                                                attr.as_mut_ptr()), <span class="number">0</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>stackaddr = std::ptr::null_mut();
+            <span class="kw">let </span><span class="kw-2">mut </span>stacksize = <span class="number">0</span>;
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_getstack(
+                attr.as_ptr(), <span class="kw-2">&amp;mut </span>stackaddr, <span class="kw-2">&amp;mut </span>stacksize
             ), <span class="number">0</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_destroy</span>(<span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="prelude-val">Some</span>(<span class="ident">stackaddr</span> <span class="kw">as</span> <span class="ident">usize</span>)
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_destroy(attr.as_mut_ptr()), <span class="number">0</span>);
+            <span class="prelude-val">Some</span>(stackaddr <span class="kw">as </span>usize)
         }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">target_os</span> = <span class="string">&quot;freebsd&quot;</span>, <span class="ident">target_os</span> = <span class="string">&quot;dragonfly&quot;</span>))]</span> {
-        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">guess_os_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attr</span> = <span class="ident">std::mem::MaybeUninit</span>::&lt;<span class="ident">libc::pthread_attr_t</span>&gt;<span class="ident">::uninit</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_init</span>(<span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_get_np</span>(<span class="ident">libc::pthread_self</span>(), <span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stackaddr</span> = <span class="ident">std::ptr::null_mut</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stacksize</span> = <span class="number">0</span>;
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_getstack</span>(
-                <span class="ident">attr</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">stackaddr</span>, <span class="kw-2">&amp;mut</span> <span class="ident">stacksize</span>
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;dragonfly&quot;</span>))]</span> {
+        <span class="kw">unsafe fn </span>guess_os_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>attr = std::mem::MaybeUninit::&lt;libc::pthread_attr_t&gt;::uninit();
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_init(attr.as_mut_ptr()), <span class="number">0</span>);
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_get_np(libc::pthread_self(), attr.as_mut_ptr()), <span class="number">0</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>stackaddr = std::ptr::null_mut();
+            <span class="kw">let </span><span class="kw-2">mut </span>stacksize = <span class="number">0</span>;
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_getstack(
+                attr.as_ptr(), <span class="kw-2">&amp;mut </span>stackaddr, <span class="kw-2">&amp;mut </span>stacksize
             ), <span class="number">0</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_attr_destroy</span>(<span class="ident">attr</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="prelude-val">Some</span>(<span class="ident">stackaddr</span> <span class="kw">as</span> <span class="ident">usize</span>)
+            <span class="macro">assert_eq!</span>(libc::pthread_attr_destroy(attr.as_mut_ptr()), <span class="number">0</span>);
+            <span class="prelude-val">Some</span>(stackaddr <span class="kw">as </span>usize)
         }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;openbsd&quot;</span>)]</span> {
-        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">guess_os_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stackinfo</span> = <span class="ident">std::mem::MaybeUninit</span>::&lt;<span class="ident">libc::stack_t</span>&gt;<span class="ident">::uninit</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">libc::pthread_stackseg_np</span>(<span class="ident">libc::pthread_self</span>(), <span class="ident">stackinfo</span>.<span class="ident">as_mut_ptr</span>()), <span class="number">0</span>);
-            <span class="prelude-val">Some</span>(<span class="ident">stackinfo</span>.<span class="ident">assume_init</span>().<span class="ident">ss_sp</span> <span class="kw">as</span> <span class="ident">usize</span> - <span class="ident">stackinfo</span>.<span class="ident">assume_init</span>().<span class="ident">ss_size</span>)
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;openbsd&quot;</span>)]</span> {
+        <span class="kw">unsafe fn </span>guess_os_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>stackinfo = std::mem::MaybeUninit::&lt;libc::stack_t&gt;::uninit();
+            <span class="macro">assert_eq!</span>(libc::pthread_stackseg_np(libc::pthread_self(), stackinfo.as_mut_ptr()), <span class="number">0</span>);
+            <span class="prelude-val">Some</span>(stackinfo.assume_init().ss_sp <span class="kw">as </span>usize - stackinfo.assume_init().ss_size)
         }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> = <span class="string">&quot;macos&quot;</span>)]</span> {
-        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">guess_os_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-            <span class="prelude-val">Some</span>(<span class="ident">libc::pthread_get_stackaddr_np</span>(<span class="ident">libc::pthread_self</span>()) <span class="kw">as</span> <span class="ident">usize</span> -
-                <span class="ident">libc::pthread_get_stacksize_np</span>(<span class="ident">libc::pthread_self</span>()) <span class="kw">as</span> <span class="ident">usize</span>)
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;macos&quot;</span>)]</span> {
+        <span class="kw">unsafe fn </span>guess_os_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+            <span class="prelude-val">Some</span>(libc::pthread_get_stackaddr_np(libc::pthread_self()) <span class="kw">as </span>usize -
+                libc::pthread_get_stacksize_np(libc::pthread_self()) <span class="kw">as </span>usize)
         }
-    } <span class="kw">else</span> {
-        <span class="comment">// fallback for other platforms is to always increase the stack if we&#39;re on</span>
-        <span class="comment">// the root stack. After we increased the stack once, we know the new stack</span>
-        <span class="comment">// size and don&#39;t need this pessimization anymore</span>
-        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">guess_os_stack_limit</span>() -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt; {
-            <span class="prelude-val">None</span>
-        }
+    } <span class="kw">else </span>{
+        <span class="comment">// fallback for other platforms is to always increase the stack if we&#39;re on
+        // the root stack. After we increased the stack once, we know the new stack
+        // size and don&#39;t need this pessimization anymore
+        </span><span class="attribute">#[inline(always)]</span>
+        <span class="kw">unsafe fn </span>guess_os_stack_limit() -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+            <span class="prelude-val">None
+        </span>}
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="stacker" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="stacker" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

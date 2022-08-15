@@ -97,102 +97,102 @@
 <span id="95">95</span>
 <span id="96">96</span>
 <span id="97">97</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">proc_macro2::TokenStream</span>;
-<span class="kw">use</span> <span class="ident">syn::Ident</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>proc_macro2::TokenStream;
+<span class="kw">use </span>syn::Ident;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::Errors</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mir::Mir</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::definition</span>::{<span class="ident">bytes_to_regex_string</span>, <span class="ident">Literal</span>};
+<span class="kw">use </span><span class="kw">crate</span>::error::Errors;
+<span class="kw">use </span><span class="kw">crate</span>::mir::Mir;
+<span class="kw">use </span><span class="kw">crate</span>::parser::definition::{bytes_to_regex_string, Literal};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Subpatterns</span> {
-    <span class="ident">map</span>: <span class="ident">Vec</span>&lt;(<span class="ident">Ident</span>, <span class="ident">String</span>)&gt;,
+<span class="attribute">#[derive(Default)]</span>
+<span class="kw">pub struct </span>Subpatterns {
+    map: Vec&lt;(Ident, String)&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Subpatterns</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">param</span>: <span class="ident">Ident</span>, <span class="ident">pattern</span>: <span class="ident">TokenStream</span>, <span class="ident">errors</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Errors</span>) {
-        <span class="kw">let</span> <span class="ident">lit</span> = <span class="kw">match</span> <span class="ident">syn::parse2</span>::&lt;<span class="ident">Literal</span>&gt;(<span class="ident">pattern</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">lit</span>) =&gt; <span class="ident">lit</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
-                <span class="ident">errors</span>.<span class="ident">err</span>(<span class="ident">e</span>.<span class="ident">to_string</span>(), <span class="ident">e</span>.<span class="ident">span</span>());
+<span class="kw">impl </span>Subpatterns {
+    <span class="kw">pub fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, param: Ident, pattern: TokenStream, errors: <span class="kw-2">&amp;mut </span>Errors) {
+        <span class="kw">let </span>lit = <span class="kw">match </span>syn::parse2::&lt;Literal&gt;(pattern) {
+            <span class="prelude-val">Ok</span>(lit) =&gt; lit,
+            <span class="prelude-val">Err</span>(e) =&gt; {
+                errors.err(e.to_string(), e.span());
                 <span class="kw">return</span>;
             }
         };
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">name</span>, <span class="kw">_</span>)) = <span class="self">self</span>.<span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">find</span>(|(<span class="ident">name</span>, <span class="kw">_</span>)| <span class="kw-2">*</span><span class="ident">name</span> == <span class="ident">param</span>) {
-            <span class="ident">errors</span>
-                .<span class="ident">err</span>(<span class="macro">format!</span>(<span class="string">&quot;{} can only be assigned once&quot;</span>, <span class="ident">param</span>), <span class="ident">param</span>.<span class="ident">span</span>())
-                .<span class="ident">err</span>(<span class="string">&quot;Previously assigned here&quot;</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>((name, <span class="kw">_</span>)) = <span class="self">self</span>.map.iter().find(|(name, <span class="kw">_</span>)| <span class="kw-2">*</span>name == param) {
+            errors
+                .err(<span class="macro">format!</span>(<span class="string">&quot;{} can only be assigned once&quot;</span>, param), param.span())
+                .err(<span class="string">&quot;Previously assigned here&quot;</span>, name.span());
             <span class="kw">return</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">fixed</span> = <span class="self">self</span>.<span class="ident">fix</span>(<span class="kw-2">&amp;</span><span class="ident">lit</span>, <span class="ident">errors</span>);
+        <span class="kw">let </span>fixed = <span class="self">self</span>.fix(<span class="kw-2">&amp;</span>lit, errors);
 
-        <span class="comment">// Validate the literal as proper regex. If it&#39;s not, emit an error.</span>
-        <span class="kw">let</span> <span class="ident">mir</span> = <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">lit</span> {
-            <span class="ident">Literal::Utf8</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::utf8</span>(<span class="kw-2">&amp;</span><span class="ident">fixed</span>),
-            <span class="ident">Literal::Bytes</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::binary</span>(<span class="kw-2">&amp;</span><span class="ident">fixed</span>),
+        <span class="comment">// Validate the literal as proper regex. If it&#39;s not, emit an error.
+        </span><span class="kw">let </span>mir = <span class="kw">match </span><span class="kw-2">&amp;</span>lit {
+            Literal::Utf8(<span class="kw">_</span>) =&gt; Mir::utf8(<span class="kw-2">&amp;</span>fixed),
+            Literal::Bytes(<span class="kw">_</span>) =&gt; Mir::binary(<span class="kw-2">&amp;</span>fixed),
         };
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) = <span class="ident">mir</span> {
-            <span class="ident">errors</span>.<span class="ident">err</span>(<span class="ident">err</span>, <span class="ident">lit</span>.<span class="ident">span</span>());
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(err) = mir {
+            errors.err(err, lit.span());
         };
 
-        <span class="self">self</span>.<span class="ident">map</span>.<span class="ident">push</span>((<span class="ident">param</span>, <span class="ident">fixed</span>));
+        <span class="self">self</span>.map.push((param, fixed));
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">lit</span>: <span class="kw-2">&amp;</span><span class="ident">Literal</span>, <span class="ident">errors</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Errors</span>) -&gt; <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> = <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pattern</span> = <span class="kw">match</span> <span class="ident">lit</span> {
-            <span class="ident">Literal::Utf8</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>.<span class="ident">value</span>(),
-            <span class="ident">Literal::Bytes</span>(<span class="ident">b</span>) =&gt; <span class="ident">bytes_to_regex_string</span>(<span class="ident">b</span>.<span class="ident">value</span>()),
+    <span class="kw">pub fn </span>fix(<span class="kw-2">&amp;</span><span class="self">self</span>, lit: <span class="kw-2">&amp;</span>Literal, errors: <span class="kw-2">&amp;mut </span>Errors) -&gt; String {
+        <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>pattern = <span class="kw">match </span>lit {
+            Literal::Utf8(s) =&gt; s.value(),
+            Literal::Bytes(b) =&gt; bytes_to_regex_string(b.value()),
         };
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) = <span class="ident">pattern</span>[<span class="ident">i</span>..].<span class="ident">find</span>(<span class="string">&quot;(?&amp;&quot;</span>) {
-            <span class="ident">i</span> += <span class="ident">f</span>;
-            <span class="ident">pattern</span>.<span class="ident">replace_range</span>(<span class="ident">i</span>..<span class="ident">i</span> + <span class="number">3</span>, <span class="string">&quot;(?:&quot;</span>);
-            <span class="ident">i</span> += <span class="number">3</span>;
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(f) = pattern[i..].find(<span class="string">&quot;(?&amp;&quot;</span>) {
+            i += f;
+            pattern.replace_range(i..i + <span class="number">3</span>, <span class="string">&quot;(?:&quot;</span>);
+            i += <span class="number">3</span>;
 
-            <span class="kw">let</span> <span class="ident">subref_end</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">f</span>) = <span class="ident">pattern</span>[<span class="ident">i</span>..].<span class="ident">find</span>(<span class="string">&#39;)&#39;</span>) {
-                <span class="ident">i</span> + <span class="ident">f</span>
-            } <span class="kw">else</span> {
-                <span class="ident">pattern</span>.<span class="ident">truncate</span>(<span class="ident">i</span>); <span class="comment">// truncate so latter error doesn&#39;t suppress</span>
-                <span class="kw">break</span>; <span class="comment">// regex-syntax will report the unclosed group</span>
-            };
+            <span class="kw">let </span>subref_end = <span class="kw">if let </span><span class="prelude-val">Some</span>(f) = pattern[i..].find(<span class="string">&#39;)&#39;</span>) {
+                i + f
+            } <span class="kw">else </span>{
+                pattern.truncate(i); <span class="comment">// truncate so latter error doesn&#39;t suppress
+                </span><span class="kw">break</span>; <span class="comment">// regex-syntax will report the unclosed group
+            </span>};
 
-            <span class="kw">let</span> <span class="ident">name</span> = <span class="kw-2">&amp;</span><span class="ident">pattern</span>[<span class="ident">i</span>..<span class="ident">subref_end</span>];
-            <span class="kw">let</span> <span class="ident">name</span> = <span class="kw">match</span> <span class="ident">syn::parse_str</span>::&lt;<span class="ident">Ident</span>&gt;(<span class="ident">name</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">name</span>) =&gt; <span class="ident">name</span>,
+            <span class="kw">let </span>name = <span class="kw-2">&amp;</span>pattern[i..subref_end];
+            <span class="kw">let </span>name = <span class="kw">match </span>syn::parse_str::&lt;Ident&gt;(name) {
+                <span class="prelude-val">Ok</span>(name) =&gt; name,
                 <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="ident">errors</span>.<span class="ident">err</span>(
-                        <span class="macro">format!</span>(<span class="string">&quot;subpattern reference `{}` is not an identifier&quot;</span>, <span class="ident">name</span>),
-                        <span class="ident">lit</span>.<span class="ident">span</span>(),
+                    errors.err(
+                        <span class="macro">format!</span>(<span class="string">&quot;subpattern reference `{}` is not an identifier&quot;</span>, name),
+                        lit.span(),
                     );
-                    <span class="comment">// we emitted the error; make something up and continue</span>
-                    <span class="ident">pattern</span>.<span class="ident">replace_range</span>(<span class="ident">i</span>..<span class="ident">subref_end</span>, <span class="string">&quot;_&quot;</span>);
-                    <span class="ident">i</span> += <span class="number">2</span>;
+                    <span class="comment">// we emitted the error; make something up and continue
+                    </span>pattern.replace_range(i..subref_end, <span class="string">&quot;_&quot;</span>);
+                    i += <span class="number">2</span>;
                     <span class="kw">continue</span>;
                 }
             };
 
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">find</span>(|(<span class="ident">def</span>, <span class="kw">_</span>)| <span class="kw-2">*</span><span class="ident">def</span> == <span class="ident">name</span>) {
-                <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="ident">subpattern</span>)) =&gt; {
-                    <span class="ident">pattern</span>.<span class="ident">replace_range</span>(<span class="ident">i</span>..<span class="ident">subref_end</span>, <span class="kw-2">&amp;</span><span class="ident">subpattern</span>);
-                    <span class="ident">i</span> += <span class="ident">subpattern</span>.<span class="ident">len</span>() + <span class="number">1</span>;
+            <span class="kw">match </span><span class="self">self</span>.map.iter().find(|(def, <span class="kw">_</span>)| <span class="kw-2">*</span>def == name) {
+                <span class="prelude-val">Some</span>((<span class="kw">_</span>, subpattern)) =&gt; {
+                    pattern.replace_range(i..subref_end, <span class="kw-2">&amp;</span>subpattern);
+                    i += subpattern.len() + <span class="number">1</span>;
                 }
-                <span class="prelude-val">None</span> =&gt; {
-                    <span class="ident">errors</span>.<span class="ident">err</span>(
-                        <span class="macro">format!</span>(<span class="string">&quot;subpattern reference `{}` has not been defined&quot;</span>, <span class="ident">name</span>),
-                        <span class="ident">lit</span>.<span class="ident">span</span>(),
+                <span class="prelude-val">None </span>=&gt; {
+                    errors.err(
+                        <span class="macro">format!</span>(<span class="string">&quot;subpattern reference `{}` has not been defined&quot;</span>, name),
+                        lit.span(),
                     );
-                    <span class="comment">// leaving `(?:name)` is fine</span>
-                    <span class="ident">i</span> = <span class="ident">subref_end</span> + <span class="number">1</span>;
+                    <span class="comment">// leaving `(?:name)` is fine
+                    </span>i = subref_end + <span class="number">1</span>;
                 }
             }
         }
 
-        <span class="ident">pattern</span>
+        pattern
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

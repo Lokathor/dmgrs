@@ -193,198 +193,198 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Ident</span>, <span class="ident">Span</span>};
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">spanned::Spanned</span>, <span class="ident">LitByteStr</span>, <span class="ident">LitStr</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>proc_macro2::{Ident, Span};
+<span class="kw">use </span>syn::{spanned::Spanned, LitByteStr, LitStr};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error</span>::{<span class="ident">Errors</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::leaf::Callback</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mir::Mir</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::nested::NestedValue</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser</span>::{<span class="ident">IgnoreFlags</span>, <span class="ident">Parser</span>, <span class="ident">Subpatterns</span>};
+<span class="kw">use </span><span class="kw">crate</span>::error::{Errors, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span><span class="kw">crate</span>::leaf::Callback;
+<span class="kw">use </span><span class="kw">crate</span>::mir::Mir;
+<span class="kw">use </span><span class="kw">crate</span>::parser::nested::NestedValue;
+<span class="kw">use </span><span class="kw">crate</span>::parser::{IgnoreFlags, Parser, Subpatterns};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ignore_flags::ascii_case::MakeAsciiCaseInsensitive</span>;
+<span class="kw">use </span><span class="kw">super</span>::ignore_flags::ascii_case::MakeAsciiCaseInsensitive;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Definition</span> {
-    <span class="kw">pub</span> <span class="ident">literal</span>: <span class="ident">Literal</span>,
-    <span class="kw">pub</span> <span class="ident">priority</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">usize</span>&gt;,
-    <span class="kw">pub</span> <span class="ident">callback</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Callback</span>&gt;,
-    <span class="kw">pub</span> <span class="ident">ignore_flags</span>: <span class="ident">IgnoreFlags</span>,
+<span class="kw">pub struct </span>Definition {
+    <span class="kw">pub </span>literal: Literal,
+    <span class="kw">pub </span>priority: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    <span class="kw">pub </span>callback: <span class="prelude-ty">Option</span>&lt;Callback&gt;,
+    <span class="kw">pub </span>ignore_flags: IgnoreFlags,
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Literal</span> {
-    <span class="ident">Utf8</span>(<span class="ident">LitStr</span>),
-    <span class="ident">Bytes</span>(<span class="ident">LitByteStr</span>),
+<span class="kw">pub enum </span>Literal {
+    Utf8(LitStr),
+    Bytes(LitByteStr),
 }
 
-<span class="kw">impl</span> <span class="ident">Definition</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">literal</span>: <span class="ident">Literal</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Definition</span> {
-            <span class="ident">literal</span>,
-            <span class="ident">priority</span>: <span class="prelude-val">None</span>,
-            <span class="ident">callback</span>: <span class="prelude-val">None</span>,
-            <span class="ident">ignore_flags</span>: <span class="ident">IgnoreFlags::Empty</span>,
+<span class="kw">impl </span>Definition {
+    <span class="kw">pub fn </span>new(literal: Literal) -&gt; <span class="self">Self </span>{
+        Definition {
+            literal,
+            priority: <span class="prelude-val">None</span>,
+            callback: <span class="prelude-val">None</span>,
+            ignore_flags: IgnoreFlags::Empty,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">named_attr</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">Ident</span>, <span class="ident">value</span>: <span class="ident">NestedValue</span>, <span class="ident">parser</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) {
-        <span class="kw">match</span> (<span class="ident">name</span>.<span class="ident">to_string</span>().<span class="ident">as_str</span>(), <span class="ident">value</span>) {
-            (<span class="string">&quot;priority&quot;</span>, <span class="ident">NestedValue::Assign</span>(<span class="ident">tokens</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">prio</span> = <span class="kw">match</span> <span class="ident">tokens</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">prio</span>) =&gt; <span class="ident">prio</span>,
+    <span class="kw">pub fn </span>named_attr(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: Ident, value: NestedValue, parser: <span class="kw-2">&amp;mut </span>Parser) {
+        <span class="kw">match </span>(name.to_string().as_str(), value) {
+            (<span class="string">&quot;priority&quot;</span>, NestedValue::Assign(tokens)) =&gt; {
+                <span class="kw">let </span>prio = <span class="kw">match </span>tokens.to_string().parse() {
+                    <span class="prelude-val">Ok</span>(prio) =&gt; prio,
                     <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                        <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Expected an unsigned integer&quot;</span>, <span class="ident">tokens</span>.<span class="ident">span</span>());
+                        parser.err(<span class="string">&quot;Expected an unsigned integer&quot;</span>, tokens.span());
                         <span class="kw">return</span>;
                     }
                 };
 
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">priority</span>.<span class="ident">replace</span>(<span class="ident">prio</span>).<span class="ident">is_some</span>() {
-                    <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Resetting previously set priority&quot;</span>, <span class="ident">tokens</span>.<span class="ident">span</span>());
+                <span class="kw">if </span><span class="self">self</span>.priority.replace(prio).is_some() {
+                    parser.err(<span class="string">&quot;Resetting previously set priority&quot;</span>, tokens.span());
                 }
             }
             (<span class="string">&quot;priority&quot;</span>, <span class="kw">_</span>) =&gt; {
-                <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Expected: priority = &lt;integer&gt;&quot;</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+                parser.err(<span class="string">&quot;Expected: priority = &lt;integer&gt;&quot;</span>, name.span());
             }
-            (<span class="string">&quot;callback&quot;</span>, <span class="ident">NestedValue::Assign</span>(<span class="ident">tokens</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">span</span> = <span class="ident">tokens</span>.<span class="ident">span</span>();
-                <span class="kw">let</span> <span class="ident">callback</span> = <span class="kw">match</span> <span class="ident">parser</span>.<span class="ident">parse_callback</span>(<span class="ident">tokens</span>) {
-                    <span class="prelude-val">Some</span>(<span class="ident">callback</span>) =&gt; <span class="ident">callback</span>,
-                    <span class="prelude-val">None</span> =&gt; {
-                        <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Not a valid callback&quot;</span>, <span class="ident">span</span>);
+            (<span class="string">&quot;callback&quot;</span>, NestedValue::Assign(tokens)) =&gt; {
+                <span class="kw">let </span>span = tokens.span();
+                <span class="kw">let </span>callback = <span class="kw">match </span>parser.parse_callback(tokens) {
+                    <span class="prelude-val">Some</span>(callback) =&gt; callback,
+                    <span class="prelude-val">None </span>=&gt; {
+                        parser.err(<span class="string">&quot;Not a valid callback&quot;</span>, span);
                         <span class="kw">return</span>;
                     }
                 };
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">previous</span>) = <span class="self">self</span>.<span class="ident">callback</span>.<span class="ident">replace</span>(<span class="ident">callback</span>) {
-                    <span class="ident">parser</span>
-                        .<span class="ident">err</span>(
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(previous) = <span class="self">self</span>.callback.replace(callback) {
+                    parser
+                        .err(
                             <span class="string">&quot;Callback has been already set&quot;</span>,
-                            <span class="ident">span</span>.<span class="ident">join</span>(<span class="ident">name</span>.<span class="ident">span</span>()).<span class="ident">unwrap</span>(),
+                            span.join(name.span()).unwrap(),
                         )
-                        .<span class="ident">err</span>(<span class="string">&quot;Previous callback set here&quot;</span>, <span class="ident">previous</span>.<span class="ident">span</span>());
+                        .err(<span class="string">&quot;Previous callback set here&quot;</span>, previous.span());
                 }
             }
             (<span class="string">&quot;callback&quot;</span>, <span class="kw">_</span>) =&gt; {
-                <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Expected: callback = ...&quot;</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+                parser.err(<span class="string">&quot;Expected: callback = ...&quot;</span>, name.span());
             }
-            (<span class="string">&quot;ignore&quot;</span>, <span class="ident">NestedValue::Group</span>(<span class="ident">tokens</span>)) =&gt; {
-                <span class="self">self</span>.<span class="ident">ignore_flags</span>.<span class="ident">parse_group</span>(<span class="ident">name</span>, <span class="ident">tokens</span>, <span class="ident">parser</span>);
+            (<span class="string">&quot;ignore&quot;</span>, NestedValue::Group(tokens)) =&gt; {
+                <span class="self">self</span>.ignore_flags.parse_group(name, tokens, parser);
             }
             (<span class="string">&quot;ignore&quot;</span>, <span class="kw">_</span>) =&gt; {
-                <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Expected: ignore(&lt;flag&gt;, ...)&quot;</span>, <span class="ident">name</span>.<span class="ident">span</span>());
+                parser.err(<span class="string">&quot;Expected: ignore(&lt;flag&gt;, ...)&quot;</span>, name.span());
             }
-            (<span class="ident">unknown</span>, <span class="kw">_</span>) =&gt; {
-                <span class="ident">parser</span>.<span class="ident">err</span>(
+            (unknown, <span class="kw">_</span>) =&gt; {
+                parser.err(
                     <span class="macro">format!</span>(
                         <span class="string">&quot;\
                         Unknown nested attribute: {}\n\
                         \n\
                         Expected one of: priority, callback\
                         &quot;</span>,
-                        <span class="ident">unknown</span>
+                        unknown
                     ),
-                    <span class="ident">name</span>.<span class="ident">span</span>(),
+                    name.span(),
                 );
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Literal</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt; {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Literal::Utf8</span>(<span class="ident">string</span>) =&gt; <span class="ident">string</span>.<span class="ident">value</span>().<span class="ident">into_bytes</span>(),
-            <span class="ident">Literal::Bytes</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">bytes</span>.<span class="ident">value</span>(),
+<span class="kw">impl </span>Literal {
+    <span class="kw">pub fn </span>to_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;u8&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            Literal::Utf8(string) =&gt; string.value().into_bytes(),
+            Literal::Bytes(bytes) =&gt; bytes.value(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">escape_regex</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Literal</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Literal::Utf8</span>(<span class="ident">string</span>) =&gt; <span class="ident">Literal::Utf8</span>(<span class="ident">LitStr::new</span>(
-                <span class="ident">regex_syntax::escape</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>.<span class="ident">value</span>()).<span class="ident">as_str</span>(),
-                <span class="self">self</span>.<span class="ident">span</span>(),
+    <span class="kw">pub fn </span>escape_regex(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Literal {
+        <span class="kw">match </span><span class="self">self </span>{
+            Literal::Utf8(string) =&gt; Literal::Utf8(LitStr::new(
+                regex_syntax::escape(<span class="kw-2">&amp;</span>string.value()).as_str(),
+                <span class="self">self</span>.span(),
             )),
-            <span class="ident">Literal::Bytes</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">Literal::Bytes</span>(<span class="ident">LitByteStr::new</span>(
-                <span class="ident">regex_syntax::escape</span>(<span class="kw-2">&amp;</span><span class="ident">bytes_to_regex_string</span>(<span class="ident">bytes</span>.<span class="ident">value</span>())).<span class="ident">as_bytes</span>(),
-                <span class="self">self</span>.<span class="ident">span</span>(),
+            Literal::Bytes(bytes) =&gt; Literal::Bytes(LitByteStr::new(
+                regex_syntax::escape(<span class="kw-2">&amp;</span>bytes_to_regex_string(bytes.value())).as_bytes(),
+                <span class="self">self</span>.span(),
             )),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_mir</span>(
+    <span class="kw">pub fn </span>to_mir(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">subpatterns</span>: <span class="kw-2">&amp;</span><span class="ident">Subpatterns</span>,
-        <span class="ident">ignore_flags</span>: <span class="ident">IgnoreFlags</span>,
-        <span class="ident">errors</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Errors</span>,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Mir</span>&gt; {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">subpatterns</span>.<span class="ident">fix</span>(<span class="self">self</span>, <span class="ident">errors</span>);
+        subpatterns: <span class="kw-2">&amp;</span>Subpatterns,
+        ignore_flags: IgnoreFlags,
+        errors: <span class="kw-2">&amp;mut </span>Errors,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Mir&gt; {
+        <span class="kw">let </span>value = subpatterns.fix(<span class="self">self</span>, errors);
 
-        <span class="kw">if</span> <span class="ident">ignore_flags</span>.<span class="ident">contains</span>(<span class="ident">IgnoreFlags::IgnoreAsciiCase</span>) {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">Literal::Utf8</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="ident">Mir::utf8</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>).<span class="ident">map</span>(<span class="ident">MakeAsciiCaseInsensitive::make_ascii_case_insensitive</span>)
+        <span class="kw">if </span>ignore_flags.contains(IgnoreFlags::IgnoreAsciiCase) {
+            <span class="kw">match </span><span class="self">self </span>{
+                Literal::Utf8(<span class="kw">_</span>) =&gt; {
+                    Mir::utf8(<span class="kw-2">&amp;</span>value).map(MakeAsciiCaseInsensitive::make_ascii_case_insensitive)
                 }
-                <span class="ident">Literal::Bytes</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::binary_ignore_case</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>),
+                Literal::Bytes(<span class="kw">_</span>) =&gt; Mir::binary_ignore_case(<span class="kw-2">&amp;</span>value),
             }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">ignore_flags</span>.<span class="ident">contains</span>(<span class="ident">IgnoreFlags::IgnoreCase</span>) {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">Literal::Utf8</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::utf8_ignore_case</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>),
-                <span class="ident">Literal::Bytes</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::binary_ignore_case</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>),
+        } <span class="kw">else if </span>ignore_flags.contains(IgnoreFlags::IgnoreCase) {
+            <span class="kw">match </span><span class="self">self </span>{
+                Literal::Utf8(<span class="kw">_</span>) =&gt; Mir::utf8_ignore_case(<span class="kw-2">&amp;</span>value),
+                Literal::Bytes(<span class="kw">_</span>) =&gt; Mir::binary_ignore_case(<span class="kw-2">&amp;</span>value),
             }
-        } <span class="kw">else</span> {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">Literal::Utf8</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::utf8</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>),
-                <span class="ident">Literal::Bytes</span>(<span class="kw">_</span>) =&gt; <span class="ident">Mir::binary</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>),
+        } <span class="kw">else </span>{
+            <span class="kw">match </span><span class="self">self </span>{
+                Literal::Utf8(<span class="kw">_</span>) =&gt; Mir::utf8(<span class="kw-2">&amp;</span>value),
+                Literal::Bytes(<span class="kw">_</span>) =&gt; Mir::binary(<span class="kw-2">&amp;</span>value),
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Span</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Literal::Utf8</span>(<span class="ident">string</span>) =&gt; <span class="ident">string</span>.<span class="ident">span</span>(),
-            <span class="ident">Literal::Bytes</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">bytes</span>.<span class="ident">span</span>(),
+    <span class="kw">pub fn </span>span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
+        <span class="kw">match </span><span class="self">self </span>{
+            Literal::Utf8(string) =&gt; string.span(),
+            Literal::Bytes(bytes) =&gt; bytes.span(),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">syn::parse::Parse</span> <span class="kw">for</span> <span class="ident">Literal</span> {
-    <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">input</span>: <span class="ident">syn::parse::ParseStream</span>) -&gt; <span class="ident">syn::Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let</span> <span class="ident">la</span> = <span class="ident">input</span>.<span class="ident">lookahead1</span>();
-        <span class="kw">if</span> <span class="ident">la</span>.<span class="ident">peek</span>(<span class="ident">LitStr</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">Literal::Utf8</span>(<span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>))
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">la</span>.<span class="ident">peek</span>(<span class="ident">LitByteStr</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">Literal::Bytes</span>(<span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">la</span>.<span class="ident">error</span>())
+<span class="kw">impl </span>syn::parse::Parse <span class="kw">for </span>Literal {
+    <span class="kw">fn </span>parse(input: syn::parse::ParseStream) -&gt; syn::Result&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>la = input.lookahead1();
+        <span class="kw">if </span>la.peek(LitStr) {
+            <span class="prelude-val">Ok</span>(Literal::Utf8(input.parse()<span class="question-mark">?</span>))
+        } <span class="kw">else if </span>la.peek(LitByteStr) {
+            <span class="prelude-val">Ok</span>(Literal::Bytes(input.parse()<span class="question-mark">?</span>))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(la.error())
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bytes_to_regex_string</span>(<span class="ident">bytes</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;) -&gt; <span class="ident">String</span> {
-    <span class="kw">if</span> <span class="ident">bytes</span>.<span class="ident">is_ascii</span>() {
-        <span class="kw">unsafe</span> {
-            <span class="comment">// Unicode values are prohibited, so we can&#39;t use</span>
-            <span class="comment">// safe version of String::from_utf8</span>
-            <span class="comment">//</span>
-            <span class="comment">// We can, however, construct a safe ASCII string</span>
-            <span class="kw">return</span> <span class="ident">String::from_utf8_unchecked</span>(<span class="ident">bytes</span>);
+<span class="kw">pub fn </span>bytes_to_regex_string(bytes: Vec&lt;u8&gt;) -&gt; String {
+    <span class="kw">if </span>bytes.is_ascii() {
+        <span class="kw">unsafe </span>{
+            <span class="comment">// Unicode values are prohibited, so we can&#39;t use
+            // safe version of String::from_utf8
+            //
+            // We can, however, construct a safe ASCII string
+            </span><span class="kw">return </span>String::from_utf8_unchecked(bytes);
         }
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string</span> = <span class="ident">String::with_capacity</span>(<span class="ident">bytes</span>.<span class="ident">len</span>() * <span class="number">2</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>string = String::with_capacity(bytes.len() * <span class="number">2</span>);
 
-    <span class="kw">for</span> <span class="ident">byte</span> <span class="kw">in</span> <span class="ident">bytes</span> {
-        <span class="kw">if</span> <span class="ident">byte</span> &lt; <span class="number">0x80</span> {
-            <span class="ident">string</span>.<span class="ident">push</span>(<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">char</span>);
-        } <span class="kw">else</span> {
-            <span class="kw">static</span> <span class="ident">DIGITS</span>: [<span class="ident">u8</span>; <span class="number">16</span>] = <span class="kw-2">*</span><span class="string">b&quot;0123456789abcdef&quot;</span>;
+    <span class="kw">for </span>byte <span class="kw">in </span>bytes {
+        <span class="kw">if </span>byte &lt; <span class="number">0x80 </span>{
+            string.push(byte <span class="kw">as </span>char);
+        } <span class="kw">else </span>{
+            <span class="kw">static </span>DIGITS: [u8; <span class="number">16</span>] = <span class="kw-2">*</span><span class="string">b&quot;0123456789abcdef&quot;</span>;
 
-            <span class="ident">string</span>.<span class="ident">push_str</span>(<span class="string">r&quot;\x&quot;</span>);
-            <span class="ident">string</span>.<span class="ident">push</span>(<span class="ident">DIGITS</span>[(<span class="ident">byte</span> / <span class="number">16</span>) <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">char</span>);
-            <span class="ident">string</span>.<span class="ident">push</span>(<span class="ident">DIGITS</span>[(<span class="ident">byte</span> % <span class="number">16</span>) <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">char</span>);
+            string.push_str(<span class="string">r&quot;\x&quot;</span>);
+            string.push(DIGITS[(byte / <span class="number">16</span>) <span class="kw">as </span>usize] <span class="kw">as </span>char);
+            string.push(DIGITS[(byte % <span class="number">16</span>) <span class="kw">as </span>usize] <span class="kw">as </span>char);
         }
     }
 
-    <span class="ident">string</span>
+    string
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

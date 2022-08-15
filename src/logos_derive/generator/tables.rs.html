@@ -77,82 +77,82 @@
 <span id="75">75</span>
 <span id="76">76</span>
 <span id="77">77</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::ToIdent</span>;
-<span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Literal</span>, <span class="ident">TokenStream</span>};
-<span class="kw">use</span> <span class="ident">quote</span>::{<span class="ident">quote</span>, <span class="ident">ToTokens</span>};
-<span class="kw">use</span> <span class="ident">syn::Ident</span>;
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::util::ToIdent;
+<span class="kw">use </span>proc_macro2::{Literal, TokenStream};
+<span class="kw">use </span>quote::{quote, ToTokens};
+<span class="kw">use </span>syn::Ident;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TableStack</span> {
-    <span class="ident">tables</span>: <span class="ident">Vec</span>&lt;(<span class="ident">Ident</span>, [<span class="ident">u8</span>; <span class="number">256</span>])&gt;,
-    <span class="ident">shift</span>: <span class="ident">u8</span>,
+<span class="kw">pub struct </span>TableStack {
+    tables: Vec&lt;(Ident, [u8; <span class="number">256</span>])&gt;,
+    shift: u8,
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TableView</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="ident">ident</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Ident</span>,
-    <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="ident">u8</span>; <span class="number">256</span>],
-    <span class="ident">mask</span>: <span class="ident">u8</span>,
+<span class="kw">pub struct </span>TableView&lt;<span class="lifetime">&#39;a</span>&gt; {
+    ident: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Ident,
+    table: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u8; <span class="number">256</span>],
+    mask: u8,
 }
 
-<span class="kw">impl</span> <span class="ident">TableStack</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">TableStack</span> {
-            <span class="ident">tables</span>: <span class="macro">vec!</span>[(<span class="string">&quot;COMPACT_TABLE_0&quot;</span>.<span class="ident">to_ident</span>(), [<span class="number">0</span>; <span class="number">256</span>])],
-            <span class="ident">shift</span>: <span class="number">0</span>,
+<span class="kw">impl </span>TableStack {
+    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        TableStack {
+            tables: <span class="macro">vec!</span>[(<span class="string">&quot;COMPACT_TABLE_0&quot;</span>.to_ident(), [<span class="number">0</span>; <span class="number">256</span>])],
+            shift: <span class="number">0</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">TableView</span> {
-        <span class="kw">let</span> <span class="ident">mask</span> = <span class="kw">if</span> <span class="self">self</span>.<span class="ident">shift</span> &lt; <span class="number">8</span> {
-            <span class="comment">// Reusing existing table with a shifted mask</span>
-            <span class="kw">let</span> <span class="ident">mask</span> = <span class="number">1u8</span> &lt;&lt; <span class="self">self</span>.<span class="ident">shift</span>;
+    <span class="kw">pub fn </span>view(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; TableView {
+        <span class="kw">let </span>mask = <span class="kw">if </span><span class="self">self</span>.shift &lt; <span class="number">8 </span>{
+            <span class="comment">// Reusing existing table with a shifted mask
+            </span><span class="kw">let </span>mask = <span class="number">1u8 </span>&lt;&lt; <span class="self">self</span>.shift;
 
-            <span class="self">self</span>.<span class="ident">shift</span> += <span class="number">1</span>;
+            <span class="self">self</span>.shift += <span class="number">1</span>;
 
-            <span class="ident">mask</span>
-        } <span class="kw">else</span> {
-            <span class="comment">// Need to create a new table</span>
-            <span class="kw">let</span> <span class="ident">ident</span> = <span class="macro">format!</span>(<span class="string">&quot;COMPACT_TABLE_{}&quot;</span>, <span class="self">self</span>.<span class="ident">tables</span>.<span class="ident">len</span>()).<span class="ident">to_ident</span>();
+            mask
+        } <span class="kw">else </span>{
+            <span class="comment">// Need to create a new table
+            </span><span class="kw">let </span>ident = <span class="macro">format!</span>(<span class="string">&quot;COMPACT_TABLE_{}&quot;</span>, <span class="self">self</span>.tables.len()).to_ident();
 
-            <span class="self">self</span>.<span class="ident">tables</span>.<span class="ident">push</span>((<span class="ident">ident</span>, [<span class="number">0</span>; <span class="number">256</span>]));
-            <span class="self">self</span>.<span class="ident">shift</span> = <span class="number">1</span>;
+            <span class="self">self</span>.tables.push((ident, [<span class="number">0</span>; <span class="number">256</span>]));
+            <span class="self">self</span>.shift = <span class="number">1</span>;
 
-            <span class="number">1</span>
-        };
+            <span class="number">1
+        </span>};
 
-        <span class="kw">let</span> (<span class="kw-2">ref</span> <span class="ident">ident</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">table</span>) = <span class="self">self</span>.<span class="ident">tables</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let </span>(<span class="kw-2">ref </span>ident, <span class="kw-2">ref mut </span>table) = <span class="self">self</span>.tables.last_mut().unwrap();
 
-        <span class="ident">TableView</span> { <span class="ident">ident</span>, <span class="ident">table</span>, <span class="ident">mask</span> }
+        TableView { ident, table, mask }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">TableView</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ident</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Ident</span> {
-        <span class="self">self</span>.<span class="ident">ident</span>
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TableView&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>ident(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Ident {
+        <span class="self">self</span>.ident
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flag</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">byte</span>: <span class="ident">u8</span>) {
-        <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">usize</span>] |= <span class="self">self</span>.<span class="ident">mask</span>;
+    <span class="kw">pub fn </span>flag(<span class="kw-2">&amp;mut </span><span class="self">self</span>, byte: u8) {
+        <span class="self">self</span>.table[byte <span class="kw">as </span>usize] |= <span class="self">self</span>.mask;
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mask</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Literal</span> {
-        <span class="ident">Literal::u8_unsuffixed</span>(<span class="self">self</span>.<span class="ident">mask</span>)
+    <span class="kw">pub fn </span>mask(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Literal {
+        Literal::u8_unsuffixed(<span class="self">self</span>.mask)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToTokens</span> <span class="kw">for</span> <span class="ident">TableStack</span> {
-    <span class="kw">fn</span> <span class="ident">to_tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;mut</span> <span class="ident">TokenStream</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">shift</span> == <span class="number">0</span> {
+<span class="kw">impl </span>ToTokens <span class="kw">for </span>TableStack {
+    <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, out: <span class="kw-2">&amp;mut </span>TokenStream) {
+        <span class="kw">if </span><span class="self">self</span>.shift == <span class="number">0 </span>{
             <span class="kw">return</span>;
         }
 
-        <span class="kw">for</span> (<span class="ident">ident</span>, <span class="ident">table</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">tables</span>.<span class="ident">iter</span>() {
-            <span class="kw">let</span> <span class="ident">bytes</span> = <span class="ident">table</span>.<span class="ident">iter</span>().<span class="ident">copied</span>().<span class="ident">map</span>(<span class="ident">Literal::u8_unsuffixed</span>);
+        <span class="kw">for </span>(ident, table) <span class="kw">in </span><span class="self">self</span>.tables.iter() {
+            <span class="kw">let </span>bytes = table.iter().copied().map(Literal::u8_unsuffixed);
 
-            <span class="ident">out</span>.<span class="ident">extend</span>(<span class="macro">quote!</span> {
-                <span class="kw">static</span> #<span class="ident">ident</span>: [<span class="ident">u8</span>; <span class="number">256</span>] = [#(#<span class="ident">bytes</span>),<span class="kw-2">*</span>];
+            out.extend(<span class="macro">quote!</span> {
+                <span class="kw">static </span>#ident: [u8; <span class="number">256</span>] = [#(#bytes),<span class="kw-2">*</span>];
             });
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

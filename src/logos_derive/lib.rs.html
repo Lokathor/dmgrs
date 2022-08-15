@@ -312,264 +312,264 @@
 <span id="310">310</span>
 <span id="311">311</span>
 <span id="312">312</span>
-</pre><pre class="rust"><code><span class="doccomment">//! &lt;img src=&quot;https://raw.githubusercontent.com/maciejhirsz/logos/master/logos.svg?sanitize=true&quot; alt=&quot;Logos logo&quot; width=&quot;250&quot; align=&quot;right&quot;&gt;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Logos</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This is a `#[derive]` macro crate, [for documentation go to main crate](https://docs.rs/logos).</span>
+</pre><pre class="rust"><code><span class="doccomment">//! &lt;img src=&quot;https://raw.githubusercontent.com/maciejhirsz/logos/master/logos.svg?sanitize=true&quot; alt=&quot;Logos logo&quot; width=&quot;250&quot; align=&quot;right&quot;&gt;
+//!
+//! # Logos
+//!
+//! This is a `#[derive]` macro crate, [for documentation go to main crate](https://docs.rs/logos).
 
-<span class="comment">// The `quote!` macro requires deep recursion.</span>
-<span class="attribute">#![<span class="ident">recursion_limit</span> = <span class="string">&quot;196&quot;</span>]</span>
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_logo_url</span> = <span class="string">&quot;https://maciej.codes/kosz/logos.png&quot;</span>)]</span>
+</span><span class="comment">// The `quote!` macro requires deep recursion.
+</span><span class="attribute">#![recursion_limit = <span class="string">&quot;196&quot;</span>]</span>
+<span class="attribute">#![doc(html_logo_url = <span class="string">&quot;https://maciej.codes/kosz/logos.png&quot;</span>)]</span>
 
-<span class="kw">mod</span> <span class="ident">error</span>;
-<span class="kw">mod</span> <span class="ident">generator</span>;
-<span class="kw">mod</span> <span class="ident">graph</span>;
-<span class="kw">mod</span> <span class="ident">leaf</span>;
-<span class="kw">mod</span> <span class="ident">mir</span>;
-<span class="kw">mod</span> <span class="ident">parser</span>;
-<span class="kw">mod</span> <span class="ident">util</span>;
+<span class="kw">mod </span>error;
+<span class="kw">mod </span>generator;
+<span class="kw">mod </span>graph;
+<span class="kw">mod </span>leaf;
+<span class="kw">mod </span>mir;
+<span class="kw">mod </span>parser;
+<span class="kw">mod </span>util;
 
-<span class="kw">use</span> <span class="ident">generator::Generator</span>;
-<span class="kw">use</span> <span class="ident">graph</span>::{<span class="ident">DisambiguationError</span>, <span class="ident">Fork</span>, <span class="ident">Graph</span>, <span class="ident">Rope</span>};
-<span class="kw">use</span> <span class="ident">leaf::Leaf</span>;
-<span class="kw">use</span> <span class="ident">parser</span>::{<span class="ident">Mode</span>, <span class="ident">Parser</span>};
-<span class="kw">use</span> <span class="ident">util::MaybeVoid</span>;
+<span class="kw">use </span>generator::Generator;
+<span class="kw">use </span>graph::{DisambiguationError, Fork, Graph, Rope};
+<span class="kw">use </span>leaf::Leaf;
+<span class="kw">use </span>parser::{Mode, Parser};
+<span class="kw">use </span>util::MaybeVoid;
 
-<span class="kw">use</span> <span class="ident">proc_macro::TokenStream</span>;
-<span class="kw">use</span> <span class="ident">proc_macro2::Span</span>;
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
-<span class="kw">use</span> <span class="ident">syn::spanned::Spanned</span>;
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">Fields</span>, <span class="ident">ItemEnum</span>};
+<span class="kw">use </span>proc_macro::TokenStream;
+<span class="kw">use </span>proc_macro2::Span;
+<span class="kw">use </span>quote::quote;
+<span class="kw">use </span>syn::spanned::Spanned;
+<span class="kw">use </span>syn::{Fields, ItemEnum};
 
-<span class="attribute">#[<span class="ident">proc_macro_derive</span>(<span class="ident">Logos</span>, <span class="ident">attributes</span>(<span class="ident">logos</span>, <span class="ident">extras</span>, <span class="ident">error</span>, <span class="ident">end</span>, <span class="ident">token</span>, <span class="ident">regex</span>))]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logos</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">item</span>: <span class="ident">ItemEnum</span> = <span class="ident">syn::parse</span>(<span class="ident">input</span>).<span class="ident">expect</span>(<span class="string">&quot;Logos can be only be derived for enums&quot;</span>);
+<span class="attribute">#[proc_macro_derive(Logos, attributes(logos, extras, error, end, token, regex))]</span>
+<span class="kw">pub fn </span>logos(input: TokenStream) -&gt; TokenStream {
+    <span class="kw">let </span><span class="kw-2">mut </span>item: ItemEnum = syn::parse(input).expect(<span class="string">&quot;Logos can be only be derived for enums&quot;</span>);
 
-    <span class="kw">let</span> <span class="ident">name</span> = <span class="kw-2">&amp;</span><span class="ident">item</span>.<span class="ident">ident</span>;
+    <span class="kw">let </span>name = <span class="kw-2">&amp;</span>item.ident;
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> = <span class="prelude-val">None</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> = <span class="ident">Parser::default</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>error = <span class="prelude-val">None</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>parser = Parser::default();
 
-    <span class="kw">for</span> <span class="ident">param</span> <span class="kw">in</span> <span class="ident">item</span>.<span class="ident">generics</span>.<span class="ident">params</span> {
-        <span class="ident">parser</span>.<span class="ident">parse_generic</span>(<span class="ident">param</span>);
+    <span class="kw">for </span>param <span class="kw">in </span>item.generics.params {
+        parser.parse_generic(param);
     }
 
-    <span class="kw">for</span> <span class="ident">attr</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">item</span>.<span class="ident">attrs</span> {
-        <span class="ident">parser</span>.<span class="ident">try_parse_logos</span>(<span class="ident">attr</span>);
+    <span class="kw">for </span>attr <span class="kw">in </span><span class="kw-2">&amp;mut </span>item.attrs {
+        parser.try_parse_logos(attr);
 
-        <span class="comment">// TODO: Remove in future versions</span>
-        <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">is_ident</span>(<span class="string">&quot;extras&quot;</span>) {
-            <span class="ident">parser</span>.<span class="ident">err</span>(
+        <span class="comment">// TODO: Remove in future versions
+        </span><span class="kw">if </span>attr.path.is_ident(<span class="string">&quot;extras&quot;</span>) {
+            parser.err(
                 <span class="string">&quot;\
                 #[extras] attribute is deprecated. Use #[logos(extras = Type)] instead.\n\
                 \n\
                 For help with migration see release notes: \
                 https://github.com/maciejhirsz/logos/releases\
                 &quot;</span>,
-                <span class="ident">attr</span>.<span class="ident">span</span>(),
+                attr.span(),
             );
         }
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ropes</span> = <span class="ident">Vec::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">regex_ids</span> = <span class="ident">Vec::new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">graph</span> = <span class="ident">Graph::new</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>ropes = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>regex_ids = Vec::new();
+    <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
-    <span class="kw">for</span> <span class="ident">variant</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">item</span>.<span class="ident">variants</span> {
-        <span class="kw">let</span> <span class="ident">field</span> = <span class="kw">match</span> <span class="kw-2">&amp;mut</span> <span class="ident">variant</span>.<span class="ident">fields</span> {
-            <span class="ident">Fields::Unit</span> =&gt; <span class="ident">MaybeVoid::Void</span>,
-            <span class="ident">Fields::Unnamed</span>(<span class="ident">fields</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">fields</span>.<span class="ident">unnamed</span>.<span class="ident">len</span>() != <span class="number">1</span> {
-                    <span class="ident">parser</span>.<span class="ident">err</span>(
+    <span class="kw">for </span>variant <span class="kw">in </span><span class="kw-2">&amp;mut </span>item.variants {
+        <span class="kw">let </span>field = <span class="kw">match </span><span class="kw-2">&amp;mut </span>variant.fields {
+            Fields::Unit =&gt; MaybeVoid::Void,
+            Fields::Unnamed(fields) =&gt; {
+                <span class="kw">if </span>fields.unnamed.len() != <span class="number">1 </span>{
+                    parser.err(
                         <span class="macro">format!</span>(
                             <span class="string">&quot;Logos currently only supports variants with one field, found {}&quot;</span>,
-                            <span class="ident">fields</span>.<span class="ident">unnamed</span>.<span class="ident">len</span>(),
+                            fields.unnamed.len(),
                         ),
-                        <span class="ident">fields</span>.<span class="ident">span</span>(),
+                        fields.span(),
                     );
                 }
 
-                <span class="kw">let</span> <span class="ident">ty</span> = <span class="kw-2">&amp;mut</span> <span class="ident">fields</span>
-                    .<span class="ident">unnamed</span>
-                    .<span class="ident">first_mut</span>()
-                    .<span class="ident">expect</span>(<span class="string">&quot;Already checked len; qed&quot;</span>)
-                    .<span class="ident">ty</span>;
-                <span class="kw">let</span> <span class="ident">ty</span> = <span class="ident">parser</span>.<span class="ident">get_type</span>(<span class="ident">ty</span>);
+                <span class="kw">let </span>ty = <span class="kw-2">&amp;mut </span>fields
+                    .unnamed
+                    .first_mut()
+                    .expect(<span class="string">&quot;Already checked len; qed&quot;</span>)
+                    .ty;
+                <span class="kw">let </span>ty = parser.get_type(ty);
 
-                <span class="ident">MaybeVoid::Some</span>(<span class="ident">ty</span>)
+                MaybeVoid::Some(ty)
             }
-            <span class="ident">Fields::Named</span>(<span class="ident">fields</span>) =&gt; {
-                <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Logos doesn&#39;t support named fields yet.&quot;</span>, <span class="ident">fields</span>.<span class="ident">span</span>());
+            Fields::Named(fields) =&gt; {
+                parser.err(<span class="string">&quot;Logos doesn&#39;t support named fields yet.&quot;</span>, fields.span());
 
-                <span class="ident">MaybeVoid::Void</span>
+                MaybeVoid::Void
             }
         };
 
-        <span class="comment">// Lazy leaf constructor to avoid cloning</span>
-        <span class="kw">let</span> <span class="ident">var_ident</span> = <span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">ident</span>;
-        <span class="kw">let</span> <span class="ident">leaf</span> = <span class="kw">move</span> |<span class="ident">span</span>| <span class="ident">Leaf::new</span>(<span class="ident">var_ident</span>, <span class="ident">span</span>).<span class="ident">field</span>(<span class="ident">field</span>.<span class="ident">clone</span>());
+        <span class="comment">// Lazy leaf constructor to avoid cloning
+        </span><span class="kw">let </span>var_ident = <span class="kw-2">&amp;</span>variant.ident;
+        <span class="kw">let </span>leaf = <span class="kw">move </span>|span| Leaf::new(var_ident, span).field(field.clone());
 
-        <span class="kw">for</span> <span class="ident">attr</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">variant</span>.<span class="ident">attrs</span> {
-            <span class="kw">let</span> <span class="ident">attr_name</span> = <span class="kw">match</span> <span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">get_ident</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">ident</span>) =&gt; <span class="ident">ident</span>.<span class="ident">to_string</span>(),
-                <span class="prelude-val">None</span> =&gt; <span class="kw">continue</span>,
+        <span class="kw">for </span>attr <span class="kw">in </span><span class="kw-2">&amp;mut </span>variant.attrs {
+            <span class="kw">let </span>attr_name = <span class="kw">match </span>attr.path.get_ident() {
+                <span class="prelude-val">Some</span>(ident) =&gt; ident.to_string(),
+                <span class="prelude-val">None </span>=&gt; <span class="kw">continue</span>,
             };
 
-            <span class="kw">match</span> <span class="ident">attr_name</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;error&quot;</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">span</span> = <span class="ident">variant</span>.<span class="ident">ident</span>.<span class="ident">span</span>();
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">previous</span>) = <span class="ident">error</span>.<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="ident">variant</span>.<span class="ident">ident</span>) {
-                        <span class="ident">parser</span>
-                            .<span class="ident">err</span>(<span class="string">&quot;Only one #[error] variant can be declared.&quot;</span>, <span class="ident">span</span>)
-                            .<span class="ident">err</span>(<span class="string">&quot;Previously declared #[error]:&quot;</span>, <span class="ident">previous</span>.<span class="ident">span</span>());
+            <span class="kw">match </span>attr_name.as_str() {
+                <span class="string">&quot;error&quot; </span>=&gt; {
+                    <span class="kw">let </span>span = variant.ident.span();
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(previous) = error.replace(<span class="kw-2">&amp;</span>variant.ident) {
+                        parser
+                            .err(<span class="string">&quot;Only one #[error] variant can be declared.&quot;</span>, span)
+                            .err(<span class="string">&quot;Previously declared #[error]:&quot;</span>, previous.span());
                     }
                 }
-                <span class="string">&quot;end&quot;</span> =&gt; {
-                    <span class="comment">// TODO: Remove in future versions</span>
-                    <span class="ident">parser</span>.<span class="ident">err</span>(
+                <span class="string">&quot;end&quot; </span>=&gt; {
+                    <span class="comment">// TODO: Remove in future versions
+                    </span>parser.err(
                         <span class="string">&quot;\
                         Since 0.11 Logos no longer requires the #[end] variant.\n\
                         \n\
                         For help with migration see release notes: \
                         https://github.com/maciejhirsz/logos/releases\
                         &quot;</span>,
-                        <span class="ident">attr</span>.<span class="ident">span</span>(),
+                        attr.span(),
                     );
                 }
-                <span class="string">&quot;token&quot;</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">definition</span> = <span class="kw">match</span> <span class="ident">parser</span>.<span class="ident">parse_definition</span>(<span class="ident">attr</span>) {
-                        <span class="prelude-val">Some</span>(<span class="ident">definition</span>) =&gt; <span class="ident">definition</span>,
-                        <span class="prelude-val">None</span> =&gt; {
-                            <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Expected #[token(...)]&quot;</span>, <span class="ident">attr</span>.<span class="ident">span</span>());
+                <span class="string">&quot;token&quot; </span>=&gt; {
+                    <span class="kw">let </span>definition = <span class="kw">match </span>parser.parse_definition(attr) {
+                        <span class="prelude-val">Some</span>(definition) =&gt; definition,
+                        <span class="prelude-val">None </span>=&gt; {
+                            parser.err(<span class="string">&quot;Expected #[token(...)]&quot;</span>, attr.span());
                             <span class="kw">continue</span>;
                         }
                     };
 
-                    <span class="kw">if</span> <span class="ident">definition</span>.<span class="ident">ignore_flags</span>.<span class="ident">is_empty</span>() {
-                        <span class="kw">let</span> <span class="ident">bytes</span> = <span class="ident">definition</span>.<span class="ident">literal</span>.<span class="ident">to_bytes</span>();
-                        <span class="kw">let</span> <span class="ident">then</span> = <span class="ident">graph</span>.<span class="ident">push</span>(
-                            <span class="ident">leaf</span>(<span class="ident">definition</span>.<span class="ident">literal</span>.<span class="ident">span</span>())
-                                .<span class="ident">priority</span>(<span class="ident">definition</span>.<span class="ident">priority</span>.<span class="ident">unwrap_or</span>(<span class="ident">bytes</span>.<span class="ident">len</span>() * <span class="number">2</span>))
-                                .<span class="ident">callback</span>(<span class="ident">definition</span>.<span class="ident">callback</span>),
+                    <span class="kw">if </span>definition.ignore_flags.is_empty() {
+                        <span class="kw">let </span>bytes = definition.literal.to_bytes();
+                        <span class="kw">let </span>then = graph.push(
+                            leaf(definition.literal.span())
+                                .priority(definition.priority.unwrap_or(bytes.len() * <span class="number">2</span>))
+                                .callback(definition.callback),
                         );
 
-                        <span class="ident">ropes</span>.<span class="ident">push</span>(<span class="ident">Rope::new</span>(<span class="ident">bytes</span>, <span class="ident">then</span>));
-                    } <span class="kw">else</span> {
-                        <span class="kw">let</span> <span class="ident">mir</span> = <span class="ident">definition</span>
-                            .<span class="ident">literal</span>
-                            .<span class="ident">escape_regex</span>()
-                            .<span class="ident">to_mir</span>(
-                                <span class="kw-2">&amp;</span><span class="ident">Default::default</span>(),
-                                <span class="ident">definition</span>.<span class="ident">ignore_flags</span>,
-                                <span class="kw-2">&amp;mut</span> <span class="ident">parser</span>.<span class="ident">errors</span>,
+                        ropes.push(Rope::new(bytes, then));
+                    } <span class="kw">else </span>{
+                        <span class="kw">let </span>mir = definition
+                            .literal
+                            .escape_regex()
+                            .to_mir(
+                                <span class="kw-2">&amp;</span>Default::default(),
+                                definition.ignore_flags,
+                                <span class="kw-2">&amp;mut </span>parser.errors,
                             )
-                            .<span class="ident">expect</span>(<span class="string">&quot;The literal should be perfectly valid regex&quot;</span>);
+                            .expect(<span class="string">&quot;The literal should be perfectly valid regex&quot;</span>);
 
-                        <span class="kw">let</span> <span class="ident">then</span> = <span class="ident">graph</span>.<span class="ident">push</span>(
-                            <span class="ident">leaf</span>(<span class="ident">definition</span>.<span class="ident">literal</span>.<span class="ident">span</span>())
-                                .<span class="ident">priority</span>(<span class="ident">definition</span>.<span class="ident">priority</span>.<span class="ident">unwrap_or_else</span>(|| <span class="ident">mir</span>.<span class="ident">priority</span>()))
-                                .<span class="ident">callback</span>(<span class="ident">definition</span>.<span class="ident">callback</span>),
+                        <span class="kw">let </span>then = graph.push(
+                            leaf(definition.literal.span())
+                                .priority(definition.priority.unwrap_or_else(|| mir.priority()))
+                                .callback(definition.callback),
                         );
-                        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">graph</span>.<span class="ident">regex</span>(<span class="ident">mir</span>, <span class="ident">then</span>);
+                        <span class="kw">let </span>id = graph.regex(mir, then);
 
-                        <span class="ident">regex_ids</span>.<span class="ident">push</span>(<span class="ident">id</span>);
+                        regex_ids.push(id);
                     }
                 }
-                <span class="string">&quot;regex&quot;</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">definition</span> = <span class="kw">match</span> <span class="ident">parser</span>.<span class="ident">parse_definition</span>(<span class="ident">attr</span>) {
-                        <span class="prelude-val">Some</span>(<span class="ident">definition</span>) =&gt; <span class="ident">definition</span>,
-                        <span class="prelude-val">None</span> =&gt; {
-                            <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;Expected #[regex(...)]&quot;</span>, <span class="ident">attr</span>.<span class="ident">span</span>());
+                <span class="string">&quot;regex&quot; </span>=&gt; {
+                    <span class="kw">let </span>definition = <span class="kw">match </span>parser.parse_definition(attr) {
+                        <span class="prelude-val">Some</span>(definition) =&gt; definition,
+                        <span class="prelude-val">None </span>=&gt; {
+                            parser.err(<span class="string">&quot;Expected #[regex(...)]&quot;</span>, attr.span());
                             <span class="kw">continue</span>;
                         }
                     };
-                    <span class="kw">let</span> <span class="ident">mir</span> = <span class="kw">match</span> <span class="ident">definition</span>.<span class="ident">literal</span>.<span class="ident">to_mir</span>(
-                        <span class="kw-2">&amp;</span><span class="ident">parser</span>.<span class="ident">subpatterns</span>,
-                        <span class="ident">definition</span>.<span class="ident">ignore_flags</span>,
-                        <span class="kw-2">&amp;mut</span> <span class="ident">parser</span>.<span class="ident">errors</span>,
+                    <span class="kw">let </span>mir = <span class="kw">match </span>definition.literal.to_mir(
+                        <span class="kw-2">&amp;</span>parser.subpatterns,
+                        definition.ignore_flags,
+                        <span class="kw-2">&amp;mut </span>parser.errors,
                     ) {
-                        <span class="prelude-val">Ok</span>(<span class="ident">mir</span>) =&gt; <span class="ident">mir</span>,
-                        <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-                            <span class="ident">parser</span>.<span class="ident">err</span>(<span class="ident">err</span>, <span class="ident">definition</span>.<span class="ident">literal</span>.<span class="ident">span</span>());
+                        <span class="prelude-val">Ok</span>(mir) =&gt; mir,
+                        <span class="prelude-val">Err</span>(err) =&gt; {
+                            parser.err(err, definition.literal.span());
                             <span class="kw">continue</span>;
                         }
                     };
 
-                    <span class="kw">let</span> <span class="ident">then</span> = <span class="ident">graph</span>.<span class="ident">push</span>(
-                        <span class="ident">leaf</span>(<span class="ident">definition</span>.<span class="ident">literal</span>.<span class="ident">span</span>())
-                            .<span class="ident">priority</span>(<span class="ident">definition</span>.<span class="ident">priority</span>.<span class="ident">unwrap_or_else</span>(|| <span class="ident">mir</span>.<span class="ident">priority</span>()))
-                            .<span class="ident">callback</span>(<span class="ident">definition</span>.<span class="ident">callback</span>),
+                    <span class="kw">let </span>then = graph.push(
+                        leaf(definition.literal.span())
+                            .priority(definition.priority.unwrap_or_else(|| mir.priority()))
+                            .callback(definition.callback),
                     );
-                    <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">graph</span>.<span class="ident">regex</span>(<span class="ident">mir</span>, <span class="ident">then</span>);
+                    <span class="kw">let </span>id = graph.regex(mir, then);
 
-                    <span class="ident">regex_ids</span>.<span class="ident">push</span>(<span class="ident">id</span>);
+                    regex_ids.push(id);
                 }
-                <span class="kw">_</span> =&gt; (),
+                <span class="kw">_ </span>=&gt; (),
             }
         }
     }
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">root</span> = <span class="ident">Fork::new</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>root = Fork::new();
 
-    <span class="kw">let</span> <span class="ident">extras</span> = <span class="ident">parser</span>.<span class="ident">extras</span>.<span class="ident">take</span>();
-    <span class="kw">let</span> <span class="ident">source</span> = <span class="kw">match</span> <span class="ident">parser</span>.<span class="ident">mode</span> {
-        <span class="ident">Mode::Utf8</span> =&gt; <span class="macro">quote!</span>(<span class="ident">str</span>),
-        <span class="ident">Mode::Binary</span> =&gt; <span class="macro">quote!</span>([<span class="ident">u8</span>]),
+    <span class="kw">let </span>extras = parser.extras.take();
+    <span class="kw">let </span>source = <span class="kw">match </span>parser.mode {
+        Mode::Utf8 =&gt; <span class="macro">quote!</span>(str),
+        Mode::Binary =&gt; <span class="macro">quote!</span>([u8]),
     };
 
-    <span class="kw">let</span> <span class="ident">error_def</span> = <span class="kw">match</span> <span class="ident">error</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">error</span>) =&gt; <span class="prelude-val">Some</span>(<span class="macro">quote!</span>(<span class="kw">const</span> <span class="ident">ERROR</span>: <span class="self">Self</span> = #<span class="ident">name</span>::#<span class="ident">error</span>;)),
-        <span class="prelude-val">None</span> =&gt; {
-            <span class="ident">parser</span>.<span class="ident">err</span>(<span class="string">&quot;missing #[error] token variant.&quot;</span>, <span class="ident">Span::call_site</span>());
-            <span class="prelude-val">None</span>
-        }
+    <span class="kw">let </span>error_def = <span class="kw">match </span>error {
+        <span class="prelude-val">Some</span>(error) =&gt; <span class="prelude-val">Some</span>(<span class="macro">quote!</span>(<span class="kw">const </span>ERROR: <span class="self">Self </span>= #name::#error;)),
+        <span class="prelude-val">None </span>=&gt; {
+            parser.err(<span class="string">&quot;missing #[error] token variant.&quot;</span>, Span::call_site());
+            <span class="prelude-val">None
+        </span>}
     };
 
-    <span class="kw">let</span> <span class="ident">generics</span> = <span class="ident">parser</span>.<span class="ident">generics</span>();
-    <span class="kw">let</span> <span class="ident">this</span> = <span class="macro">quote!</span>(#<span class="ident">name</span> #<span class="ident">generics</span>);
+    <span class="kw">let </span>generics = parser.generics();
+    <span class="kw">let </span>this = <span class="macro">quote!</span>(#name #generics);
 
-    <span class="kw">let</span> <span class="ident">impl_logos</span> = |<span class="ident">body</span>| {
+    <span class="kw">let </span>impl_logos = |body| {
         <span class="macro">quote!</span> {
-            <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>&gt; <span class="ident">::logos::Logos</span>&lt;<span class="lifetime">&#39;s</span>&gt; <span class="kw">for</span> #<span class="ident">this</span> {
-                <span class="kw">type</span> <span class="ident">Extras</span> = #<span class="ident">extras</span>;
+            <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>&gt; ::logos::Logos&lt;<span class="lifetime">&#39;s</span>&gt; <span class="kw">for </span>#this {
+                <span class="kw">type </span>Extras = #extras;
 
-                <span class="kw">type</span> <span class="ident">Source</span> = #<span class="ident">source</span>;
+                <span class="kw">type </span>Source = #source;
 
-                #<span class="ident">error_def</span>
+                #error_def
 
-                <span class="kw">fn</span> <span class="ident">lex</span>(<span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">::logos::Lexer</span>&lt;<span class="lifetime">&#39;s</span>, <span class="self">Self</span>&gt;) {
-                    #<span class="ident">body</span>
+                <span class="kw">fn </span>lex(lex: <span class="kw-2">&amp;mut </span>::logos::Lexer&lt;<span class="lifetime">&#39;s</span>, <span class="self">Self</span>&gt;) {
+                    #body
                 }
             }
         }
     };
 
-    <span class="kw">for</span> <span class="ident">id</span> <span class="kw">in</span> <span class="ident">regex_ids</span> {
-        <span class="kw">let</span> <span class="ident">fork</span> = <span class="ident">graph</span>.<span class="ident">fork_off</span>(<span class="ident">id</span>);
+    <span class="kw">for </span>id <span class="kw">in </span>regex_ids {
+        <span class="kw">let </span>fork = graph.fork_off(id);
 
-        <span class="ident">root</span>.<span class="ident">merge</span>(<span class="ident">fork</span>, <span class="kw-2">&amp;mut</span> <span class="ident">graph</span>);
+        root.merge(fork, <span class="kw-2">&amp;mut </span>graph);
     }
-    <span class="kw">for</span> <span class="ident">rope</span> <span class="kw">in</span> <span class="ident">ropes</span> {
-        <span class="ident">root</span>.<span class="ident">merge</span>(<span class="ident">rope</span>.<span class="ident">into_fork</span>(<span class="kw-2">&amp;mut</span> <span class="ident">graph</span>), <span class="kw-2">&amp;mut</span> <span class="ident">graph</span>);
+    <span class="kw">for </span>rope <span class="kw">in </span>ropes {
+        root.merge(rope.into_fork(<span class="kw-2">&amp;mut </span>graph), <span class="kw-2">&amp;mut </span>graph);
     }
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) = <span class="ident">root</span>.<span class="ident">miss</span>.<span class="ident">take</span>() {
-        <span class="kw">let</span> <span class="ident">fork</span> = <span class="ident">graph</span>.<span class="ident">fork_off</span>(<span class="ident">id</span>);
+    <span class="kw">while let </span><span class="prelude-val">Some</span>(id) = root.miss.take() {
+        <span class="kw">let </span>fork = graph.fork_off(id);
 
-        <span class="kw">if</span> <span class="ident">fork</span>.<span class="ident">branches</span>().<span class="ident">next</span>().<span class="ident">is_some</span>() {
-            <span class="ident">root</span>.<span class="ident">merge</span>(<span class="ident">fork</span>, <span class="kw-2">&amp;mut</span> <span class="ident">graph</span>);
-        } <span class="kw">else</span> {
+        <span class="kw">if </span>fork.branches().next().is_some() {
+            root.merge(fork, <span class="kw-2">&amp;mut </span>graph);
+        } <span class="kw">else </span>{
             <span class="kw">break</span>;
         }
     }
 
-    <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">DisambiguationError</span>(<span class="ident">a</span>, <span class="ident">b</span>) <span class="kw">in</span> <span class="ident">graph</span>.<span class="ident">errors</span>() {
-        <span class="kw">let</span> <span class="ident">a</span> = <span class="ident">graph</span>[<span class="ident">a</span>].<span class="ident">unwrap_leaf</span>();
-        <span class="kw">let</span> <span class="ident">b</span> = <span class="ident">graph</span>[<span class="ident">b</span>].<span class="ident">unwrap_leaf</span>();
-        <span class="kw">let</span> <span class="ident">disambiguate</span> = <span class="ident">a</span>.<span class="ident">priority</span> + <span class="number">1</span>;
+    <span class="kw">for </span><span class="kw-2">&amp;</span>DisambiguationError(a, b) <span class="kw">in </span>graph.errors() {
+        <span class="kw">let </span>a = graph[a].unwrap_leaf();
+        <span class="kw">let </span>b = graph[b].unwrap_leaf();
+        <span class="kw">let </span>disambiguate = a.priority + <span class="number">1</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">err</span> = |<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Leaf</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">Leaf</span>| {
-            <span class="ident">parser</span>.<span class="ident">err</span>(
+        <span class="kw">let </span><span class="kw-2">mut </span>err = |a: <span class="kw-2">&amp;</span>Leaf, b: <span class="kw-2">&amp;</span>Leaf| {
+            parser.err(
                 <span class="macro">format!</span>(
                     <span class="string">&quot;\
                     A definition of variant `{0}` can match the same input as another definition of variant `{1}`.\n\
@@ -577,52 +577,52 @@
                     hint: Consider giving one definition a higher priority: \
                     #[regex(..., priority = {2})]\
                     &quot;</span>,
-                    <span class="ident">a</span>.<span class="ident">ident</span>,
-                    <span class="ident">b</span>.<span class="ident">ident</span>,
-                    <span class="ident">disambiguate</span>,
+                    a.ident,
+                    b.ident,
+                    disambiguate,
                 ),
-                <span class="ident">a</span>.<span class="ident">span</span>
+                a.span
             );
         };
 
-        <span class="ident">err</span>(<span class="ident">a</span>, <span class="ident">b</span>);
-        <span class="ident">err</span>(<span class="ident">b</span>, <span class="ident">a</span>);
+        err(a, b);
+        err(b, a);
     }
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">errors</span>) = <span class="ident">parser</span>.<span class="ident">errors</span>.<span class="ident">render</span>() {
-        <span class="kw">return</span> <span class="ident">impl_logos</span>(<span class="ident">errors</span>).<span class="ident">into</span>();
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(errors) = parser.errors.render() {
+        <span class="kw">return </span>impl_logos(errors).into();
     }
 
-    <span class="kw">let</span> <span class="ident">root</span> = <span class="ident">graph</span>.<span class="ident">push</span>(<span class="ident">root</span>);
+    <span class="kw">let </span>root = graph.push(root);
 
-    <span class="ident">graph</span>.<span class="ident">shake</span>(<span class="ident">root</span>);
+    graph.shake(root);
 
-    <span class="comment">// panic!(&quot;{:#?}\n\n{} nodes&quot;, graph, graph.nodes().iter().filter_map(|n| n.as_ref()).count());</span>
+    <span class="comment">// panic!(&quot;{:#?}\n\n{} nodes&quot;, graph, graph.nodes().iter().filter_map(|n| n.as_ref()).count());
 
-    <span class="kw">let</span> <span class="ident">generator</span> = <span class="ident">Generator::new</span>(<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">this</span>, <span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">graph</span>);
+    </span><span class="kw">let </span>generator = Generator::new(name, <span class="kw-2">&amp;</span>this, root, <span class="kw-2">&amp;</span>graph);
 
-    <span class="kw">let</span> <span class="ident">body</span> = <span class="ident">generator</span>.<span class="ident">generate</span>();
-    <span class="kw">let</span> <span class="ident">tokens</span> = <span class="ident">impl_logos</span>(<span class="macro">quote!</span> {
-        <span class="kw">use</span> <span class="ident">::logos::internal</span>::{<span class="ident">LexerInternal</span>, <span class="ident">CallbackResult</span>};
+    <span class="kw">let </span>body = generator.generate();
+    <span class="kw">let </span>tokens = impl_logos(<span class="macro">quote!</span> {
+        <span class="kw">use </span>::logos::internal::{LexerInternal, CallbackResult};
 
-        <span class="kw">type</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>&gt; = <span class="ident">::logos::Lexer</span>&lt;<span class="lifetime">&#39;s</span>, #<span class="ident">this</span>&gt;;
+        <span class="kw">type </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt; = ::logos::Lexer&lt;<span class="lifetime">&#39;s</span>, #this&gt;;
 
-        <span class="kw">fn</span> <span class="ident">_end</span>&lt;<span class="lifetime">&#39;s</span>&gt;(<span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>&gt;) {
-            <span class="ident">lex</span>.<span class="ident">end</span>()
+        <span class="kw">fn </span>_end&lt;<span class="lifetime">&#39;s</span>&gt;(lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) {
+            lex.end()
         }
 
-        <span class="kw">fn</span> <span class="ident">_error</span>&lt;<span class="lifetime">&#39;s</span>&gt;(<span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>&gt;) {
-            <span class="ident">lex</span>.<span class="ident">bump_unchecked</span>(<span class="number">1</span>);
+        <span class="kw">fn </span>_error&lt;<span class="lifetime">&#39;s</span>&gt;(lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) {
+            lex.bump_unchecked(<span class="number">1</span>);
 
-            <span class="ident">lex</span>.<span class="ident">error</span>();
+            lex.error();
         }
 
-        #<span class="ident">body</span>
+        #body
     });
 
-    <span class="comment">// panic!(&quot;{}&quot;, tokens);</span>
+    <span class="comment">// panic!(&quot;{}&quot;, tokens);
 
-    <span class="ident">TokenStream::from</span>(<span class="ident">tokens</span>)
+    </span>TokenStream::from(tokens)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

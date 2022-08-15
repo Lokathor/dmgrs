@@ -483,488 +483,488 @@
 <span id="481">481</span>
 <span id="482">482</span>
 <span id="483">483</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::ops</span>::{<span class="ident">BitAnd</span>, <span class="ident">BitOr</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::ops::{BitAnd, BitOr};
 
-<span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Ident</span>, <span class="ident">TokenStream</span>, <span class="ident">TokenTree</span>};
+<span class="kw">use </span>proc_macro2::{Ident, TokenStream, TokenTree};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::Parser</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::is_punct</span>;
+<span class="kw">use </span><span class="kw">crate</span>::parser::Parser;
+<span class="kw">use </span><span class="kw">crate</span>::util::is_punct;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IgnoreFlags</span> {
-    <span class="ident">bits</span>: <span class="ident">u8</span>,
+<span class="attribute">#[derive(Clone, Copy, PartialEq, Eq)]</span>
+<span class="kw">pub struct </span>IgnoreFlags {
+    bits: u8,
 }
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_upper_case_globals</span>)]</span>
-<span class="kw">impl</span> <span class="ident">IgnoreFlags</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Empty</span>: <span class="self">Self</span> = <span class="ident"><span class="self">Self</span>::new</span>(<span class="number">0x00</span>);
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IgnoreCase</span>: <span class="self">Self</span> = <span class="ident"><span class="self">Self</span>::new</span>(<span class="number">0x01</span>);
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IgnoreAsciiCase</span>: <span class="self">Self</span> = <span class="ident"><span class="self">Self</span>::new</span>(<span class="number">0x02</span>);
+<span class="attribute">#[allow(non_upper_case_globals)]</span>
+<span class="kw">impl </span>IgnoreFlags {
+    <span class="kw">pub const </span>Empty: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="number">0x00</span>);
+    <span class="kw">pub const </span>IgnoreCase: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="number">0x01</span>);
+    <span class="kw">pub const </span>IgnoreAsciiCase: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="number">0x02</span>);
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">bits</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">bits</span> }
+    <span class="attribute">#[inline]</span>
+    <span class="kw">pub const fn </span>new(bits: u8) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ bits }
     }
 
-    <span class="doccomment">/// Enables a variant.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">enable</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">variant</span>: <span class="self">Self</span>) {
-        <span class="self">self</span>.<span class="ident">bits</span> |= <span class="ident">variant</span>.<span class="ident">bits</span>;
+    <span class="doccomment">/// Enables a variant.
+    </span><span class="attribute">#[inline]</span>
+    <span class="kw">pub fn </span>enable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, variant: <span class="self">Self</span>) {
+        <span class="self">self</span>.bits |= variant.bits;
     }
 
-    <span class="doccomment">/// Checks if this `IgnoreFlags` contains *any* of the given variants.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">variants</span>: <span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">bits</span> &amp; <span class="ident">variants</span>.<span class="ident">bits</span> != <span class="number">0</span>
-    }
+    <span class="doccomment">/// Checks if this `IgnoreFlags` contains *any* of the given variants.
+    </span><span class="attribute">#[inline]</span>
+    <span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, variants: <span class="self">Self</span>) -&gt; bool {
+        <span class="self">self</span>.bits &amp; variants.bits != <span class="number">0
+    </span>}
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">bits</span> == <span class="number">0</span>
-    }
+    <span class="attribute">#[inline]</span>
+    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.bits == <span class="number">0
+    </span>}
 
-    <span class="doccomment">/// Parses an identifier an enables it for `self`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Valid inputs are (that produces `true`):</span>
-    <span class="doccomment">/// * `&quot;case&quot;` (incompatible with `&quot;ascii_case&quot;`)</span>
-    <span class="doccomment">/// * `&quot;ascii_case&quot;` (incompatible with `&quot;case&quot;`)</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// An error causes this function to return `false` and emits an error to</span>
-    <span class="doccomment">/// the given `Parser`.</span>
-    <span class="kw">fn</span> <span class="ident">parse_ident</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">ident</span>: <span class="ident">Ident</span>, <span class="ident">parser</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) -&gt; <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="ident">ident</span>.<span class="ident">to_string</span>().<span class="ident">as_str</span>() {
-            <span class="string">&quot;case&quot;</span> =&gt; {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::IgnoreAsciiCase</span>) {
-                    <span class="ident">parser</span>.<span class="ident">err</span>(
+    <span class="doccomment">/// Parses an identifier an enables it for `self`.
+    ///
+    /// Valid inputs are (that produces `true`):
+    /// * `&quot;case&quot;` (incompatible with `&quot;ascii_case&quot;`)
+    /// * `&quot;ascii_case&quot;` (incompatible with `&quot;case&quot;`)
+    ///
+    /// An error causes this function to return `false` and emits an error to
+    /// the given `Parser`.
+    </span><span class="kw">fn </span>parse_ident(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ident: Ident, parser: <span class="kw-2">&amp;mut </span>Parser) -&gt; bool {
+        <span class="kw">match </span>ident.to_string().as_str() {
+            <span class="string">&quot;case&quot; </span>=&gt; {
+                <span class="kw">if </span><span class="self">self</span>.contains(<span class="self">Self</span>::IgnoreAsciiCase) {
+                    parser.err(
                         <span class="string">&quot;\
                         The flag \&quot;case\&quot; cannot be used along with \&quot;ascii_case\&quot;\
                         &quot;</span>,
-                        <span class="ident">ident</span>.<span class="ident">span</span>(),
+                        ident.span(),
                     );
-                    <span class="bool-val">false</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">enable</span>(<span class="ident"><span class="self">Self</span>::IgnoreCase</span>);
-                    <span class="bool-val">true</span>
-                }
+                    <span class="bool-val">false
+                </span>} <span class="kw">else </span>{
+                    <span class="self">self</span>.enable(<span class="self">Self</span>::IgnoreCase);
+                    <span class="bool-val">true
+                </span>}
             }
-            <span class="string">&quot;ascii_case&quot;</span> =&gt; {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contains</span>(<span class="ident"><span class="self">Self</span>::IgnoreCase</span>) {
-                    <span class="ident">parser</span>.<span class="ident">err</span>(
+            <span class="string">&quot;ascii_case&quot; </span>=&gt; {
+                <span class="kw">if </span><span class="self">self</span>.contains(<span class="self">Self</span>::IgnoreCase) {
+                    parser.err(
                         <span class="string">&quot;\
                         The flag \&quot;ascii_case\&quot; cannot be used along with \&quot;case\&quot;\
                         &quot;</span>,
-                        <span class="ident">ident</span>.<span class="ident">span</span>(),
+                        ident.span(),
                     );
-                    <span class="bool-val">false</span>
-                } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">enable</span>(<span class="ident"><span class="self">Self</span>::IgnoreAsciiCase</span>);
-                    <span class="bool-val">true</span>
-                }
+                    <span class="bool-val">false
+                </span>} <span class="kw">else </span>{
+                    <span class="self">self</span>.enable(<span class="self">Self</span>::IgnoreAsciiCase);
+                    <span class="bool-val">true
+                </span>}
             }
-            <span class="ident">unknown</span> =&gt; {
-                <span class="ident">parser</span>.<span class="ident">err</span>(
+            unknown =&gt; {
+                parser.err(
                     <span class="macro">format!</span>(
                         <span class="string">&quot;\
                         Unknown flag: {}\n\
                         \n\
                         Expected one of: case, ascii_case\
                         &quot;</span>,
-                        <span class="ident">unknown</span>
+                        unknown
                     ),
-                    <span class="ident">ident</span>.<span class="ident">span</span>(),
+                    ident.span(),
                 );
-                <span class="bool-val">false</span>
-            }
+                <span class="bool-val">false
+            </span>}
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_group</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">Ident</span>, <span class="ident">tokens</span>: <span class="ident">TokenStream</span>, <span class="ident">parser</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Parser</span>) {
-        <span class="comment">// Little finite state machine to parse &quot;&lt;flag&gt;(,&lt;flag&gt;)*,?&quot;</span>
+    <span class="kw">pub fn </span>parse_group(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: Ident, tokens: TokenStream, parser: <span class="kw-2">&amp;mut </span>Parser) {
+        <span class="comment">// Little finite state machine to parse &quot;&lt;flag&gt;(,&lt;flag&gt;)*,?&quot;
 
-        <span class="comment">// FSM description for future maintenance</span>
-        <span class="comment">// 0: Initial state</span>
-        <span class="comment">//   &lt;flag&gt; -&gt; 1</span>
-        <span class="comment">//        _ -&gt; error</span>
-        <span class="comment">// 1: A flag was found</span>
-        <span class="comment">//        , -&gt; 2</span>
-        <span class="comment">//     None -&gt; done</span>
-        <span class="comment">//        _ -&gt; error</span>
-        <span class="comment">// 2: A comma was found (after a &lt;flag&gt;)</span>
-        <span class="comment">//   &lt;flag&gt; -&gt; 1</span>
-        <span class="comment">//     None -&gt; done</span>
-        <span class="comment">//        _ -&gt; error</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> = <span class="number">0u8</span>;
+        // FSM description for future maintenance
+        // 0: Initial state
+        //   &lt;flag&gt; -&gt; 1
+        //        _ -&gt; error
+        // 1: A flag was found
+        //        , -&gt; 2
+        //     None -&gt; done
+        //        _ -&gt; error
+        // 2: A comma was found (after a &lt;flag&gt;)
+        //   &lt;flag&gt; -&gt; 1
+        //     None -&gt; done
+        //        _ -&gt; error
+        </span><span class="kw">let </span><span class="kw-2">mut </span>state = <span class="number">0u8</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tokens</span> = <span class="ident">tokens</span>.<span class="ident">into_iter</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>tokens = tokens.into_iter();
 
-        <span class="kw">loop</span> {
-            <span class="ident">state</span> = <span class="kw">match</span> <span class="ident">state</span> {
-                <span class="number">0</span> =&gt; <span class="kw">match</span> <span class="ident">tokens</span>.<span class="ident">next</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">TokenTree::Ident</span>(<span class="ident">ident</span>)) =&gt; {
-                        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">parse_ident</span>(<span class="ident">ident</span>, <span class="ident">parser</span>) {
-                            <span class="number">1</span>
-                        } <span class="kw">else</span> {
+        <span class="kw">loop </span>{
+            state = <span class="kw">match </span>state {
+                <span class="number">0 </span>=&gt; <span class="kw">match </span>tokens.next() {
+                    <span class="prelude-val">Some</span>(TokenTree::Ident(ident)) =&gt; {
+                        <span class="kw">if </span><span class="self">self</span>.parse_ident(ident, parser) {
+                            <span class="number">1
+                        </span>} <span class="kw">else </span>{
                             <span class="kw">return</span>;
                         }
                     }
-                    <span class="kw">_</span> =&gt; {
-                        <span class="ident">parser</span>.<span class="ident">err</span>(
+                    <span class="kw">_ </span>=&gt; {
+                        parser.err(
                             <span class="string">&quot;\
                             Invalid ignore flag\n\
                             \n\
                             Expected one of: case, ascii_case\
                             &quot;</span>,
-                            <span class="ident">name</span>.<span class="ident">span</span>(),
+                            name.span(),
                         );
                         <span class="kw">return</span>;
                     }
                 },
-                <span class="number">1</span> =&gt; <span class="kw">match</span> <span class="ident">tokens</span>.<span class="ident">next</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">tt</span>) <span class="kw">if</span> <span class="ident">is_punct</span>(<span class="kw-2">&amp;</span><span class="ident">tt</span>, <span class="string">&#39;,&#39;</span>) =&gt; <span class="number">2</span>,
-                    <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">unexpected_tt</span>) =&gt; {
-                        <span class="ident">parser</span>.<span class="ident">err</span>(
+                <span class="number">1 </span>=&gt; <span class="kw">match </span>tokens.next() {
+                    <span class="prelude-val">Some</span>(tt) <span class="kw">if </span>is_punct(<span class="kw-2">&amp;</span>tt, <span class="string">&#39;,&#39;</span>) =&gt; <span class="number">2</span>,
+                    <span class="prelude-val">None </span>=&gt; <span class="kw">return</span>,
+                    <span class="prelude-val">Some</span>(unexpected_tt) =&gt; {
+                        parser.err(
                             <span class="macro">format!</span>(
                                 <span class="string">&quot;\
                                 Unexpected token: {:?}\
                                 &quot;</span>,
-                                <span class="ident">unexpected_tt</span>.<span class="ident">to_string</span>(),
+                                unexpected_tt.to_string(),
                             ),
-                            <span class="ident">unexpected_tt</span>.<span class="ident">span</span>(),
+                            unexpected_tt.span(),
                         );
                         <span class="kw">return</span>;
                     }
                 },
-                <span class="number">2</span> =&gt; <span class="kw">match</span> <span class="ident">tokens</span>.<span class="ident">next</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">TokenTree::Ident</span>(<span class="ident">ident</span>)) =&gt; {
-                        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">parse_ident</span>(<span class="ident">ident</span>, <span class="ident">parser</span>) {
-                            <span class="number">1</span>
-                        } <span class="kw">else</span> {
+                <span class="number">2 </span>=&gt; <span class="kw">match </span>tokens.next() {
+                    <span class="prelude-val">Some</span>(TokenTree::Ident(ident)) =&gt; {
+                        <span class="kw">if </span><span class="self">self</span>.parse_ident(ident, parser) {
+                            <span class="number">1
+                        </span>} <span class="kw">else </span>{
                             <span class="kw">return</span>;
                         }
                     }
-                    <span class="prelude-val">None</span> =&gt; <span class="kw">return</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">unexpected_tt</span>) =&gt; {
-                        <span class="ident">parser</span>.<span class="ident">err</span>(
+                    <span class="prelude-val">None </span>=&gt; <span class="kw">return</span>,
+                    <span class="prelude-val">Some</span>(unexpected_tt) =&gt; {
+                        parser.err(
                             <span class="macro">format!</span>(
                                 <span class="string">&quot;\
                                 Unexpected token: {:?}\
                                 &quot;</span>,
-                                <span class="ident">unexpected_tt</span>.<span class="ident">to_string</span>(),
+                                unexpected_tt.to_string(),
                             ),
-                            <span class="ident">unexpected_tt</span>.<span class="ident">span</span>(),
+                            unexpected_tt.span(),
                         );
                         <span class="kw">return</span>;
                     }
                 },
-                <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Internal Error: invalid state ({})&quot;</span>, <span class="ident">state</span>),
+                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Internal Error: invalid state ({})&quot;</span>, state),
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">BitOr</span> <span class="kw">for</span> <span class="ident">IgnoreFlags</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="self">Self</span>;
+<span class="kw">impl </span>BitOr <span class="kw">for </span>IgnoreFlags {
+    <span class="kw">type </span>Output = <span class="self">Self</span>;
 
-    <span class="kw">fn</span> <span class="ident">bitor</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="self">self</span>.<span class="ident">bits</span> | <span class="ident">other</span>.<span class="ident">bits</span>)
+    <span class="kw">fn </span>bitor(<span class="self">self</span>, other: <span class="self">Self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(<span class="self">self</span>.bits | other.bits)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">BitAnd</span> <span class="kw">for</span> <span class="ident">IgnoreFlags</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="self">Self</span>;
+<span class="kw">impl </span>BitAnd <span class="kw">for </span>IgnoreFlags {
+    <span class="kw">type </span>Output = <span class="self">Self</span>;
 
-    <span class="kw">fn</span> <span class="ident">bitand</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>(<span class="self">self</span>.<span class="ident">bits</span> &amp; <span class="ident">other</span>.<span class="ident">bits</span>)
+    <span class="kw">fn </span>bitand(<span class="self">self</span>, other: <span class="self">Self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::new(<span class="self">self</span>.bits &amp; other.bits)
     }
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ascii_case</span> {
-    <span class="kw">use</span> <span class="ident">regex_syntax::hir</span>;
+<span class="kw">pub mod </span>ascii_case {
+    <span class="kw">use </span>regex_syntax::hir;
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mir::Mir</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::parser::Literal</span>;
+    <span class="kw">use </span><span class="kw">crate</span>::mir::Mir;
+    <span class="kw">use </span><span class="kw">crate</span>::parser::Literal;
 
-    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MakeAsciiCaseInsensitive</span> {
-        <span class="doccomment">/// Creates a equivalent regular expression which ignore the letter casing</span>
-        <span class="doccomment">/// of ascii characters.</span>
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span>;
+    <span class="kw">pub trait </span>MakeAsciiCaseInsensitive {
+        <span class="doccomment">/// Creates a equivalent regular expression which ignore the letter casing
+        /// of ascii characters.
+        </span><span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir;
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">u8</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">if</span> <span class="string">b&#39;a&#39;</span> &lt;= <span class="self">self</span> &amp;&amp; <span class="self">self</span> &lt;= <span class="string">b&#39;z&#39;</span> {
-                <span class="ident">Mir::Alternation</span>(<span class="macro">vec!</span>[
-                    <span class="ident">Mir::Literal</span>(<span class="ident">hir::Literal::Byte</span>(<span class="self">self</span> - <span class="number">32</span>)),
-                    <span class="ident">Mir::Literal</span>(<span class="ident">hir::Literal::Byte</span>(<span class="self">self</span>)),
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>u8 {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir {
+            <span class="kw">if </span><span class="string">b&#39;a&#39; </span>&lt;= <span class="self">self </span>&amp;&amp; <span class="self">self </span>&lt;= <span class="string">b&#39;z&#39; </span>{
+                Mir::Alternation(<span class="macro">vec!</span>[
+                    Mir::Literal(hir::Literal::Byte(<span class="self">self </span>- <span class="number">32</span>)),
+                    Mir::Literal(hir::Literal::Byte(<span class="self">self</span>)),
                 ])
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="string">b&#39;A&#39;</span> &lt;= <span class="self">self</span> &amp;&amp; <span class="self">self</span> &lt;= <span class="string">b&#39;Z&#39;</span> {
-                <span class="ident">Mir::Alternation</span>(<span class="macro">vec!</span>[
-                    <span class="ident">Mir::Literal</span>(<span class="ident">hir::Literal::Byte</span>(<span class="self">self</span>)),
-                    <span class="ident">Mir::Literal</span>(<span class="ident">hir::Literal::Byte</span>(<span class="self">self</span> + <span class="number">32</span>)),
+            } <span class="kw">else if </span><span class="string">b&#39;A&#39; </span>&lt;= <span class="self">self </span>&amp;&amp; <span class="self">self </span>&lt;= <span class="string">b&#39;Z&#39; </span>{
+                Mir::Alternation(<span class="macro">vec!</span>[
+                    Mir::Literal(hir::Literal::Byte(<span class="self">self</span>)),
+                    Mir::Literal(hir::Literal::Byte(<span class="self">self </span>+ <span class="number">32</span>)),
                 ])
-            } <span class="kw">else</span> {
-                <span class="ident">Mir::Literal</span>(<span class="ident">hir::Literal::Byte</span>(<span class="self">self</span>))
+            } <span class="kw">else </span>{
+                Mir::Literal(hir::Literal::Byte(<span class="self">self</span>))
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">char</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_ascii</span>() {
-                (<span class="self">self</span> <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">make_ascii_case_insensitive</span>()
-            } <span class="kw">else</span> {
-                <span class="ident">Mir::Literal</span>(<span class="ident">hir::Literal::Unicode</span>(<span class="self">self</span>))
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>char {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir {
+            <span class="kw">if </span><span class="self">self</span>.is_ascii() {
+                (<span class="self">self </span><span class="kw">as </span>u8).make_ascii_case_insensitive()
+            } <span class="kw">else </span>{
+                Mir::Literal(hir::Literal::Unicode(<span class="self">self</span>))
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">hir::Literal</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">hir::Literal::Byte</span>(<span class="ident">b</span>) =&gt; <span class="ident">b</span>.<span class="ident">make_ascii_case_insensitive</span>(),
-                <span class="ident">hir::Literal::Unicode</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>.<span class="ident">make_ascii_case_insensitive</span>(),
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>hir::Literal {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir {
+            <span class="kw">match </span><span class="self">self </span>{
+                hir::Literal::Byte(b) =&gt; b.make_ascii_case_insensitive(),
+                hir::Literal::Unicode(c) =&gt; c.make_ascii_case_insensitive(),
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">hir::ClassBytes</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="self">self</span>.<span class="ident">case_fold_simple</span>();
-            <span class="ident">Mir::Class</span>(<span class="ident">hir::Class::Bytes</span>(<span class="self">self</span>))
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>hir::ClassBytes {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; Mir {
+            <span class="self">self</span>.case_fold_simple();
+            Mir::Class(hir::Class::Bytes(<span class="self">self</span>))
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">hir::ClassUnicode</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">use</span> <span class="ident">std::cmp</span>;
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>hir::ClassUnicode {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; Mir {
+            <span class="kw">use </span>std::cmp;
 
-            <span class="comment">// Manuall implementation to only perform the case folding on ascii characters.</span>
+            <span class="comment">// Manuall implementation to only perform the case folding on ascii characters.
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ranges</span> = <span class="ident">Vec::new</span>();
+            </span><span class="kw">let </span><span class="kw-2">mut </span>ranges = Vec::new();
 
-            <span class="kw">for</span> <span class="ident">range</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">ranges</span>() {
-                <span class="attribute">#[<span class="ident">inline</span>]</span>
-                <span class="kw">fn</span> <span class="ident">overlaps</span>(<span class="ident">st1</span>: <span class="ident">u8</span>, <span class="ident">end1</span>: <span class="ident">u8</span>, <span class="ident">st2</span>: <span class="ident">u8</span>, <span class="ident">end2</span>: <span class="ident">u8</span>) -&gt; <span class="ident">bool</span> {
-                    (<span class="ident">st2</span> &lt;= <span class="ident">st1</span> &amp;&amp; <span class="ident">st1</span> &lt;= <span class="ident">end2</span>) || (<span class="ident">st1</span> &lt;= <span class="ident">st2</span> &amp;&amp; <span class="ident">st2</span> &lt;= <span class="ident">end1</span>)
+            <span class="kw">for </span>range <span class="kw">in </span><span class="self">self</span>.ranges() {
+                <span class="attribute">#[inline]</span>
+                <span class="kw">fn </span>overlaps(st1: u8, end1: u8, st2: u8, end2: u8) -&gt; bool {
+                    (st2 &lt;= st1 &amp;&amp; st1 &lt;= end2) || (st1 &lt;= st2 &amp;&amp; st2 &lt;= end1)
                 }
 
-                <span class="attribute">#[<span class="ident">inline</span>]</span>
-                <span class="kw">fn</span> <span class="ident">make_ascii</span>(<span class="ident">c</span>: <span class="ident">char</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u8</span>&gt; {
-                    <span class="kw">if</span> <span class="ident">c</span>.<span class="ident">is_ascii</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u8</span>);
-                    } <span class="kw">else</span> {
-                        <span class="prelude-val">None</span>
-                    }
+                <span class="attribute">#[inline]</span>
+                <span class="kw">fn </span>make_ascii(c: char) -&gt; <span class="prelude-ty">Option</span>&lt;u8&gt; {
+                    <span class="kw">if </span>c.is_ascii() {
+                        <span class="kw">return </span><span class="prelude-val">Some</span>(c <span class="kw">as </span>u8);
+                    } <span class="kw">else </span>{
+                        <span class="prelude-val">None
+                    </span>}
                 }
 
-                <span class="kw">match</span> (<span class="ident">make_ascii</span>(<span class="ident">range</span>.<span class="ident">start</span>()), <span class="ident">make_ascii</span>(<span class="ident">range</span>.<span class="ident">end</span>())) {
-                    (<span class="prelude-val">Some</span>(<span class="ident">start</span>), <span class="prelude-val">Some</span>(<span class="ident">end</span>)) =&gt; {
-                        <span class="kw">if</span> <span class="ident">overlaps</span>(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;z&#39;</span>, <span class="ident">start</span>, <span class="ident">end</span>) {
-                            <span class="kw">let</span> <span class="ident">lower</span> = <span class="ident">cmp::max</span>(<span class="ident">start</span>, <span class="string">b&#39;a&#39;</span>);
-                            <span class="kw">let</span> <span class="ident">upper</span> = <span class="ident">cmp::min</span>(<span class="ident">end</span>, <span class="string">b&#39;z&#39;</span>);
-                            <span class="ident">ranges</span>.<span class="ident">push</span>(<span class="ident">hir::ClassUnicodeRange::new</span>(
-                                (<span class="ident">lower</span> - <span class="number">32</span>) <span class="kw">as</span> <span class="ident">char</span>,
-                                (<span class="ident">upper</span> - <span class="number">32</span>) <span class="kw">as</span> <span class="ident">char</span>,
+                <span class="kw">match </span>(make_ascii(range.start()), make_ascii(range.end())) {
+                    (<span class="prelude-val">Some</span>(start), <span class="prelude-val">Some</span>(end)) =&gt; {
+                        <span class="kw">if </span>overlaps(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;z&#39;</span>, start, end) {
+                            <span class="kw">let </span>lower = cmp::max(start, <span class="string">b&#39;a&#39;</span>);
+                            <span class="kw">let </span>upper = cmp::min(end, <span class="string">b&#39;z&#39;</span>);
+                            ranges.push(hir::ClassUnicodeRange::new(
+                                (lower - <span class="number">32</span>) <span class="kw">as </span>char,
+                                (upper - <span class="number">32</span>) <span class="kw">as </span>char,
                             ))
                         }
 
-                        <span class="kw">if</span> <span class="ident">overlaps</span>(<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;Z&#39;</span>, <span class="ident">start</span>, <span class="ident">end</span>) {
-                            <span class="kw">let</span> <span class="ident">lower</span> = <span class="ident">cmp::max</span>(<span class="ident">start</span>, <span class="string">b&#39;A&#39;</span>);
-                            <span class="kw">let</span> <span class="ident">upper</span> = <span class="ident">cmp::min</span>(<span class="ident">end</span>, <span class="string">b&#39;Z&#39;</span>);
-                            <span class="ident">ranges</span>.<span class="ident">push</span>(<span class="ident">hir::ClassUnicodeRange::new</span>(
-                                (<span class="ident">lower</span> + <span class="number">32</span>) <span class="kw">as</span> <span class="ident">char</span>,
-                                (<span class="ident">upper</span> + <span class="number">32</span>) <span class="kw">as</span> <span class="ident">char</span>,
+                        <span class="kw">if </span>overlaps(<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;Z&#39;</span>, start, end) {
+                            <span class="kw">let </span>lower = cmp::max(start, <span class="string">b&#39;A&#39;</span>);
+                            <span class="kw">let </span>upper = cmp::min(end, <span class="string">b&#39;Z&#39;</span>);
+                            ranges.push(hir::ClassUnicodeRange::new(
+                                (lower + <span class="number">32</span>) <span class="kw">as </span>char,
+                                (upper + <span class="number">32</span>) <span class="kw">as </span>char,
                             ))
                         }
                     }
-                    (<span class="prelude-val">Some</span>(<span class="ident">start</span>), <span class="prelude-val">None</span>) =&gt; {
-                        <span class="kw">if</span> <span class="ident">overlaps</span>(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;z&#39;</span>, <span class="ident">start</span>, <span class="string">b&#39;z&#39;</span>) {
-                            <span class="kw">let</span> <span class="ident">lower</span> = <span class="ident">cmp::max</span>(<span class="ident">start</span>, <span class="string">b&#39;a&#39;</span>);
-                            <span class="ident">ranges</span>.<span class="ident">push</span>(<span class="ident">hir::ClassUnicodeRange::new</span>((<span class="ident">lower</span> - <span class="number">32</span>) <span class="kw">as</span> <span class="ident">char</span>, <span class="string">&#39;Z&#39;</span>))
+                    (<span class="prelude-val">Some</span>(start), <span class="prelude-val">None</span>) =&gt; {
+                        <span class="kw">if </span>overlaps(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;z&#39;</span>, start, <span class="string">b&#39;z&#39;</span>) {
+                            <span class="kw">let </span>lower = cmp::max(start, <span class="string">b&#39;a&#39;</span>);
+                            ranges.push(hir::ClassUnicodeRange::new((lower - <span class="number">32</span>) <span class="kw">as </span>char, <span class="string">&#39;Z&#39;</span>))
                         }
 
-                        <span class="kw">if</span> <span class="ident">overlaps</span>(<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;Z&#39;</span>, <span class="ident">start</span>, <span class="string">b&#39;Z&#39;</span>) {
-                            <span class="kw">let</span> <span class="ident">lower</span> = <span class="ident">cmp::max</span>(<span class="ident">start</span>, <span class="string">b&#39;A&#39;</span>);
-                            <span class="ident">ranges</span>.<span class="ident">push</span>(<span class="ident">hir::ClassUnicodeRange::new</span>((<span class="ident">lower</span> + <span class="number">32</span>) <span class="kw">as</span> <span class="ident">char</span>, <span class="string">&#39;Z&#39;</span>))
+                        <span class="kw">if </span>overlaps(<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;Z&#39;</span>, start, <span class="string">b&#39;Z&#39;</span>) {
+                            <span class="kw">let </span>lower = cmp::max(start, <span class="string">b&#39;A&#39;</span>);
+                            ranges.push(hir::ClassUnicodeRange::new((lower + <span class="number">32</span>) <span class="kw">as </span>char, <span class="string">&#39;Z&#39;</span>))
                         }
                     }
-                    <span class="kw">_</span> =&gt; (),
+                    <span class="kw">_ </span>=&gt; (),
                 }
             }
 
-            <span class="self">self</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">hir::ClassUnicode::new</span>(<span class="ident">ranges</span>));
+            <span class="self">self</span>.union(<span class="kw-2">&amp;</span>hir::ClassUnicode::new(ranges));
 
-            <span class="ident">Mir::Class</span>(<span class="ident">hir::Class::Unicode</span>(<span class="self">self</span>))
+            Mir::Class(hir::Class::Unicode(<span class="self">self</span>))
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">hir::Class</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">hir::Class::Bytes</span>(<span class="ident">b</span>) =&gt; <span class="ident">b</span>.<span class="ident">make_ascii_case_insensitive</span>(),
-                <span class="ident">hir::Class::Unicode</span>(<span class="ident">u</span>) =&gt; <span class="ident">u</span>.<span class="ident">make_ascii_case_insensitive</span>(),
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>hir::Class {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir {
+            <span class="kw">match </span><span class="self">self </span>{
+                hir::Class::Bytes(b) =&gt; b.make_ascii_case_insensitive(),
+                hir::Class::Unicode(u) =&gt; u.make_ascii_case_insensitive(),
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">Literal</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">Literal::Bytes</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">Mir::Concat</span>(
-                    <span class="ident">bytes</span>
-                        .<span class="ident">value</span>()
-                        .<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(|<span class="ident">b</span>| <span class="ident">b</span>.<span class="ident">make_ascii_case_insensitive</span>())
-                        .<span class="ident">collect</span>(),
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span><span class="kw-2">&amp;</span>Literal {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir {
+            <span class="kw">match </span><span class="self">self </span>{
+                Literal::Bytes(bytes) =&gt; Mir::Concat(
+                    bytes
+                        .value()
+                        .into_iter()
+                        .map(|b| b.make_ascii_case_insensitive())
+                        .collect(),
                 ),
-                <span class="ident">Literal::Utf8</span>(<span class="ident">s</span>) =&gt; <span class="ident">Mir::Concat</span>(
-                    <span class="ident">s</span>.<span class="ident">value</span>()
-                        .<span class="ident">chars</span>()
-                        .<span class="ident">map</span>(|<span class="ident">b</span>| <span class="ident">b</span>.<span class="ident">make_ascii_case_insensitive</span>())
-                        .<span class="ident">collect</span>(),
+                Literal::Utf8(s) =&gt; Mir::Concat(
+                    s.value()
+                        .chars()
+                        .map(|b| b.make_ascii_case_insensitive())
+                        .collect(),
                 ),
             }
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">MakeAsciiCaseInsensitive</span> <span class="kw">for</span> <span class="ident">Mir</span> {
-        <span class="kw">fn</span> <span class="ident">make_ascii_case_insensitive</span>(<span class="self">self</span>) -&gt; <span class="ident">Mir</span> {
-            <span class="kw">match</span> <span class="self">self</span> {
-                <span class="ident">Mir::Empty</span> =&gt; <span class="ident">Mir::Empty</span>,
-                <span class="ident">Mir::Loop</span>(<span class="ident">l</span>) =&gt; <span class="ident">Mir::Loop</span>(<span class="ident">Box::new</span>(<span class="ident">l</span>.<span class="ident">make_ascii_case_insensitive</span>())),
-                <span class="ident">Mir::Maybe</span>(<span class="ident">m</span>) =&gt; <span class="ident">Mir::Maybe</span>(<span class="ident">Box::new</span>(<span class="ident">m</span>.<span class="ident">make_ascii_case_insensitive</span>())),
-                <span class="ident">Mir::Concat</span>(<span class="ident">c</span>) =&gt; <span class="ident">Mir::Concat</span>(
-                    <span class="ident">c</span>.<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(|<span class="ident">m</span>| <span class="ident">m</span>.<span class="ident">make_ascii_case_insensitive</span>())
-                        .<span class="ident">collect</span>(),
+    <span class="kw">impl </span>MakeAsciiCaseInsensitive <span class="kw">for </span>Mir {
+        <span class="kw">fn </span>make_ascii_case_insensitive(<span class="self">self</span>) -&gt; Mir {
+            <span class="kw">match </span><span class="self">self </span>{
+                Mir::Empty =&gt; Mir::Empty,
+                Mir::Loop(l) =&gt; Mir::Loop(Box::new(l.make_ascii_case_insensitive())),
+                Mir::Maybe(m) =&gt; Mir::Maybe(Box::new(m.make_ascii_case_insensitive())),
+                Mir::Concat(c) =&gt; Mir::Concat(
+                    c.into_iter()
+                        .map(|m| m.make_ascii_case_insensitive())
+                        .collect(),
                 ),
-                <span class="ident">Mir::Alternation</span>(<span class="ident">a</span>) =&gt; <span class="ident">Mir::Alternation</span>(
-                    <span class="ident">a</span>.<span class="ident">into_iter</span>()
-                        .<span class="ident">map</span>(|<span class="ident">m</span>| <span class="ident">m</span>.<span class="ident">make_ascii_case_insensitive</span>())
-                        .<span class="ident">collect</span>(),
+                Mir::Alternation(a) =&gt; Mir::Alternation(
+                    a.into_iter()
+                        .map(|m| m.make_ascii_case_insensitive())
+                        .collect(),
                 ),
-                <span class="ident">Mir::Class</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>.<span class="ident">make_ascii_case_insensitive</span>(),
-                <span class="ident">Mir::Literal</span>(<span class="ident">l</span>) =&gt; <span class="ident">l</span>.<span class="ident">make_ascii_case_insensitive</span>(),
+                Mir::Class(c) =&gt; c.make_ascii_case_insensitive(),
+                Mir::Literal(l) =&gt; l.make_ascii_case_insensitive(),
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-    <span class="kw">mod</span> <span class="ident">tests</span> {
-        <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::MakeAsciiCaseInsensitive</span>;
-        <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mir</span>::{<span class="ident">Class</span>, <span class="ident">Mir</span>};
-        <span class="kw">use</span> <span class="ident">regex_syntax::hir</span>::{<span class="ident">ClassUnicode</span>, <span class="ident">ClassUnicodeRange</span>};
+    <span class="attribute">#[cfg(test)]</span>
+    <span class="kw">mod </span>tests {
+        <span class="kw">use </span><span class="kw">super</span>::MakeAsciiCaseInsensitive;
+        <span class="kw">use </span><span class="kw">crate</span>::mir::{Class, Mir};
+        <span class="kw">use </span>regex_syntax::hir::{ClassUnicode, ClassUnicodeRange};
 
-        <span class="kw">fn</span> <span class="ident">assert_range</span>(<span class="ident">in_s</span>: <span class="ident">char</span>, <span class="ident">in_e</span>: <span class="ident">char</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span>[(<span class="ident">char</span>, <span class="ident">char</span>)]) {
-            <span class="kw">let</span> <span class="ident">range</span> = <span class="ident">ClassUnicodeRange::new</span>(<span class="ident">in_s</span>, <span class="ident">in_e</span>);
-            <span class="kw">let</span> <span class="ident">class</span> = <span class="ident">ClassUnicode::new</span>(<span class="macro">vec!</span>[<span class="ident">range</span>]);
+        <span class="kw">fn </span>assert_range(in_s: char, in_e: char, expected: <span class="kw-2">&amp;</span>[(char, char)]) {
+            <span class="kw">let </span>range = ClassUnicodeRange::new(in_s, in_e);
+            <span class="kw">let </span>class = ClassUnicode::new(<span class="macro">vec!</span>[range]);
 
-            <span class="kw">let</span> <span class="ident">expected</span> =
-                <span class="ident">ClassUnicode::new</span>(<span class="ident">expected</span>.<span class="ident">iter</span>().<span class="ident">map</span>(|<span class="kw-2">&amp;</span>(<span class="ident">a</span>, <span class="ident">b</span>)| <span class="ident">ClassUnicodeRange::new</span>(<span class="ident">a</span>, <span class="ident">b</span>)));
+            <span class="kw">let </span>expected =
+                ClassUnicode::new(expected.iter().map(|<span class="kw-2">&amp;</span>(a, b)| ClassUnicodeRange::new(a, b)));
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Mir::Class</span>(<span class="ident">Class::Unicode</span>(<span class="ident">result</span>)) = <span class="ident">class</span>.<span class="ident">make_ascii_case_insensitive</span>() {
-                <span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
-            } <span class="kw">else</span> {
+            <span class="kw">if let </span>Mir::Class(Class::Unicode(result)) = class.make_ascii_case_insensitive() {
+                <span class="macro">assert_eq!</span>(result, expected);
+            } <span class="kw">else </span>{
                 <span class="macro">panic!</span>(<span class="string">&quot;Not a unicode class&quot;</span>);
             };
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">no_letters_left</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39; &#39;</span>, <span class="string">&#39;+&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39; &#39;</span>, <span class="string">&#39;+&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>no_letters_left() {
+            assert_range(<span class="string">&#39; &#39;</span>, <span class="string">&#39;+&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39; &#39;</span>, <span class="string">&#39;+&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">no_letters_right</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;{&#39;</span>, <span class="string">&#39;~&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;{&#39;</span>, <span class="string">&#39;~&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>no_letters_right() {
+            assert_range(<span class="string">&#39;{&#39;</span>, <span class="string">&#39;~&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;{&#39;</span>, <span class="string">&#39;~&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">no_letters_middle</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;`&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;`&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>no_letters_middle() {
+            assert_range(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;`&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;`&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">lowercase_left_edge</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>lowercase_left_edge() {
+            assert_range(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">lowercase_right_edge</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>lowercase_right_edge() {
+            assert_range(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">lowercase_total</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>lowercase_total() {
+            assert_range(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">uppercase_left_edge</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>uppercase_left_edge() {
+            assert_range(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">uppercase_right_edge</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>uppercase_right_edge() {
+            assert_range(<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">uppercase_total</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>uppercase_total() {
+            assert_range(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">lowercase_cross_left</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;h&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;h&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;H&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>lowercase_cross_left() {
+            assert_range(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;h&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;h&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;H&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">lowercase_cross_right</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;d&#39;</span>, <span class="string">&#39;}&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;d&#39;</span>, <span class="string">&#39;}&#39;</span>), (<span class="string">&#39;D&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>lowercase_cross_right() {
+            assert_range(<span class="string">&#39;d&#39;</span>, <span class="string">&#39;}&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;d&#39;</span>, <span class="string">&#39;}&#39;</span>), (<span class="string">&#39;D&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">uppercase_cross_left</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;;&#39;</span>, <span class="string">&#39;H&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;;&#39;</span>, <span class="string">&#39;H&#39;</span>), (<span class="string">&#39;a&#39;</span>, <span class="string">&#39;h&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>uppercase_cross_left() {
+            assert_range(<span class="string">&#39;;&#39;</span>, <span class="string">&#39;H&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;;&#39;</span>, <span class="string">&#39;H&#39;</span>), (<span class="string">&#39;a&#39;</span>, <span class="string">&#39;h&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">uppercase_cross_right</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;T&#39;</span>, <span class="string">&#39;]&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;t&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;T&#39;</span>, <span class="string">&#39;]&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>uppercase_cross_right() {
+            assert_range(<span class="string">&#39;T&#39;</span>, <span class="string">&#39;]&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;t&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;T&#39;</span>, <span class="string">&#39;]&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">cross_both</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;X&#39;</span>, <span class="string">&#39;c&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;X&#39;</span>, <span class="string">&#39;c&#39;</span>), (<span class="string">&#39;x&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;C&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>cross_both() {
+            assert_range(<span class="string">&#39;X&#39;</span>, <span class="string">&#39;c&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;X&#39;</span>, <span class="string">&#39;c&#39;</span>), (<span class="string">&#39;x&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;C&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">all_letters</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;+&#39;</span>, <span class="string">&#39;|&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;+&#39;</span>, <span class="string">&#39;|&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>all_letters() {
+            assert_range(<span class="string">&#39;+&#39;</span>, <span class="string">&#39;|&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;+&#39;</span>, <span class="string">&#39;|&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">oob_all_letters</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;#&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;#&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>oob_all_letters() {
+            assert_range(<span class="string">&#39;#&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;#&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">oob_from_uppercase</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;Q&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>oob_from_uppercase() {
+            assert_range(<span class="string">&#39;Q&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">oob_from_lowercase</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;q&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;q&#39;</span>, <span class="string">&#39;é&#39;</span>), (<span class="string">&#39;Q&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>oob_from_lowercase() {
+            assert_range(<span class="string">&#39;q&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;q&#39;</span>, <span class="string">&#39;é&#39;</span>), (<span class="string">&#39;Q&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[<span class="ident">test</span>]</span>
-        <span class="kw">fn</span> <span class="ident">oob_no_letters</span>() {
-            <span class="ident">assert_range</span>(<span class="string">&#39;|&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;|&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
+        <span class="attribute">#[test]</span>
+        <span class="kw">fn </span>oob_no_letters() {
+            assert_range(<span class="string">&#39;|&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;|&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

@@ -15,35 +15,35 @@ behaviour of <code>Ident::new</code>.</p>
 A span must be provided explicitly which governs the name resolution
 behavior of the resulting identifier.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Ident</span>, <span class="ident">Span</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>proc_macro2::{Ident, Span};
 
-<span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="kw">let</span> <span class="ident">call_ident</span> = <span class="ident">Ident::new</span>(<span class="string">&quot;calligraphy&quot;</span>, <span class="ident">Span::call_site</span>());
+<span class="kw">fn </span>main() {
+    <span class="kw">let </span>call_ident = Ident::new(<span class="string">&quot;calligraphy&quot;</span>, Span::call_site());
 
-    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">call_ident</span>);
+    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, call_ident);
 }</code></pre></div>
 <p>An ident can be interpolated into a token stream using the <code>quote!</code> macro.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Ident</span>, <span class="ident">Span</span>};
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>proc_macro2::{Ident, Span};
+<span class="kw">use </span>quote::quote;
 
-<span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="kw">let</span> <span class="ident">ident</span> = <span class="ident">Ident::new</span>(<span class="string">&quot;demo&quot;</span>, <span class="ident">Span::call_site</span>());
+<span class="kw">fn </span>main() {
+    <span class="kw">let </span>ident = Ident::new(<span class="string">&quot;demo&quot;</span>, Span::call_site());
 
-    <span class="comment">// Create a variable binding whose name is this ident.</span>
-    <span class="kw">let</span> <span class="ident">expanded</span> = <span class="macro">quote!</span> { <span class="kw">let</span> #<span class="ident">ident</span> = <span class="number">10</span>; };
+    <span class="comment">// Create a variable binding whose name is this ident.
+    </span><span class="kw">let </span>expanded = <span class="macro">quote!</span> { <span class="kw">let </span>#ident = <span class="number">10</span>; };
 
-    <span class="comment">// Create a variable binding with a slightly different name.</span>
-    <span class="kw">let</span> <span class="ident">temp_ident</span> = <span class="ident">Ident::new</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;new_{}&quot;</span>, <span class="ident">ident</span>), <span class="ident">Span::call_site</span>());
-    <span class="kw">let</span> <span class="ident">expanded</span> = <span class="macro">quote!</span> { <span class="kw">let</span> #<span class="ident">temp_ident</span> = <span class="number">10</span>; };
+    <span class="comment">// Create a variable binding with a slightly different name.
+    </span><span class="kw">let </span>temp_ident = Ident::new(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;new_{}&quot;</span>, ident), Span::call_site());
+    <span class="kw">let </span>expanded = <span class="macro">quote!</span> { <span class="kw">let </span>#temp_ident = <span class="number">10</span>; };
 }</code></pre></div>
 <p>A string representation of the ident is available through the <code>to_string()</code>
 method.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Examine the ident as a string.</span>
-<span class="kw">let</span> <span class="ident">ident_string</span> = <span class="ident">ident</span>.<span class="ident">to_string</span>();
-<span class="kw">if</span> <span class="ident">ident_string</span>.<span class="ident">len</span>() &gt; <span class="number">60</span> {
-    <span class="macro">println!</span>(<span class="string">&quot;Very long identifier: {}&quot;</span>, <span class="ident">ident_string</span>)
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Examine the ident as a string.
+</span><span class="kw">let </span>ident_string = ident.to_string();
+<span class="kw">if </span>ident_string.len() &gt; <span class="number">60 </span>{
+    <span class="macro">println!</span>(<span class="string">&quot;Very long identifier: {}&quot;</span>, ident_string)
 }</code></pre></div>
 </div></details><h2 id="implementations" class="small-section-header">Implementations<a href="#implementations" class="anchor"></a></h2><div id="implementations-list"><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl-Ident" class="impl has-srclink"><span class="rightside"><a class="srclink" href="../src/proc_macro2/lib.rs.html#913-979">source</a></span><a href="#impl-Ident" class="anchor"></a><h3 class="code-header in-band">impl <a class="struct" href="struct.Ident.html" title="struct proc_macro2::Ident">Ident</a></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.new" class="method has-srclink"><span class="rightside"><a class="srclink" href="../src/proc_macro2/lib.rs.html#952-954">source</a></span><h4 class="code-header">pub fn <a href="#method.new" class="fnname">new</a>(string: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, span: <a class="struct" href="struct.Span.html" title="struct proc_macro2::Span">Span</a>) -&gt; Self</h4></section></summary><div class="docblock"><p>Creates a new <code>Ident</code> with the given <code>string</code> as well as the specified
 <code>span</code>.</p>
@@ -118,4 +118,4 @@ operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.h
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-Ident" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-Ident" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

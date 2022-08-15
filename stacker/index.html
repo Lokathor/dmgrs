@@ -7,16 +7,16 @@ if it does reach the end.</p>
 is switched to for the duration of a closure.</p>
 <p>For a set of lower-level primitives, consider the <code>psm</code> crate.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Grow the stack if we are within the &quot;red zone&quot; of 32K, and if we allocate</span>
-<span class="comment">// a new stack allocate 1MB of stack space.</span>
-<span class="comment">//</span>
-<span class="comment">// If we&#39;re already in bounds, just run the provided closure on current stack.</span>
-<span class="ident">stacker::maybe_grow</span>(<span class="number">32</span> * <span class="number">1024</span>, <span class="number">1024</span> * <span class="number">1024</span>, || {
-    <span class="comment">// guaranteed to have at least 32K of stack</span>
-});</code></pre></div>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Grow the stack if we are within the &quot;red zone&quot; of 32K, and if we allocate
+// a new stack allocate 1MB of stack space.
+//
+// If we&#39;re already in bounds, just run the provided closure on current stack.
+</span>stacker::maybe_grow(<span class="number">32 </span>* <span class="number">1024</span>, <span class="number">1024 </span>* <span class="number">1024</span>, || {
+    <span class="comment">// guaranteed to have at least 32K of stack
+</span>});</code></pre></div>
 </div></details><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.grow.html" title="stacker::grow fn">grow</a></div><div class="item-right docblock-short"><p>Always creates a new stack for the passed closure to run on.
 The closure will still be on the same thread as the caller of <code>grow</code>.
 This will allocate a new stack with at least <code>stack_size</code> bytes.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.maybe_grow.html" title="stacker::maybe_grow fn">maybe_grow</a></div><div class="item-right docblock-short"><p>Grows the call stack if necessary.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.remaining_stack.html" title="stacker::remaining_stack fn">remaining_stack</a></div><div class="item-right docblock-short"><p>Queries the amount of remaining stack as interpreted by this library.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="stacker" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="stacker" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

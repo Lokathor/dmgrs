@@ -1140,1147 +1140,1147 @@
 <span id="1140">1140</span>
 <span id="1141">1141</span>
 <span id="1142">1142</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Parser primitives that accept specific token patterns.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! *“These creatures you call mice, you see, they are not quite as they appear. They are merely the protrusion into</span>
-<span class="doccomment">//! our dimension of vastly hyperintelligent pandimensional beings.”*</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Chumsky parsers are created by combining together smaller parsers. Right at the bottom of the pile are the parser</span>
-<span class="doccomment">//! primitives, a parser developer&#39;s bread &amp; butter. Each of these primitives are very easy to understand in isolation,</span>
-<span class="doccomment">//! usually only doing one thing.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## The Important Ones</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - [`just`]: parses a specific input or sequence of inputs</span>
-<span class="doccomment">//! - [`filter`]: parses a single input, if the given filter function returns `true`</span>
-<span class="doccomment">//! - [`end`]: parses the end of input (i.e: if there any more inputs, this parse fails)</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Parser primitives that accept specific token patterns.
+//!
+//! *“These creatures you call mice, you see, they are not quite as they appear. They are merely the protrusion into
+//! our dimension of vastly hyperintelligent pandimensional beings.”*
+//!
+//! Chumsky parsers are created by combining together smaller parsers. Right at the bottom of the pile are the parser
+//! primitives, a parser developer&#39;s bread &amp; butter. Each of these primitives are very easy to understand in isolation,
+//! usually only doing one thing.
+//!
+//! ## The Important Ones
+//!
+//! - [`just`]: parses a specific input or sequence of inputs
+//! - [`filter`]: parses a single input, if the given filter function returns `true`
+//! - [`end`]: parses the end of input (i.e: if there any more inputs, this parse fails)
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">core::panic::Location</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>core::panic::Location;
 
-<span class="doccomment">/// See [`custom`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Custom</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt;(<span class="ident">F</span>, <span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
+<span class="doccomment">/// See [`custom`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Custom&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
 
-<span class="kw">impl</span>&lt;<span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Custom</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">F</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Custom</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+<span class="kw">impl</span>&lt;F: Copy, E&gt; Copy <span class="kw">for </span>Custom&lt;F, E&gt; {}
+<span class="kw">impl</span>&lt;F: Clone, E&gt; Clone <span class="kw">for </span>Custom&lt;F, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;
-    <span class="kw">for</span> <span class="ident">Custom</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt;
+<span class="kw">impl</span>&lt;I: Clone, O, F: Fn(<span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt;, E: Error&lt;I&gt;&gt; Parser&lt;I, O&gt;
+    <span class="kw">for </span>Custom&lt;F, E&gt;
 {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+    <span class="kw">type </span>Error = E;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        (<span class="self">self</span>.<span class="number">0</span>)(<span class="ident">stream</span>)
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, O, E&gt; {
+        (<span class="self">self</span>.<span class="number">0</span>)(stream)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser primitive that allows you to define your own custom parsers.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In theory you shouldn&#39;t need to use this unless you have particularly bizarre requirements, but it&#39;s a cleaner and</span>
-<span class="doccomment">/// more sustainable alternative to implementing [`Parser`] by hand.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is determined by the parse result of the function.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt;(<span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Custom</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Custom</span>(<span class="ident">f</span>, <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`end`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">End</span>&lt;<span class="ident">E</span>&gt;(<span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">End</span>&lt;<span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, ()&gt; <span class="kw">for</span> <span class="ident">End</span>&lt;<span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser primitive that allows you to define your own custom parsers.
+///
+/// In theory you shouldn&#39;t need to use this unless you have particularly bizarre requirements, but it&#39;s a cleaner and
+/// more sustainable alternative to implementing [`Parser`] by hand.
+///
+/// The output type of this parser is determined by the parse result of the function.
+</span><span class="kw">pub fn </span>custom&lt;F, E&gt;(f: F) -&gt; Custom&lt;F, E&gt; {
+    Custom(f, PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`end`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>End&lt;E&gt;(PhantomData&lt;E&gt;);
+
+<span class="kw">impl</span>&lt;E&gt; Clone <span class="kw">for </span>End&lt;E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone, E: Error&lt;I&gt;&gt; Parser&lt;I, ()&gt; <span class="kw">for </span>End&lt;E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>))),
-            (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) =&gt; (
-                <span class="ident">Vec::new</span>(),
-                <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                    <span class="ident">at</span>,
-                    <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="prelude-val">None</span>), <span class="ident">found</span>),
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="kw">match </span>stream.next() {
+            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; (Vec::new(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>))),
+            (at, span, found) =&gt; (
+                Vec::new(),
+                <span class="prelude-val">Err</span>(Located::at(
+                    at,
+                    E::expected_input_found(span, <span class="prelude-val">Some</span>(<span class="prelude-val">None</span>), found),
                 )),
             ),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts only the end of input.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This parser is very useful when you wish to force a parser to consume *all* of the input. It is typically combined</span>
-<span class="doccomment">/// with [`Parser::then_ignore`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `()`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// assert_eq!(end::&lt;Simple&lt;char&gt;&gt;().parse(&quot;&quot;), Ok(()));</span>
-<span class="doccomment">/// assert!(end::&lt;Simple&lt;char&gt;&gt;().parse(&quot;hello&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let digits = text::digits::&lt;_, Simple&lt;char&gt;&gt;(10);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // This parser parses digits!</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;1234&quot;), Ok(&quot;1234&quot;.to_string()));</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // However, parsers are lazy and do not consume trailing input.</span>
-<span class="doccomment">/// // This can be inconvenient if we want to validate all of the input.</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;1234AhasjADSJAlaDJKSDAK&quot;), Ok(&quot;1234&quot;.to_string()));</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // To fix this problem, we require that the end of input follows any successfully parsed input</span>
-<span class="doccomment">/// let only_digits = digits.then_ignore(end());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // Now our parser correctly produces an error if any trailing input is found...</span>
-<span class="doccomment">/// assert!(only_digits.parse(&quot;1234AhasjADSJAlaDJKSDAK&quot;).is_err());</span>
-<span class="doccomment">/// // ...while still behaving correctly for inputs that only consist of valid patterns</span>
-<span class="doccomment">/// assert_eq!(only_digits.parse(&quot;1234&quot;), Ok(&quot;1234&quot;.to_string()));</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">end</span>&lt;<span class="ident">E</span>&gt;() -&gt; <span class="ident">End</span>&lt;<span class="ident">E</span>&gt; {
-    <span class="ident">End</span>(<span class="ident">PhantomData</span>)
-}
-
-<span class="kw">mod</span> <span class="ident">private</span> {
-    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; {}
-
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">T</span> {}
-    <span class="kw">impl</span> <span class="ident">Sealed</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="ident">alloc::string::String</span> {}
-    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {}
-    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>] {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> [<span class="ident">T</span>; <span class="ident">N</span>] {}
-    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>; <span class="ident">N</span>] {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::vec::Vec</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::LinkedList</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::VecDeque</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::BTreeSet</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::BinaryHeap</span>&lt;<span class="ident">T</span>&gt; {}
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">std::collections::HashSet</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;std&quot;</span>))]</span>
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">hashbrown::HashSet</span>&lt;<span class="ident">T</span>&gt; {}
-}
-
-<span class="doccomment">/// A utility trait to abstract over container-like things.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This trait is sealed and an implementation detail - its internals should not be relied on by users.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt;: <span class="ident">private::Sealed</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="doccomment">/// An iterator over the items within this container, by value.</span>
-    <span class="kw">type</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = <span class="ident">T</span>&gt;;
-    <span class="doccomment">/// Iterate over the elements of the container (using internal iteration because GATs are unstable).</span>
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span>;
-}
-
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">T</span> {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">core::iter::Once</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="ident">core::iter::once</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Container</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::vec::IntoIter</span>&lt;<span class="ident">char</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">chars</span>().<span class="ident">collect</span>::&lt;<span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;&gt;().<span class="ident">into_iter</span>()
+<span class="doccomment">/// A parser that accepts only the end of input.
+///
+/// This parser is very useful when you wish to force a parser to consume *all* of the input. It is typically combined
+/// with [`Parser::then_ignore`].
+///
+/// The output type of this parser is `()`.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// assert_eq!(end::&lt;Simple&lt;char&gt;&gt;().parse(&quot;&quot;), Ok(()));
+/// assert!(end::&lt;Simple&lt;char&gt;&gt;().parse(&quot;hello&quot;).is_err());
+/// ```
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// let digits = text::digits::&lt;_, Simple&lt;char&gt;&gt;(10);
+///
+/// // This parser parses digits!
+/// assert_eq!(digits.parse(&quot;1234&quot;), Ok(&quot;1234&quot;.to_string()));
+///
+/// // However, parsers are lazy and do not consume trailing input.
+/// // This can be inconvenient if we want to validate all of the input.
+/// assert_eq!(digits.parse(&quot;1234AhasjADSJAlaDJKSDAK&quot;), Ok(&quot;1234&quot;.to_string()));
+///
+/// // To fix this problem, we require that the end of input follows any successfully parsed input
+/// let only_digits = digits.then_ignore(end());
+///
+/// // Now our parser correctly produces an error if any trailing input is found...
+/// assert!(only_digits.parse(&quot;1234AhasjADSJAlaDJKSDAK&quot;).is_err());
+/// // ...while still behaving correctly for inputs that only consist of valid patterns
+/// assert_eq!(only_digits.parse(&quot;1234&quot;), Ok(&quot;1234&quot;.to_string()));
+/// ```
+</span><span class="kw">pub fn </span>end&lt;E&gt;() -&gt; End&lt;E&gt; {
+    End(PhantomData)
+}
+
+<span class="kw">mod </span>private {
+    <span class="kw">pub trait </span>Sealed&lt;T&gt; {}
+
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>T {}
+    <span class="kw">impl </span>Sealed&lt;char&gt; <span class="kw">for </span>alloc::string::String {}
+    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Sealed&lt;char&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {}
+    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; Sealed&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[T] {}
+    <span class="kw">impl</span>&lt;T, <span class="kw">const </span>N: usize&gt; Sealed&lt;T&gt; <span class="kw">for </span>[T; N] {}
+    <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T, <span class="kw">const </span>N: usize&gt; Sealed&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[T; N] {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::vec::Vec&lt;T&gt; {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::collections::LinkedList&lt;T&gt; {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::collections::VecDeque&lt;T&gt; {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::collections::BTreeSet&lt;T&gt; {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::collections::BinaryHeap&lt;T&gt; {}
+
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>std::collections::HashSet&lt;T&gt; {}
+    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>hashbrown::HashSet&lt;T&gt; {}
+}
+
+<span class="doccomment">/// A utility trait to abstract over container-like things.
+///
+/// This trait is sealed and an implementation detail - its internals should not be relied on by users.
+</span><span class="kw">pub trait </span>Container&lt;T&gt;: private::Sealed&lt;T&gt; {
+    <span class="doccomment">/// An iterator over the items within this container, by value.
+    </span><span class="kw">type </span>Iter: Iterator&lt;Item = T&gt;;
+    <span class="doccomment">/// Iterate over the elements of the container (using internal iteration because GATs are unstable).
+    </span><span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter;
+}
+
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>T {
+    <span class="kw">type </span>Iter = core::iter::Once&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        core::iter::once(<span class="self">self</span>.clone())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::str::Chars</span>&lt;<span class="lifetime">&#39;a</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">chars</span>()
+<span class="kw">impl </span>Container&lt;char&gt; <span class="kw">for </span>String {
+    <span class="kw">type </span>Iter = alloc::vec::IntoIter&lt;char&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.chars().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;().into_iter()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>] {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">core::iter::Cloned</span>&lt;<span class="ident">core::slice::Iter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt;&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Container&lt;char&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {
+    <span class="kw">type </span>Iter = alloc::str::Chars&lt;<span class="lifetime">&#39;a</span>&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.chars()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Clone</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>; <span class="ident">N</span>] {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">core::iter::Cloned</span>&lt;<span class="ident">core::slice::Iter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt;&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[T] {
+    <span class="kw">type </span>Iter = core::iter::Cloned&lt;core::slice::Iter&lt;<span class="lifetime">&#39;a</span>, T&gt;&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.iter().cloned()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> [<span class="ident">T</span>; <span class="ident">N</span>] {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">core::array::IntoIter</span>&lt;<span class="ident">T</span>, <span class="ident">N</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="ident">core::array::IntoIter::new</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Clone, <span class="kw">const </span>N: usize&gt; Container&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[T; N] {
+    <span class="kw">type </span>Iter = core::iter::Cloned&lt;core::slice::Iter&lt;<span class="lifetime">&#39;a</span>, T&gt;&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.iter().cloned()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::vec::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="kw">impl</span>&lt;T: Clone, <span class="kw">const </span>N: usize&gt; Container&lt;T&gt; <span class="kw">for </span>[T; N] {
+    <span class="kw">type </span>Iter = core::array::IntoIter&lt;T, N&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        core::array::IntoIter::new(<span class="self">self</span>.clone())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::LinkedList</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::collections::linked_list::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>Vec&lt;T&gt; {
+    <span class="kw">type </span>Iter = alloc::vec::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::VecDeque</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::collections::vec_deque::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>alloc::collections::LinkedList&lt;T&gt; {
+    <span class="kw">type </span>Iter = alloc::collections::linked_list::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">std::collections::HashSet</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">std::collections::hash_set::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>alloc::collections::VecDeque&lt;T&gt; {
+    <span class="kw">type </span>Iter = alloc::collections::vec_deque::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">hashbrown::HashSet</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">hashbrown::hash_set::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>std::collections::HashSet&lt;T&gt; {
+    <span class="kw">type </span>Iter = std::collections::hash_set::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::BTreeSet</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::collections::btree_set::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>hashbrown::HashSet&lt;T&gt; {
+    <span class="kw">type </span>Iter = hashbrown::hash_set::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::BinaryHeap</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Iter</span> = <span class="ident">alloc::collections::binary_heap::IntoIter</span>&lt;<span class="ident">T</span>&gt;;
-    <span class="kw">fn</span> <span class="ident">get_iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::Iter</span> {
-        <span class="self">self</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>alloc::collections::BTreeSet&lt;T&gt; {
+    <span class="kw">type </span>Iter = alloc::collections::btree_set::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="doccomment">/// A utility trait to abstract over linear and ordered container-like things, excluding things such</span>
-<span class="doccomment">/// as sets and heaps.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This trait is sealed and an implementation detail - its internals should not be relied on by users.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt;: <span class="ident">Container</span>&lt;<span class="ident">T</span>&gt; {}
-
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">T</span> {}
-<span class="kw">impl</span> <span class="ident">OrderedContainer</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="ident">String</span> {}
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {}
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>] {}
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Clone</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">T</span>; <span class="ident">N</span>] {}
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> [<span class="ident">T</span>; <span class="ident">N</span>] {}
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::LinkedList</span>&lt;<span class="ident">T</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>&gt; <span class="ident">OrderedContainer</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::collections::VecDeque</span>&lt;<span class="ident">T</span>&gt; {}
-
-<span class="doccomment">/// See [`just`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Just</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">OrderedContainer</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>&gt;(<span class="ident">C</span>, <span class="ident">PhantomData</span>&lt;(<span class="ident">I</span>, <span class="ident">E</span>)&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">Copy</span> + <span class="ident">OrderedContainer</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Just</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">Clone</span> + <span class="ident">OrderedContainer</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Just</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>alloc::collections::BinaryHeap&lt;T&gt; {
+    <span class="kw">type </span>Iter = alloc::collections::binary_heap::IntoIter&lt;T&gt;;
+    <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
+        <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">C</span>: <span class="ident">OrderedContainer</span>&lt;<span class="ident">I</span>&gt; + <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>&gt;
-    <span class="kw">for</span> <span class="ident">Just</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt;
+<span class="doccomment">/// A utility trait to abstract over linear and ordered container-like things, excluding things such
+/// as sets and heaps.
+///
+/// This trait is sealed and an implementation detail - its internals should not be relied on by users.
+</span><span class="kw">pub trait </span>OrderedContainer&lt;T&gt;: Container&lt;T&gt; {}
+
+<span class="kw">impl</span>&lt;T: Clone&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span>T {}
+<span class="kw">impl </span>OrderedContainer&lt;char&gt; <span class="kw">for </span>String {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; OrderedContainer&lt;char&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Clone&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[T] {}
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Clone, <span class="kw">const </span>N: usize&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[T; N] {}
+<span class="kw">impl</span>&lt;T: Clone, <span class="kw">const </span>N: usize&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span>[T; N] {}
+<span class="kw">impl</span>&lt;T: Clone&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span>Vec&lt;T&gt; {}
+<span class="kw">impl</span>&lt;T: Clone&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span>alloc::collections::LinkedList&lt;T&gt; {}
+<span class="kw">impl</span>&lt;T: Clone&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span>alloc::collections::VecDeque&lt;T&gt; {}
+
+<span class="doccomment">/// See [`just`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Just&lt;I, C: OrderedContainer&lt;I&gt;, E&gt;(C, PhantomData&lt;(I, E)&gt;);
+
+<span class="kw">impl</span>&lt;I, C: Copy + OrderedContainer&lt;I&gt;, E&gt; Copy <span class="kw">for </span>Just&lt;I, C, E&gt; {}
+<span class="kw">impl</span>&lt;I, C: Clone + OrderedContainer&lt;I&gt;, E&gt; Clone <span class="kw">for </span>Just&lt;I, C, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, C: OrderedContainer&lt;I&gt; + Clone, E: Error&lt;I&gt;&gt; Parser&lt;I, C&gt;
+    <span class="kw">for </span>Just&lt;I, C, E&gt;
 {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+    <span class="kw">type </span>Error = E;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">for</span> <span class="ident">expected</span> <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_iter</span>() {
-            <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">tok</span>)) <span class="kw">if</span> <span class="ident">tok</span> == <span class="ident">expected</span> =&gt; {}
-                (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) =&gt; {
-                    <span class="kw">return</span> (
-                        <span class="ident">Vec::new</span>(),
-                        <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                            <span class="ident">at</span>,
-                            <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="ident">expected</span>)), <span class="ident">found</span>),
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, C, E&gt; {
+        <span class="kw">for </span>expected <span class="kw">in </span><span class="self">self</span>.<span class="number">0</span>.get_iter() {
+            <span class="kw">match </span>stream.next() {
+                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(tok)) <span class="kw">if </span>tok == expected =&gt; {}
+                (at, span, found) =&gt; {
+                    <span class="kw">return </span>(
+                        Vec::new(),
+                        <span class="prelude-val">Err</span>(Located::at(
+                            at,
+                            E::expected_input_found(span, <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(expected)), found),
                         )),
                     )
                 }
             }
         }
 
-        (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>((<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>)))
+        (Vec::new(), <span class="prelude-val">Ok</span>((<span class="self">self</span>.<span class="number">0</span>.clone(), <span class="prelude-val">None</span>)))
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, C, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts only the given input.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `C`, the input or sequence that was provided.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let question = just::&lt;_, _, Cheap&lt;char&gt;&gt;(&#39;?&#39;);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(question.parse(&quot;?&quot;), Ok(&#39;?&#39;));</span>
-<span class="doccomment">/// assert!(question.parse(&quot;!&quot;).is_err());</span>
-<span class="doccomment">/// // This works because parsers do not eagerly consume input, so the &#39;!&#39; is not parsed</span>
-<span class="doccomment">/// assert_eq!(question.parse(&quot;?!&quot;), Ok(&#39;?&#39;));</span>
-<span class="doccomment">/// // This fails because the parser expects an end to the input after the &#39;?&#39;</span>
-<span class="doccomment">/// assert!(question.then(end()).parse(&quot;?!&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">just</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">OrderedContainer</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(<span class="ident">inputs</span>: <span class="ident">C</span>) -&gt; <span class="ident">Just</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Just</span>(<span class="ident">inputs</span>, <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`seq`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Seq</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;(<span class="ident">Vec</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Seq</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, C, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, ()&gt; <span class="kw">for</span> <span class="ident">Seq</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that accepts only the given input.
+///
+/// The output type of this parser is `C`, the input or sequence that was provided.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let question = just::&lt;_, _, Cheap&lt;char&gt;&gt;(&#39;?&#39;);
+///
+/// assert_eq!(question.parse(&quot;?&quot;), Ok(&#39;?&#39;));
+/// assert!(question.parse(&quot;!&quot;).is_err());
+/// // This works because parsers do not eagerly consume input, so the &#39;!&#39; is not parsed
+/// assert_eq!(question.parse(&quot;?!&quot;), Ok(&#39;?&#39;));
+/// // This fails because the parser expects an end to the input after the &#39;?&#39;
+/// assert!(question.then(end()).parse(&quot;?!&quot;).is_err());
+/// ```
+</span><span class="kw">pub fn </span>just&lt;I, C: OrderedContainer&lt;I&gt;, E: Error&lt;I&gt;&gt;(inputs: C) -&gt; Just&lt;I, C, E&gt; {
+    Just(inputs, PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`seq`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Seq&lt;I, E&gt;(Vec&lt;I&gt;, PhantomData&lt;E&gt;);
+
+<span class="kw">impl</span>&lt;I: Clone, E&gt; Clone <span class="kw">for </span>Seq&lt;I, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, E: Error&lt;I&gt;&gt; Parser&lt;I, ()&gt; <span class="kw">for </span>Seq&lt;I, E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="kw">for</span> <span class="ident">expected</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-            <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">tok</span>)) <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">tok</span> == <span class="ident">expected</span> =&gt; {}
-                (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) =&gt; {
-                    <span class="kw">return</span> (
-                        <span class="ident">Vec::new</span>(),
-                        <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                            <span class="ident">at</span>,
-                            <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="ident">expected</span>.<span class="ident">clone</span>())), <span class="ident">found</span>),
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="kw">for </span>expected <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+            <span class="kw">match </span>stream.next() {
+                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(tok)) <span class="kw">if </span><span class="kw-2">&amp;</span>tok == expected =&gt; {}
+                (at, span, found) =&gt; {
+                    <span class="kw">return </span>(
+                        Vec::new(),
+                        <span class="prelude-val">Err</span>(Located::at(
+                            at,
+                            E::expected_input_found(span, <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(expected.clone())), found),
                         )),
                     )
                 }
             }
         }
 
-        (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>)))
+        (Vec::new(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>)))
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts only a sequence of specific inputs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `()`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let hello = seq::&lt;_, _, Cheap&lt;char&gt;&gt;(&quot;Hello&quot;.chars());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(hello.parse(&quot;Hello&quot;), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(hello.parse(&quot;Hello, world!&quot;), Ok(()));</span>
-<span class="doccomment">/// assert!(hello.parse(&quot;Goodbye&quot;).is_err());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let onetwothree = seq::&lt;_, _, Cheap&lt;i32&gt;&gt;([1, 2, 3]);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(onetwothree.parse([1, 2, 3]), Ok(()));</span>
-<span class="doccomment">/// assert_eq!(onetwothree.parse([1, 2, 3, 4, 5]), Ok(()));</span>
-<span class="doccomment">/// assert!(onetwothree.parse([2, 1, 3]).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">deprecated</span>(
-    <span class="ident">since</span> = <span class="string">&quot;0.7.0&quot;</span>,
-    <span class="ident">note</span> = <span class="string">&quot;Use `just` instead: it now works for many sequence-like types!&quot;</span>
-)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">seq</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">Iter</span>: <span class="ident">IntoIterator</span>&lt;<span class="ident">Item</span> = <span class="ident">I</span>&gt;, <span class="ident">E</span>&gt;(<span class="ident">xs</span>: <span class="ident">Iter</span>) -&gt; <span class="ident">Seq</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Seq</span>(<span class="ident">xs</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>(), <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`one_of`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt;(<span class="ident">C</span>, <span class="ident">PhantomData</span>&lt;(<span class="ident">I</span>, <span class="ident">E</span>)&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">OneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">C</span>: <span class="ident">Container</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>&gt; <span class="kw">for</span> <span class="ident">OneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that accepts only a sequence of specific inputs.
+///
+/// The output type of this parser is `()`.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let hello = seq::&lt;_, _, Cheap&lt;char&gt;&gt;(&quot;Hello&quot;.chars());
+///
+/// assert_eq!(hello.parse(&quot;Hello&quot;), Ok(()));
+/// assert_eq!(hello.parse(&quot;Hello, world!&quot;), Ok(()));
+/// assert!(hello.parse(&quot;Goodbye&quot;).is_err());
+///
+/// let onetwothree = seq::&lt;_, _, Cheap&lt;i32&gt;&gt;([1, 2, 3]);
+///
+/// assert_eq!(onetwothree.parse([1, 2, 3]), Ok(()));
+/// assert_eq!(onetwothree.parse([1, 2, 3, 4, 5]), Ok(()));
+/// assert!(onetwothree.parse([2, 1, 3]).is_err());
+/// ```
+</span><span class="attribute">#[deprecated(
+    since = <span class="string">&quot;0.7.0&quot;</span>,
+    note = <span class="string">&quot;Use `just` instead: it now works for many sequence-like types!&quot;
+</span>)]</span>
+<span class="kw">pub fn </span>seq&lt;I: Clone + PartialEq, Iter: IntoIterator&lt;Item = I&gt;, E&gt;(xs: Iter) -&gt; Seq&lt;I, E&gt; {
+    Seq(xs.into_iter().collect(), PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`one_of`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>OneOf&lt;I, C, E&gt;(C, PhantomData&lt;(I, E)&gt;);
+
+<span class="kw">impl</span>&lt;I, C: Clone, E&gt; Clone <span class="kw">for </span>OneOf&lt;I, C, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, C: Container&lt;I&gt;, E: Error&lt;I&gt;&gt; Parser&lt;I, I&gt; <span class="kw">for </span>OneOf&lt;I, C, E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">tok</span>)) <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_iter</span>().<span class="ident">any</span>(|<span class="ident">not</span>| <span class="ident">not</span> == <span class="ident">tok</span>) =&gt; {
-                (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>((<span class="ident">tok</span>, <span class="prelude-val">None</span>)))
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="kw">match </span>stream.next() {
+            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(tok)) <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.get_iter().any(|not| not == tok) =&gt; {
+                (Vec::new(), <span class="prelude-val">Ok</span>((tok, <span class="prelude-val">None</span>)))
             }
-            (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) =&gt; (
-                <span class="ident">Vec::new</span>(),
-                <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                    <span class="ident">at</span>,
-                    <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_iter</span>().<span class="ident">map</span>(<span class="prelude-val">Some</span>), <span class="ident">found</span>),
+            (at, span, found) =&gt; (
+                Vec::new(),
+                <span class="prelude-val">Err</span>(Located::at(
+                    at,
+                    E::expected_input_found(span, <span class="self">self</span>.<span class="number">0</span>.get_iter().map(<span class="prelude-val">Some</span>), found),
                 )),
             ),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts one of a sequence of specific inputs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `I`, the input that was found.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let digits = one_of::&lt;_, _, Cheap&lt;char&gt;&gt;(&quot;0123456789&quot;)</span>
-<span class="doccomment">///     .repeated().at_least(1)</span>
-<span class="doccomment">///     .then_ignore(end())</span>
-<span class="doccomment">///     .collect::&lt;String&gt;();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(digits.parse(&quot;48791&quot;), Ok(&quot;48791&quot;.to_string()));</span>
-<span class="doccomment">/// assert!(digits.parse(&quot;421!53&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">one_of</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">Container</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(<span class="ident">inputs</span>: <span class="ident">C</span>) -&gt; <span class="ident">OneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">OneOf</span>(<span class="ident">inputs</span>, <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`empty`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Empty</span>&lt;<span class="ident">E</span>&gt;(<span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Empty</span>&lt;<span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, ()&gt; <span class="kw">for</span> <span class="ident">Empty</span>&lt;<span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that accepts one of a sequence of specific inputs.
+///
+/// The output type of this parser is `I`, the input that was found.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let digits = one_of::&lt;_, _, Cheap&lt;char&gt;&gt;(&quot;0123456789&quot;)
+///     .repeated().at_least(1)
+///     .then_ignore(end())
+///     .collect::&lt;String&gt;();
+///
+/// assert_eq!(digits.parse(&quot;48791&quot;), Ok(&quot;48791&quot;.to_string()));
+/// assert!(digits.parse(&quot;421!53&quot;).is_err());
+/// ```
+</span><span class="kw">pub fn </span>one_of&lt;I, C: Container&lt;I&gt;, E: Error&lt;I&gt;&gt;(inputs: C) -&gt; OneOf&lt;I, C, E&gt; {
+    OneOf(inputs, PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`empty`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Empty&lt;E&gt;(PhantomData&lt;E&gt;);
+
+<span class="kw">impl</span>&lt;E&gt; Clone <span class="kw">for </span>Empty&lt;E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone, E: Error&lt;I&gt;&gt; Parser&lt;I, ()&gt; <span class="kw">for </span>Empty&lt;E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>)))
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, (), E&gt; {
+        (Vec::new(), <span class="prelude-val">Ok</span>(((), <span class="prelude-val">None</span>)))
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (), <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that parses no inputs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `()`.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>&lt;<span class="ident">E</span>&gt;() -&gt; <span class="ident">Empty</span>&lt;<span class="ident">E</span>&gt; {
-    <span class="ident">Empty</span>(<span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`none_of`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NoneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt;(<span class="ident">C</span>, <span class="ident">PhantomData</span>&lt;(<span class="ident">I</span>, <span class="ident">E</span>)&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">NoneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">C</span>: <span class="ident">Container</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>&gt; <span class="kw">for</span> <span class="ident">NoneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that parses no inputs.
+///
+/// The output type of this parser is `()`.
+</span><span class="kw">pub fn </span>empty&lt;E&gt;() -&gt; Empty&lt;E&gt; {
+    Empty(PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`none_of`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>NoneOf&lt;I, C, E&gt;(C, PhantomData&lt;(I, E)&gt;);
+
+<span class="kw">impl</span>&lt;I, C: Clone, E&gt; Clone <span class="kw">for </span>NoneOf&lt;I, C, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, C: Container&lt;I&gt;, E: Error&lt;I&gt;&gt; Parser&lt;I, I&gt; <span class="kw">for </span>NoneOf&lt;I, C, E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">tok</span>)) <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get_iter</span>().<span class="ident">all</span>(|<span class="ident">not</span>| <span class="ident">not</span> != <span class="ident">tok</span>) =&gt; {
-                (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>((<span class="ident">tok</span>, <span class="prelude-val">None</span>)))
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="kw">match </span>stream.next() {
+            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(tok)) <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.get_iter().all(|not| not != tok) =&gt; {
+                (Vec::new(), <span class="prelude-val">Ok</span>((tok, <span class="prelude-val">None</span>)))
             }
-            (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) =&gt; (
-                <span class="ident">Vec::new</span>(),
-                <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                    <span class="ident">at</span>,
-                    <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="ident">Vec::new</span>(), <span class="ident">found</span>),
+            (at, span, found) =&gt; (
+                Vec::new(),
+                <span class="prelude-val">Err</span>(Located::at(
+                    at,
+                    E::expected_input_found(span, Vec::new(), found),
                 )),
             ),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="doccomment">/// A parser that accepts any input that is *not* in a sequence of specific inputs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `I`, the input that was found.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let string = one_of::&lt;_, _, Cheap&lt;char&gt;&gt;(&quot;\&quot;&#39;&quot;)</span>
-<span class="doccomment">///     .ignore_then(none_of(&quot;\&quot;&#39;&quot;).repeated())</span>
-<span class="doccomment">///     .then_ignore(one_of(&quot;\&quot;&#39;&quot;))</span>
-<span class="doccomment">///     .then_ignore(end())</span>
-<span class="doccomment">///     .collect::&lt;String&gt;();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(string.parse(&quot;&#39;hello&#39;&quot;), Ok(&quot;hello&quot;.to_string()));</span>
-<span class="doccomment">/// assert_eq!(string.parse(&quot;\&quot;world\&quot;&quot;), Ok(&quot;world&quot;.to_string()));</span>
-<span class="doccomment">/// assert!(string.parse(&quot;\&quot;421!53&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">none_of</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>: <span class="ident">Container</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(<span class="ident">inputs</span>: <span class="ident">C</span>) -&gt; <span class="ident">NoneOf</span>&lt;<span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">NoneOf</span>(<span class="ident">inputs</span>, <span class="ident">PhantomData</span>)
+<span class="doccomment">/// A parser that accepts any input that is *not* in a sequence of specific inputs.
+///
+/// The output type of this parser is `I`, the input that was found.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let string = one_of::&lt;_, _, Cheap&lt;char&gt;&gt;(&quot;\&quot;&#39;&quot;)
+///     .ignore_then(none_of(&quot;\&quot;&#39;&quot;).repeated())
+///     .then_ignore(one_of(&quot;\&quot;&#39;&quot;))
+///     .then_ignore(end())
+///     .collect::&lt;String&gt;();
+///
+/// assert_eq!(string.parse(&quot;&#39;hello&#39;&quot;), Ok(&quot;hello&quot;.to_string()));
+/// assert_eq!(string.parse(&quot;\&quot;world\&quot;&quot;), Ok(&quot;world&quot;.to_string()));
+/// assert!(string.parse(&quot;\&quot;421!53&quot;).is_err());
+/// ```
+</span><span class="kw">pub fn </span>none_of&lt;I, C: Container&lt;I&gt;, E: Error&lt;I&gt;&gt;(inputs: C) -&gt; NoneOf&lt;I, C, E&gt; {
+    NoneOf(inputs, PhantomData)
 }
 
-<span class="doccomment">/// See [`take_until`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TakeUntil</span>&lt;<span class="ident">A</span>&gt;(<span class="ident">A</span>);
+<span class="doccomment">/// See [`take_until`].
+</span><span class="attribute">#[must_use]</span>
+<span class="attribute">#[derive(Copy, Clone)]</span>
+<span class="kw">pub struct </span>TakeUntil&lt;A&gt;(A);
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, (<span class="ident">Vec</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">O</span>)&gt; <span class="kw">for</span> <span class="ident">TakeUntil</span>&lt;<span class="ident">A</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">A::Error</span>;
+<span class="kw">impl</span>&lt;I: Clone, O, A: Parser&lt;I, O&gt;&gt; Parser&lt;I, (Vec&lt;I&gt;, O)&gt; <span class="kw">for </span>TakeUntil&lt;A&gt; {
+    <span class="kw">type </span>Error = A::Error;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">A::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (<span class="ident">Vec</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">O</span>), <span class="ident">A::Error</span>&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outputs</span> = <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">alt</span> = <span class="prelude-val">None</span>;
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, A::Error&gt;,
+    ) -&gt; PResult&lt;I, (Vec&lt;I&gt;, O), A::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>outputs = Vec::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>alt = <span class="prelude-val">None</span>;
 
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> (<span class="ident">errors</span>, <span class="ident">err</span>) = <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_parse</span>(|<span class="ident">stream</span>| {
-                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                <span class="self">self</span>.<span class="number">0</span>.<span class="ident">parse_inner</span>(<span class="ident">debugger</span>, <span class="ident">stream</span>)
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>(errors, err) = <span class="kw">match </span>stream.try_parse(|stream| {
+                <span class="attribute">#[allow(deprecated)]</span>
+                <span class="self">self</span>.<span class="number">0</span>.parse_inner(debugger, stream)
             }) {
-                (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>((<span class="ident">out</span>, <span class="ident">a_alt</span>))) =&gt; {
-                    <span class="kw">break</span> (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(((<span class="ident">outputs</span>, <span class="ident">out</span>), <span class="ident">merge_alts</span>(<span class="ident">alt</span>, <span class="ident">a_alt</span>))))
+                (errors, <span class="prelude-val">Ok</span>((out, a_alt))) =&gt; {
+                    <span class="kw">break </span>(errors, <span class="prelude-val">Ok</span>(((outputs, out), merge_alts(alt, a_alt))))
                 }
-                (<span class="ident">errors</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; (<span class="ident">errors</span>, <span class="ident">err</span>),
+                (errors, <span class="prelude-val">Err</span>(err)) =&gt; (errors, err),
             };
 
-            <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">tok</span>)) =&gt; <span class="ident">outputs</span>.<span class="ident">push</span>(<span class="ident">tok</span>),
-                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; <span class="kw">break</span> (<span class="ident">errors</span>, <span class="prelude-val">Err</span>(<span class="ident">err</span>)),
+            <span class="kw">match </span>stream.next() {
+                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(tok)) =&gt; outputs.push(tok),
+                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; <span class="kw">break </span>(errors, <span class="prelude-val">Err</span>(err)),
             }
 
-            <span class="ident">alt</span> = <span class="ident">merge_alts</span>(<span class="ident">alt</span>.<span class="ident">take</span>(), <span class="prelude-val">Some</span>(<span class="ident">err</span>));
+            alt = merge_alts(alt.take(), <span class="prelude-val">Some</span>(err));
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
+    <span class="kw">fn </span>parse_inner_verbose(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">A::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (<span class="ident">Vec</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">O</span>), <span class="ident">A::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Verbose,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, A::Error&gt;,
+    ) -&gt; PResult&lt;I, (Vec&lt;I&gt;, O), A::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
+    <span class="kw">fn </span>parse_inner_silent(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">A::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, (<span class="ident">Vec</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">O</span>), <span class="ident">A::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts any number of inputs until a terminating pattern is reached.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `(Vec&lt;I&gt;, O)`, a combination of the preceding inputs and the output of the</span>
-<span class="doccomment">/// final patterns.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let single_line = just::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;//&quot;)</span>
-<span class="doccomment">///     .then(take_until(text::newline()))</span>
-<span class="doccomment">///     .ignored();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let multi_line = just::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;/*&quot;)</span>
-<span class="doccomment">///     .then(take_until(just(&quot;*/&quot;)))</span>
-<span class="doccomment">///     .ignored();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let comment = single_line.or(multi_line);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens = text::ident()</span>
-<span class="doccomment">///     .padded()</span>
-<span class="doccomment">///     .padded_by(comment</span>
-<span class="doccomment">///         .padded()</span>
-<span class="doccomment">///         .repeated())</span>
-<span class="doccomment">///     .repeated();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(tokens.parse(r#&quot;</span>
-<span class="doccomment">///     // These tokens...</span>
-<span class="doccomment">///     these are</span>
-<span class="doccomment">///     /*</span>
-<span class="doccomment">///         ...have some</span>
-<span class="doccomment">///         multi-line...</span>
-<span class="doccomment">///     */</span>
-<span class="doccomment">///     // ...and single-line...</span>
-<span class="doccomment">///     tokens</span>
-<span class="doccomment">///     // ...comments between them</span>
-<span class="doccomment">/// &quot;#), Ok(vec![&quot;these&quot;.to_string(), &quot;are&quot;.to_string(), &quot;tokens&quot;.to_string()]));</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_until</span>&lt;<span class="ident">A</span>&gt;(<span class="ident">until</span>: <span class="ident">A</span>) -&gt; <span class="ident">TakeUntil</span>&lt;<span class="ident">A</span>&gt; {
-    <span class="ident">TakeUntil</span>(<span class="ident">until</span>)
-}
-
-<span class="doccomment">/// See [`filter`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Filter</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt;(<span class="ident">F</span>, <span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Filter</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">F</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Filter</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+        d: <span class="kw-2">&amp;mut </span>Silent,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, A::Error&gt;,
+    ) -&gt; PResult&lt;I, (Vec&lt;I&gt;, O), A::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">I</span>) -&gt; <span class="ident">bool</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>&gt; <span class="kw">for</span> <span class="ident">Filter</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that accepts any number of inputs until a terminating pattern is reached.
+///
+/// The output type of this parser is `(Vec&lt;I&gt;, O)`, a combination of the preceding inputs and the output of the
+/// final patterns.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let single_line = just::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;//&quot;)
+///     .then(take_until(text::newline()))
+///     .ignored();
+///
+/// let multi_line = just::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;/*&quot;)
+///     .then(take_until(just(&quot;*/&quot;)))
+///     .ignored();
+///
+/// let comment = single_line.or(multi_line);
+///
+/// let tokens = text::ident()
+///     .padded()
+///     .padded_by(comment
+///         .padded()
+///         .repeated())
+///     .repeated();
+///
+/// assert_eq!(tokens.parse(r#&quot;
+///     // These tokens...
+///     these are
+///     /*
+///         ...have some
+///         multi-line...
+///     */
+///     // ...and single-line...
+///     tokens
+///     // ...comments between them
+/// &quot;#), Ok(vec![&quot;these&quot;.to_string(), &quot;are&quot;.to_string(), &quot;tokens&quot;.to_string()]));
+/// ```
+</span><span class="kw">pub fn </span>take_until&lt;A&gt;(until: A) -&gt; TakeUntil&lt;A&gt; {
+    TakeUntil(until)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`filter`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Filter&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
+
+<span class="kw">impl</span>&lt;F: Copy, E&gt; Copy <span class="kw">for </span>Filter&lt;F, E&gt; {}
+<span class="kw">impl</span>&lt;F: Clone, E&gt; Clone <span class="kw">for </span>Filter&lt;F, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone, F: Fn(<span class="kw-2">&amp;</span>I) -&gt; bool, E: Error&lt;I&gt;&gt; Parser&lt;I, I&gt; <span class="kw">for </span>Filter&lt;F, E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">tok</span>)) <span class="kw">if</span> (<span class="self">self</span>.<span class="number">0</span>)(<span class="kw-2">&amp;</span><span class="ident">tok</span>) =&gt; (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>((<span class="ident">tok</span>, <span class="prelude-val">None</span>))),
-            (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">found</span>) =&gt; (
-                <span class="ident">Vec::new</span>(),
-                <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                    <span class="ident">at</span>,
-                    <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="ident">Vec::new</span>(), <span class="ident">found</span>),
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="kw">match </span>stream.next() {
+            (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(tok)) <span class="kw">if </span>(<span class="self">self</span>.<span class="number">0</span>)(<span class="kw-2">&amp;</span>tok) =&gt; (Vec::new(), <span class="prelude-val">Ok</span>((tok, <span class="prelude-val">None</span>))),
+            (at, span, found) =&gt; (
+                Vec::new(),
+                <span class="prelude-val">Err</span>(Located::at(
+                    at,
+                    E::expected_input_found(span, Vec::new(), found),
                 )),
             ),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">I</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts only inputs that match the given predicate.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `I`, the input that was found.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let lowercase = filter::&lt;_, _, Cheap&lt;char&gt;&gt;(char::is_ascii_lowercase)</span>
-<span class="doccomment">///     .repeated().at_least(1)</span>
-<span class="doccomment">///     .then_ignore(end())</span>
-<span class="doccomment">///     .collect::&lt;String&gt;();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(lowercase.parse(&quot;hello&quot;), Ok(&quot;hello&quot;.to_string()));</span>
-<span class="doccomment">/// assert!(lowercase.parse(&quot;Hello&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">filter</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">I</span>) -&gt; <span class="ident">bool</span>, <span class="ident">E</span>&gt;(<span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">Filter</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Filter</span>(<span class="ident">f</span>, <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`filter_map`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FilterMap</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt;(<span class="ident">F</span>, <span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
-
-<span class="kw">impl</span>&lt;<span class="ident">F</span>: <span class="ident">Copy</span>, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">FilterMap</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">F</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">FilterMap</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">E::Span</span>, <span class="ident">I</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">O</span>, <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">FilterMap</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that accepts only inputs that match the given predicate.
+///
+/// The output type of this parser is `I`, the input that was found.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let lowercase = filter::&lt;_, _, Cheap&lt;char&gt;&gt;(char::is_ascii_lowercase)
+///     .repeated().at_least(1)
+///     .then_ignore(end())
+///     .collect::&lt;String&gt;();
+///
+/// assert_eq!(lowercase.parse(&quot;hello&quot;), Ok(&quot;hello&quot;.to_string()));
+/// assert!(lowercase.parse(&quot;Hello&quot;).is_err());
+/// ```
+</span><span class="kw">pub fn </span>filter&lt;I, F: Fn(<span class="kw-2">&amp;</span>I) -&gt; bool, E&gt;(f: F) -&gt; Filter&lt;F, E&gt; {
+    Filter(f, PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`filter_map`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>FilterMap&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
+
+<span class="kw">impl</span>&lt;F: Copy, E&gt; Copy <span class="kw">for </span>FilterMap&lt;F, E&gt; {}
+<span class="kw">impl</span>&lt;F: Clone, E&gt; Clone <span class="kw">for </span>FilterMap&lt;F, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone, O, F: Fn(E::Span, I) -&gt; <span class="prelude-ty">Result</span>&lt;O, E&gt;, E: Error&lt;I&gt;&gt; Parser&lt;I, O&gt; <span class="kw">for </span>FilterMap&lt;F, E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">let</span> (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">tok</span>) = <span class="ident">stream</span>.<span class="ident">next</span>();
-        <span class="kw">match</span> <span class="ident">tok</span>.<span class="ident">map</span>(|<span class="ident">tok</span>| (<span class="self">self</span>.<span class="number">0</span>)(<span class="ident">span</span>.<span class="ident">clone</span>(), <span class="ident">tok</span>)) {
-            <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">tok</span>)) =&gt; (<span class="ident">Vec::new</span>(), <span class="prelude-val">Ok</span>((<span class="ident">tok</span>, <span class="prelude-val">None</span>))),
-            <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)) =&gt; (<span class="ident">Vec::new</span>(), <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(<span class="ident">at</span>, <span class="ident">err</span>))),
-            <span class="prelude-val">None</span> =&gt; (
-                <span class="ident">Vec::new</span>(),
-                <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                    <span class="ident">at</span>,
-                    <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="ident">Vec::new</span>(), <span class="prelude-val">None</span>),
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="kw">let </span>(at, span, tok) = stream.next();
+        <span class="kw">match </span>tok.map(|tok| (<span class="self">self</span>.<span class="number">0</span>)(span.clone(), tok)) {
+            <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(tok)) =&gt; (Vec::new(), <span class="prelude-val">Ok</span>((tok, <span class="prelude-val">None</span>))),
+            <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(err)) =&gt; (Vec::new(), <span class="prelude-val">Err</span>(Located::at(at, err))),
+            <span class="prelude-val">None </span>=&gt; (
+                Vec::new(),
+                <span class="prelude-val">Err</span>(Located::at(
+                    at,
+                    E::expected_input_found(span, Vec::new(), <span class="prelude-val">None</span>),
                 )),
             ),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
-    }
-}
-
-<span class="doccomment">/// A parser that accepts a input and tests it against the given fallible function.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This function allows integration with custom error types to allow for custom parser errors.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Before using this function, consider whether the [`select`] macro would serve you better.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `I`, the input that was found.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let numeral = filter_map(|span, c: char| match c.to_digit(10) {</span>
-<span class="doccomment">///     Some(x) =&gt; Ok(x),</span>
-<span class="doccomment">///     None =&gt; Err(Simple::custom(span, format!(&quot;&#39;{}&#39; is not a digit&quot;, c))),</span>
-<span class="doccomment">/// });</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(numeral.parse(&quot;3&quot;), Ok(3));</span>
-<span class="doccomment">/// assert_eq!(numeral.parse(&quot;7&quot;), Ok(7));</span>
-<span class="doccomment">/// assert_eq!(numeral.parse(&quot;f&quot;), Err(vec![Simple::custom(0..1, &quot;&#39;f&#39; is not a digit&quot;)]));</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">filter_map</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">E::Span</span>, <span class="ident">I</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">O</span>, <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(<span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">FilterMap</span>&lt;<span class="ident">F</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">FilterMap</span>(<span class="ident">f</span>, <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`any`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Any</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; = <span class="ident">Filter</span>&lt;<span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">I</span>) -&gt; <span class="ident">bool</span>, <span class="ident">E</span>&gt;;
-
-<span class="doccomment">/// A parser that accepts any input (but not the end of input).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `I`, the input that was found.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::{prelude::*, error::Cheap};</span>
-<span class="doccomment">/// let any = any::&lt;char, Cheap&lt;char&gt;&gt;();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(any.parse(&quot;a&quot;), Ok(&#39;a&#39;));</span>
-<span class="doccomment">/// assert_eq!(any.parse(&quot;7&quot;), Ok(&#39;7&#39;));</span>
-<span class="doccomment">/// assert_eq!(any.parse(&quot;\t&quot;), Ok(&#39;\t&#39;));</span>
-<span class="doccomment">/// assert!(any.parse(&quot;&quot;).is_err());</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">any</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;() -&gt; <span class="ident">Any</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Filter</span>(|<span class="kw">_</span>| <span class="bool-val">true</span>, <span class="ident">PhantomData</span>)
-}
-
-<span class="doccomment">/// See [`fn@todo`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Todo</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Location</span>&lt;<span class="lifetime">&#39;static</span>&gt;, <span class="ident">PhantomData</span>&lt;(<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>)&gt;);
-
-<span class="doccomment">/// A parser that can be used wherever you need to implement a parser later.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This parser is analogous to the [`todo!`] and [`unimplemented!`] macros, but will produce a panic when used to</span>
-<span class="doccomment">/// parse input, not immediately when invoked.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This function is useful when developing your parser, allowing you to prototype and run parts of your parser without</span>
-<span class="doccomment">/// committing to implementing the entire thing immediately.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is whatever you want it to be: it&#39;ll never produce output!</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```should_panic</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// let int = just::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;0x&quot;).ignore_then(todo())</span>
-<span class="doccomment">///     .or(just(&quot;0b&quot;).ignore_then(text::digits(2)))</span>
-<span class="doccomment">///     .or(text::int(10));</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // Decimal numbers are parsed</span>
-<span class="doccomment">/// assert_eq!(int.parse(&quot;12&quot;), Ok(&quot;12&quot;.to_string()));</span>
-<span class="doccomment">/// // Binary numbers are parsed</span>
-<span class="doccomment">/// assert_eq!(int.parse(&quot;0b00101&quot;), Ok(&quot;00101&quot;.to_string()));</span>
-<span class="doccomment">/// // Parsing hexadecimal numbers results in a panic because the parser is unimplemented</span>
-<span class="doccomment">/// int.parse(&quot;0xd4&quot;);</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">track_caller</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">todo</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;() -&gt; <span class="ident">Todo</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Todo</span>(<span class="ident">Location::caller</span>(), <span class="ident">PhantomData</span>)
-}
-
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Todo</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Todo</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">PhantomData</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Todo</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="doccomment">/// A parser that accepts a input and tests it against the given fallible function.
+///
+/// This function allows integration with custom error types to allow for custom parser errors.
+///
+/// Before using this function, consider whether the [`select`] macro would serve you better.
+///
+/// The output type of this parser is `I`, the input that was found.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let numeral = filter_map(|span, c: char| match c.to_digit(10) {
+///     Some(x) =&gt; Ok(x),
+///     None =&gt; Err(Simple::custom(span, format!(&quot;&#39;{}&#39; is not a digit&quot;, c))),
+/// });
+///
+/// assert_eq!(numeral.parse(&quot;3&quot;), Ok(3));
+/// assert_eq!(numeral.parse(&quot;7&quot;), Ok(7));
+/// assert_eq!(numeral.parse(&quot;f&quot;), Err(vec![Simple::custom(0..1, &quot;&#39;f&#39; is not a digit&quot;)]));
+/// ```
+</span><span class="kw">pub fn </span>filter_map&lt;I, O, F: Fn(E::Span, I) -&gt; <span class="prelude-ty">Result</span>&lt;O, E&gt;, E: Error&lt;I&gt;&gt;(f: F) -&gt; FilterMap&lt;F, E&gt; {
+    FilterMap(f, PhantomData)
+}
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+<span class="doccomment">/// See [`any`].
+</span><span class="kw">pub type </span>Any&lt;I, E&gt; = Filter&lt;<span class="kw">fn</span>(<span class="kw-2">&amp;</span>I) -&gt; bool, E&gt;;
+
+<span class="doccomment">/// A parser that accepts any input (but not the end of input).
+///
+/// The output type of this parser is `I`, the input that was found.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::{prelude::*, error::Cheap};
+/// let any = any::&lt;char, Cheap&lt;char&gt;&gt;();
+///
+/// assert_eq!(any.parse(&quot;a&quot;), Ok(&#39;a&#39;));
+/// assert_eq!(any.parse(&quot;7&quot;), Ok(&#39;7&#39;));
+/// assert_eq!(any.parse(&quot;\t&quot;), Ok(&#39;\t&#39;));
+/// assert!(any.parse(&quot;&quot;).is_err());
+/// ```
+</span><span class="kw">pub fn </span>any&lt;I, E&gt;() -&gt; Any&lt;I, E&gt; {
+    Filter(|<span class="kw">_</span>| <span class="bool-val">true</span>, PhantomData)
+}
+
+<span class="doccomment">/// See [`fn@todo`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Todo&lt;I, O, E&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;, PhantomData&lt;(I, O, E)&gt;);
+
+<span class="doccomment">/// A parser that can be used wherever you need to implement a parser later.
+///
+/// This parser is analogous to the [`todo!`] and [`unimplemented!`] macros, but will produce a panic when used to
+/// parse input, not immediately when invoked.
+///
+/// This function is useful when developing your parser, allowing you to prototype and run parts of your parser without
+/// committing to implementing the entire thing immediately.
+///
+/// The output type of this parser is whatever you want it to be: it&#39;ll never produce output!
+///
+/// # Examples
+///
+/// ```should_panic
+/// # use chumsky::prelude::*;
+/// let int = just::&lt;_, _, Simple&lt;char&gt;&gt;(&quot;0x&quot;).ignore_then(todo())
+///     .or(just(&quot;0b&quot;).ignore_then(text::digits(2)))
+///     .or(text::int(10));
+///
+/// // Decimal numbers are parsed
+/// assert_eq!(int.parse(&quot;12&quot;), Ok(&quot;12&quot;.to_string()));
+/// // Binary numbers are parsed
+/// assert_eq!(int.parse(&quot;0b00101&quot;), Ok(&quot;00101&quot;.to_string()));
+/// // Parsing hexadecimal numbers results in a panic because the parser is unimplemented
+/// int.parse(&quot;0xd4&quot;);
+/// ```
+</span><span class="attribute">#[track_caller]</span>
+<span class="kw">pub fn </span>todo&lt;I, O, E&gt;() -&gt; Todo&lt;I, O, E&gt; {
+    Todo(Location::caller(), PhantomData)
+}
+
+<span class="kw">impl</span>&lt;I, O, E&gt; Copy <span class="kw">for </span>Todo&lt;I, O, E&gt; {}
+<span class="kw">impl</span>&lt;I, O, E&gt; Clone <span class="kw">for </span>Todo&lt;I, O, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>, PhantomData)
+    }
+}
+
+<span class="kw">impl</span>&lt;I: Clone, O, E: Error&lt;I&gt;&gt; Parser&lt;I, O&gt; <span class="kw">for </span>Todo&lt;I, O, E&gt; {
+    <span class="kw">type </span>Error = E;
+
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">_stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        _stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
         <span class="macro">todo!</span>(
             <span class="string">&quot;Attempted to use an unimplemented parser. Parser defined at {}&quot;</span>,
-            <span class="self">self</span>.<span class="number">0</span>
-        )
+            <span class="self">self</span>.<span class="number">0
+        </span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
+    <span class="kw">fn </span>parse_inner_verbose(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Verbose,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
+    <span class="kw">fn </span>parse_inner_silent(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Silent,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="doccomment">/// See [`choice`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Choice</span>&lt;<span class="ident">T</span>, <span class="ident">E</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">T</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">PhantomData</span>&lt;<span class="ident">E</span>&gt;);
+<span class="doccomment">/// See [`choice`].
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Choice&lt;T, E&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) T, <span class="kw">pub</span>(<span class="kw">crate</span>) PhantomData&lt;E&gt;);
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Copy</span>, <span class="ident">E</span>&gt; <span class="ident">Copy</span> <span class="kw">for</span> <span class="ident">Choice</span>&lt;<span class="ident">T</span>, <span class="ident">E</span>&gt; {}
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span>, <span class="ident">E</span>&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Choice</span>&lt;<span class="ident">T</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="ident">PhantomData</span>)
+<span class="kw">impl</span>&lt;T: Copy, E&gt; Copy <span class="kw">for </span>Choice&lt;T, E&gt; {}
+<span class="kw">impl</span>&lt;T: Clone, E&gt; Clone <span class="kw">for </span>Choice&lt;T, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone(), PhantomData)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;
-    <span class="kw">for</span> <span class="ident">Choice</span>&lt;[<span class="ident">A</span>; <span class="ident">N</span>], <span class="ident">E</span>&gt;
+<span class="kw">impl</span>&lt;I: Clone, O, E: Error&lt;I&gt;, A: Parser&lt;I, O, Error = E&gt;, <span class="kw">const </span>N: usize&gt; Parser&lt;I, O&gt;
+    <span class="kw">for </span>Choice&lt;[A; N], E&gt;
 {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+    <span class="kw">type </span>Error = E;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="kw">let</span> <span class="ident">Choice</span>(<span class="ident">parsers</span>, <span class="kw">_</span>) = <span class="self">self</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">alt</span> = <span class="prelude-val">None</span>;
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">let </span>Choice(parsers, <span class="kw">_</span>) = <span class="self">self</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>alt = <span class="prelude-val">None</span>;
 
-        <span class="kw">for</span> <span class="ident">parser</span> <span class="kw">in</span> <span class="ident">parsers</span> {
-            <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_parse</span>(|<span class="ident">stream</span>| {
-                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="ident">parser</span>, <span class="ident">stream</span>)
+        <span class="kw">for </span>parser <span class="kw">in </span>parsers {
+            <span class="kw">match </span>stream.try_parse(|stream| {
+                <span class="attribute">#[allow(deprecated)]</span>
+                debugger.invoke(parser, stream)
             }) {
-                (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>)) =&gt; <span class="kw">return</span> (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>)),
-                (<span class="kw">_</span>, <span class="prelude-val">Err</span>(<span class="ident">a_alt</span>)) =&gt; {
-                    <span class="ident">alt</span> = <span class="ident">merge_alts</span>(<span class="ident">alt</span>.<span class="ident">take</span>(), <span class="prelude-val">Some</span>(<span class="ident">a_alt</span>));
+                (errors, <span class="prelude-val">Ok</span>(out)) =&gt; <span class="kw">return </span>(errors, <span class="prelude-val">Ok</span>(out)),
+                (<span class="kw">_</span>, <span class="prelude-val">Err</span>(a_alt)) =&gt; {
+                    alt = merge_alts(alt.take(), <span class="prelude-val">Some</span>(a_alt));
                 }
             };
         }
 
-        (<span class="ident">Vec::new</span>(), <span class="prelude-val">Err</span>(<span class="ident">alt</span>.<span class="ident">unwrap</span>()))
+        (Vec::new(), <span class="prelude-val">Err</span>(alt.unwrap()))
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
+    <span class="kw">fn </span>parse_inner_verbose(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Verbose,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
+    <span class="kw">fn </span>parse_inner_silent(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Silent,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Choice</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">A</span>&gt;, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="kw">impl</span>&lt;I: Clone, O, E: Error&lt;I&gt;, A: Parser&lt;I, O, Error = E&gt;&gt; Parser&lt;I, O&gt; <span class="kw">for </span>Choice&lt;Vec&lt;A&gt;, E&gt; {
+    <span class="kw">type </span>Error = E;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="kw">let</span> <span class="ident">Choice</span>(<span class="ident">parsers</span>, <span class="kw">_</span>) = <span class="self">self</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">alt</span> = <span class="prelude-val">None</span>;
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">let </span>Choice(parsers, <span class="kw">_</span>) = <span class="self">self</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>alt = <span class="prelude-val">None</span>;
 
-        <span class="kw">for</span> <span class="ident">parser</span> <span class="kw">in</span> <span class="ident">parsers</span> {
-            <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_parse</span>(|<span class="ident">stream</span>| {
-                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="ident">parser</span>, <span class="ident">stream</span>)
+        <span class="kw">for </span>parser <span class="kw">in </span>parsers {
+            <span class="kw">match </span>stream.try_parse(|stream| {
+                <span class="attribute">#[allow(deprecated)]</span>
+                debugger.invoke(parser, stream)
             }) {
-                (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>)) =&gt; <span class="kw">return</span> (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>)),
-                (<span class="kw">_</span>, <span class="prelude-val">Err</span>(<span class="ident">a_alt</span>)) =&gt; {
-                    <span class="ident">alt</span> = <span class="ident">merge_alts</span>(<span class="ident">alt</span>.<span class="ident">take</span>(), <span class="prelude-val">Some</span>(<span class="ident">a_alt</span>));
+                (errors, <span class="prelude-val">Ok</span>(out)) =&gt; <span class="kw">return </span>(errors, <span class="prelude-val">Ok</span>(out)),
+                (<span class="kw">_</span>, <span class="prelude-val">Err</span>(a_alt)) =&gt; {
+                    alt = merge_alts(alt.take(), <span class="prelude-val">Some</span>(a_alt));
                 }
             };
         }
 
-        (<span class="ident">Vec::new</span>(), <span class="prelude-val">Err</span>(<span class="ident">alt</span>.<span class="ident">unwrap</span>()))
+        (Vec::new(), <span class="prelude-val">Err</span>(alt.unwrap()))
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
+    <span class="kw">fn </span>parse_inner_verbose(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Verbose,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
+    <span class="kw">fn </span>parse_inner_silent(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-        <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+        d: <span class="kw-2">&amp;mut </span>Silent,
+        s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">impl_for_tuple</span> {
+<span class="macro">macro_rules!</span> impl_for_tuple {
     () =&gt; {};
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">ident</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>:<span class="ident">ident</span>)<span class="kw-2">*</span>) =&gt; {
-        <span class="macro">impl_for_tuple!</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>)<span class="kw-2">*</span>);
-        <span class="macro">impl_for_tuple!</span>(~ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span> $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>)<span class="kw-2">*</span>);
+    (<span class="macro-nonterminal">$head</span>:ident $(<span class="macro-nonterminal">$X</span>:ident)<span class="kw-2">*</span>) =&gt; {
+        <span class="macro">impl_for_tuple!</span>($(<span class="macro-nonterminal">$X</span>)<span class="kw-2">*</span>);
+        <span class="macro">impl_for_tuple!</span>(~ <span class="macro-nonterminal">$head </span>$(<span class="macro-nonterminal">$X</span>)<span class="kw-2">*</span>);
     };
-    (~ $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>:<span class="ident">ident</span>)<span class="kw-2">*</span>) =&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>, <span class="ident">non_snake_case</span>)]</span>
-        <span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;),<span class="kw-2">*</span>&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Choice</span>&lt;($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>,)<span class="kw-2">*</span>), <span class="ident">E</span>&gt; {
-            <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+    (~ $(<span class="macro-nonterminal">$X</span>:ident)<span class="kw-2">*</span>) =&gt; {
+        <span class="attribute">#[allow(unused_variables, non_snake_case)]</span>
+        <span class="kw">impl</span>&lt;I: Clone, O, E: Error&lt;I&gt;, $(<span class="macro-nonterminal">$X</span>: Parser&lt;I, O, Error = E&gt;),<span class="kw-2">*</span>&gt; Parser&lt;I, O&gt; <span class="kw">for </span>Choice&lt;($(<span class="macro-nonterminal">$X</span>,)<span class="kw-2">*</span>), E&gt; {
+            <span class="kw">type </span>Error = E;
 
-            <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+            <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
-                <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-                <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-            ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-                <span class="kw">let</span> <span class="ident">Choice</span>(($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>,)<span class="kw-2">*</span>), <span class="kw">_</span>) = <span class="self">self</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">alt</span> = <span class="prelude-val">None</span>;
+                debugger: <span class="kw-2">&amp;mut </span>D,
+                stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+            ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+                <span class="kw">let </span>Choice(($(<span class="macro-nonterminal">$X</span>,)<span class="kw-2">*</span>), <span class="kw">_</span>) = <span class="self">self</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>alt = <span class="prelude-val">None</span>;
                 $(
-                    <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_parse</span>(|<span class="ident">stream</span>| {
-                        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                        <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>, <span class="ident">stream</span>)
+                    <span class="kw">match </span>stream.try_parse(|stream| {
+                        <span class="attribute">#[allow(deprecated)]</span>
+                        debugger.invoke(<span class="macro-nonterminal">$X</span>, stream)
                     }) {
-                        (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>)) =&gt; <span class="kw">return</span> (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>)),
-                        (<span class="ident">errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_alt</span>)) =&gt; {
-                            <span class="ident">alt</span> = <span class="ident">merge_alts</span>(<span class="ident">alt</span>.<span class="ident">take</span>(), <span class="prelude-val">Some</span>(<span class="ident">a_alt</span>));
+                        (errors, <span class="prelude-val">Ok</span>(out)) =&gt; <span class="kw">return </span>(errors, <span class="prelude-val">Ok</span>(out)),
+                        (errors, <span class="prelude-val">Err</span>(a_alt)) =&gt; {
+                            alt = merge_alts(alt.take(), <span class="prelude-val">Some</span>(a_alt));
                         },
                     };
                 )*
-                (<span class="ident">Vec::new</span>(), <span class="prelude-val">Err</span>(<span class="ident">alt</span>.<span class="ident">unwrap</span>()))
+                (Vec::new(), <span class="prelude-val">Err</span>(alt.unwrap()))
             }
 
-            <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(
+            <span class="kw">fn </span>parse_inner_verbose(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
-                <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>,
-                <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-            ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+                d: <span class="kw-2">&amp;mut </span>Verbose,
+                s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+            ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+                <span class="attribute">#[allow(deprecated)]</span>
+                <span class="self">self</span>.parse_inner(d, s)
             }
-            <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(
+            <span class="kw">fn </span>parse_inner_silent(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
-                <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>,
-                <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-            ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-                <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+                d: <span class="kw-2">&amp;mut </span>Silent,
+                s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+            ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+                <span class="attribute">#[allow(deprecated)]</span>
+                <span class="self">self</span>.parse_inner(d, s)
             }
         }
     };
 }
 
-<span class="macro">impl_for_tuple!</span>(<span class="ident">A_</span> <span class="ident">B_</span> <span class="ident">C_</span> <span class="ident">D_</span> <span class="ident">E_</span> <span class="ident">F_</span> <span class="ident">G_</span> <span class="ident">H_</span> <span class="ident">I_</span> <span class="ident">J_</span> <span class="ident">K_</span> <span class="ident">L_</span> <span class="ident">M_</span> <span class="ident">N_</span> <span class="ident">O_</span> <span class="ident">P_</span> <span class="ident">Q_</span> <span class="ident">S_</span> <span class="ident">T_</span> <span class="ident">U_</span> <span class="ident">V_</span> <span class="ident">W_</span> <span class="ident">X_</span> <span class="ident">Y_</span> <span class="ident">Z_</span>);
+<span class="macro">impl_for_tuple!</span>(A_ B_ C_ D_ E_ F_ G_ H_ I_ J_ K_ L_ M_ N_ O_ P_ Q_ S_ T_ U_ V_ W_ X_ Y_ Z_);
 
-<span class="doccomment">/// Parse using a tuple or array of many parsers, producing the output of the first to successfully parse.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This primitive has a twofold improvement over a chain of [`Parser::or`] calls:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - Rust&#39;s trait solver seems to resolve the [`Parser`] impl for this type much faster, significantly reducing</span>
-<span class="doccomment">///   compilation times.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - Parsing is likely a little faster in some cases because the resulting parser is &#39;less careful&#39; about error</span>
-<span class="doccomment">///   routing, and doesn&#39;t perform the same fine-grained error prioritisation that [`Parser::or`] does.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// These qualities make this parser ideal for lexers.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is the output type of the inner parsers.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// #[derive(Clone, Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Token {</span>
-<span class="doccomment">///     If,</span>
-<span class="doccomment">///     For,</span>
-<span class="doccomment">///     While,</span>
-<span class="doccomment">///     Fn,</span>
-<span class="doccomment">///     Int(u64),</span>
-<span class="doccomment">///     Ident(String),</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens = choice::&lt;_, Simple&lt;char&gt;&gt;((</span>
-<span class="doccomment">///     text::keyword(&quot;if&quot;).to(Token::If),</span>
-<span class="doccomment">///     text::keyword(&quot;for&quot;).to(Token::For),</span>
-<span class="doccomment">///     text::keyword(&quot;while&quot;).to(Token::While),</span>
-<span class="doccomment">///     text::keyword(&quot;fn&quot;).to(Token::Fn),</span>
-<span class="doccomment">///     text::int(10).from_str().unwrapped().map(Token::Int),</span>
-<span class="doccomment">///     text::ident().map(Token::Ident),</span>
-<span class="doccomment">/// ))</span>
-<span class="doccomment">///     .padded()</span>
-<span class="doccomment">///     .repeated();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// use Token::*;</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     tokens.parse(&quot;if 56 for foo while 42 fn bar&quot;),</span>
-<span class="doccomment">///     Ok(vec![If, Int(56), For, Ident(&quot;foo&quot;.to_string()), While, Int(42), Fn, Ident(&quot;bar&quot;.to_string())]),</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If you have more than 26 choices, the array-form of choice will work for any length. The downside</span>
-<span class="doccomment">/// being that the contained parsers must all be of the same type.</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// #[derive(Clone, Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Token {</span>
-<span class="doccomment">///     If,</span>
-<span class="doccomment">///     For,</span>
-<span class="doccomment">///     While,</span>
-<span class="doccomment">///     Fn,</span>
-<span class="doccomment">///     Def,</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens = choice::&lt;_, Simple&lt;char&gt;&gt;([</span>
-<span class="doccomment">///     text::keyword(&quot;if&quot;).to(Token::If),</span>
-<span class="doccomment">///     text::keyword(&quot;for&quot;).to(Token::For),</span>
-<span class="doccomment">///     text::keyword(&quot;while&quot;).to(Token::While),</span>
-<span class="doccomment">///     text::keyword(&quot;fn&quot;).to(Token::Fn),</span>
-<span class="doccomment">///     text::keyword(&quot;def&quot;).to(Token::Def),</span>
-<span class="doccomment">/// ])</span>
-<span class="doccomment">///     .padded()</span>
-<span class="doccomment">///     .repeated();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// use Token::*;</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     tokens.parse(&quot;def fn while if for&quot;),</span>
-<span class="doccomment">///     Ok(vec![Def, Fn, While, If, For]),</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">choice</span>&lt;<span class="ident">T</span>, <span class="ident">E</span>&gt;(<span class="ident">parsers</span>: <span class="ident">T</span>) -&gt; <span class="ident">Choice</span>&lt;<span class="ident">T</span>, <span class="ident">E</span>&gt; {
-    <span class="ident">Choice</span>(<span class="ident">parsers</span>, <span class="ident">PhantomData</span>)
+<span class="doccomment">/// Parse using a tuple or array of many parsers, producing the output of the first to successfully parse.
+///
+/// This primitive has a twofold improvement over a chain of [`Parser::or`] calls:
+///
+/// - Rust&#39;s trait solver seems to resolve the [`Parser`] impl for this type much faster, significantly reducing
+///   compilation times.
+///
+/// - Parsing is likely a little faster in some cases because the resulting parser is &#39;less careful&#39; about error
+///   routing, and doesn&#39;t perform the same fine-grained error prioritisation that [`Parser::or`] does.
+///
+/// These qualities make this parser ideal for lexers.
+///
+/// The output type of this parser is the output type of the inner parsers.
+///
+/// # Examples
+/// ```
+/// # use chumsky::prelude::*;
+/// #[derive(Clone, Debug, PartialEq)]
+/// enum Token {
+///     If,
+///     For,
+///     While,
+///     Fn,
+///     Int(u64),
+///     Ident(String),
+/// }
+///
+/// let tokens = choice::&lt;_, Simple&lt;char&gt;&gt;((
+///     text::keyword(&quot;if&quot;).to(Token::If),
+///     text::keyword(&quot;for&quot;).to(Token::For),
+///     text::keyword(&quot;while&quot;).to(Token::While),
+///     text::keyword(&quot;fn&quot;).to(Token::Fn),
+///     text::int(10).from_str().unwrapped().map(Token::Int),
+///     text::ident().map(Token::Ident),
+/// ))
+///     .padded()
+///     .repeated();
+///
+/// use Token::*;
+/// assert_eq!(
+///     tokens.parse(&quot;if 56 for foo while 42 fn bar&quot;),
+///     Ok(vec![If, Int(56), For, Ident(&quot;foo&quot;.to_string()), While, Int(42), Fn, Ident(&quot;bar&quot;.to_string())]),
+/// );
+/// ```
+///
+/// If you have more than 26 choices, the array-form of choice will work for any length. The downside
+/// being that the contained parsers must all be of the same type.
+/// ```
+/// # use chumsky::prelude::*;
+/// #[derive(Clone, Debug, PartialEq)]
+/// enum Token {
+///     If,
+///     For,
+///     While,
+///     Fn,
+///     Def,
+/// }
+///
+/// let tokens = choice::&lt;_, Simple&lt;char&gt;&gt;([
+///     text::keyword(&quot;if&quot;).to(Token::If),
+///     text::keyword(&quot;for&quot;).to(Token::For),
+///     text::keyword(&quot;while&quot;).to(Token::While),
+///     text::keyword(&quot;fn&quot;).to(Token::Fn),
+///     text::keyword(&quot;def&quot;).to(Token::Def),
+/// ])
+///     .padded()
+///     .repeated();
+///
+/// use Token::*;
+/// assert_eq!(
+///     tokens.parse(&quot;def fn while if for&quot;),
+///     Ok(vec![Def, Fn, While, If, For]),
+/// );
+/// ```
+</span><span class="kw">pub fn </span>choice&lt;T, E&gt;(parsers: T) -&gt; Choice&lt;T, E&gt; {
+    Choice(parsers, PhantomData)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

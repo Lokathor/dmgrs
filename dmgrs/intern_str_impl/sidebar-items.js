@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["intern_str","Turns any `&str` into a `&'static str` using a minimal number of new allocations."]]};

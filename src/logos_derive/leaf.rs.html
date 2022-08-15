@@ -96,101 +96,101 @@
 <span id="94">94</span>
 <span id="95">95</span>
 <span id="96">96</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::cmp</span>::{<span class="ident">Ord</span>, <span class="ident">Ordering</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="self">self</span>, <span class="ident">Debug</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>std::cmp::{Ord, Ordering};
+<span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
 
-<span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Span</span>, <span class="ident">TokenStream</span>};
-<span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">spanned::Spanned</span>, <span class="ident">Ident</span>};
+<span class="kw">use </span>proc_macro2::{Span, TokenStream};
+<span class="kw">use </span>syn::{spanned::Spanned, Ident};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::graph</span>::{<span class="ident">Disambiguate</span>, <span class="ident">Node</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::MaybeVoid</span>;
+<span class="kw">use </span><span class="kw">crate</span>::graph::{Disambiguate, Node};
+<span class="kw">use </span><span class="kw">crate</span>::util::MaybeVoid;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;t</span>&gt; {
-    <span class="kw">pub</span> <span class="ident">ident</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">Ident</span>,
-    <span class="kw">pub</span> <span class="ident">span</span>: <span class="ident">Span</span>,
-    <span class="kw">pub</span> <span class="ident">priority</span>: <span class="ident">usize</span>,
-    <span class="kw">pub</span> <span class="ident">field</span>: <span class="ident">MaybeVoid</span>,
-    <span class="kw">pub</span> <span class="ident">callback</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Callback</span>&gt;,
+<span class="attribute">#[derive(Clone)]</span>
+<span class="kw">pub struct </span>Leaf&lt;<span class="lifetime">&#39;t</span>&gt; {
+    <span class="kw">pub </span>ident: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span>Ident,
+    <span class="kw">pub </span>span: Span,
+    <span class="kw">pub </span>priority: usize,
+    <span class="kw">pub </span>field: MaybeVoid,
+    <span class="kw">pub </span>callback: <span class="prelude-ty">Option</span>&lt;Callback&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Callback</span> {
-    <span class="ident">Label</span>(<span class="ident">TokenStream</span>),
-    <span class="ident">Inline</span>(<span class="ident">Box</span>&lt;<span class="ident">InlineCallback</span>&gt;),
+<span class="attribute">#[derive(Clone)]</span>
+<span class="kw">pub enum </span>Callback {
+    Label(TokenStream),
+    Inline(Box&lt;InlineCallback&gt;),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InlineCallback</span> {
-    <span class="kw">pub</span> <span class="ident">arg</span>: <span class="ident">Ident</span>,
-    <span class="kw">pub</span> <span class="ident">body</span>: <span class="ident">TokenStream</span>,
-    <span class="kw">pub</span> <span class="ident">span</span>: <span class="ident">Span</span>,
+<span class="attribute">#[derive(Clone)]</span>
+<span class="kw">pub struct </span>InlineCallback {
+    <span class="kw">pub </span>arg: Ident,
+    <span class="kw">pub </span>body: TokenStream,
+    <span class="kw">pub </span>span: Span,
 }
 
-<span class="kw">impl</span> <span class="ident">From</span>&lt;<span class="ident">InlineCallback</span>&gt; <span class="kw">for</span> <span class="ident">Callback</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">inline</span>: <span class="ident">InlineCallback</span>) -&gt; <span class="ident">Callback</span> {
-        <span class="ident">Callback::Inline</span>(<span class="ident">Box::new</span>(<span class="ident">inline</span>))
+<span class="kw">impl </span>From&lt;InlineCallback&gt; <span class="kw">for </span>Callback {
+    <span class="kw">fn </span>from(inline: InlineCallback) -&gt; Callback {
+        Callback::Inline(Box::new(inline))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Callback</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">span</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Span</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">Callback::Label</span>(<span class="ident">tokens</span>) =&gt; <span class="ident">tokens</span>.<span class="ident">span</span>(),
-            <span class="ident">Callback::Inline</span>(<span class="ident">inline</span>) =&gt; <span class="ident">inline</span>.<span class="ident">span</span>,
+<span class="kw">impl </span>Callback {
+    <span class="kw">pub fn </span>span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
+        <span class="kw">match </span><span class="self">self </span>{
+            Callback::Label(tokens) =&gt; tokens.span(),
+            Callback::Inline(inline) =&gt; inline.span,
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>&gt; <span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;t</span>&gt; {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ident</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">Ident</span>, <span class="ident">span</span>: <span class="ident">Span</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident">Leaf</span> {
-            <span class="ident">ident</span>,
-            <span class="ident">span</span>,
-            <span class="ident">priority</span>: <span class="number">0</span>,
-            <span class="ident">field</span>: <span class="ident">MaybeVoid::Void</span>,
-            <span class="ident">callback</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>&gt; Leaf&lt;<span class="lifetime">&#39;t</span>&gt; {
+    <span class="kw">pub fn </span>new(ident: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span>Ident, span: Span) -&gt; <span class="self">Self </span>{
+        Leaf {
+            ident,
+            span,
+            priority: <span class="number">0</span>,
+            field: MaybeVoid::Void,
+            callback: <span class="prelude-val">None</span>,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">callback</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">callback</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Callback</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">callback</span> = <span class="ident">callback</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>callback(<span class="kw-2">mut </span><span class="self">self</span>, callback: <span class="prelude-ty">Option</span>&lt;Callback&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.callback = callback;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">field</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">field</span>: <span class="ident">MaybeVoid</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">field</span> = <span class="ident">field</span>;
-        <span class="self">self</span>
-    }
+    <span class="kw">pub fn </span>field(<span class="kw-2">mut </span><span class="self">self</span>, field: MaybeVoid) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.field = field;
+        <span class="self">self
+    </span>}
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">priority</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">priority</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">priority</span> = <span class="ident">priority</span>;
-        <span class="self">self</span>
+    <span class="kw">pub fn </span>priority(<span class="kw-2">mut </span><span class="self">self</span>, priority: usize) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.priority = priority;
+        <span class="self">self
+    </span>}
+}
+
+<span class="kw">impl </span>Disambiguate <span class="kw">for </span>Leaf&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>cmp(left: <span class="kw-2">&amp;</span>Leaf, right: <span class="kw-2">&amp;</span>Leaf) -&gt; Ordering {
+        Ord::cmp(<span class="kw-2">&amp;</span>left.priority, <span class="kw-2">&amp;</span>right.priority)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Disambiguate</span> <span class="kw">for</span> <span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="ident">left</span>: <span class="kw-2">&amp;</span><span class="ident">Leaf</span>, <span class="ident">right</span>: <span class="kw-2">&amp;</span><span class="ident">Leaf</span>) -&gt; <span class="ident">Ordering</span> {
-        <span class="ident">Ord::cmp</span>(<span class="kw-2">&amp;</span><span class="ident">left</span>.<span class="ident">priority</span>, <span class="kw-2">&amp;</span><span class="ident">right</span>.<span class="ident">priority</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>&gt; From&lt;Leaf&lt;<span class="lifetime">&#39;t</span>&gt;&gt; <span class="kw">for </span>Node&lt;Leaf&lt;<span class="lifetime">&#39;t</span>&gt;&gt; {
+    <span class="kw">fn </span>from(leaf: Leaf&lt;<span class="lifetime">&#39;t</span>&gt;) -&gt; <span class="self">Self </span>{
+        Node::Leaf(leaf)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;t</span>&gt; <span class="ident">From</span>&lt;<span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;t</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Node</span>&lt;<span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;t</span>&gt;&gt; {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">leaf</span>: <span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;t</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="ident">Node::Leaf</span>(<span class="ident">leaf</span>)
-    }
-}
+<span class="kw">impl </span>Debug <span class="kw">for </span>Leaf&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        <span class="macro">write!</span>(f, <span class="string">&quot;::{}&quot;</span>, <span class="self">self</span>.ident)<span class="question-mark">?</span>;
 
-<span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Leaf</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;::{}&quot;</span>, <span class="self">self</span>.<span class="ident">ident</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">callback</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">Callback::Label</span>(<span class="kw-2">ref</span> <span class="ident">label</span>)) =&gt; <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot; ({})&quot;</span>, <span class="ident">label</span>),
-            <span class="prelude-val">Some</span>(<span class="ident">Callback::Inline</span>(<span class="kw">_</span>)) =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; (&lt;inline&gt;)&quot;</span>),
-            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(()),
+        <span class="kw">match </span><span class="self">self</span>.callback {
+            <span class="prelude-val">Some</span>(Callback::Label(<span class="kw-2">ref </span>label)) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot; ({})&quot;</span>, label),
+            <span class="prelude-val">Some</span>(Callback::Inline(<span class="kw">_</span>)) =&gt; f.write_str(<span class="string">&quot; (&lt;inline&gt;)&quot;</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

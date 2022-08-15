@@ -53,58 +53,58 @@
 <span id="51">51</span>
 <span id="52">52</span>
 <span id="53">53</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">proc_macro2::TokenStream</span>;
-<span class="kw">use</span> <span class="ident">quote::quote</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>proc_macro2::TokenStream;
+<span class="kw">use </span>quote::quote;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::generator</span>::{<span class="ident">Context</span>, <span class="ident">Generator</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::leaf</span>::{<span class="ident">Callback</span>, <span class="ident">Leaf</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::MaybeVoid</span>;
+<span class="kw">use </span><span class="kw">crate</span>::generator::{Context, Generator};
+<span class="kw">use </span><span class="kw">crate</span>::leaf::{Callback, Leaf};
+<span class="kw">use </span><span class="kw">crate</span>::util::MaybeVoid;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">Generator</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_leaf</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">leaf</span>: <span class="kw-2">&amp;</span><span class="ident">Leaf</span>, <span class="kw-2">mut</span> <span class="ident">ctx</span>: <span class="ident">Context</span>) -&gt; <span class="ident">TokenStream</span> {
-        <span class="kw">let</span> <span class="ident">bump</span> = <span class="ident">ctx</span>.<span class="ident">bump</span>();
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Generator&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub fn </span>generate_leaf(<span class="kw-2">&amp;mut </span><span class="self">self</span>, leaf: <span class="kw-2">&amp;</span>Leaf, <span class="kw-2">mut </span>ctx: Context) -&gt; TokenStream {
+        <span class="kw">let </span>bump = ctx.bump();
 
-        <span class="kw">let</span> <span class="ident">ident</span> = <span class="kw-2">&amp;</span><span class="ident">leaf</span>.<span class="ident">ident</span>;
-        <span class="kw">let</span> <span class="ident">name</span> = <span class="self">self</span>.<span class="ident">name</span>;
-        <span class="kw">let</span> <span class="ident">this</span> = <span class="self">self</span>.<span class="ident">this</span>;
-        <span class="kw">let</span> <span class="ident">ty</span> = <span class="kw-2">&amp;</span><span class="ident">leaf</span>.<span class="ident">field</span>;
+        <span class="kw">let </span>ident = <span class="kw-2">&amp;</span>leaf.ident;
+        <span class="kw">let </span>name = <span class="self">self</span>.name;
+        <span class="kw">let </span>this = <span class="self">self</span>.this;
+        <span class="kw">let </span>ty = <span class="kw-2">&amp;</span>leaf.field;
 
-        <span class="kw">let</span> <span class="ident">constructor</span> = <span class="kw">match</span> <span class="ident">leaf</span>.<span class="ident">field</span> {
-            <span class="ident">MaybeVoid::Some</span>(<span class="kw">_</span>) =&gt; <span class="macro">quote!</span>(#<span class="ident">name</span>::#<span class="ident">ident</span>),
-            <span class="ident">MaybeVoid::Void</span> =&gt; <span class="macro">quote!</span>(|()| #<span class="ident">name</span>::#<span class="ident">ident</span>),
+        <span class="kw">let </span>constructor = <span class="kw">match </span>leaf.field {
+            MaybeVoid::Some(<span class="kw">_</span>) =&gt; <span class="macro">quote!</span>(#name::#ident),
+            MaybeVoid::Void =&gt; <span class="macro">quote!</span>(|()| #name::#ident),
         };
 
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">leaf</span>.<span class="ident">callback</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">Callback::Label</span>(<span class="ident">callback</span>)) =&gt; <span class="macro">quote!</span> {
-                #<span class="ident">bump</span>
-                #<span class="ident">callback</span>(<span class="ident">lex</span>).<span class="ident">construct</span>(#<span class="ident">constructor</span>, <span class="ident">lex</span>);
+        <span class="kw">match </span><span class="kw-2">&amp;</span>leaf.callback {
+            <span class="prelude-val">Some</span>(Callback::Label(callback)) =&gt; <span class="macro">quote!</span> {
+                #bump
+                #callback(lex).construct(#constructor, lex);
             },
-            <span class="prelude-val">Some</span>(<span class="ident">Callback::Inline</span>(<span class="ident">inline</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">arg</span> = <span class="kw-2">&amp;</span><span class="ident">inline</span>.<span class="ident">arg</span>;
-                <span class="kw">let</span> <span class="ident">body</span> = <span class="kw-2">&amp;</span><span class="ident">inline</span>.<span class="ident">body</span>;
+            <span class="prelude-val">Some</span>(Callback::Inline(inline)) =&gt; {
+                <span class="kw">let </span>arg = <span class="kw-2">&amp;</span>inline.arg;
+                <span class="kw">let </span>body = <span class="kw-2">&amp;</span>inline.body;
 
                 <span class="macro">quote!</span> {
-                    #<span class="ident">bump</span>
+                    #bump
 
-                    <span class="attribute">#[<span class="ident">inline</span>]</span>
-                    <span class="kw">fn</span> <span class="ident">callback</span>&lt;<span class="lifetime">&#39;s</span>&gt;(#<span class="ident">arg</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;s</span>&gt;) -&gt; <span class="kw">impl</span> <span class="ident">CallbackResult</span>&lt;<span class="lifetime">&#39;s</span>, #<span class="ident">ty</span>, #<span class="ident">this</span>&gt; {
-                        #<span class="ident">body</span>
+                    <span class="attribute">#[inline]</span>
+                    <span class="kw">fn </span>callback&lt;<span class="lifetime">&#39;s</span>&gt;(#arg: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) -&gt; <span class="kw">impl </span>CallbackResult&lt;<span class="lifetime">&#39;s</span>, #ty, #this&gt; {
+                        #body
                     }
 
-                    <span class="ident">callback</span>(<span class="ident">lex</span>).<span class="ident">construct</span>(#<span class="ident">constructor</span>, <span class="ident">lex</span>);
+                    callback(lex).construct(#constructor, lex);
                 }
             }
-            <span class="prelude-val">None</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">leaf</span>.<span class="ident">field</span>, <span class="ident">MaybeVoid::Void</span>) =&gt; <span class="macro">quote!</span> {
-                #<span class="ident">bump</span>
-                <span class="ident">lex</span>.<span class="ident">set</span>(#<span class="ident">name</span>::#<span class="ident">ident</span>);
+            <span class="prelude-val">None </span><span class="kw">if </span><span class="macro">matches!</span>(leaf.field, MaybeVoid::Void) =&gt; <span class="macro">quote!</span> {
+                #bump
+                lex.set(#name::#ident);
             },
-            <span class="prelude-val">None</span> =&gt; <span class="macro">quote!</span> {
-                #<span class="ident">bump</span>
-                <span class="kw">let</span> <span class="ident">token</span> = #<span class="ident">name</span>::#<span class="ident">ident</span>(<span class="ident">lex</span>.<span class="ident">slice</span>());
-                <span class="ident">lex</span>.<span class="ident">set</span>(<span class="ident">token</span>);
+            <span class="prelude-val">None </span>=&gt; <span class="macro">quote!</span> {
+                #bump
+                <span class="kw">let </span>token = #name::#ident(lex.slice());
+                lex.set(token);
             },
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

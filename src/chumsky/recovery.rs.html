@@ -374,163 +374,163 @@
 <span id="374">374</span>
 <span id="375">375</span>
 <span id="376">376</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Types and traits that facilitate error recovery.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! *“Do you find coming to terms with the mindless tedium of it all presents an interesting challenge?”*</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Types and traits that facilitate error recovery.
+//!
+//! *“Do you find coming to terms with the mindless tedium of it all presents an interesting challenge?”*
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// A trait implemented by error recovery strategies.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Strategy</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; {
-    <span class="doccomment">/// Recover from a parsing failure.</span>
-    <span class="kw">fn</span> <span class="ident">recover</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>, <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;&gt;(
+<span class="doccomment">/// A trait implemented by error recovery strategies.
+</span><span class="kw">pub trait </span>Strategy&lt;I: Clone, O, E: Error&lt;I&gt;&gt; {
+    <span class="doccomment">/// Recover from a parsing failure.
+    </span><span class="kw">fn </span>recover&lt;D: Debugger, P: Parser&lt;I, O, Error = E&gt;&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">recovered_errors</span>: <span class="ident">Vec</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;&gt;,
-        <span class="ident">fatal_error</span>: <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-        <span class="ident">parser</span>: <span class="ident">P</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">P::Error</span>&gt;;
+        recovered_errors: Vec&lt;Located&lt;I, P::Error&gt;&gt;,
+        fatal_error: Located&lt;I, P::Error&gt;,
+        parser: P,
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, P::Error&gt;,
+    ) -&gt; PResult&lt;I, O, P::Error&gt;;
 }
 
-<span class="doccomment">/// See [`skip_then_retry_until`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SkipThenRetryUntil</span>&lt;<span class="ident">I</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt;(
-    <span class="kw">pub</span>(<span class="kw">crate</span>) [<span class="ident">I</span>; <span class="ident">N</span>],
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">bool</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">bool</span>,
+<span class="doccomment">/// See [`skip_then_retry_until`].
+</span><span class="attribute">#[must_use]</span>
+<span class="attribute">#[derive(Copy, Clone)]</span>
+<span class="kw">pub struct </span>SkipThenRetryUntil&lt;I, <span class="kw">const </span>N: usize&gt;(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) [I; N],
+    <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
 );
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">SkipThenRetryUntil</span>&lt;<span class="ident">I</span>, <span class="ident">N</span>&gt; {
-    <span class="doccomment">/// Alters this recovery strategy so that the first token will always be skipped.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is useful when the input being searched for also appears at the beginning of the pattern that failed to</span>
-    <span class="doccomment">/// parse.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_start</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span>&lt;I, <span class="kw">const </span>N: usize&gt; SkipThenRetryUntil&lt;I, N&gt; {
+    <span class="doccomment">/// Alters this recovery strategy so that the first token will always be skipped.
+    ///
+    /// This is useful when the input being searched for also appears at the beginning of the pattern that failed to
+    /// parse.
+    </span><span class="kw">pub fn </span>skip_start(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>, <span class="bool-val">true</span>)
     }
 
-    <span class="doccomment">/// Alters this recovery strategy so that the synchronisation token will be consumed during recovery.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is useful when the input being searched for is a delimiter of a prior pattern rather than the start of a</span>
-    <span class="doccomment">/// new pattern and hence is no longer important once recovery has occurred.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_end</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
+    <span class="doccomment">/// Alters this recovery strategy so that the synchronisation token will be consumed during recovery.
+    ///
+    /// This is useful when the input being searched for is a delimiter of a prior pattern rather than the start of a
+    /// new pattern and hence is no longer important once recovery has occurred.
+    </span><span class="kw">pub fn </span>consume_end(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="bool-val">true</span>, <span class="self">self</span>.<span class="number">2</span>)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Strategy</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;
-    <span class="kw">for</span> <span class="ident">SkipThenRetryUntil</span>&lt;<span class="ident">I</span>, <span class="ident">N</span>&gt;
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, O, E: Error&lt;I&gt;, <span class="kw">const </span>N: usize&gt; Strategy&lt;I, O, E&gt;
+    <span class="kw">for </span>SkipThenRetryUntil&lt;I, N&gt;
 {
-    <span class="kw">fn</span> <span class="ident">recover</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>, <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;&gt;(
+    <span class="kw">fn </span>recover&lt;D: Debugger, P: Parser&lt;I, O, Error = E&gt;&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">a_errors</span>: <span class="ident">Vec</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;&gt;,
-        <span class="ident">a_err</span>: <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-        <span class="ident">parser</span>: <span class="ident">P</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">P::Error</span>&gt; {
-        <span class="kw">let</span> <span class="kw">_</span> = <span class="ident">stream</span>.<span class="ident">next</span>();
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">2</span> {
-            <span class="kw">let</span> <span class="kw">_</span> = <span class="ident">stream</span>.<span class="ident">next</span>();
+        a_errors: Vec&lt;Located&lt;I, P::Error&gt;&gt;,
+        a_err: Located&lt;I, P::Error&gt;,
+        parser: P,
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, P::Error&gt;,
+    ) -&gt; PResult&lt;I, O, P::Error&gt; {
+        <span class="kw">let _ </span>= stream.next();
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">2 </span>{
+            <span class="kw">let _ </span>= stream.next();
         }
-        <span class="kw">loop</span> {
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::blocks_in_if_conditions</span>)]</span>
-            <span class="kw">if</span> !<span class="ident">stream</span>.<span class="ident">attempt</span>(
-                |<span class="ident">stream</span>| <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>().<span class="number">2</span>.<span class="ident">map</span>(|<span class="ident">tok</span>| <span class="self">self</span>.<span class="number">0</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">tok</span>)) {
+        <span class="kw">loop </span>{
+            <span class="attribute">#[allow(clippy::blocks_in_if_conditions)]</span>
+            <span class="kw">if </span>!stream.attempt(
+                |stream| <span class="kw">match </span>stream.next().<span class="number">2</span>.map(|tok| <span class="self">self</span>.<span class="number">0</span>.contains(<span class="kw-2">&amp;</span>tok)) {
                     <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) =&gt; (<span class="self">self</span>.<span class="number">1</span>, <span class="bool-val">false</span>),
                     <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) =&gt; (<span class="bool-val">false</span>, <span class="bool-val">true</span>),
-                    <span class="prelude-val">None</span> =&gt; (<span class="bool-val">false</span>, <span class="bool-val">false</span>),
+                    <span class="prelude-val">None </span>=&gt; (<span class="bool-val">false</span>, <span class="bool-val">false</span>),
                 },
             ) {
-                <span class="kw">break</span> (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_err</span>));
+                <span class="kw">break </span>(a_errors, <span class="prelude-val">Err</span>(a_err));
             }
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-            <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">errors</span>, <span class="ident">res</span>) = <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="ident">parser</span>, <span class="ident">stream</span>);
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">out</span>) = <span class="ident">res</span> {
-                <span class="ident">errors</span>.<span class="ident">push</span>(<span class="ident">a_err</span>);
-                <span class="kw">break</span> (<span class="ident">errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">out</span>));
+            <span class="attribute">#[allow(deprecated)]</span>
+            <span class="kw">let </span>(<span class="kw-2">mut </span>errors, res) = debugger.invoke(<span class="kw-2">&amp;</span>parser, stream);
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(out) = res {
+                errors.push(a_err);
+                <span class="kw">break </span>(errors, <span class="prelude-val">Ok</span>(out));
             }
         }
     }
 }
 
-<span class="doccomment">/// A recovery mode that simply skips to the next input on parser failure and tries again, until reaching one of</span>
-<span class="doccomment">/// several inputs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Also see [`SkipThenRetryUntil::consume_end`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This strategy is very &#39;stupid&#39; and can result in very poor error generation in some languages. Place this strategy</span>
-<span class="doccomment">/// after others as a last resort, and be careful about over-using it.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_then_retry_until</span>&lt;<span class="ident">I</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt;(<span class="ident">until</span>: [<span class="ident">I</span>; <span class="ident">N</span>]) -&gt; <span class="ident">SkipThenRetryUntil</span>&lt;<span class="ident">I</span>, <span class="ident">N</span>&gt; {
-    <span class="ident">SkipThenRetryUntil</span>(<span class="ident">until</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>)
+<span class="doccomment">/// A recovery mode that simply skips to the next input on parser failure and tries again, until reaching one of
+/// several inputs.
+///
+/// Also see [`SkipThenRetryUntil::consume_end`].
+///
+/// This strategy is very &#39;stupid&#39; and can result in very poor error generation in some languages. Place this strategy
+/// after others as a last resort, and be careful about over-using it.
+</span><span class="kw">pub fn </span>skip_then_retry_until&lt;I, <span class="kw">const </span>N: usize&gt;(until: [I; N]) -&gt; SkipThenRetryUntil&lt;I, N&gt; {
+    SkipThenRetryUntil(until, <span class="bool-val">false</span>, <span class="bool-val">false</span>)
 }
 
-<span class="doccomment">/// See [`skip_until`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SkipUntil</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt;(
-    <span class="kw">pub</span>(<span class="kw">crate</span>) [<span class="ident">I</span>; <span class="ident">N</span>],
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">bool</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">bool</span>,
+<span class="doccomment">/// See [`skip_until`].
+</span><span class="attribute">#[must_use]</span>
+<span class="attribute">#[derive(Copy, Clone)]</span>
+<span class="kw">pub struct </span>SkipUntil&lt;I, F, <span class="kw">const </span>N: usize&gt;(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) [I; N],
+    <span class="kw">pub</span>(<span class="kw">crate</span>) F,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
 );
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">SkipUntil</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="ident">N</span>&gt; {
-    <span class="doccomment">/// Alters this recovery strategy so that the first token will always be skipped.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is useful when the input being searched for also appears at the beginning of the pattern that failed to</span>
-    <span class="doccomment">/// parse.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_start</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span>&lt;I, F, <span class="kw">const </span>N: usize&gt; SkipUntil&lt;I, F, N&gt; {
+    <span class="doccomment">/// Alters this recovery strategy so that the first token will always be skipped.
+    ///
+    /// This is useful when the input being searched for also appears at the beginning of the pattern that failed to
+    /// parse.
+    </span><span class="kw">pub fn </span>skip_start(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>, <span class="self">self</span>.<span class="number">2</span>, <span class="bool-val">true</span>)
     }
 
-    <span class="doccomment">/// Alters this recovery strategy so that the synchronisation token will be consumed during recovery.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is useful when the input being searched for is a delimiter of a prior pattern rather than the start of a</span>
-    <span class="doccomment">/// new pattern and hence is no longer important once recovery has occurred.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume_end</span>(<span class="self">self</span>) -&gt; <span class="self">Self</span> {
+    <span class="doccomment">/// Alters this recovery strategy so that the synchronisation token will be consumed during recovery.
+    ///
+    /// This is useful when the input being searched for is a delimiter of a prior pattern rather than the start of a
+    /// new pattern and hence is no longer important once recovery has occurred.
+    </span><span class="kw">pub fn </span>consume_end(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>, <span class="bool-val">true</span>, <span class="self">self</span>.<span class="number">3</span>)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">E::Span</span>) -&gt; <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Strategy</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;
-    <span class="kw">for</span> <span class="ident">SkipUntil</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="ident">N</span>&gt;
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, O, F: Fn(E::Span) -&gt; O, E: Error&lt;I&gt;, <span class="kw">const </span>N: usize&gt; Strategy&lt;I, O, E&gt;
+    <span class="kw">for </span>SkipUntil&lt;I, F, N&gt;
 {
-    <span class="kw">fn</span> <span class="ident">recover</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>, <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;&gt;(
+    <span class="kw">fn </span>recover&lt;D: Debugger, P: Parser&lt;I, O, Error = E&gt;&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="kw-2">mut</span> <span class="ident">a_errors</span>: <span class="ident">Vec</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;&gt;,
-        <span class="ident">a_err</span>: <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-        <span class="ident">_parser</span>: <span class="ident">P</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">P::Error</span>&gt; {
-        <span class="kw">let</span> <span class="ident">pre_state</span> = <span class="ident">stream</span>.<span class="ident">save</span>();
-        <span class="kw">if</span> <span class="self">self</span>.<span class="number">3</span> {
-            <span class="kw">let</span> <span class="kw">_</span> = <span class="ident">stream</span>.<span class="ident">next</span>();
+        <span class="kw-2">mut </span>a_errors: Vec&lt;Located&lt;I, P::Error&gt;&gt;,
+        a_err: Located&lt;I, P::Error&gt;,
+        _parser: P,
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, P::Error&gt;,
+    ) -&gt; PResult&lt;I, O, P::Error&gt; {
+        <span class="kw">let </span>pre_state = stream.save();
+        <span class="kw">if </span><span class="self">self</span>.<span class="number">3 </span>{
+            <span class="kw">let _ </span>= stream.next();
         }
-        <span class="ident">a_errors</span>.<span class="ident">push</span>(<span class="ident">a_err</span>);
-        <span class="kw">loop</span> {
-            <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">attempt</span>(|<span class="ident">stream</span>| {
-                <span class="kw">let</span> (<span class="ident">at</span>, <span class="ident">span</span>, <span class="ident">tok</span>) = <span class="ident">stream</span>.<span class="ident">next</span>();
-                <span class="kw">match</span> <span class="ident">tok</span>.<span class="ident">map</span>(|<span class="ident">tok</span>| <span class="self">self</span>.<span class="number">0</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">tok</span>)) {
+        a_errors.push(a_err);
+        <span class="kw">loop </span>{
+            <span class="kw">match </span>stream.attempt(|stream| {
+                <span class="kw">let </span>(at, span, tok) = stream.next();
+                <span class="kw">match </span>tok.map(|tok| <span class="self">self</span>.<span class="number">0</span>.contains(<span class="kw-2">&amp;</span>tok)) {
                     <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) =&gt; (<span class="self">self</span>.<span class="number">2</span>, <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)),
                     <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) =&gt; (<span class="bool-val">true</span>, <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)),
-                    <span class="prelude-val">None</span> =&gt; (<span class="bool-val">true</span>, <span class="prelude-val">Err</span>((<span class="ident">at</span>, <span class="ident">span</span>))),
+                    <span class="prelude-val">None </span>=&gt; (<span class="bool-val">true</span>, <span class="prelude-val">Err</span>((at, span))),
                 }
             }) {
-                <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) =&gt; <span class="kw">break</span> (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(((<span class="self">self</span>.<span class="number">1</span>)(<span class="ident">stream</span>.<span class="ident">span_since</span>(<span class="ident">pre_state</span>)), <span class="prelude-val">None</span>))),
+                <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) =&gt; <span class="kw">break </span>(a_errors, <span class="prelude-val">Ok</span>(((<span class="self">self</span>.<span class="number">1</span>)(stream.span_since(pre_state)), <span class="prelude-val">None</span>))),
                 <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) =&gt; {}
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="kw">if</span> <span class="ident">stream</span>.<span class="ident">save</span>() &gt; <span class="ident">pre_state</span> =&gt; {
-                    <span class="kw">break</span> (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(((<span class="self">self</span>.<span class="number">1</span>)(<span class="ident">stream</span>.<span class="ident">span_since</span>(<span class="ident">pre_state</span>)), <span class="prelude-val">None</span>)))
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="kw">if </span>stream.save() &gt; pre_state =&gt; {
+                    <span class="kw">break </span>(a_errors, <span class="prelude-val">Ok</span>(((<span class="self">self</span>.<span class="number">1</span>)(stream.span_since(pre_state)), <span class="prelude-val">None</span>)))
                 }
-                <span class="prelude-val">Err</span>((<span class="ident">at</span>, <span class="ident">span</span>)) =&gt; {
-                    <span class="kw">break</span> (
-                        <span class="ident">a_errors</span>,
-                        <span class="prelude-val">Err</span>(<span class="ident">Located::at</span>(
-                            <span class="ident">at</span>,
-                            <span class="ident">E::expected_input_found</span>(<span class="ident">span</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">map</span>(<span class="prelude-val">Some</span>), <span class="prelude-val">None</span>),
+                <span class="prelude-val">Err</span>((at, span)) =&gt; {
+                    <span class="kw">break </span>(
+                        a_errors,
+                        <span class="prelude-val">Err</span>(Located::at(
+                            at,
+                            E::expected_input_found(span, <span class="self">self</span>.<span class="number">0</span>.iter().cloned().map(<span class="prelude-val">Some</span>), <span class="prelude-val">None</span>),
                         )),
                     )
                 }
@@ -539,216 +539,216 @@
     }
 }
 
-<span class="doccomment">/// A recovery mode that skips input until one of several inputs is found.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Also see [`SkipUntil::consume_end`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This strategy is very &#39;stupid&#39; and can result in very poor error generation in some languages. Place this strategy</span>
-<span class="doccomment">/// after others as a last resort, and be careful about over-using it.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip_until</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt;(<span class="ident">until</span>: [<span class="ident">I</span>; <span class="ident">N</span>], <span class="ident">fallback</span>: <span class="ident">F</span>) -&gt; <span class="ident">SkipUntil</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="ident">N</span>&gt; {
-    <span class="ident">SkipUntil</span>(<span class="ident">until</span>, <span class="ident">fallback</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>)
+<span class="doccomment">/// A recovery mode that skips input until one of several inputs is found.
+///
+/// Also see [`SkipUntil::consume_end`].
+///
+/// This strategy is very &#39;stupid&#39; and can result in very poor error generation in some languages. Place this strategy
+/// after others as a last resort, and be careful about over-using it.
+</span><span class="kw">pub fn </span>skip_until&lt;I, F, <span class="kw">const </span>N: usize&gt;(until: [I; N], fallback: F) -&gt; SkipUntil&lt;I, F, N&gt; {
+    SkipUntil(until, fallback, <span class="bool-val">false</span>, <span class="bool-val">false</span>)
 }
 
-<span class="doccomment">/// See [`nested_delimiters`].</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NestedDelimiters</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt;(
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">I</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">I</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) [(<span class="ident">I</span>, <span class="ident">I</span>); <span class="ident">N</span>],
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">F</span>,
+<span class="doccomment">/// See [`nested_delimiters`].
+</span><span class="attribute">#[must_use]</span>
+<span class="attribute">#[derive(Copy, Clone)]</span>
+<span class="kw">pub struct </span>NestedDelimiters&lt;I, F, <span class="kw">const </span>N: usize&gt;(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) I,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) I,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) [(I, I); N],
+    <span class="kw">pub</span>(<span class="kw">crate</span>) F,
 );
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span> + <span class="ident">PartialEq</span>, <span class="ident">O</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">E::Span</span>) -&gt; <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt; <span class="ident">Strategy</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;
-    <span class="kw">for</span> <span class="ident">NestedDelimiters</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="ident">N</span>&gt;
+<span class="kw">impl</span>&lt;I: Clone + PartialEq, O, F: Fn(E::Span) -&gt; O, E: Error&lt;I&gt;, <span class="kw">const </span>N: usize&gt; Strategy&lt;I, O, E&gt;
+    <span class="kw">for </span>NestedDelimiters&lt;I, F, N&gt;
 {
-    <span class="comment">// This looks like something weird with clippy, it warns in a weird spot and isn&#39;t fixed by</span>
-    <span class="comment">// marking it at the spot.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::blocks_in_if_conditions</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">recover</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>, <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;&gt;(
+    <span class="comment">// This looks like something weird with clippy, it warns in a weird spot and isn&#39;t fixed by
+    // marking it at the spot.
+    </span><span class="attribute">#[allow(clippy::blocks_in_if_conditions)]</span>
+    <span class="kw">fn </span>recover&lt;D: Debugger, P: Parser&lt;I, O, Error = E&gt;&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="kw-2">mut</span> <span class="ident">a_errors</span>: <span class="ident">Vec</span>&lt;<span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;&gt;,
-        <span class="ident">a_err</span>: <span class="ident">Located</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-        <span class="ident">_parser</span>: <span class="ident">P</span>,
-        <span class="ident">_debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">P::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">P::Error</span>&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">balance</span> = <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">balance_others</span> = [<span class="number">0</span>; <span class="ident">N</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">starts</span> = <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> = <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="ident">pre_state</span> = <span class="ident">stream</span>.<span class="ident">save</span>();
-        <span class="kw">let</span> <span class="ident">recovered</span> = <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">next</span>() {
-                (<span class="kw">_</span>, <span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="ident">t</span>)) <span class="kw">if</span> <span class="ident">t</span> == <span class="self">self</span>.<span class="number">0</span> =&gt; {
-                    <span class="ident">balance</span> += <span class="number">1</span>;
-                    <span class="ident">starts</span>.<span class="ident">push</span>(<span class="ident">span</span>);
-                    <span class="bool-val">true</span>
-                }
-                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">t</span>)) <span class="kw">if</span> <span class="ident">t</span> == <span class="self">self</span>.<span class="number">1</span> =&gt; {
-                    <span class="ident">balance</span> -= <span class="number">1</span>;
-                    <span class="ident">starts</span>.<span class="ident">pop</span>();
-                    <span class="bool-val">true</span>
-                }
-                (<span class="ident">at</span>, <span class="ident">span</span>, <span class="prelude-val">Some</span>(<span class="ident">t</span>)) =&gt; {
-                    <span class="kw">for</span> (<span class="ident">balance_other</span>, <span class="ident">others</span>) <span class="kw">in</span> <span class="ident">balance_others</span>.<span class="ident">iter_mut</span>().<span class="ident">zip</span>(<span class="self">self</span>.<span class="number">2</span>.<span class="ident">iter</span>()) {
-                        <span class="kw">if</span> <span class="ident">t</span> == <span class="ident">others</span>.<span class="number">0</span> {
-                            <span class="kw-2">*</span><span class="ident">balance_other</span> += <span class="number">1</span>;
-                        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">t</span> == <span class="ident">others</span>.<span class="number">1</span> {
-                            <span class="kw-2">*</span><span class="ident">balance_other</span> -= <span class="number">1</span>;
+        <span class="kw-2">mut </span>a_errors: Vec&lt;Located&lt;I, P::Error&gt;&gt;,
+        a_err: Located&lt;I, P::Error&gt;,
+        _parser: P,
+        _debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, P::Error&gt;,
+    ) -&gt; PResult&lt;I, O, P::Error&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>balance = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>balance_others = [<span class="number">0</span>; N];
+        <span class="kw">let </span><span class="kw-2">mut </span>starts = Vec::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>error = <span class="prelude-val">None</span>;
+        <span class="kw">let </span>pre_state = stream.save();
+        <span class="kw">let </span>recovered = <span class="kw">loop </span>{
+            <span class="kw">if match </span>stream.next() {
+                (<span class="kw">_</span>, span, <span class="prelude-val">Some</span>(t)) <span class="kw">if </span>t == <span class="self">self</span>.<span class="number">0 </span>=&gt; {
+                    balance += <span class="number">1</span>;
+                    starts.push(span);
+                    <span class="bool-val">true
+                </span>}
+                (<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(t)) <span class="kw">if </span>t == <span class="self">self</span>.<span class="number">1 </span>=&gt; {
+                    balance -= <span class="number">1</span>;
+                    starts.pop();
+                    <span class="bool-val">true
+                </span>}
+                (at, span, <span class="prelude-val">Some</span>(t)) =&gt; {
+                    <span class="kw">for </span>(balance_other, others) <span class="kw">in </span>balance_others.iter_mut().zip(<span class="self">self</span>.<span class="number">2</span>.iter()) {
+                        <span class="kw">if </span>t == others.<span class="number">0 </span>{
+                            <span class="kw-2">*</span>balance_other += <span class="number">1</span>;
+                        } <span class="kw">else if </span>t == others.<span class="number">1 </span>{
+                            <span class="kw-2">*</span>balance_other -= <span class="number">1</span>;
 
-                            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">balance_other</span> &lt; <span class="number">0</span> &amp;&amp; <span class="ident">balance</span> == <span class="number">1</span> {
-                                <span class="comment">// stream.revert(pre_state);</span>
-                                <span class="ident">error</span>.<span class="ident">get_or_insert_with</span>(|| {
-                                    <span class="ident">Located::at</span>(
-                                        <span class="ident">at</span>,
-                                        <span class="ident">P::Error::unclosed_delimiter</span>(
-                                            <span class="ident">starts</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>(),
-                                            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(),
-                                            <span class="ident">span</span>.<span class="ident">clone</span>(),
-                                            <span class="self">self</span>.<span class="number">1</span>.<span class="ident">clone</span>(),
-                                            <span class="prelude-val">Some</span>(<span class="ident">t</span>.<span class="ident">clone</span>()),
+                            <span class="kw">if </span><span class="kw-2">*</span>balance_other &lt; <span class="number">0 </span>&amp;&amp; balance == <span class="number">1 </span>{
+                                <span class="comment">// stream.revert(pre_state);
+                                </span>error.get_or_insert_with(|| {
+                                    Located::at(
+                                        at,
+                                        P::Error::unclosed_delimiter(
+                                            starts.pop().unwrap(),
+                                            <span class="self">self</span>.<span class="number">0</span>.clone(),
+                                            span.clone(),
+                                            <span class="self">self</span>.<span class="number">1</span>.clone(),
+                                            <span class="prelude-val">Some</span>(t.clone()),
                                         ),
                                     )
                                 });
                             }
                         }
                     }
-                    <span class="bool-val">false</span>
-                }
-                (<span class="ident">at</span>, <span class="ident">span</span>, <span class="prelude-val">None</span>) =&gt; {
-                    <span class="kw">if</span> <span class="ident">balance</span> &gt; <span class="number">0</span> &amp;&amp; <span class="ident">balance</span> == <span class="number">1</span> {
-                        <span class="ident">error</span>.<span class="ident">get_or_insert_with</span>(|| <span class="kw">match</span> <span class="ident">starts</span>.<span class="ident">pop</span>() {
-                            <span class="prelude-val">Some</span>(<span class="ident">start</span>) =&gt; <span class="ident">Located::at</span>(
-                                <span class="ident">at</span>,
-                                <span class="ident">P::Error::unclosed_delimiter</span>(
-                                    <span class="ident">start</span>,
-                                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(),
-                                    <span class="ident">span</span>,
-                                    <span class="self">self</span>.<span class="number">1</span>.<span class="ident">clone</span>(),
+                    <span class="bool-val">false
+                </span>}
+                (at, span, <span class="prelude-val">None</span>) =&gt; {
+                    <span class="kw">if </span>balance &gt; <span class="number">0 </span>&amp;&amp; balance == <span class="number">1 </span>{
+                        error.get_or_insert_with(|| <span class="kw">match </span>starts.pop() {
+                            <span class="prelude-val">Some</span>(start) =&gt; Located::at(
+                                at,
+                                P::Error::unclosed_delimiter(
+                                    start,
+                                    <span class="self">self</span>.<span class="number">0</span>.clone(),
+                                    span,
+                                    <span class="self">self</span>.<span class="number">1</span>.clone(),
                                     <span class="prelude-val">None</span>,
                                 ),
                             ),
-                            <span class="prelude-val">None</span> =&gt; <span class="ident">Located::at</span>(
-                                <span class="ident">at</span>,
-                                <span class="ident">P::Error::expected_input_found</span>(
-                                    <span class="ident">span</span>,
-                                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">1</span>.<span class="ident">clone</span>())),
+                            <span class="prelude-val">None </span>=&gt; Located::at(
+                                at,
+                                P::Error::expected_input_found(
+                                    span,
+                                    <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">1</span>.clone())),
                                     <span class="prelude-val">None</span>,
                                 ),
                             ),
                         });
                     }
-                    <span class="kw">break</span> <span class="bool-val">false</span>;
+                    <span class="kw">break </span><span class="bool-val">false</span>;
                 }
             } {
-                <span class="kw">match</span> <span class="ident">balance</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="number">0</span>) {
-                    <span class="ident">Ordering::Equal</span> =&gt; <span class="kw">break</span> <span class="bool-val">true</span>,
-                    <span class="comment">// The end of a delimited section is not a valid recovery pattern</span>
-                    <span class="ident">Ordering::Less</span> =&gt; <span class="kw">break</span> <span class="bool-val">false</span>,
-                    <span class="ident">Ordering::Greater</span> =&gt; (),
+                <span class="kw">match </span>balance.cmp(<span class="kw-2">&amp;</span><span class="number">0</span>) {
+                    Ordering::Equal =&gt; <span class="kw">break </span><span class="bool-val">true</span>,
+                    <span class="comment">// The end of a delimited section is not a valid recovery pattern
+                    </span>Ordering::Less =&gt; <span class="kw">break </span><span class="bool-val">false</span>,
+                    Ordering::Greater =&gt; (),
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">balance</span> == <span class="number">0</span> {
-                <span class="comment">// A non-delimiter input before anything else is not a valid recovery pattern</span>
-                <span class="kw">break</span> <span class="bool-val">false</span>;
+            } <span class="kw">else if </span>balance == <span class="number">0 </span>{
+                <span class="comment">// A non-delimiter input before anything else is not a valid recovery pattern
+                </span><span class="kw">break </span><span class="bool-val">false</span>;
             }
         };
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>) = <span class="ident">error</span> {
-            <span class="ident">a_errors</span>.<span class="ident">push</span>(<span class="ident">e</span>);
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(e) = error {
+            a_errors.push(e);
         }
 
-        <span class="kw">if</span> <span class="ident">recovered</span> {
-            <span class="kw">if</span> <span class="ident">a_errors</span>.<span class="ident">last</span>().<span class="ident">map_or</span>(<span class="bool-val">true</span>, |<span class="ident">e</span>| <span class="ident">a_err</span>.<span class="ident">at</span> &lt; <span class="ident">e</span>.<span class="ident">at</span>) {
-                <span class="ident">a_errors</span>.<span class="ident">push</span>(<span class="ident">a_err</span>);
+        <span class="kw">if </span>recovered {
+            <span class="kw">if </span>a_errors.last().map_or(<span class="bool-val">true</span>, |e| a_err.at &lt; e.at) {
+                a_errors.push(a_err);
             }
-            (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(((<span class="self">self</span>.<span class="number">3</span>)(<span class="ident">stream</span>.<span class="ident">span_since</span>(<span class="ident">pre_state</span>)), <span class="prelude-val">None</span>)))
-        } <span class="kw">else</span> {
-            (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_err</span>))
+            (a_errors, <span class="prelude-val">Ok</span>(((<span class="self">self</span>.<span class="number">3</span>)(stream.span_since(pre_state)), <span class="prelude-val">None</span>)))
+        } <span class="kw">else </span>{
+            (a_errors, <span class="prelude-val">Err</span>(a_err))
         }
     }
 }
 
-<span class="doccomment">/// A recovery strategy that searches for a start and end delimiter, respecting nesting.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It is possible to specify additional delimiter pairs that are valid in the pattern&#39;s context for better errors. For</span>
-<span class="doccomment">/// example, you might want to also specify `[(&#39;[&#39;, &#39;]&#39;), (&#39;{&#39;, &#39;}&#39;)]` when recovering a parenthesised expression as</span>
-<span class="doccomment">/// this can aid in detecting delimiter mismatches.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A function that generates a fallback output on recovery is also required.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nested_delimiters</span>&lt;<span class="ident">I</span>: <span class="ident">PartialEq</span>, <span class="ident">F</span>, <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span>&gt;(
-    <span class="ident">start</span>: <span class="ident">I</span>,
-    <span class="ident">end</span>: <span class="ident">I</span>,
-    <span class="ident">others</span>: [(<span class="ident">I</span>, <span class="ident">I</span>); <span class="ident">N</span>],
-    <span class="ident">fallback</span>: <span class="ident">F</span>,
-) -&gt; <span class="ident">NestedDelimiters</span>&lt;<span class="ident">I</span>, <span class="ident">F</span>, <span class="ident">N</span>&gt; {
+<span class="doccomment">/// A recovery strategy that searches for a start and end delimiter, respecting nesting.
+///
+/// It is possible to specify additional delimiter pairs that are valid in the pattern&#39;s context for better errors. For
+/// example, you might want to also specify `[(&#39;[&#39;, &#39;]&#39;), (&#39;{&#39;, &#39;}&#39;)]` when recovering a parenthesised expression as
+/// this can aid in detecting delimiter mismatches.
+///
+/// A function that generates a fallback output on recovery is also required.
+</span><span class="kw">pub fn </span>nested_delimiters&lt;I: PartialEq, F, <span class="kw">const </span>N: usize&gt;(
+    start: I,
+    end: I,
+    others: [(I, I); N],
+    fallback: F,
+) -&gt; NestedDelimiters&lt;I, F, N&gt; {
     <span class="macro">assert!</span>(
-        <span class="ident">start</span> != <span class="ident">end</span>,
-        <span class="string">&quot;Start and end delimiters cannot be the same when using `NestedDelimiters`&quot;</span>
-    );
-    <span class="ident">NestedDelimiters</span>(<span class="ident">start</span>, <span class="ident">end</span>, <span class="ident">others</span>, <span class="ident">fallback</span>)
+        start != end,
+        <span class="string">&quot;Start and end delimiters cannot be the same when using `NestedDelimiters`&quot;
+    </span>);
+    NestedDelimiters(start, end, others, fallback)
 }
 
-<span class="doccomment">/// A parser that includes a fallback recovery strategy should parsing result in an error.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Recovery</span>&lt;<span class="ident">A</span>, <span class="ident">S</span>&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">A</span>, <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">S</span>);
+<span class="doccomment">/// A parser that includes a fallback recovery strategy should parsing result in an error.
+</span><span class="attribute">#[must_use]</span>
+<span class="attribute">#[derive(Copy, Clone)]</span>
+<span class="kw">pub struct </span>Recovery&lt;A, S&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) A, <span class="kw">pub</span>(<span class="kw">crate</span>) S);
 
-<span class="kw">impl</span>&lt;<span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">A</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt;, <span class="ident">S</span>: <span class="ident">Strategy</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt;
-    <span class="kw">for</span> <span class="ident">Recovery</span>&lt;<span class="ident">A</span>, <span class="ident">S</span>&gt;
+<span class="kw">impl</span>&lt;I: Clone, O, A: Parser&lt;I, O, Error = E&gt;, S: Strategy&lt;I, O, E&gt;, E: Error&lt;I&gt;&gt; Parser&lt;I, O&gt;
+    <span class="kw">for </span>Recovery&lt;A, S&gt;
 {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+    <span class="kw">type </span>Error = E;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="kw">match</span> <span class="ident">stream</span>.<span class="ident">try_parse</span>(|<span class="ident">stream</span>| {
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-            <span class="ident">debugger</span>.<span class="ident">invoke</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">stream</span>)
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
+    ) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="kw">match </span>stream.try_parse(|stream| {
+            <span class="attribute">#[allow(deprecated)]</span>
+            debugger.invoke(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, stream)
         }) {
-            (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">a_out</span>)) =&gt; (<span class="ident">a_errors</span>, <span class="prelude-val">Ok</span>(<span class="ident">a_out</span>)),
-            (<span class="ident">a_errors</span>, <span class="prelude-val">Err</span>(<span class="ident">a_err</span>)) =&gt; <span class="self">self</span>.<span class="number">1</span>.<span class="ident">recover</span>(<span class="ident">a_errors</span>, <span class="ident">a_err</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">debugger</span>, <span class="ident">stream</span>),
+            (a_errors, <span class="prelude-val">Ok</span>(a_out)) =&gt; (a_errors, <span class="prelude-val">Ok</span>(a_out)),
+            (a_errors, <span class="prelude-val">Err</span>(a_err)) =&gt; <span class="self">self</span>.<span class="number">1</span>.recover(a_errors, a_err, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, debugger, stream),
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::Cheap</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::prelude</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]</span>
+<span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::error::Cheap;
+    <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">recover_with_skip_then_retry_until</span>() {
-        <span class="kw">let</span> <span class="ident">parser</span> = <span class="ident">just</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Cheap</span>&lt;<span class="kw">_</span>&gt;&gt;(<span class="string">&#39;a&#39;</span>)
-            .<span class="ident">recover_with</span>(<span class="ident">skip_then_retry_until</span>([<span class="string">&#39;,&#39;</span>]))
-            .<span class="ident">separated_by</span>(<span class="ident">just</span>(<span class="string">&#39;,&#39;</span>));
+    <span class="attribute">#[test]</span>
+    <span class="kw">fn </span>recover_with_skip_then_retry_until() {
+        <span class="kw">let </span>parser = just::&lt;<span class="kw">_</span>, <span class="kw">_</span>, Cheap&lt;<span class="kw">_</span>&gt;&gt;(<span class="string">&#39;a&#39;</span>)
+            .recover_with(skip_then_retry_until([<span class="string">&#39;,&#39;</span>]))
+            .separated_by(just(<span class="string">&#39;,&#39;</span>));
         {
-            <span class="kw">let</span> (<span class="ident">result</span>, <span class="ident">errors</span>) = <span class="ident">parser</span>.<span class="ident">parse_recovery</span>(<span class="string">&quot;a,a,2a,a&quot;</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>]));
-            <span class="macro">assert_eq!</span>(<span class="ident">errors</span>.<span class="ident">len</span>(), <span class="number">1</span>)
+            <span class="kw">let </span>(result, errors) = parser.parse_recovery(<span class="string">&quot;a,a,2a,a&quot;</span>);
+            <span class="macro">assert_eq!</span>(result, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>]));
+            <span class="macro">assert_eq!</span>(errors.len(), <span class="number">1</span>)
         }
         {
-            <span class="kw">let</span> (<span class="ident">result</span>, <span class="ident">errors</span>) = <span class="ident">parser</span>.<span class="ident">parse_recovery</span>(<span class="string">&quot;a,a,2 a,a&quot;</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>]));
-            <span class="macro">assert_eq!</span>(<span class="ident">errors</span>.<span class="ident">len</span>(), <span class="number">1</span>)
+            <span class="kw">let </span>(result, errors) = parser.parse_recovery(<span class="string">&quot;a,a,2 a,a&quot;</span>);
+            <span class="macro">assert_eq!</span>(result, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>]));
+            <span class="macro">assert_eq!</span>(errors.len(), <span class="number">1</span>)
         }
         {
-            <span class="kw">let</span> (<span class="ident">result</span>, <span class="ident">errors</span>) = <span class="ident">parser</span>.<span class="ident">parse_recovery</span>(<span class="string">&quot;a,a,2  a,a&quot;</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>]));
-            <span class="macro">assert_eq!</span>(<span class="ident">errors</span>.<span class="ident">len</span>(), <span class="number">1</span>)
+            <span class="kw">let </span>(result, errors) = parser.parse_recovery(<span class="string">&quot;a,a,2  a,a&quot;</span>);
+            <span class="macro">assert_eq!</span>(result, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>]));
+            <span class="macro">assert_eq!</span>(errors.len(), <span class="number">1</span>)
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

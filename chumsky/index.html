@@ -39,27 +39,27 @@
 <p>See <a href="https://github.com/zesterer/chumsky/blob/master/examples/brainfuck.rs"><code>examples/brainfuck.rs</code></a> for the full
 interpreter (<code>cargo run --example brainfuck -- examples/sample.bf</code>).</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">chumsky::prelude</span>::<span class="kw-2">*</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>chumsky::prelude::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Instr</span> {
-    <span class="ident">Left</span>, <span class="ident">Right</span>,
-    <span class="ident">Incr</span>, <span class="ident">Decr</span>,
-    <span class="ident">Read</span>, <span class="ident">Write</span>,
-    <span class="ident">Loop</span>(<span class="ident">Vec</span>&lt;<span class="self">Self</span>&gt;),
+<span class="attribute">#[derive(Clone)]</span>
+<span class="kw">enum </span>Instr {
+    Left, Right,
+    Incr, Decr,
+    Read, Write,
+    Loop(Vec&lt;<span class="self">Self</span>&gt;),
 }
 
-<span class="kw">fn</span> <span class="ident">parser</span>() -&gt; <span class="kw">impl</span> <span class="ident">Parser</span>&lt;<span class="ident">char</span>, <span class="ident">Vec</span>&lt;<span class="ident">Instr</span>&gt;, <span class="ident">Error</span> = <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt; {
-    <span class="ident">recursive</span>(|<span class="ident">bf</span>| <span class="ident">choice</span>((
-        <span class="ident">just</span>(<span class="string">&#39;&lt;&#39;</span>).<span class="ident">to</span>(<span class="ident">Instr::Left</span>),
-        <span class="ident">just</span>(<span class="string">&#39;&gt;&#39;</span>).<span class="ident">to</span>(<span class="ident">Instr::Right</span>),
-        <span class="ident">just</span>(<span class="string">&#39;+&#39;</span>).<span class="ident">to</span>(<span class="ident">Instr::Incr</span>),
-        <span class="ident">just</span>(<span class="string">&#39;-&#39;</span>).<span class="ident">to</span>(<span class="ident">Instr::Decr</span>),
-        <span class="ident">just</span>(<span class="string">&#39;,&#39;</span>).<span class="ident">to</span>(<span class="ident">Instr::Read</span>),
-        <span class="ident">just</span>(<span class="string">&#39;.&#39;</span>).<span class="ident">to</span>(<span class="ident">Instr::Write</span>),
-        <span class="ident">bf</span>.<span class="ident">delimited_by</span>(<span class="ident">just</span>(<span class="string">&#39;[&#39;</span>), <span class="ident">just</span>(<span class="string">&#39;]&#39;</span>)).<span class="ident">map</span>(<span class="ident">Instr::Loop</span>),
+<span class="kw">fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;char, Vec&lt;Instr&gt;, Error = Simple&lt;char&gt;&gt; {
+    recursive(|bf| choice((
+        just(<span class="string">&#39;&lt;&#39;</span>).to(Instr::Left),
+        just(<span class="string">&#39;&gt;&#39;</span>).to(Instr::Right),
+        just(<span class="string">&#39;+&#39;</span>).to(Instr::Incr),
+        just(<span class="string">&#39;-&#39;</span>).to(Instr::Decr),
+        just(<span class="string">&#39;,&#39;</span>).to(Instr::Read),
+        just(<span class="string">&#39;.&#39;</span>).to(Instr::Write),
+        bf.delimited_by(just(<span class="string">&#39;[&#39;</span>), just(<span class="string">&#39;]&#39;</span>)).map(Instr::Loop),
     ))
-        .<span class="ident">repeated</span>())
+        .repeated())
 }</code></pre></div>
 <p>Other examples include:</p>
 <ul>
@@ -124,8 +124,8 @@ etc. All that said, here are some numbers from the
 <a href="https://github.com/zesterer/chumsky/blob/master/benches/json.rs">JSON benchmark</a> included in the repository running on
 my Ryzen 7 3700x.</p>
 
-<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="ident">test</span> <span class="ident">chumsky</span> ... <span class="ident">bench</span>:   <span class="number">4</span>,<span class="number">782</span>,<span class="number">390</span> <span class="ident">ns</span>/<span class="ident">iter</span> (+/- <span class="number">997</span>,<span class="number">208</span>)
-<span class="ident">test</span> <span class="ident">pom</span>     ... <span class="ident">bench</span>:  <span class="number">12</span>,<span class="number">793</span>,<span class="number">490</span> <span class="ident">ns</span>/<span class="ident">iter</span> (+/- <span class="number">1</span>,<span class="number">954</span>,<span class="number">583</span>)</code></pre></div>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code>test chumsky ... bench:   <span class="number">4</span>,<span class="number">782</span>,<span class="number">390 </span>ns/iter (+/- <span class="number">997</span>,<span class="number">208</span>)
+test pom     ... bench:  <span class="number">12</span>,<span class="number">793</span>,<span class="number">490 </span>ns/iter (+/- <span class="number">1</span>,<span class="number">954</span>,<span class="number">583</span>)</code></pre></div>
 <p>I’ve included results from <a href="https://github.com/J-F-Liu/pom"><code>pom</code></a>, another parser combinator crate with a similar
 design, as a point of reference. The sample file being parsed is broadly representative of typical JSON data and has
 3,018 lines. This translates to a little over 630,000 lines of JSON per second.</p>
@@ -168,4 +168,4 @@ be generic over both input tokens and the output AST</li>
 </div></div></div><h2 id="macros" class="small-section-header"><a href="#macros">Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.select.html" title="chumsky::select macro">select</a></div><div class="item-right docblock-short"><p>Create a parser that selects one or more input patterns and map them to an output value.</p>
 </div></div></div><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.BoxedParser.html" title="chumsky::BoxedParser struct">BoxedParser</a></div><div class="item-right docblock-short"><p>See <a href="trait.Parser.html#method.boxed" title="Parser::boxed"><code>Parser::boxed</code></a>.</p>
 </div></div></div><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Parser.html" title="chumsky::Parser trait">Parser</a></div><div class="item-right docblock-short"><p>A trait implemented by parsers.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

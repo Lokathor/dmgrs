@@ -8,27 +8,27 @@ feature.</em></p>
 <p><em>This function is available only if Syn is built with the <code>&quot;parsing&quot;</code>
 feature.</em></p>
 <h5 id="example"><a href="#example">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">Path</span>, <span class="prelude-ty">Result</span>, <span class="ident">Token</span>};
-<span class="kw">use</span> <span class="ident">syn::parse</span>::{<span class="ident">Parse</span>, <span class="ident">ParseStream</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>syn::{Path, <span class="prelude-ty">Result</span>, Token};
+<span class="kw">use </span>syn::parse::{Parse, ParseStream};
 
-<span class="comment">// A simplified single `use` statement like:</span>
-<span class="comment">//</span>
-<span class="comment">//     use std::collections::HashMap;</span>
-<span class="comment">//</span>
-<span class="comment">// Note that generic parameters are not allowed in a `use` statement</span>
-<span class="comment">// so the following must not be accepted.</span>
-<span class="comment">//</span>
-<span class="comment">//     use a::&lt;b&gt;::c;</span>
-<span class="kw">struct</span> <span class="ident">SingleUse</span> {
-    <span class="ident">use_token</span>: <span class="macro">Token!</span>[<span class="kw">use</span>],
-    <span class="ident">path</span>: <span class="ident">Path</span>,
+<span class="comment">// A simplified single `use` statement like:
+//
+//     use std::collections::HashMap;
+//
+// Note that generic parameters are not allowed in a `use` statement
+// so the following must not be accepted.
+//
+//     use a::&lt;b&gt;::c;
+</span><span class="kw">struct </span>SingleUse {
+    use_token: <span class="macro">Token!</span>[<span class="kw">use</span>],
+    path: Path,
 }
 
-<span class="kw">impl</span> <span class="ident">Parse</span> <span class="kw">for</span> <span class="ident">SingleUse</span> {
-    <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">input</span>: <span class="ident">ParseStream</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="prelude-val">Ok</span>(<span class="ident">SingleUse</span> {
-            <span class="ident">use_token</span>: <span class="ident">input</span>.<span class="ident">parse</span>()<span class="question-mark">?</span>,
-            <span class="ident">path</span>: <span class="ident">input</span>.<span class="ident">call</span>(<span class="ident">Path::parse_mod_style</span>)<span class="question-mark">?</span>,
+<span class="kw">impl </span>Parse <span class="kw">for </span>SingleUse {
+    <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="prelude-val">Ok</span>(SingleUse {
+            use_token: input.parse()<span class="question-mark">?</span>,
+            path: input.call(Path::parse_mod_style)<span class="question-mark">?</span>,
         })
     }
 }</code></pre></div>
@@ -45,16 +45,16 @@ path arguments, and</li>
 <p><em>This function is available only if Syn is built with the <code>&quot;parsing&quot;</code>
 feature.</em></p>
 <h5 id="example-1"><a href="#example-1">Example</a></h5>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">Attribute</span>, <span class="ident">Error</span>, <span class="ident">Meta</span>, <span class="ident">NestedMeta</span>, <span class="prelude-ty">Result</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>syn::{Attribute, Error, Meta, NestedMeta, <span class="prelude-ty">Result</span>};
 
-<span class="kw">fn</span> <span class="ident">get_serde_meta_items</span>(<span class="ident">attr</span>: <span class="kw-2">&amp;</span><span class="ident">Attribute</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">NestedMeta</span>&gt;&gt; {
-    <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">path</span>.<span class="ident">is_ident</span>(<span class="string">&quot;serde&quot;</span>) {
-        <span class="kw">match</span> <span class="ident">attr</span>.<span class="ident">parse_meta</span>()<span class="question-mark">?</span> {
-            <span class="ident">Meta::List</span>(<span class="ident">meta</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Vec::from_iter</span>(<span class="ident">meta</span>.<span class="ident">nested</span>)),
-            <span class="ident">bad</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Error::new_spanned</span>(<span class="ident">bad</span>, <span class="string">&quot;unrecognized attribute&quot;</span>)),
+<span class="kw">fn </span>get_serde_meta_items(attr: <span class="kw-2">&amp;</span>Attribute) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;NestedMeta&gt;&gt; {
+    <span class="kw">if </span>attr.path.is_ident(<span class="string">&quot;serde&quot;</span>) {
+        <span class="kw">match </span>attr.parse_meta()<span class="question-mark">? </span>{
+            Meta::List(meta) =&gt; <span class="prelude-val">Ok</span>(Vec::from_iter(meta.nested)),
+            bad =&gt; <span class="prelude-val">Err</span>(Error::new_spanned(bad, <span class="string">&quot;unrecognized attribute&quot;</span>)),
         }
-    } <span class="kw">else</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">Vec::new</span>())
+    } <span class="kw">else </span>{
+        <span class="prelude-val">Ok</span>(Vec::new())
     }
 }</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.get_ident" class="method has-srclink"><span class="rightside"><a class="srclink" href="../src/syn/path.rs.html#593-602">source</a></span><h4 class="code-header">pub fn <a href="#method.get_ident" class="fnname">get_ident</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="struct.Ident.html" title="struct syn::Ident">Ident</a>&gt;</h4></section></summary><div class="docblock"><p>If this path consists of a single ident, returns the ident.</p>
@@ -90,4 +90,4 @@ node, or <a href="../proc_macro2/struct.Span.html#method.call_site"><code>Span::
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-Path" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-Path" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

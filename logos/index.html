@@ -17,103 +17,103 @@
 <li>Does all of that heavy lifting at compile time.</li>
 </ul>
 <h3 id="example"><a href="#example">Example</a></h3>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">logos::Logos</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>logos::Logos;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Logos</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Token</span> {
-    <span class="comment">// Tokens can be literal strings, of any length.</span>
-    <span class="attribute">#[<span class="ident">token</span>(<span class="string">&quot;fast&quot;</span>)]</span>
-    <span class="ident">Fast</span>,
+<span class="attribute">#[derive(Logos, Debug, PartialEq)]</span>
+<span class="kw">enum </span>Token {
+    <span class="comment">// Tokens can be literal strings, of any length.
+    </span><span class="attribute">#[token(<span class="string">&quot;fast&quot;</span>)]</span>
+    Fast,
 
-    <span class="attribute">#[<span class="ident">token</span>(<span class="string">&quot;.&quot;</span>)]</span>
-    <span class="ident">Period</span>,
+    <span class="attribute">#[token(<span class="string">&quot;.&quot;</span>)]</span>
+    Period,
 
-    <span class="comment">// Or regular expressions.</span>
-    <span class="attribute">#[<span class="ident">regex</span>(<span class="string">&quot;[a-zA-Z]+&quot;</span>)]</span>
-    <span class="ident">Text</span>,
+    <span class="comment">// Or regular expressions.
+    </span><span class="attribute">#[regex(<span class="string">&quot;[a-zA-Z]+&quot;</span>)]</span>
+    Text,
 
-    <span class="comment">// Logos requires one token variant to handle errors,</span>
-    <span class="comment">// it can be named anything you wish.</span>
-    <span class="attribute">#[<span class="ident">error</span>]</span>
-    <span class="comment">// We can also use this variant to define whitespace,</span>
-    <span class="comment">// or any other matches we wish to skip.</span>
-    <span class="attribute">#[<span class="ident">regex</span>(<span class="string">r&quot;[ \t\n\f]+&quot;</span>, <span class="ident">logos::skip</span>)]</span>
-    <span class="ident">Error</span>,
+    <span class="comment">// Logos requires one token variant to handle errors,
+    // it can be named anything you wish.
+    </span><span class="attribute">#[error]</span>
+    <span class="comment">// We can also use this variant to define whitespace,
+    // or any other matches we wish to skip.
+    </span><span class="attribute">#[regex(<span class="string">r&quot;[ \t\n\f]+&quot;</span>, logos::skip)]</span>
+    Error,
 }
 
-<span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lex</span> = <span class="ident">Token::lexer</span>(<span class="string">&quot;Create ridiculously fast Lexers.&quot;</span>);
+<span class="kw">fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>lex = Token::lexer(<span class="string">&quot;Create ridiculously fast Lexers.&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Text</span>));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">span</span>(), <span class="number">0</span>..<span class="number">6</span>);
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;Create&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Text));
+    <span class="macro">assert_eq!</span>(lex.span(), <span class="number">0</span>..<span class="number">6</span>);
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;Create&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Text</span>));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">span</span>(), <span class="number">7</span>..<span class="number">19</span>);
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;ridiculously&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Text));
+    <span class="macro">assert_eq!</span>(lex.span(), <span class="number">7</span>..<span class="number">19</span>);
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;ridiculously&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Fast</span>));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">span</span>(), <span class="number">20</span>..<span class="number">24</span>);
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;fast&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Fast));
+    <span class="macro">assert_eq!</span>(lex.span(), <span class="number">20</span>..<span class="number">24</span>);
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;fast&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Text</span>));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;Lexers&quot;</span>);
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">span</span>(), <span class="number">25</span>..<span class="number">31</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Text));
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;Lexers&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.span(), <span class="number">25</span>..<span class="number">31</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Period</span>));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">span</span>(), <span class="number">31</span>..<span class="number">32</span>);
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;.&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Period));
+    <span class="macro">assert_eq!</span>(lex.span(), <span class="number">31</span>..<span class="number">32</span>);
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;.&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">None</span>);
 }</code></pre></div>
 <h4 id="callbacks"><a href="#callbacks">Callbacks</a></h4>
 <p><strong>Logos</strong> can also call arbitrary functions whenever a pattern is matched,
 which can be used to put data into a variant:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">logos</span>::{<span class="ident">Logos</span>, <span class="ident">Lexer</span>};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>logos::{Logos, Lexer};
 
-<span class="comment">// Note: callbacks can return `Option` or `Result`</span>
-<span class="kw">fn</span> <span class="ident">kilo</span>(<span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="ident">Token</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt; {
-    <span class="kw">let</span> <span class="ident">slice</span> = <span class="ident">lex</span>.<span class="ident">slice</span>();
-    <span class="kw">let</span> <span class="ident">n</span>: <span class="ident">u64</span> = <span class="ident">slice</span>[..<span class="ident">slice</span>.<span class="ident">len</span>() - <span class="number">1</span>].<span class="ident">parse</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>; <span class="comment">// skip &#39;k&#39;</span>
-    <span class="prelude-val">Some</span>(<span class="ident">n</span> * <span class="number">1_000</span>)
+<span class="comment">// Note: callbacks can return `Option` or `Result`
+</span><span class="kw">fn </span>kilo(lex: <span class="kw-2">&amp;mut </span>Lexer&lt;Token&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;u64&gt; {
+    <span class="kw">let </span>slice = lex.slice();
+    <span class="kw">let </span>n: u64 = slice[..slice.len() - <span class="number">1</span>].parse().ok()<span class="question-mark">?</span>; <span class="comment">// skip &#39;k&#39;
+    </span><span class="prelude-val">Some</span>(n * <span class="number">1_000</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">mega</span>(<span class="ident">lex</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="ident">Token</span>&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt; {
-    <span class="kw">let</span> <span class="ident">slice</span> = <span class="ident">lex</span>.<span class="ident">slice</span>();
-    <span class="kw">let</span> <span class="ident">n</span>: <span class="ident">u64</span> = <span class="ident">slice</span>[..<span class="ident">slice</span>.<span class="ident">len</span>() - <span class="number">1</span>].<span class="ident">parse</span>().<span class="ident">ok</span>()<span class="question-mark">?</span>; <span class="comment">// skip &#39;m&#39;</span>
-    <span class="prelude-val">Some</span>(<span class="ident">n</span> * <span class="number">1_000_000</span>)
+<span class="kw">fn </span>mega(lex: <span class="kw-2">&amp;mut </span>Lexer&lt;Token&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;u64&gt; {
+    <span class="kw">let </span>slice = lex.slice();
+    <span class="kw">let </span>n: u64 = slice[..slice.len() - <span class="number">1</span>].parse().ok()<span class="question-mark">?</span>; <span class="comment">// skip &#39;m&#39;
+    </span><span class="prelude-val">Some</span>(n * <span class="number">1_000_000</span>)
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Logos</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Token</span> {
-    <span class="attribute">#[<span class="ident">regex</span>(<span class="string">r&quot;[ \t\n\f]+&quot;</span>, <span class="ident">logos::skip</span>)]</span>
-    <span class="attribute">#[<span class="ident">error</span>]</span>
-    <span class="ident">Error</span>,
+<span class="attribute">#[derive(Logos, Debug, PartialEq)]</span>
+<span class="kw">enum </span>Token {
+    <span class="attribute">#[regex(<span class="string">r&quot;[ \t\n\f]+&quot;</span>, logos::skip)]</span>
+    <span class="attribute">#[error]</span>
+    Error,
 
-    <span class="comment">// Callbacks can use closure syntax, or refer</span>
-    <span class="comment">// to a function defined elsewhere.</span>
-    <span class="comment">//</span>
-    <span class="comment">// Each pattern can have it&#39;s own callback.</span>
-    <span class="attribute">#[<span class="ident">regex</span>(<span class="string">&quot;[0-9]+&quot;</span>, |<span class="ident">lex</span>| <span class="ident">lex</span>.<span class="ident">slice</span>().<span class="ident">parse</span>())]</span>
-    <span class="attribute">#[<span class="ident">regex</span>(<span class="string">&quot;[0-9]+k&quot;</span>, <span class="ident">kilo</span>)]</span>
-    <span class="attribute">#[<span class="ident">regex</span>(<span class="string">&quot;[0-9]+m&quot;</span>, <span class="ident">mega</span>)]</span>
-    <span class="ident">Number</span>(<span class="ident">u64</span>),
+    <span class="comment">// Callbacks can use closure syntax, or refer
+    // to a function defined elsewhere.
+    //
+    // Each pattern can have it&#39;s own callback.
+    </span><span class="attribute">#[regex(<span class="string">&quot;[0-9]+&quot;</span>, |lex| lex.slice().parse())]</span>
+    <span class="attribute">#[regex(<span class="string">&quot;[0-9]+k&quot;</span>, kilo)]</span>
+    <span class="attribute">#[regex(<span class="string">&quot;[0-9]+m&quot;</span>, mega)]</span>
+    Number(u64),
 }
 
-<span class="kw">fn</span> <span class="ident">main</span>() {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lex</span> = <span class="ident">Token::lexer</span>(<span class="string">&quot;5 42k 75m&quot;</span>);
+<span class="kw">fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>lex = Token::lexer(<span class="string">&quot;5 42k 75m&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Number</span>(<span class="number">5</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;5&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Number(<span class="number">5</span>)));
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;5&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Number</span>(<span class="number">42_000</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;42k&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Number(<span class="number">42_000</span>)));
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;42k&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">Some</span>(<span class="ident">Token::Number</span>(<span class="number">75_000_000</span>)));
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">slice</span>(), <span class="string">&quot;75m&quot;</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">Some</span>(Token::Number(<span class="number">75_000_000</span>)));
+    <span class="macro">assert_eq!</span>(lex.slice(), <span class="string">&quot;75m&quot;</span>);
 
-    <span class="macro">assert_eq!</span>(<span class="ident">lex</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+    <span class="macro">assert_eq!</span>(lex.next(), <span class="prelude-val">None</span>);
 }</code></pre></div>
 <p>Logos can handle callbacks with following return types:</p>
 <div><table><thead><tr><th>Return type</th><th>Produces</th></tr></thead><tbody>
@@ -162,4 +162,4 @@ for a token, skipping it, or emitting an error.</p>
 to implement it manually, use the <code>#[derive(Logos)]</code> attribute on your enum.</p>
 </div></div></div><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.skip.html" title="logos::skip fn">skip</a></div><div class="item-right docblock-short"><p>Predefined callback that will inform the <code>Lexer</code> to skip a definition.</p>
 </div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.Span.html" title="logos::Span type">Span</a></div><div class="item-right docblock-short"><p>Byte range in the source.</p>
-</div></div></div><h2 id="derives" class="small-section-header"><a href="#derives">Derive Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="derive" href="derive.Logos.html" title="logos::Logos derive">Logos</a></div><div class="item-right docblock-short"></div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></div></div><h2 id="derives" class="small-section-header"><a href="#derives">Derive Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="derive" href="derive.Logos.html" title="logos::Logos derive">Logos</a></div><div class="item-right docblock-short"></div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

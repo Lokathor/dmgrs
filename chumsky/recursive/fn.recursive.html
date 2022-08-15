@@ -3,39 +3,39 @@
 <p>This is a wrapper around <a href="struct.Recursive.html#method.declare" title="Recursive::declare"><code>Recursive::declare</code></a> and <a href="struct.Recursive.html#method.define" title="Recursive::define"><code>Recursive::define</code></a>.</p>
 <p>The output type of this parser is <code>O</code>, the same as the inner parser.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Tree</span> {
-    <span class="ident">Leaf</span>(<span class="ident">String</span>),
-    <span class="ident">Branch</span>(<span class="ident">Vec</span>&lt;<span class="ident">Tree</span>&gt;),
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[derive(Debug, PartialEq)]</span>
+<span class="kw">enum </span>Tree {
+    Leaf(String),
+    Branch(Vec&lt;Tree&gt;),
 }
 
-<span class="comment">// Parser that recursively parses nested lists</span>
-<span class="kw">let</span> <span class="ident">tree</span> = <span class="ident">recursive</span>::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">Simple</span>&lt;<span class="ident">char</span>&gt;&gt;(|<span class="ident">tree</span>| <span class="ident">tree</span>
-    .<span class="ident">separated_by</span>(<span class="ident">just</span>(<span class="string">&#39;,&#39;</span>))
-    .<span class="ident">delimited_by</span>(<span class="ident">just</span>(<span class="string">&#39;[&#39;</span>), <span class="ident">just</span>(<span class="string">&#39;]&#39;</span>))
-    .<span class="ident">map</span>(<span class="ident">Tree::Branch</span>)
-    .<span class="ident">or</span>(<span class="ident">text::ident</span>().<span class="ident">map</span>(<span class="ident">Tree::Leaf</span>))
-    .<span class="ident">padded</span>());
+<span class="comment">// Parser that recursively parses nested lists
+</span><span class="kw">let </span>tree = recursive::&lt;<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, Simple&lt;char&gt;&gt;(|tree| tree
+    .separated_by(just(<span class="string">&#39;,&#39;</span>))
+    .delimited_by(just(<span class="string">&#39;[&#39;</span>), just(<span class="string">&#39;]&#39;</span>))
+    .map(Tree::Branch)
+    .or(text::ident().map(Tree::Leaf))
+    .padded());
 
-<span class="macro">assert_eq!</span>(<span class="ident">tree</span>.<span class="ident">parse</span>(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">Tree::Leaf</span>(<span class="string">&quot;hello&quot;</span>.<span class="ident">to_string</span>())));
-<span class="macro">assert_eq!</span>(<span class="ident">tree</span>.<span class="ident">parse</span>(<span class="string">&quot;[a, b, c]&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">Tree::Branch</span>(<span class="macro">vec!</span>[
-    <span class="ident">Tree::Leaf</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>()),
-    <span class="ident">Tree::Leaf</span>(<span class="string">&quot;b&quot;</span>.<span class="ident">to_string</span>()),
-    <span class="ident">Tree::Leaf</span>(<span class="string">&quot;c&quot;</span>.<span class="ident">to_string</span>()),
+<span class="macro">assert_eq!</span>(tree.parse(<span class="string">&quot;hello&quot;</span>), <span class="prelude-val">Ok</span>(Tree::Leaf(<span class="string">&quot;hello&quot;</span>.to_string())));
+<span class="macro">assert_eq!</span>(tree.parse(<span class="string">&quot;[a, b, c]&quot;</span>), <span class="prelude-val">Ok</span>(Tree::Branch(<span class="macro">vec!</span>[
+    Tree::Leaf(<span class="string">&quot;a&quot;</span>.to_string()),
+    Tree::Leaf(<span class="string">&quot;b&quot;</span>.to_string()),
+    Tree::Leaf(<span class="string">&quot;c&quot;</span>.to_string()),
 ])));
-<span class="comment">// The parser can deal with arbitrarily complex nested lists</span>
-<span class="macro">assert_eq!</span>(<span class="ident">tree</span>.<span class="ident">parse</span>(<span class="string">&quot;[[a, b], c, [d, [e, f]]]&quot;</span>), <span class="prelude-val">Ok</span>(<span class="ident">Tree::Branch</span>(<span class="macro">vec!</span>[
-    <span class="ident">Tree::Branch</span>(<span class="macro">vec!</span>[
-        <span class="ident">Tree::Leaf</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">to_string</span>()),
-        <span class="ident">Tree::Leaf</span>(<span class="string">&quot;b&quot;</span>.<span class="ident">to_string</span>()),
+<span class="comment">// The parser can deal with arbitrarily complex nested lists
+</span><span class="macro">assert_eq!</span>(tree.parse(<span class="string">&quot;[[a, b], c, [d, [e, f]]]&quot;</span>), <span class="prelude-val">Ok</span>(Tree::Branch(<span class="macro">vec!</span>[
+    Tree::Branch(<span class="macro">vec!</span>[
+        Tree::Leaf(<span class="string">&quot;a&quot;</span>.to_string()),
+        Tree::Leaf(<span class="string">&quot;b&quot;</span>.to_string()),
     ]),
-    <span class="ident">Tree::Leaf</span>(<span class="string">&quot;c&quot;</span>.<span class="ident">to_string</span>()),
-    <span class="ident">Tree::Branch</span>(<span class="macro">vec!</span>[
-        <span class="ident">Tree::Leaf</span>(<span class="string">&quot;d&quot;</span>.<span class="ident">to_string</span>()),
-        <span class="ident">Tree::Branch</span>(<span class="macro">vec!</span>[
-            <span class="ident">Tree::Leaf</span>(<span class="string">&quot;e&quot;</span>.<span class="ident">to_string</span>()),
-            <span class="ident">Tree::Leaf</span>(<span class="string">&quot;f&quot;</span>.<span class="ident">to_string</span>()),
+    Tree::Leaf(<span class="string">&quot;c&quot;</span>.to_string()),
+    Tree::Branch(<span class="macro">vec!</span>[
+        Tree::Leaf(<span class="string">&quot;d&quot;</span>.to_string()),
+        Tree::Branch(<span class="macro">vec!</span>[
+            Tree::Leaf(<span class="string">&quot;e&quot;</span>.to_string()),
+            Tree::Leaf(<span class="string">&quot;f&quot;</span>.to_string()),
         ]),
     ]),
 ])));</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

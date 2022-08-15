@@ -47,17 +47,17 @@ feature, but most of the variants are not available unless “full” is enabled
 <p>This type is a syntax tree enum. In Syn this and other syntax tree enums
 are designed to be traversed using the following rebinding idiom.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="ident">expr</span>: <span class="ident">Expr</span> = <span class="comment">/* ... */</span>;
-<span class="kw">match</span> <span class="ident">expr</span> {
-    <span class="ident">Expr::MethodCall</span>(<span class="ident">expr</span>) =&gt; {
-        <span class="comment">/* ... */</span>
-    }
-    <span class="ident">Expr::Cast</span>(<span class="ident">expr</span>) =&gt; {
-        <span class="comment">/* ... */</span>
-    }
-    <span class="ident">Expr::If</span>(<span class="ident">expr</span>) =&gt; {
-        <span class="comment">/* ... */</span>
-    }
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>expr: Expr = <span class="comment">/* ... */</span>;
+<span class="kw">match </span>expr {
+    Expr::MethodCall(expr) =&gt; {
+        <span class="comment">/* ... */
+    </span>}
+    Expr::Cast(expr) =&gt; {
+        <span class="comment">/* ... */
+    </span>}
+    Expr::If(expr) =&gt; {
+        <span class="comment">/* ... */
+    </span>}
 
     <span class="comment">/* ... */</span></code></pre></div>
 <p>We begin with a variable <code>expr</code> of type <code>Expr</code> that has no fields
@@ -69,15 +69,15 @@ example above if we ended up in the <code>MethodCall</code> case then we get to 
 to use <code>expr.cond</code>, <code>expr.then_branch</code>, <code>expr.else_branch</code>.</p>
 <p>This approach avoids repeating the variant names twice on every line.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Repetitive; recommend not doing this.</span>
-<span class="kw">match</span> <span class="ident">expr</span> {
-    <span class="ident">Expr::MethodCall</span>(<span class="ident">ExprMethodCall</span> { <span class="ident">method</span>, <span class="ident">args</span>, .. }) =&gt; {</code></pre></div>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Repetitive; recommend not doing this.
+</span><span class="kw">match </span>expr {
+    Expr::MethodCall(ExprMethodCall { method, args, .. }) =&gt; {</code></pre></div>
 <p>In general, the name to which a syntax tree enum variant is bound should
 be a suitable name for the complete syntax tree enum type.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Binding is called `base` which is the name I would use if I were</span>
-<span class="comment">// assigning `*discriminant.base` without an `if let`.</span>
-<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Expr::Tuple</span>(<span class="ident">base</span>) = <span class="kw-2">*</span><span class="ident">discriminant</span>.<span class="ident">base</span> {</code></pre></div>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Binding is called `base` which is the name I would use if I were
+// assigning `*discriminant.base` without an `if let`.
+</span><span class="kw">if let </span>Expr::Tuple(base) = <span class="kw-2">*</span>discriminant.base {</code></pre></div>
 <p>A sign that you may not be choosing the right variable names is if you
 see names getting repeated in your code, like accessing
 <code>receiver.receiver</code> or <code>pat.pat</code> or <code>cond.cond</code>.</p>
@@ -140,23 +140,23 @@ following code, the expression <code>S {}</code> is one expression. Presumably
 there is an empty struct <code>struct S {}</code> defined somewhere which it is
 instantiating.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let</span> <span class="kw">_</span> = <span class="kw-2">*</span><span class="ident">S</span> {};
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let _ </span>= <span class="kw-2">*</span>S {};
 
 <span class="comment">// parsed by rustc as: `*(S {})`</span></code></pre></div>
 <p>We would want to parse the above using <code>Expr::parse</code> after the <code>=</code>
 token.</p>
 <p>But in the following, <code>S {}</code> is <em>not</em> a struct init expression.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if</span> <span class="kw-2">*</span><span class="ident">S</span> {} {}
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if </span><span class="kw-2">*</span>S {} {}
 
-<span class="comment">// parsed by rustc as:</span>
-<span class="comment">//</span>
-<span class="comment">//    if (*S) {</span>
-<span class="comment">//        /* empty block */</span>
-<span class="comment">//    }</span>
-<span class="comment">//    {</span>
-<span class="comment">//        /* another empty block */</span>
-<span class="comment">//    }</span></code></pre></div>
+<span class="comment">// parsed by rustc as:
+//
+//    if (*S) {
+//        /* empty block */
+//    }
+//    {
+//        /* another empty block */
+//    }</span></code></pre></div>
 <p>For that reason we would want to parse if-conditions using
 <code>Expr::parse_without_eager_brace</code> after the <code>if</code> token. Same for
 similar syntactic positions such as the condition expr after a
@@ -167,18 +167,18 @@ either parse behavior could work in most positions, and language
 designers just decide each case based on which is more likely to be
 what the programmer had in mind most of the time.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if</span> <span class="kw">return</span> <span class="ident">S</span> {} {}
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if return </span>S {} {}
 
-<span class="comment">// parsed by rustc as:</span>
-<span class="comment">//</span>
-<span class="comment">//    if (return (S {})) {</span>
-<span class="comment">//    }</span>
-<span class="comment">//</span>
-<span class="comment">// but could equally well have been this other arbitrary choice:</span>
-<span class="comment">//</span>
-<span class="comment">//    if (return S) {</span>
-<span class="comment">//    }</span>
-<span class="comment">//    {}</span></code></pre></div>
+<span class="comment">// parsed by rustc as:
+//
+//    if (return (S {})) {
+//    }
+//
+// but could equally well have been this other arbitrary choice:
+//
+//    if (return S) {
+//    }
+//    {}</span></code></pre></div>
 <p>Note the grammar ambiguity on trailing braces is distinct from
 precedence and is not captured by assigning a precedence level to
 the braced struct init expr in relation to other operators. This can
@@ -247,4 +247,4 @@ node, or <a href="../proc_macro2/struct.Span.html#method.call_site"><code>Span::
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#604">source</a></span><a href="#method.try_from" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-TryInto%3CU%3E-for-Expr" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#583">source</a></span><a href="#impl-TryInto%3CU%3E-for-Expr" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Error-1" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#589">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

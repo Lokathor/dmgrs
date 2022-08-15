@@ -224,231 +224,231 @@
 <span id="224">224</span>
 <span id="225">225</span>
 <span id="226">226</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Recursive parsers (parser that include themselves within their patterns).</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! *“It&#39;s unpleasantly like being drunk.&quot;</span>
-<span class="doccomment">//! &quot;What&#39;s so unpleasant about being drunk?&quot;</span>
-<span class="doccomment">//! &quot;You ask a glass of water.”*</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The [`recursive()`] function covers most cases, but sometimes it&#39;s necessary to manually control the declaration and</span>
-<span class="doccomment">//! definition of parsers more corefully, particularly for mutually-recursive parsers. In such cases, the functions on</span>
-<span class="doccomment">//! [`Recursive`] allow for this.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Recursive parsers (parser that include themselves within their patterns).
+//!
+//! *“It&#39;s unpleasantly like being drunk.&quot;
+//! &quot;What&#39;s so unpleasant about being drunk?&quot;
+//! &quot;You ask a glass of water.”*
+//!
+//! The [`recursive()`] function covers most cases, but sometimes it&#39;s necessary to manually control the declaration and
+//! definition of parsers more corefully, particularly for mutually-recursive parsers. In such cases, the functions on
+//! [`Recursive`] allow for this.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">alloc::rc</span>::{<span class="ident">Rc</span>, <span class="ident">Weak</span>};
+<span class="kw">use </span>alloc::rc::{Rc, Weak};
 
-<span class="comment">// TODO: Remove when `OnceCell` is stable</span>
-<span class="kw">struct</span> <span class="ident">OnceCell</span>&lt;<span class="ident">T</span>&gt;(<span class="ident">core::cell::RefCell</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">T</span>&gt;&gt;);
-<span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">OnceCell</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">core::cell::RefCell::new</span>(<span class="prelude-val">None</span>))
+<span class="comment">// TODO: Remove when `OnceCell` is stable
+</span><span class="kw">struct </span>OnceCell&lt;T&gt;(core::cell::RefCell&lt;<span class="prelude-ty">Option</span>&lt;T&gt;&gt;);
+<span class="kw">impl</span>&lt;T&gt; OnceCell&lt;T&gt; {
+    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(core::cell::RefCell::new(<span class="prelude-val">None</span>))
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">x</span>: <span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner</span> = <span class="self">self</span>.<span class="number">0</span>.<span class="ident">try_borrow_mut</span>().<span class="ident">map_err</span>(|<span class="kw">_</span>| ())<span class="question-mark">?</span>;
+    <span class="kw">pub fn </span>set(<span class="kw-2">&amp;</span><span class="self">self</span>, x: T) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>inner = <span class="self">self</span>.<span class="number">0</span>.try_borrow_mut().map_err(|<span class="kw">_</span>| ())<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="ident">inner</span>.<span class="ident">is_none</span>() {
-            <span class="kw-2">*</span><span class="ident">inner</span> = <span class="prelude-val">Some</span>(<span class="ident">x</span>);
+        <span class="kw">if </span>inner.is_none() {
+            <span class="kw-2">*</span>inner = <span class="prelude-val">Some</span>(x);
             <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
+        } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(())
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">core::cell::Ref</span>&lt;<span class="ident">T</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(<span class="ident">core::cell::Ref::map</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">borrow</span>(), |<span class="ident">x</span>| {
-            <span class="ident">x</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>()
+    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;core::cell::Ref&lt;T&gt;&gt; {
+        <span class="prelude-val">Some</span>(core::cell::Ref::map(<span class="self">self</span>.<span class="number">0</span>.borrow(), |x| {
+            x.as_ref().unwrap()
         }))
     }
 }
 
-<span class="kw">enum</span> <span class="ident">RecursiveInner</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="ident">Owned</span>(<span class="ident">Rc</span>&lt;<span class="ident">T</span>&gt;),
-    <span class="ident">Unowned</span>(<span class="ident">Weak</span>&lt;<span class="ident">T</span>&gt;),
+<span class="kw">enum </span>RecursiveInner&lt;T&gt; {
+    Owned(Rc&lt;T&gt;),
+    Unowned(Weak&lt;T&gt;),
 }
 
-<span class="kw">type</span> <span class="ident">OnceParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; = <span class="ident">OnceCell</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="lifetime">&#39;a</span>&gt;&gt;;
+<span class="kw">type </span>OnceParser&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt; = OnceCell&lt;Box&lt;<span class="kw">dyn </span>Parser&lt;I, O, Error = E&gt; + <span class="lifetime">&#39;a</span>&gt;&gt;;
 
-<span class="doccomment">/// A parser that can be defined in terms of itself by separating its [declaration](Recursive::declare) from its</span>
-<span class="doccomment">/// [definition](Recursive::define).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Prefer to use [`recursive()`], which exists as a convenient wrapper around both operations, if possible.</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Recursive</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt;(<span class="ident">RecursiveInner</span>&lt;<span class="ident">OnceParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;&gt;);
+<span class="doccomment">/// A parser that can be defined in terms of itself by separating its [declaration](Recursive::declare) from its
+/// [definition](Recursive::define).
+///
+/// Prefer to use [`recursive()`], which exists as a convenient wrapper around both operations, if possible.
+</span><span class="attribute">#[must_use]</span>
+<span class="kw">pub struct </span>Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E: Error&lt;I&gt;&gt;(RecursiveInner&lt;OnceParser&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt;&gt;);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Recursive</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">cell</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Rc</span>&lt;<span class="ident">OnceParser</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;&gt; {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-            <span class="ident">RecursiveInner::Owned</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>.<span class="ident">clone</span>(),
-            <span class="ident">RecursiveInner::Unowned</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>
-                .<span class="ident">upgrade</span>()
-                .<span class="ident">expect</span>(<span class="string">&quot;Recursive parser used before being defined&quot;</span>),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I: Clone, O, E: Error&lt;I&gt;&gt; Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt; {
+    <span class="kw">fn </span>cell(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Rc&lt;OnceParser&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt;&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+            RecursiveInner::Owned(x) =&gt; x.clone(),
+            RecursiveInner::Unowned(x) =&gt; x
+                .upgrade()
+                .expect(<span class="string">&quot;Recursive parser used before being defined&quot;</span>),
         }
     }
 
-    <span class="doccomment">/// Declare the existence of a recursive parser, allowing it to be used to construct parser combinators before</span>
-    <span class="doccomment">/// being fulled defined.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Declaring a parser before defining it is required for a parser to reference itself.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This should be followed by **exactly one** call to the [`Recursive::define`] method prior to using the parser</span>
-    <span class="doccomment">/// for parsing (i.e: via the [`Parser::parse`] method or similar).</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Prefer to use [`recursive()`], which is a convenient wrapper around this method and [`Recursive::define`], if</span>
-    <span class="doccomment">/// possible.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use chumsky::prelude::*;</span>
-    <span class="doccomment">/// #[derive(Debug, PartialEq)]</span>
-    <span class="doccomment">/// enum Chain {</span>
-    <span class="doccomment">///     End,</span>
-    <span class="doccomment">///     Link(char, Box&lt;Chain&gt;),</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // Declare the existence of the parser before defining it so that it can reference itself</span>
-    <span class="doccomment">/// let mut chain = Recursive::&lt;_, _, Simple&lt;char&gt;&gt;::declare();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // Define the parser in terms of itself.</span>
-    <span class="doccomment">/// // In this case, the parser parses a right-recursive list of &#39;+&#39; into a singly linked list</span>
-    <span class="doccomment">/// chain.define(just(&#39;+&#39;)</span>
-    <span class="doccomment">///     .then(chain.clone())</span>
-    <span class="doccomment">///     .map(|(c, chain)| Chain::Link(c, Box::new(chain)))</span>
-    <span class="doccomment">///     .or_not()</span>
-    <span class="doccomment">///     .map(|chain| chain.unwrap_or(Chain::End)));</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(chain.parse(&quot;&quot;), Ok(Chain::End));</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     chain.parse(&quot;++&quot;),</span>
-    <span class="doccomment">///     Ok(Chain::Link(&#39;+&#39;, Box::new(Chain::Link(&#39;+&#39;, Box::new(Chain::End))))),</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">declare</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident">Recursive</span>(<span class="ident">RecursiveInner::Owned</span>(<span class="ident">Rc::new</span>(<span class="ident">OnceCell::new</span>())))
+    <span class="doccomment">/// Declare the existence of a recursive parser, allowing it to be used to construct parser combinators before
+    /// being fulled defined.
+    ///
+    /// Declaring a parser before defining it is required for a parser to reference itself.
+    ///
+    /// This should be followed by **exactly one** call to the [`Recursive::define`] method prior to using the parser
+    /// for parsing (i.e: via the [`Parser::parse`] method or similar).
+    ///
+    /// Prefer to use [`recursive()`], which is a convenient wrapper around this method and [`Recursive::define`], if
+    /// possible.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use chumsky::prelude::*;
+    /// #[derive(Debug, PartialEq)]
+    /// enum Chain {
+    ///     End,
+    ///     Link(char, Box&lt;Chain&gt;),
+    /// }
+    ///
+    /// // Declare the existence of the parser before defining it so that it can reference itself
+    /// let mut chain = Recursive::&lt;_, _, Simple&lt;char&gt;&gt;::declare();
+    ///
+    /// // Define the parser in terms of itself.
+    /// // In this case, the parser parses a right-recursive list of &#39;+&#39; into a singly linked list
+    /// chain.define(just(&#39;+&#39;)
+    ///     .then(chain.clone())
+    ///     .map(|(c, chain)| Chain::Link(c, Box::new(chain)))
+    ///     .or_not()
+    ///     .map(|chain| chain.unwrap_or(Chain::End)));
+    ///
+    /// assert_eq!(chain.parse(&quot;&quot;), Ok(Chain::End));
+    /// assert_eq!(
+    ///     chain.parse(&quot;++&quot;),
+    ///     Ok(Chain::Link(&#39;+&#39;, Box::new(Chain::Link(&#39;+&#39;, Box::new(Chain::End))))),
+    /// );
+    /// ```
+    </span><span class="kw">pub fn </span>declare() -&gt; <span class="self">Self </span>{
+        Recursive(RecursiveInner::Owned(Rc::new(OnceCell::new())))
     }
 
-    <span class="doccomment">/// Defines the parser after declaring it, allowing it to be used for parsing.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">define</span>&lt;<span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">parser</span>: <span class="ident">P</span>) {
-        <span class="self">self</span>.<span class="ident">cell</span>()
-            .<span class="ident">set</span>(<span class="ident">Box::new</span>(<span class="ident">parser</span>))
-            .<span class="ident">unwrap_or_else</span>(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">&quot;Parser defined more than once&quot;</span>));
+    <span class="doccomment">/// Defines the parser after declaring it, allowing it to be used for parsing.
+    </span><span class="kw">pub fn </span>define&lt;P: Parser&lt;I, O, Error = E&gt; + <span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, parser: P) {
+        <span class="self">self</span>.cell()
+            .set(Box::new(parser))
+            .unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">&quot;Parser defined more than once&quot;</span>));
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Recursive</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-            <span class="ident">RecursiveInner::Owned</span>(<span class="ident">x</span>) =&gt; <span class="ident">RecursiveInner::Owned</span>(<span class="ident">x</span>.<span class="ident">clone</span>()),
-            <span class="ident">RecursiveInner::Unowned</span>(<span class="ident">x</span>) =&gt; <span class="ident">RecursiveInner::Unowned</span>(<span class="ident">x</span>.<span class="ident">clone</span>()),
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I: Clone, O, E: Error&lt;I&gt;&gt; Clone <span class="kw">for </span>Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt; {
+    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+            RecursiveInner::Owned(x) =&gt; RecursiveInner::Owned(x.clone()),
+            RecursiveInner::Unowned(x) =&gt; RecursiveInner::Unowned(x.clone()),
         })
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Clone</span>, <span class="ident">O</span>, <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;&gt; <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>&gt; <span class="kw">for</span> <span class="ident">Recursive</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">E</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I: Clone, O, E: Error&lt;I&gt;&gt; Parser&lt;I, O&gt; <span class="kw">for </span>Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt; {
+    <span class="kw">type </span>Error = E;
 
-    <span class="kw">fn</span> <span class="ident">parse_inner</span>&lt;<span class="ident">D</span>: <span class="ident">Debugger</span>&gt;(
+    <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">debugger</span>: <span class="kw-2">&amp;mut</span> <span class="ident">D</span>,
-        <span class="ident">stream</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt;,
-    ) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;stacker&quot;</span>)]</span>
-        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">recurse</span>&lt;<span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span>&gt;(<span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span> {
-            <span class="ident">stacker::maybe_grow</span>(<span class="number">1024</span> * <span class="number">1024</span>, <span class="number">1024</span> * <span class="number">1024</span>, <span class="ident">f</span>)
+        debugger: <span class="kw-2">&amp;mut </span>D,
+        stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
+    ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;stacker&quot;</span>)]</span>
+        <span class="attribute">#[inline(always)]</span>
+        <span class="kw">fn </span>recurse&lt;R, F: FnOnce() -&gt; R&gt;(f: F) -&gt; R {
+            stacker::maybe_grow(<span class="number">1024 </span>* <span class="number">1024</span>, <span class="number">1024 </span>* <span class="number">1024</span>, f)
         }
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;stacker&quot;</span>))]</span>
-        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-        <span class="kw">fn</span> <span class="ident">recurse</span>&lt;<span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span>&gt;(<span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span> {
-            <span class="ident">f</span>()
+        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;stacker&quot;</span>))]</span>
+        <span class="attribute">#[inline(always)]</span>
+        <span class="kw">fn </span>recurse&lt;R, F: FnOnce() -&gt; R&gt;(f: F) -&gt; R {
+            f()
         }
 
-        <span class="ident">recurse</span>(|| {
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-            <span class="ident">debugger</span>.<span class="ident">invoke</span>(
-                <span class="self">self</span>.<span class="ident">cell</span>()
-                    .<span class="ident">get</span>()
-                    .<span class="ident">expect</span>(<span class="string">&quot;Recursive parser used before being defined&quot;</span>)
-                    .<span class="ident">as_ref</span>(),
-                <span class="ident">stream</span>,
+        recurse(|| {
+            <span class="attribute">#[allow(deprecated)]</span>
+            debugger.invoke(
+                <span class="self">self</span>.cell()
+                    .get()
+                    .expect(<span class="string">&quot;Recursive parser used before being defined&quot;</span>)
+                    .as_ref(),
+                stream,
             )
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_inner_verbose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Verbose</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
-    <span class="kw">fn</span> <span class="ident">parse_inner_silent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">d</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Silent</span>, <span class="ident">s</span>: <span class="kw-2">&amp;mut</span> <span class="ident">StreamOf</span>&lt;<span class="ident">I</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">PResult</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-        <span class="self">self</span>.<span class="ident">parse_inner</span>(<span class="ident">d</span>, <span class="ident">s</span>)
+    <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
+        <span class="attribute">#[allow(deprecated)]</span>
+        <span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="doccomment">/// Construct a recursive parser (i.e: a parser that may contain itself as part of its pattern).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The given function must create the parser. The parser must not be used to parse input before this function returns.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is a wrapper around [`Recursive::declare`] and [`Recursive::define`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The output type of this parser is `O`, the same as the inner parser.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use chumsky::prelude::*;</span>
-<span class="doccomment">/// #[derive(Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Tree {</span>
-<span class="doccomment">///     Leaf(String),</span>
-<span class="doccomment">///     Branch(Vec&lt;Tree&gt;),</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // Parser that recursively parses nested lists</span>
-<span class="doccomment">/// let tree = recursive::&lt;_, _, _, _, Simple&lt;char&gt;&gt;(|tree| tree</span>
-<span class="doccomment">///     .separated_by(just(&#39;,&#39;))</span>
-<span class="doccomment">///     .delimited_by(just(&#39;[&#39;), just(&#39;]&#39;))</span>
-<span class="doccomment">///     .map(Tree::Branch)</span>
-<span class="doccomment">///     .or(text::ident().map(Tree::Leaf))</span>
-<span class="doccomment">///     .padded());</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(tree.parse(&quot;hello&quot;), Ok(Tree::Leaf(&quot;hello&quot;.to_string())));</span>
-<span class="doccomment">/// assert_eq!(tree.parse(&quot;[a, b, c]&quot;), Ok(Tree::Branch(vec![</span>
-<span class="doccomment">///     Tree::Leaf(&quot;a&quot;.to_string()),</span>
-<span class="doccomment">///     Tree::Leaf(&quot;b&quot;.to_string()),</span>
-<span class="doccomment">///     Tree::Leaf(&quot;c&quot;.to_string()),</span>
-<span class="doccomment">/// ])));</span>
-<span class="doccomment">/// // The parser can deal with arbitrarily complex nested lists</span>
-<span class="doccomment">/// assert_eq!(tree.parse(&quot;[[a, b], c, [d, [e, f]]]&quot;), Ok(Tree::Branch(vec![</span>
-<span class="doccomment">///     Tree::Branch(vec![</span>
-<span class="doccomment">///         Tree::Leaf(&quot;a&quot;.to_string()),</span>
-<span class="doccomment">///         Tree::Leaf(&quot;b&quot;.to_string()),</span>
-<span class="doccomment">///     ]),</span>
-<span class="doccomment">///     Tree::Leaf(&quot;c&quot;.to_string()),</span>
-<span class="doccomment">///     Tree::Branch(vec![</span>
-<span class="doccomment">///         Tree::Leaf(&quot;d&quot;.to_string()),</span>
-<span class="doccomment">///         Tree::Branch(vec![</span>
-<span class="doccomment">///             Tree::Leaf(&quot;e&quot;.to_string()),</span>
-<span class="doccomment">///             Tree::Leaf(&quot;f&quot;.to_string()),</span>
-<span class="doccomment">///         ]),</span>
-<span class="doccomment">///     ]),</span>
-<span class="doccomment">/// ])));</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recursive</span>&lt;
+<span class="doccomment">/// Construct a recursive parser (i.e: a parser that may contain itself as part of its pattern).
+///
+/// The given function must create the parser. The parser must not be used to parse input before this function returns.
+///
+/// This is a wrapper around [`Recursive::declare`] and [`Recursive::define`].
+///
+/// The output type of this parser is `O`, the same as the inner parser.
+///
+/// # Examples
+///
+/// ```
+/// # use chumsky::prelude::*;
+/// #[derive(Debug, PartialEq)]
+/// enum Tree {
+///     Leaf(String),
+///     Branch(Vec&lt;Tree&gt;),
+/// }
+///
+/// // Parser that recursively parses nested lists
+/// let tree = recursive::&lt;_, _, _, _, Simple&lt;char&gt;&gt;(|tree| tree
+///     .separated_by(just(&#39;,&#39;))
+///     .delimited_by(just(&#39;[&#39;), just(&#39;]&#39;))
+///     .map(Tree::Branch)
+///     .or(text::ident().map(Tree::Leaf))
+///     .padded());
+///
+/// assert_eq!(tree.parse(&quot;hello&quot;), Ok(Tree::Leaf(&quot;hello&quot;.to_string())));
+/// assert_eq!(tree.parse(&quot;[a, b, c]&quot;), Ok(Tree::Branch(vec![
+///     Tree::Leaf(&quot;a&quot;.to_string()),
+///     Tree::Leaf(&quot;b&quot;.to_string()),
+///     Tree::Leaf(&quot;c&quot;.to_string()),
+/// ])));
+/// // The parser can deal with arbitrarily complex nested lists
+/// assert_eq!(tree.parse(&quot;[[a, b], c, [d, [e, f]]]&quot;), Ok(Tree::Branch(vec![
+///     Tree::Branch(vec![
+///         Tree::Leaf(&quot;a&quot;.to_string()),
+///         Tree::Leaf(&quot;b&quot;.to_string()),
+///     ]),
+///     Tree::Leaf(&quot;c&quot;.to_string()),
+///     Tree::Branch(vec![
+///         Tree::Leaf(&quot;d&quot;.to_string()),
+///         Tree::Branch(vec![
+///             Tree::Leaf(&quot;e&quot;.to_string()),
+///             Tree::Leaf(&quot;f&quot;.to_string()),
+///         ]),
+///     ]),
+/// ])));
+/// ```
+</span><span class="kw">pub fn </span>recursive&lt;
     <span class="lifetime">&#39;a</span>,
-    <span class="ident">I</span>: <span class="ident">Clone</span>,
-    <span class="ident">O</span>,
-    <span class="ident">P</span>: <span class="ident">Parser</span>&lt;<span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">Error</span> = <span class="ident">E</span>&gt; + <span class="lifetime">&#39;a</span>,
-    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Recursive</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt;) -&gt; <span class="ident">P</span>,
-    <span class="ident">E</span>: <span class="ident">Error</span>&lt;<span class="ident">I</span>&gt;,
+    I: Clone,
+    O,
+    P: Parser&lt;I, O, Error = E&gt; + <span class="lifetime">&#39;a</span>,
+    F: FnOnce(Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt;) -&gt; P,
+    E: Error&lt;I&gt;,
 &gt;(
-    <span class="ident">f</span>: <span class="ident">F</span>,
-) -&gt; <span class="ident">Recursive</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">O</span>, <span class="ident">E</span>&gt; {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parser</span> = <span class="ident">Recursive::declare</span>();
-    <span class="ident">parser</span>.<span class="ident">define</span>(<span class="ident">f</span>(<span class="ident">Recursive</span>(<span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">parser</span>.<span class="number">0</span> {
-        <span class="ident">RecursiveInner::Owned</span>(<span class="ident">x</span>) =&gt; <span class="ident">RecursiveInner::Unowned</span>(<span class="ident">Rc::downgrade</span>(<span class="ident">x</span>)),
-        <span class="ident">RecursiveInner::Unowned</span>(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+    f: F,
+) -&gt; Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>parser = Recursive::declare();
+    parser.define(f(Recursive(<span class="kw">match </span><span class="kw-2">&amp;</span>parser.<span class="number">0 </span>{
+        RecursiveInner::Owned(x) =&gt; RecursiveInner::Unowned(Rc::downgrade(x)),
+        RecursiveInner::Unowned(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
     })));
-    <span class="ident">parser</span>
+    parser
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

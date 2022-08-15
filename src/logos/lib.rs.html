@@ -399,404 +399,404 @@
 <span id="397">397</span>
 <span id="398">398</span>
 <span id="399">399</span>
-</pre><pre class="rust"><code><span class="doccomment">//! &lt;img src=&quot;https://raw.githubusercontent.com/maciejhirsz/logos/master/logos.svg?sanitize=true&quot; alt=&quot;Logos logo&quot; width=&quot;250&quot; align=&quot;right&quot;&gt;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Logos</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! _Create ridiculously fast Lexers._</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! **Logos** has two goals:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! + To make it easy to create a Lexer, so you can focus on more complex problems.</span>
-<span class="doccomment">//! + To make the generated Lexer faster than anything you&#39;d write by hand.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! To achieve those, **Logos**:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! + Combines all token definitions into a single [deterministic state machine](https://en.wikipedia.org/wiki/Deterministic_finite_automaton).</span>
-<span class="doccomment">//! + Optimizes branches into [lookup tables](https://en.wikipedia.org/wiki/Lookup_table) or [jump tables](https://en.wikipedia.org/wiki/Branch_table).</span>
-<span class="doccomment">//! + Prevents [backtracking](https://en.wikipedia.org/wiki/ReDoS) inside token definitions.</span>
-<span class="doccomment">//! + [Unwinds loops](https://en.wikipedia.org/wiki/Loop_unrolling), and batches reads to minimize bounds checking.</span>
-<span class="doccomment">//! + Does all of that heavy lifting at compile time.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Example</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```rust</span>
-<span class="doccomment">//! use logos::Logos;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! #[derive(Logos, Debug, PartialEq)]</span>
-<span class="doccomment">//! enum Token {</span>
-<span class="doccomment">//!     // Tokens can be literal strings, of any length.</span>
-<span class="doccomment">//!     #[token(&quot;fast&quot;)]</span>
-<span class="doccomment">//!     Fast,</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     #[token(&quot;.&quot;)]</span>
-<span class="doccomment">//!     Period,</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     // Or regular expressions.</span>
-<span class="doccomment">//!     #[regex(&quot;[a-zA-Z]+&quot;)]</span>
-<span class="doccomment">//!     Text,</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     // Logos requires one token variant to handle errors,</span>
-<span class="doccomment">//!     // it can be named anything you wish.</span>
-<span class="doccomment">//!     #[error]</span>
-<span class="doccomment">//!     // We can also use this variant to define whitespace,</span>
-<span class="doccomment">//!     // or any other matches we wish to skip.</span>
-<span class="doccomment">//!     #[regex(r&quot;[ \t\n\f]+&quot;, logos::skip)]</span>
-<span class="doccomment">//!     Error,</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! fn main() {</span>
-<span class="doccomment">//!     let mut lex = Token::lexer(&quot;Create ridiculously fast Lexers.&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Text));</span>
-<span class="doccomment">//!     assert_eq!(lex.span(), 0..6);</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;Create&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Text));</span>
-<span class="doccomment">//!     assert_eq!(lex.span(), 7..19);</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;ridiculously&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Fast));</span>
-<span class="doccomment">//!     assert_eq!(lex.span(), 20..24);</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;fast&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Text));</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;Lexers&quot;);</span>
-<span class="doccomment">//!     assert_eq!(lex.span(), 25..31);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Period));</span>
-<span class="doccomment">//!     assert_eq!(lex.span(), 31..32);</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;.&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), None);</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Callbacks</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! **Logos** can also call arbitrary functions whenever a pattern is matched,</span>
-<span class="doccomment">//! which can be used to put data into a variant:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```rust</span>
-<span class="doccomment">//! use logos::{Logos, Lexer};</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! // Note: callbacks can return `Option` or `Result`</span>
-<span class="doccomment">//! fn kilo(lex: &amp;mut Lexer&lt;Token&gt;) -&gt; Option&lt;u64&gt; {</span>
-<span class="doccomment">//!     let slice = lex.slice();</span>
-<span class="doccomment">//!     let n: u64 = slice[..slice.len() - 1].parse().ok()?; // skip &#39;k&#39;</span>
-<span class="doccomment">//!     Some(n * 1_000)</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! fn mega(lex: &amp;mut Lexer&lt;Token&gt;) -&gt; Option&lt;u64&gt; {</span>
-<span class="doccomment">//!     let slice = lex.slice();</span>
-<span class="doccomment">//!     let n: u64 = slice[..slice.len() - 1].parse().ok()?; // skip &#39;m&#39;</span>
-<span class="doccomment">//!     Some(n * 1_000_000)</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! #[derive(Logos, Debug, PartialEq)]</span>
-<span class="doccomment">//! enum Token {</span>
-<span class="doccomment">//!     #[regex(r&quot;[ \t\n\f]+&quot;, logos::skip)]</span>
-<span class="doccomment">//!     #[error]</span>
-<span class="doccomment">//!     Error,</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     // Callbacks can use closure syntax, or refer</span>
-<span class="doccomment">//!     // to a function defined elsewhere.</span>
-<span class="doccomment">//!     //</span>
-<span class="doccomment">//!     // Each pattern can have it&#39;s own callback.</span>
-<span class="doccomment">//!     #[regex(&quot;[0-9]+&quot;, |lex| lex.slice().parse())]</span>
-<span class="doccomment">//!     #[regex(&quot;[0-9]+k&quot;, kilo)]</span>
-<span class="doccomment">//!     #[regex(&quot;[0-9]+m&quot;, mega)]</span>
-<span class="doccomment">//!     Number(u64),</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! fn main() {</span>
-<span class="doccomment">//!     let mut lex = Token::lexer(&quot;5 42k 75m&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Number(5)));</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;5&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Number(42_000)));</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;42k&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), Some(Token::Number(75_000_000)));</span>
-<span class="doccomment">//!     assert_eq!(lex.slice(), &quot;75m&quot;);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     assert_eq!(lex.next(), None);</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Logos can handle callbacks with following return types:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! | Return type                       | Produces                                           |</span>
-<span class="doccomment">//! |-----------------------------------|----------------------------------------------------|</span>
-<span class="doccomment">//! | `()`                              | `Token::Unit`                                      |</span>
-<span class="doccomment">//! | `bool`                            | `Token::Unit` **or** `&lt;Token as Logos&gt;::ERROR`     |</span>
-<span class="doccomment">//! | `Result&lt;(), _&gt;`                   | `Token::Unit` **or** `&lt;Token as Logos&gt;::ERROR`     |</span>
-<span class="doccomment">//! | `T`                               | `Token::Value(T)`                                  |</span>
-<span class="doccomment">//! | `Option&lt;T&gt;`                       | `Token::Value(T)` **or** `&lt;Token as Logos&gt;::ERROR` |</span>
-<span class="doccomment">//! | `Result&lt;T, _&gt;`                    | `Token::Value(T)` **or** `&lt;Token as Logos&gt;::ERROR` |</span>
-<span class="doccomment">//! | [`Skip`](./struct.Skip.html)      | _skips matched input_                              |</span>
-<span class="doccomment">//! | [`Filter&lt;T&gt;`](./enum.Filter.html) | `Token::Value(T)` **or** _skips matched input_     |</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Callbacks can be also used to do perform more specialized lexing in place</span>
-<span class="doccomment">//! where regular expressions are too limiting. For specifics look at</span>
-<span class="doccomment">//! [`Lexer::remainder`](./struct.Lexer.html#method.remainder) and</span>
-<span class="doccomment">//! [`Lexer::bump`](./struct.Lexer.html#method.bump).</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Token disambiguation</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Rule of thumb is:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! + Longer beats shorter.</span>
-<span class="doccomment">//! + Specific beats generic.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! If any two definitions could match the same input, like `fast` and `[a-zA-Z]+`</span>
-<span class="doccomment">//! in the example above, it&#39;s the longer and more specific definition of `Token::Fast`</span>
-<span class="doccomment">//! that will be the result.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This is done by comparing numeric priority attached to each definition. Every consecutive,</span>
-<span class="doccomment">//! non-repeating single byte adds 2 to the priority, while every range or regex class adds 1.</span>
-<span class="doccomment">//! Loops or optional blocks are ignored, while alternations count the shortest alternative:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! + `[a-zA-Z]+` has a priority of 1 (lowest possible), because at minimum it can match a single byte to a class.</span>
-<span class="doccomment">//! + `foobar` has a priority of 12.</span>
-<span class="doccomment">//! + `(foo|hello)(bar)?` has a priority of 6, `foo` being it&#39;s shortest possible match.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! &lt;img src=&quot;https://raw.githubusercontent.com/maciejhirsz/logos/master/logos.svg?sanitize=true&quot; alt=&quot;Logos logo&quot; width=&quot;250&quot; align=&quot;right&quot;&gt;
+//!
+//! # Logos
+//!
+//! _Create ridiculously fast Lexers._
+//!
+//! **Logos** has two goals:
+//!
+//! + To make it easy to create a Lexer, so you can focus on more complex problems.
+//! + To make the generated Lexer faster than anything you&#39;d write by hand.
+//!
+//! To achieve those, **Logos**:
+//!
+//! + Combines all token definitions into a single [deterministic state machine](https://en.wikipedia.org/wiki/Deterministic_finite_automaton).
+//! + Optimizes branches into [lookup tables](https://en.wikipedia.org/wiki/Lookup_table) or [jump tables](https://en.wikipedia.org/wiki/Branch_table).
+//! + Prevents [backtracking](https://en.wikipedia.org/wiki/ReDoS) inside token definitions.
+//! + [Unwinds loops](https://en.wikipedia.org/wiki/Loop_unrolling), and batches reads to minimize bounds checking.
+//! + Does all of that heavy lifting at compile time.
+//!
+//! ## Example
+//!
+//! ```rust
+//! use logos::Logos;
+//!
+//! #[derive(Logos, Debug, PartialEq)]
+//! enum Token {
+//!     // Tokens can be literal strings, of any length.
+//!     #[token(&quot;fast&quot;)]
+//!     Fast,
+//!
+//!     #[token(&quot;.&quot;)]
+//!     Period,
+//!
+//!     // Or regular expressions.
+//!     #[regex(&quot;[a-zA-Z]+&quot;)]
+//!     Text,
+//!
+//!     // Logos requires one token variant to handle errors,
+//!     // it can be named anything you wish.
+//!     #[error]
+//!     // We can also use this variant to define whitespace,
+//!     // or any other matches we wish to skip.
+//!     #[regex(r&quot;[ \t\n\f]+&quot;, logos::skip)]
+//!     Error,
+//! }
+//!
+//! fn main() {
+//!     let mut lex = Token::lexer(&quot;Create ridiculously fast Lexers.&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Text));
+//!     assert_eq!(lex.span(), 0..6);
+//!     assert_eq!(lex.slice(), &quot;Create&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Text));
+//!     assert_eq!(lex.span(), 7..19);
+//!     assert_eq!(lex.slice(), &quot;ridiculously&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Fast));
+//!     assert_eq!(lex.span(), 20..24);
+//!     assert_eq!(lex.slice(), &quot;fast&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Text));
+//!     assert_eq!(lex.slice(), &quot;Lexers&quot;);
+//!     assert_eq!(lex.span(), 25..31);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Period));
+//!     assert_eq!(lex.span(), 31..32);
+//!     assert_eq!(lex.slice(), &quot;.&quot;);
+//!
+//!     assert_eq!(lex.next(), None);
+//! }
+//! ```
+//!
+//! ### Callbacks
+//!
+//! **Logos** can also call arbitrary functions whenever a pattern is matched,
+//! which can be used to put data into a variant:
+//!
+//! ```rust
+//! use logos::{Logos, Lexer};
+//!
+//! // Note: callbacks can return `Option` or `Result`
+//! fn kilo(lex: &amp;mut Lexer&lt;Token&gt;) -&gt; Option&lt;u64&gt; {
+//!     let slice = lex.slice();
+//!     let n: u64 = slice[..slice.len() - 1].parse().ok()?; // skip &#39;k&#39;
+//!     Some(n * 1_000)
+//! }
+//!
+//! fn mega(lex: &amp;mut Lexer&lt;Token&gt;) -&gt; Option&lt;u64&gt; {
+//!     let slice = lex.slice();
+//!     let n: u64 = slice[..slice.len() - 1].parse().ok()?; // skip &#39;m&#39;
+//!     Some(n * 1_000_000)
+//! }
+//!
+//! #[derive(Logos, Debug, PartialEq)]
+//! enum Token {
+//!     #[regex(r&quot;[ \t\n\f]+&quot;, logos::skip)]
+//!     #[error]
+//!     Error,
+//!
+//!     // Callbacks can use closure syntax, or refer
+//!     // to a function defined elsewhere.
+//!     //
+//!     // Each pattern can have it&#39;s own callback.
+//!     #[regex(&quot;[0-9]+&quot;, |lex| lex.slice().parse())]
+//!     #[regex(&quot;[0-9]+k&quot;, kilo)]
+//!     #[regex(&quot;[0-9]+m&quot;, mega)]
+//!     Number(u64),
+//! }
+//!
+//! fn main() {
+//!     let mut lex = Token::lexer(&quot;5 42k 75m&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Number(5)));
+//!     assert_eq!(lex.slice(), &quot;5&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Number(42_000)));
+//!     assert_eq!(lex.slice(), &quot;42k&quot;);
+//!
+//!     assert_eq!(lex.next(), Some(Token::Number(75_000_000)));
+//!     assert_eq!(lex.slice(), &quot;75m&quot;);
+//!
+//!     assert_eq!(lex.next(), None);
+//! }
+//! ```
+//!
+//! Logos can handle callbacks with following return types:
+//!
+//! | Return type                       | Produces                                           |
+//! |-----------------------------------|----------------------------------------------------|
+//! | `()`                              | `Token::Unit`                                      |
+//! | `bool`                            | `Token::Unit` **or** `&lt;Token as Logos&gt;::ERROR`     |
+//! | `Result&lt;(), _&gt;`                   | `Token::Unit` **or** `&lt;Token as Logos&gt;::ERROR`     |
+//! | `T`                               | `Token::Value(T)`                                  |
+//! | `Option&lt;T&gt;`                       | `Token::Value(T)` **or** `&lt;Token as Logos&gt;::ERROR` |
+//! | `Result&lt;T, _&gt;`                    | `Token::Value(T)` **or** `&lt;Token as Logos&gt;::ERROR` |
+//! | [`Skip`](./struct.Skip.html)      | _skips matched input_                              |
+//! | [`Filter&lt;T&gt;`](./enum.Filter.html) | `Token::Value(T)` **or** _skips matched input_     |
+//!
+//! Callbacks can be also used to do perform more specialized lexing in place
+//! where regular expressions are too limiting. For specifics look at
+//! [`Lexer::remainder`](./struct.Lexer.html#method.remainder) and
+//! [`Lexer::bump`](./struct.Lexer.html#method.bump).
+//!
+//! ## Token disambiguation
+//!
+//! Rule of thumb is:
+//!
+//! + Longer beats shorter.
+//! + Specific beats generic.
+//!
+//! If any two definitions could match the same input, like `fast` and `[a-zA-Z]+`
+//! in the example above, it&#39;s the longer and more specific definition of `Token::Fast`
+//! that will be the result.
+//!
+//! This is done by comparing numeric priority attached to each definition. Every consecutive,
+//! non-repeating single byte adds 2 to the priority, while every range or regex class adds 1.
+//! Loops or optional blocks are ignored, while alternations count the shortest alternative:
+//!
+//! + `[a-zA-Z]+` has a priority of 1 (lowest possible), because at minimum it can match a single byte to a class.
+//! + `foobar` has a priority of 12.
+//! + `(foo|hello)(bar)?` has a priority of 6, `foo` being it&#39;s shortest possible match.
 
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
-<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_logo_url</span> = <span class="string">&quot;https://maciej.codes/kosz/logos.png&quot;</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]</span>
+<span class="attribute">#![warn(missing_docs)]</span>
+<span class="attribute">#![doc(html_logo_url = <span class="string">&quot;https://maciej.codes/kosz/logos.png&quot;</span>)]</span>
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">core</span> <span class="kw">as</span> <span class="ident">std</span>;
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
+<span class="kw">extern crate </span>core <span class="kw">as </span>std;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;export_derive&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">logos_derive::Logos</span>;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;export_derive&quot;</span>)]</span>
+<span class="kw">pub use </span>logos_derive::Logos;
 
-<span class="kw">mod</span> <span class="ident">lexer</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">source</span>;
+<span class="kw">mod </span>lexer;
+<span class="kw">pub mod </span>source;
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">internal</span>;
+<span class="attribute">#[doc(hidden)]</span>
+<span class="kw">pub mod </span>internal;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::lexer</span>::{<span class="ident">Lexer</span>, <span class="ident">Span</span>, <span class="ident">SpannedIter</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::source::Source</span>;
+<span class="kw">pub use </span><span class="kw">crate</span>::lexer::{Lexer, Span, SpannedIter};
+<span class="kw">pub use </span><span class="kw">crate</span>::source::Source;
 
-<span class="doccomment">/// Trait implemented for an enum representing all tokens. You should never have</span>
-<span class="doccomment">/// to implement it manually, use the `#[derive(Logos)]` attribute on your enum.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;source</span>&gt;: <span class="ident">Sized</span> {
-    <span class="doccomment">/// Associated type `Extras` for the particular lexer. This can be set using</span>
-    <span class="doccomment">/// `#[logos(extras = MyExtras)]` and accessed inside callbacks.</span>
-    <span class="kw">type</span> <span class="ident">Extras</span>;
+<span class="doccomment">/// Trait implemented for an enum representing all tokens. You should never have
+/// to implement it manually, use the `#[derive(Logos)]` attribute on your enum.
+</span><span class="kw">pub trait </span>Logos&lt;<span class="lifetime">&#39;source</span>&gt;: Sized {
+    <span class="doccomment">/// Associated type `Extras` for the particular lexer. This can be set using
+    /// `#[logos(extras = MyExtras)]` and accessed inside callbacks.
+    </span><span class="kw">type </span>Extras;
 
-    <span class="doccomment">/// Source type this token can be lexed from. This will default to `str`,</span>
-    <span class="doccomment">/// unless one of the defined patterns explicitly uses non-unicode byte values</span>
-    <span class="doccomment">/// or byte slices, in which case that implementation will use `[u8]`.</span>
-    <span class="kw">type</span> <span class="ident">Source</span>: <span class="ident">Source</span> + <span class="question-mark">?</span><span class="ident">Sized</span> + <span class="lifetime">&#39;source</span>;
+    <span class="doccomment">/// Source type this token can be lexed from. This will default to `str`,
+    /// unless one of the defined patterns explicitly uses non-unicode byte values
+    /// or byte slices, in which case that implementation will use `[u8]`.
+    </span><span class="kw">type </span>Source: Source + <span class="question-mark">?</span>Sized + <span class="lifetime">&#39;source</span>;
 
-    <span class="doccomment">/// Helper `const` of the variant marked as `#[error]`.</span>
-    <span class="kw">const</span> <span class="ident">ERROR</span>: <span class="self">Self</span>;
+    <span class="doccomment">/// Helper `const` of the variant marked as `#[error]`.
+    </span><span class="kw">const </span>ERROR: <span class="self">Self</span>;
 
-    <span class="doccomment">/// The heart of Logos. Called by the `Lexer`. The implementation for this function</span>
-    <span class="doccomment">/// is generated by the `logos-derive` crate.</span>
-    <span class="kw">fn</span> <span class="ident">lex</span>(<span class="ident">lexer</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;source</span>, <span class="self">Self</span>&gt;);
+    <span class="doccomment">/// The heart of Logos. Called by the `Lexer`. The implementation for this function
+    /// is generated by the `logos-derive` crate.
+    </span><span class="kw">fn </span>lex(lexer: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;source</span>, <span class="self">Self</span>&gt;);
 
-    <span class="doccomment">/// Create a new instance of a `Lexer` that will produce tokens implementing</span>
-    <span class="doccomment">/// this `Logos`.</span>
-    <span class="kw">fn</span> <span class="ident">lexer</span>(<span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident"><span class="self">Self</span>::Source</span>) -&gt; <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;source</span>, <span class="self">Self</span>&gt;
-    <span class="kw">where</span>
-        <span class="ident"><span class="self">Self</span>::Extras</span>: <span class="ident">Default</span>,
+    <span class="doccomment">/// Create a new instance of a `Lexer` that will produce tokens implementing
+    /// this `Logos`.
+    </span><span class="kw">fn </span>lexer(source: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span><span class="self">Self</span>::Source) -&gt; Lexer&lt;<span class="lifetime">&#39;source</span>, <span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span><span class="self">Self</span>::Extras: Default,
     {
-        <span class="ident">Lexer::new</span>(<span class="ident">source</span>)
+        Lexer::new(source)
     }
 
-    <span class="doccomment">/// Create a new instance of a `Lexer` with the provided `Extras` that will</span>
-    <span class="doccomment">/// produce tokens implementing this `Logos`.</span>
-    <span class="kw">fn</span> <span class="ident">lexer_with_extras</span>(
-        <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident"><span class="self">Self</span>::Source</span>,
-        <span class="ident">extras</span>: <span class="ident"><span class="self">Self</span>::Extras</span>,
-    ) -&gt; <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;source</span>, <span class="self">Self</span>&gt; {
-        <span class="ident">Lexer::with_extras</span>(<span class="ident">source</span>, <span class="ident">extras</span>)
+    <span class="doccomment">/// Create a new instance of a `Lexer` with the provided `Extras` that will
+    /// produce tokens implementing this `Logos`.
+    </span><span class="kw">fn </span>lexer_with_extras(
+        source: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span><span class="self">Self</span>::Source,
+        extras: <span class="self">Self</span>::Extras,
+    ) -&gt; Lexer&lt;<span class="lifetime">&#39;source</span>, <span class="self">Self</span>&gt; {
+        Lexer::with_extras(source, extras)
     }
 }
 
-<span class="doccomment">/// Type that can be returned from a callback, informing the `Lexer`, to skip</span>
-<span class="doccomment">/// current token match. See also [`logos::skip`](./fn.skip.html).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// use logos::{Logos, Skip};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[derive(Logos, Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Token&lt;&#39;a&gt; {</span>
-<span class="doccomment">///     // We will treat &quot;abc&quot; as if it was whitespace.</span>
-<span class="doccomment">///     // This is identical to using `logos::skip`.</span>
-<span class="doccomment">///     #[regex(&quot; |abc&quot;, |_| Skip)]</span>
-<span class="doccomment">///     #[error]</span>
-<span class="doccomment">///     Error,</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     #[regex(&quot;[a-zA-Z]+&quot;)]</span>
-<span class="doccomment">///     Text(&amp;&#39;a str),</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;Hello abc world&quot;).collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     tokens,</span>
-<span class="doccomment">///     &amp;[</span>
-<span class="doccomment">///         Token::Text(&quot;Hello&quot;),</span>
-<span class="doccomment">///         Token::Text(&quot;world&quot;),</span>
-<span class="doccomment">///     ],</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Skip</span>;
+<span class="doccomment">/// Type that can be returned from a callback, informing the `Lexer`, to skip
+/// current token match. See also [`logos::skip`](./fn.skip.html).
+///
+/// # Example
+///
+/// ```rust
+/// use logos::{Logos, Skip};
+///
+/// #[derive(Logos, Debug, PartialEq)]
+/// enum Token&lt;&#39;a&gt; {
+///     // We will treat &quot;abc&quot; as if it was whitespace.
+///     // This is identical to using `logos::skip`.
+///     #[regex(&quot; |abc&quot;, |_| Skip)]
+///     #[error]
+///     Error,
+///
+///     #[regex(&quot;[a-zA-Z]+&quot;)]
+///     Text(&amp;&#39;a str),
+/// }
+///
+/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;Hello abc world&quot;).collect();
+///
+/// assert_eq!(
+///     tokens,
+///     &amp;[
+///         Token::Text(&quot;Hello&quot;),
+///         Token::Text(&quot;world&quot;),
+///     ],
+/// );
+/// ```
+</span><span class="kw">pub struct </span>Skip;
 
-<span class="doccomment">/// Type that can be returned from a callback, either producing a field</span>
-<span class="doccomment">/// for a token, or skipping it.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// use logos::{Logos, Filter};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[derive(Logos, Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Token {</span>
-<span class="doccomment">///     #[regex(r&quot;[ \n\f\t]+&quot;, logos::skip)]</span>
-<span class="doccomment">///     #[error]</span>
-<span class="doccomment">///     Error,</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     #[regex(&quot;[0-9]+&quot;, |lex| {</span>
-<span class="doccomment">///         let n: u64 = lex.slice().parse().unwrap();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///         // Only emit a token if `n` is an even number</span>
-<span class="doccomment">///         match n % 2 {</span>
-<span class="doccomment">///             0 =&gt; Filter::Emit(n),</span>
-<span class="doccomment">///             _ =&gt; Filter::Skip,</span>
-<span class="doccomment">///         }</span>
-<span class="doccomment">///     })]</span>
-<span class="doccomment">///     EvenNumber(u64)</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;20 11 42 23 100 8002&quot;).collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     tokens,</span>
-<span class="doccomment">///     &amp;[</span>
-<span class="doccomment">///         Token::EvenNumber(20),</span>
-<span class="doccomment">///         // skipping 11</span>
-<span class="doccomment">///         Token::EvenNumber(42),</span>
-<span class="doccomment">///         // skipping 23</span>
-<span class="doccomment">///         Token::EvenNumber(100),</span>
-<span class="doccomment">///         Token::EvenNumber(8002),</span>
-<span class="doccomment">///     ]</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Filter</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="doccomment">/// Emit a token with a given value `T`. Use `()` for unit variants without fields.</span>
-    <span class="ident">Emit</span>(<span class="ident">T</span>),
-    <span class="doccomment">/// Skip current match, analog to [`Skip`](./struct.Skip.html).</span>
-    <span class="ident">Skip</span>,
+<span class="doccomment">/// Type that can be returned from a callback, either producing a field
+/// for a token, or skipping it.
+///
+/// # Example
+///
+/// ```rust
+/// use logos::{Logos, Filter};
+///
+/// #[derive(Logos, Debug, PartialEq)]
+/// enum Token {
+///     #[regex(r&quot;[ \n\f\t]+&quot;, logos::skip)]
+///     #[error]
+///     Error,
+///
+///     #[regex(&quot;[0-9]+&quot;, |lex| {
+///         let n: u64 = lex.slice().parse().unwrap();
+///
+///         // Only emit a token if `n` is an even number
+///         match n % 2 {
+///             0 =&gt; Filter::Emit(n),
+///             _ =&gt; Filter::Skip,
+///         }
+///     })]
+///     EvenNumber(u64)
+/// }
+///
+/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;20 11 42 23 100 8002&quot;).collect();
+///
+/// assert_eq!(
+///     tokens,
+///     &amp;[
+///         Token::EvenNumber(20),
+///         // skipping 11
+///         Token::EvenNumber(42),
+///         // skipping 23
+///         Token::EvenNumber(100),
+///         Token::EvenNumber(8002),
+///     ]
+/// );
+/// ```
+</span><span class="kw">pub enum </span>Filter&lt;T&gt; {
+    <span class="doccomment">/// Emit a token with a given value `T`. Use `()` for unit variants without fields.
+    </span>Emit(T),
+    <span class="doccomment">/// Skip current match, analog to [`Skip`](./struct.Skip.html).
+    </span>Skip,
 }
 
-<span class="doccomment">/// Type that can be returned from a callback, either producing a field</span>
-<span class="doccomment">/// for a token, skipping it, or emitting an error.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// use logos::{Logos, FilterResult};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[derive(Logos, Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Token {</span>
-<span class="doccomment">///     #[regex(r&quot;[ \n\f\t]+&quot;, logos::skip)]</span>
-<span class="doccomment">///     #[error]</span>
-<span class="doccomment">///     Error,</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     #[regex(&quot;[0-9]+&quot;, |lex| {</span>
-<span class="doccomment">///         let n: u64 = lex.slice().parse().unwrap();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///         // Only emit a token if `n` is an even number.</span>
-<span class="doccomment">///         if n % 2 == 0 {</span>
-<span class="doccomment">///             // Emit an error if `n` is 10.</span>
-<span class="doccomment">///             if n == 10 {</span>
-<span class="doccomment">///                 FilterResult::Error</span>
-<span class="doccomment">///             } else {</span>
-<span class="doccomment">///                 FilterResult::Emit(n)</span>
-<span class="doccomment">///             }</span>
-<span class="doccomment">///         } else {</span>
-<span class="doccomment">///             FilterResult::Skip</span>
-<span class="doccomment">///         }</span>
-<span class="doccomment">///     })]</span>
-<span class="doccomment">///     NiceEvenNumber(u64)</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;20 11 42 23 100 10&quot;).collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     tokens,</span>
-<span class="doccomment">///     &amp;[</span>
-<span class="doccomment">///         Token::NiceEvenNumber(20),</span>
-<span class="doccomment">///         // skipping 11</span>
-<span class="doccomment">///         Token::NiceEvenNumber(42),</span>
-<span class="doccomment">///         // skipping 23</span>
-<span class="doccomment">///         Token::NiceEvenNumber(100),</span>
-<span class="doccomment">///         // error at 10</span>
-<span class="doccomment">///         Token::Error,</span>
-<span class="doccomment">///     ]</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FilterResult</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="doccomment">/// Emit a token with a given value `T`. Use `()` for unit variants without fields.</span>
-    <span class="ident">Emit</span>(<span class="ident">T</span>),
-    <span class="doccomment">/// Skip current match, analog to [`Skip`](./struct.Skip.html).</span>
-    <span class="ident">Skip</span>,
-    <span class="doccomment">/// Emit a `&lt;Token as Logos&gt;::ERROR` token.</span>
-    <span class="ident">Error</span>,
+<span class="doccomment">/// Type that can be returned from a callback, either producing a field
+/// for a token, skipping it, or emitting an error.
+///
+/// # Example
+///
+/// ```rust
+/// use logos::{Logos, FilterResult};
+///
+/// #[derive(Logos, Debug, PartialEq)]
+/// enum Token {
+///     #[regex(r&quot;[ \n\f\t]+&quot;, logos::skip)]
+///     #[error]
+///     Error,
+///
+///     #[regex(&quot;[0-9]+&quot;, |lex| {
+///         let n: u64 = lex.slice().parse().unwrap();
+///
+///         // Only emit a token if `n` is an even number.
+///         if n % 2 == 0 {
+///             // Emit an error if `n` is 10.
+///             if n == 10 {
+///                 FilterResult::Error
+///             } else {
+///                 FilterResult::Emit(n)
+///             }
+///         } else {
+///             FilterResult::Skip
+///         }
+///     })]
+///     NiceEvenNumber(u64)
+/// }
+///
+/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;20 11 42 23 100 10&quot;).collect();
+///
+/// assert_eq!(
+///     tokens,
+///     &amp;[
+///         Token::NiceEvenNumber(20),
+///         // skipping 11
+///         Token::NiceEvenNumber(42),
+///         // skipping 23
+///         Token::NiceEvenNumber(100),
+///         // error at 10
+///         Token::Error,
+///     ]
+/// );
+/// ```
+</span><span class="kw">pub enum </span>FilterResult&lt;T&gt; {
+    <span class="doccomment">/// Emit a token with a given value `T`. Use `()` for unit variants without fields.
+    </span>Emit(T),
+    <span class="doccomment">/// Skip current match, analog to [`Skip`](./struct.Skip.html).
+    </span>Skip,
+    <span class="doccomment">/// Emit a `&lt;Token as Logos&gt;::ERROR` token.
+    </span>Error,
 }
 
-<span class="doccomment">/// Predefined callback that will inform the `Lexer` to skip a definition.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Example</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// use logos::Logos;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[derive(Logos, Debug, PartialEq)]</span>
-<span class="doccomment">/// enum Token&lt;&#39;a&gt; {</span>
-<span class="doccomment">///     // We will treat &quot;abc&quot; as if it was whitespace</span>
-<span class="doccomment">///     #[regex(&quot; |abc&quot;, logos::skip)]</span>
-<span class="doccomment">///     #[error]</span>
-<span class="doccomment">///     Error,</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///     #[regex(&quot;[a-zA-Z]+&quot;)]</span>
-<span class="doccomment">///     Text(&amp;&#39;a str),</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;Hello abc world&quot;).collect();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     tokens,</span>
-<span class="doccomment">///     &amp;[</span>
-<span class="doccomment">///         Token::Text(&quot;Hello&quot;),</span>
-<span class="doccomment">///         Token::Text(&quot;world&quot;),</span>
-<span class="doccomment">///     ],</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">skip</span>&lt;<span class="lifetime">&#39;source</span>, <span class="ident">Token</span>: <span class="ident">Logos</span>&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Lexer</span>&lt;<span class="lifetime">&#39;source</span>, <span class="ident">Token</span>&gt;) -&gt; <span class="ident">Skip</span> {
-    <span class="ident">Skip</span>
+<span class="doccomment">/// Predefined callback that will inform the `Lexer` to skip a definition.
+///
+/// # Example
+///
+/// ```rust
+/// use logos::Logos;
+///
+/// #[derive(Logos, Debug, PartialEq)]
+/// enum Token&lt;&#39;a&gt; {
+///     // We will treat &quot;abc&quot; as if it was whitespace
+///     #[regex(&quot; |abc&quot;, logos::skip)]
+///     #[error]
+///     Error,
+///
+///     #[regex(&quot;[a-zA-Z]+&quot;)]
+///     Text(&amp;&#39;a str),
+/// }
+///
+/// let tokens: Vec&lt;_&gt; = Token::lexer(&quot;Hello abc world&quot;).collect();
+///
+/// assert_eq!(
+///     tokens,
+///     &amp;[
+///         Token::Text(&quot;Hello&quot;),
+///         Token::Text(&quot;world&quot;),
+///     ],
+/// );
+/// ```
+</span><span class="attribute">#[inline]</span>
+<span class="kw">pub fn </span>skip&lt;<span class="lifetime">&#39;source</span>, Token: Logos&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;source</span>, Token&gt;) -&gt; Skip {
+    Skip
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">doctest</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test_readme</span> {
-    <span class="macro">macro_rules!</span> <span class="ident">external_doc_test</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">expr</span>) =&gt; {
-            <span class="attribute">#[<span class="ident">doc</span> = <span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>]</span>
-            <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {}
+<span class="attribute">#[cfg(doctest)]</span>
+<span class="kw">mod </span>test_readme {
+    <span class="macro">macro_rules!</span> external_doc_test {
+        (<span class="macro-nonterminal">$x</span>:expr) =&gt; {
+            <span class="attribute">#[doc = <span class="macro-nonterminal">$x</span>]</span>
+            <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{}
         };
     }
 
     <span class="macro">external_doc_test!</span>(<span class="macro">include_str!</span>(<span class="string">&quot;../../README.md&quot;</span>));
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>

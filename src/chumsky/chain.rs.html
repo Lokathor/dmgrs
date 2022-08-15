@@ -77,84 +77,84 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Traits that allow chaining parser outputs together.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! *“And what’s happened to the Earth?” “Ah. It’s been demolished.” “Has it,” said Arthur levelly. “Yes. It just</span>
-<span class="doccomment">//! boiled away into space.” “Look,” said Arthur, “I’m a bit upset about that.”*</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! You usually don&#39;t need to interact with this trait, or even import it. It&#39;s only public so that you can see which</span>
-<span class="doccomment">//! types implement it. See [`Parser::chain`](super::Parser) for examples of its usage.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Traits that allow chaining parser outputs together.
+//!
+//! *“And what’s happened to the Earth?” “Ah. It’s been demolished.” “Has it,” said Arthur levelly. “Yes. It just
+//! boiled away into space.” “Look,” said Arthur, “I’m a bit upset about that.”*
+//!
+//! You usually don&#39;t need to interact with this trait, or even import it. It&#39;s only public so that you can see which
+//! types implement it. See [`Parser::chain`](super::Parser) for examples of its usage.
 
-<span class="kw">use</span> <span class="ident">alloc</span>::{<span class="ident">string::String</span>, <span class="ident">vec::Vec</span>};
+</span><span class="kw">use </span>alloc::{string::String, vec::Vec};
 
-<span class="kw">mod</span> <span class="ident">private</span> {
-    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; {}
+<span class="kw">mod </span>private {
+    <span class="kw">pub trait </span>Sealed&lt;T&gt; {}
 
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">T</span> {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>, <span class="ident">A</span>: <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt;&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">T</span>) {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="prelude-ty">Option</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Sealed</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">alloc::vec::Vec</span>&lt;<span class="ident">T</span>&gt; {}
-    <span class="kw">impl</span> <span class="ident">Sealed</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="ident">alloc::string::String</span> {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>T {}
+    <span class="kw">impl</span>&lt;T, A: Sealed&lt;T&gt;&gt; Sealed&lt;T&gt; <span class="kw">for </span>(A, T) {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {}
+    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::vec::Vec&lt;T&gt; {}
+    <span class="kw">impl </span>Sealed&lt;char&gt; <span class="kw">for </span>alloc::string::String {}
 }
 
-<span class="doccomment">/// A utility trait that facilitates chaining parser outputs together into [`Vec`]s.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See [`Parser::chain`](super::Parser).</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::len_without_is_empty</span>)]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt;: <span class="ident">private::Sealed</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="doccomment">/// The number of items that this chain link consists of.</span>
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
-    <span class="doccomment">/// Append the elements in this link to the chain.</span>
-    <span class="kw">fn</span> <span class="ident">append_to</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;);
+<span class="doccomment">/// A utility trait that facilitates chaining parser outputs together into [`Vec`]s.
+///
+/// See [`Parser::chain`](super::Parser).
+</span><span class="attribute">#[allow(clippy::len_without_is_empty)]</span>
+<span class="kw">pub trait </span>Chain&lt;T&gt;: private::Sealed&lt;T&gt; {
+    <span class="doccomment">/// The number of items that this chain link consists of.
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
+    <span class="doccomment">/// Append the elements in this link to the chain.
+    </span><span class="kw">fn </span>append_to(<span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;);
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="number">1</span>
-    }
-    <span class="kw">fn</span> <span class="ident">append_to</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;) {
-        <span class="ident">v</span>.<span class="ident">push</span>(<span class="self">self</span>);
-    }
-}
-
-<span class="kw">impl</span>&lt;<span class="ident">T</span>, <span class="ident">A</span>: <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt;&gt; <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> (<span class="ident">A</span>, <span class="ident">T</span>) {
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="number">1</span>
-    }
-    <span class="kw">fn</span> <span class="ident">append_to</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;) {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">append_to</span>(<span class="ident">v</span>);
-        <span class="ident">v</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="number">1</span>);
+<span class="kw">impl</span>&lt;T&gt; Chain&lt;T&gt; <span class="kw">for </span>T {
+    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="number">1
+    </span>}
+    <span class="kw">fn </span>append_to(<span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;) {
+        v.push(<span class="self">self</span>);
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="prelude-ty">Option</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">is_some</span>() <span class="kw">as</span> <span class="ident">usize</span>
+<span class="kw">impl</span>&lt;T, A: Chain&lt;T&gt;&gt; Chain&lt;T&gt; <span class="kw">for </span>(A, T) {
+    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="number">1
+    </span>}
+    <span class="kw">fn </span>append_to(<span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;) {
+        <span class="self">self</span>.<span class="number">0</span>.append_to(v);
+        v.push(<span class="self">self</span>.<span class="number">1</span>);
     }
-    <span class="kw">fn</span> <span class="ident">append_to</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">x</span>) = <span class="self">self</span> {
-            <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">x</span>);
+}
+
+<span class="kw">impl</span>&lt;T&gt; Chain&lt;T&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.is_some() <span class="kw">as </span>usize
+    }
+    <span class="kw">fn </span>append_to(<span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(x) = <span class="self">self </span>{
+            v.push(x);
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">Chain</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">as_slice</span>().<span class="ident">len</span>()
+<span class="kw">impl</span>&lt;T&gt; Chain&lt;T&gt; <span class="kw">for </span>Vec&lt;T&gt; {
+    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.as_slice().len()
     }
-    <span class="kw">fn</span> <span class="ident">append_to</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">T</span>&gt;) {
-        <span class="ident">v</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
+    <span class="kw">fn </span>append_to(<span class="kw-2">mut </span><span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;) {
+        v.append(<span class="kw-2">&amp;mut </span><span class="self">self</span>);
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Chain</span>&lt;<span class="ident">char</span>&gt; <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="comment">// TODO: Quite inefficient</span>
-    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">chars</span>().<span class="ident">count</span>()
+<span class="kw">impl </span>Chain&lt;char&gt; <span class="kw">for </span>String {
+    <span class="comment">// TODO: Quite inefficient
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.chars().count()
     }
-    <span class="kw">fn</span> <span class="ident">append_to</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">char</span>&gt;) {
-        <span class="ident">v</span>.<span class="ident">extend</span>(<span class="self">self</span>.<span class="ident">chars</span>());
+    <span class="kw">fn </span>append_to(<span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;char&gt;) {
+        v.extend(<span class="self">self</span>.chars());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (75b7e52e9 2022-08-13)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>
