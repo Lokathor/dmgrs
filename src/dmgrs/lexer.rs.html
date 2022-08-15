@@ -279,7 +279,7 @@
 
 </span><span class="kw">use </span>logos::Logos;
 
-<span class="kw">use crate</span>::{intern_str_impl::intern_str, StaticStr};
+<span class="kw">use crate</span>::{str_cache_impl::cache_str, StaticStr};
 
 <span class="doccomment">/// The possible tokens within a Dmgrs program.
 ///
@@ -321,7 +321,7 @@
   ///
   /// The lone character `_` ends up matching as an Ident rather than a
   /// Punctuation.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;[_a-zA-Z][_a-zA-Z0-9]*&quot;</span>, |lex| intern_str(lex.slice()), priority=<span class="number">2</span>)]</span>
+  </span><span class="attribute">#[regex(<span class="string">r&quot;[_a-zA-Z][_a-zA-Z0-9]*&quot;</span>, |lex| cache_str(lex.slice()), priority=<span class="number">2</span>)]</span>
   Ident(StaticStr),
 
   <span class="doccomment">/// Holds all the stuff *between* `&quot;`.
@@ -333,7 +333,7 @@
   /// escape sequences you allow (here just `\&quot;`, and `\\` for a `\` itself) up
   /// front and then requiring the rest of the literal to not be a quote or
   /// escape (that would start with `\`)&quot;
-  </span><span class="attribute">#[regex(<span class="string">r#&quot;&quot;((\\&quot;|\\\\)|[^\\&quot;])*&quot;&quot;#</span>, |lex| {<span class="kw">let </span>s = lex.slice(); intern_str(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..s.len()-<span class="number">1</span>]</span>) })]
+  </span><span class="attribute">#[regex(<span class="string">r#&quot;&quot;((\\&quot;|\\\\)|[^\\&quot;])*&quot;&quot;#</span>, |lex| {<span class="kw">let </span>s = lex.slice(); cache_str(<span class="kw-2">&amp;</span>s[<span class="number">1</span>..s.len()-<span class="number">1</span>]</span>) })]
   Str(StaticStr),
 
   <span class="doccomment">/// The digits of a binary literal (no prefix).
