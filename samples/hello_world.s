@@ -23,6 +23,19 @@
 // const fits into that smaller integer type (127 fits into a `u8`, and 5 fits
 // into a `u3`). If the value does not fit, a compile error is generated.
 
+// The "directives" are made to look like rust macro_rules, but they're just
+// built-in functions of the compiler you can use in some places. They're not
+// intended to be anything that the user can create themselves.
+// * `bit` turns a number of a bit (0-7) into the correct bit value. Not fancy,
+//   but lets you signal the intent.
+// * `size_of_val` gets you the byte size of a static, and i guess it could work
+//   on functions too.
+// * `include_bytes` lets you grab a file on disk and stick the raw bytes as the
+//   value of a `static`.
+// * `gfx` lets you make an ascii art and then it's turned into data usable for
+//   graphics. We might want two different things here, one for declaring tiles,
+//   and another for declaring the tile maps.
+
 const NR52 = $FF26; // hex literals start with $ or 0x, interior _ is allowed
 const LCDC = $FF40;
 const LCDC_LCD_ON = bit!(7); 
@@ -37,21 +50,6 @@ const LY = $FF44;
 const BGP = $FF47;
 const VRAM_BLOCK2 = $9000;
 const TILEMAP0 = $9800;
-
-// The "macros" are made to look like rust macros, but they're just built-in
-// functions of the compiler you can use. They're not intended to be anything
-// that the user can create themselves. I probably should *stop* calling them
-// macros, since everyone has a separate idea of what that means anyway. Maybe
-// calling them the "directives" of this compiler might work. Or "intrinsics"?
-// * `bit` turns a number of a bit (0-7) into the correct bit value. Not fancy,
-//   but lets you signal the intent.
-// * `size_of_val` gets you the byte size of a static, and i guess it could work
-//   on functions too.
-// * `include_bytes` lets you grab a file on disk and stick the raw bytes as the
-//   value of a `static`.
-// * `gfx` lets you make an ascii art and then it's turned into data usable for
-//   graphics. We might want two different things here, one for declaring tiles,
-//   and another for declaring the tile maps.
 
 // Each function is its own output section and label.
 
