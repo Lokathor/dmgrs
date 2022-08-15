@@ -23,15 +23,15 @@ static STR_DB_PTR: AtomicPtr<RwLockHashSetStaticStr> =
 ///
 /// Most importantly, this will allocate a new RwLock on the first call.
 fn get_str_db_rw_lock_ref() -> &'static RwLockHashSetStaticStr {
-  let p: *mut RwLockHashSetStaticStr = STR_DB_PTR.load(Ordering::SeqCst);
+  let p: *mut RwLockHashSetStaticStr = STR_DB_PTR.load(Ordering::Acquire);
   if p.is_null() {
     let new_p: *mut RwLockHashSetStaticStr =
       Box::leak(Box::new(RwLock::default()));
     match STR_DB_PTR.compare_exchange(
       null_mut(),
       new_p,
-      Ordering::SeqCst,
-      Ordering::SeqCst,
+      Ordering::AcqRel,
+      Ordering::Acquire,
     ) {
       Ok(_old_p) => unsafe {
         // if ok, then old_p is a null, and we return the reference to new_p
