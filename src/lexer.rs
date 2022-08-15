@@ -4,17 +4,17 @@
 //! string into its tokens.
 //!
 //! ```no_run
-//! use dmgrs::lexer::DmgToken;
+//! use dmgrs::lexer::Lexeme;
 //! use logos::Logos; // trait, provides the `lexer` function
 //!
 //! const SRC: &str = "ld a, 0";
-//! for (span, token) in DmgToken::lexer(SRC).spanned() {
-//!   println!("{span:?} => {token:?}");
+//! for (span, lexeme) in Lexeme::lexer(SRC).spanned() {
+//!   println!("{span:?} => {lexeme:?}");
 //! }
 //! ```
 //!
 //! Most likely you'll want to *parse* the token stream that come out of lexing.
-//! You can pass the `DmgToken::lexer(SRC).spanned()` iterator over to
+//! You can pass the `Lexeme::lexer(SRC).spanned()` iterator over to
 //! [`chumsky::Stream::from_iter`](chumsky::Stream::from_iter). You'll also need
 //! to tell chumsky what the "span" value will be when you've reached the
 //! end-of-input, which will generally be the source string length as both sides
@@ -22,12 +22,12 @@
 //!
 //! ```no_run
 //! use chumsky::stream::Stream;
-//! use dmgrs::lexer::DmgToken;
+//! use dmgrs::lexer::Lexeme;
 //! use logos::Logos; // trait, provides the `lexer` function
 //!
 //! const SRC: &str = "ld a, 0";
 //! let len = SRC.len();
-//! let lex_iter = DmgToken::lexer(SRC).spanned();
+//! let lex_iter = Lexeme::lexer(SRC).spanned();
 //! let stream = Stream::from_iter(len..len, lex_iter);
 //! ```
 
@@ -41,7 +41,7 @@ use crate::{str_cache_impl::cache_str, StaticStr};
 /// register names just count as an "ident". A simple string interning mechanism
 /// is used, so it's not a super allocation fest to do this.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Logos)] // Note: custom Debug at the end of the file
-pub enum DmgToken {
+pub enum Lexeme {
   /// An error during lexing.
   #[error]
   Error,
@@ -112,7 +112,7 @@ pub enum DmgToken {
   #[regex(r"(\$|0x)[0-9a-fA-F_]+", |lex| {let s = lex.slice(); try_hex_str_to_u16(if s.starts_with('$') { &s[1..] } else { &s[2..] }) })]
   HexLiteral(u16),
 }
-impl DmgToken {
+impl Lexeme {
   /// If this token is an `Ident`
   pub const fn is_ident(&self) -> bool {
     match self {
@@ -218,29 +218,56 @@ fn test_try_hex_str_to_u16() {
   assert_eq!(try_hex_str_to_u16("FF26"), Some(0xFF26));
 }
 
-impl core::fmt::Debug for DmgToken {
+impl core::fmt::Debug for Lexeme {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     match self {
       // numbers print out using the correct radix (rust-style) for maximum
       // recognizability
-      DmgToken::BinaryLiteral(n) => write!(f, "BinaryLiteral(0b{n:b})"),
-      DmgToken::DecimalLiteral(n) => write!(f, "DecimalLiteral({n})"),
-      DmgToken::HexLiteral(n) => write!(f, "HexLiteral(0x{n:X})"),
+      Lexeme::BinaryLiteral(n) => write!(f, "BinaryLiteral(0b{n:b})"),
+      Lexeme::DecimalLiteral(n) => write!(f, "DecimalLiteral({n})"),
+      Lexeme::HexLiteral(n) => write!(f, "HexLiteral(0x{n:X})"),
 
       // other payload variants print their payload
-      DmgToken::Punct(p) => write!(f, "Punct({p:?})"),
-      DmgToken::Ident(i) => write!(f, "Ident({i:?})"),
-      DmgToken::Str(s) => write!(f, "Str({s:?})"),
+      Lexeme::Punct(p) => write!(f, "Punct({p:?})"),
+      Lexeme::Ident(i) => write!(f, "Ident({i:?})"),
+      Lexeme::Str(s) => write!(f, "Str({s:?})"),
 
       // empty variants just print their name
-      DmgToken::Error => write!(f, stringify!(Error)),
-      DmgToken::HorizontalWhitespace => {
+      Lexeme::Error => write!(f, stringify!(Error)),
+      Lexeme::HorizontalWhitespace => {
         write!(f, stringify!(HorizontalWhitespace))
       }
-      DmgToken::EndOfLineComment => write!(f, stringify!(EndOfLineComment)),
-      DmgToken::StartMultiComment => write!(f, stringify!(StartMultiComment)),
-      DmgToken::EndMultiComment => write!(f, stringify!(EndMultiComment)),
-      DmgToken::EndOfLine => write!(f, stringify!(EndOfLine)),
+      Lexeme::EndOfLineComment => write!(f, stringify!(EndOfLineComment)),
+      Lexeme::StartMultiComment => write!(f, stringify!(StartMultiComment)),
+      Lexeme::EndMultiComment => write!(f, stringify!(EndMultiComment)),
+      Lexeme::EndOfLine => write!(f, stringify!(EndOfLine)),
+    }
+  }
+}
+
+impl core::fmt::Display for Lexeme {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    match self {
+      // numbers print out using the correct radix (rust-style) for maximum
+      // recognizability
+      Lexeme::BinaryLiteral(n) => write!(f, "%{n:b}"),
+      Lexeme::DecimalLiteral(n) => write!(f, "{n}"),
+      Lexeme::HexLiteral(n) => write!(f, "${n:X}"),
+
+      // other payload variants print their payload
+      Lexeme::Punct(p) => write!(f, "{p}"),
+      Lexeme::Ident(i) => write!(f, "{i}"),
+      Lexeme::Str(s) => write!(f, "{s:?}"),
+
+      // empty variants just print their name
+      Lexeme::Error => write!(f, stringify!(Error)),
+      Lexeme::HorizontalWhitespace => {
+        write!(f, " ")
+      }
+      Lexeme::EndOfLineComment => write!(f, "//..."),
+      Lexeme::StartMultiComment => write!(f, "/*"),
+      Lexeme::EndMultiComment => write!(f, "*/"),
+      Lexeme::EndOfLine => write!(f, "\n"),
     }
   }
 }

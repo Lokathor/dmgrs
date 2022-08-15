@@ -23,29 +23,27 @@
 // const fits into that smaller integer type (127 fits into a `u8`, and 5 fits
 // into a `u3`). If the value does not fit, a compile error is generated.
 
-// The "directives" are made to look like rust macro_rules, but they're just
-// built-in functions of the compiler you can use in some places. They're not
-// intended to be anything that the user can create themselves.
-// * `bit` turns a number of a bit (0-7) into the correct bit value. Not fancy,
-//   but lets you signal the intent.
-// * `size_of_val` gets you the byte size of a static, and i guess it could work
-//   on functions too.
-// * `include_bytes` lets you grab a file on disk and stick the raw bytes as the
-//   value of a `static`.
-// * `gfx` lets you make an ascii art and then it's turned into data usable for
-//   graphics. We might want two different things here, one for declaring tiles,
-//   and another for declaring the tile maps.
+// The "directives" are styled to look like rust macro invocations using `[]`:
+// * name![args here]
+//
+// Different directives might be appropriate in different positions within a
+// program. Currently, all directives are used as expressions. Directives that
+// are used in statement position might be introduced later.
+// * `bit` evaluates to an int.
+// * `size_of_val` evaluates to an int.
+// * `include_bytes` evaluates to a byte slice.
+// * `gfx` evaluates to a byte slice.
 
 const NR52 = $FF26; // hex literals start with $ or 0x, interior _ is allowed
 const LCDC = $FF40;
-const LCDC_LCD_ON = bit!(7); 
-const LCDC_WIN_TILEMAP1 = bit!(6);
-const LCDC_WIN_ON = bit!(5);
-const LCDC_CHARBLOCK_LOW = bit!(4);
-const LCDC_BG_TILEMAP1 = bit!(3);
-const LCDC_OBJ_IS_TALL = bit!(2);
-const LCDC_OBJ_ON = bit!(1);
-const LCDC_BGWIN_ON = bit!(0);
+const LCDC_LCD_ON = bit![7] 
+const LCDC_WIN_TILEMAP1 = bit![6];
+const LCDC_WIN_ON = bit![5];
+const LCDC_CHARBLOCK_LOW = bit![4];
+const LCDC_BG_TILEMAP1 = bit![3];
+const LCDC_OBJ_IS_TALL = bit![2];
+const LCDC_OBJ_ON = bit![1];
+const LCDC_BGWIN_ON = bit![0];
 const LY = $FF44;
 const BGP = $FF47;
 const VRAM_BLOCK2 = $9000;
@@ -78,8 +76,10 @@ fn main -> ! {
     if c, continue
   }
 
-  /* Not needed/shown in this example,
-  but i'd also like to support if and if-else */
+  /*
+  Not needed/shown in this example, but i'd also like to support if and if-else
+  at some point.
+  */
 
   // Turn LCD off
   ld a, 0
@@ -88,13 +88,13 @@ fn main -> ! {
   // copy tile data
   ld de, Tiles
   ld hl, VRAM_BLOCK2
-  ld bc, size_of_val!(Tiles)
+  ld bc, size_of_val![Tiles]
   call simple_copy
 
   // copy tile map data
   ld de, TileMap
   ld hl, TILEMAP0
-  ld bc, size_of_val!(TileMap)
+  ld bc, size_of_val![TileMap]
   call simple_copy
 
   // Turn LCD on
