@@ -1,3 +1,4 @@
+use chumsky::{Parser as _, Stream};
 use dmgrs::{
   lexer::Lexeme,
   parser::{
@@ -7,7 +8,6 @@ use dmgrs::{
   parser2::parser,
 };
 use logos::Logos;
-use chumsky::{Stream, Parser as _};
 
 const SRC: &str = include_str!("../samples/hello_world.s");
 
@@ -19,11 +19,13 @@ fn main() {
   //   print!("TOKEN {lex} {lex:?}");
   // }
 
-  let lexer = RepeatedNewlineFilter::new(MultiLineCommentFilter::new(Lexeme::lexer(SRC).spanned()));
+  let lexer = RepeatedNewlineFilter::new(MultiLineCommentFilter::new(
+    Lexeme::lexer(SRC).spanned(),
+  ));
 
   let mut stream = Stream::from_iter(SRC.len()..SRC.len(), lexer);
 
-  println!("Tokens = {:?}", stream.fetch_tokens().collect::<Vec<_>>());
+  println!("Tokens = {:#?}", stream.fetch_tokens().collect::<Vec<_>>());
 
   println!("{:#?}", parser().parse(stream));
 }
