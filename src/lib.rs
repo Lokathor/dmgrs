@@ -14,5 +14,6 @@ macro_rules! box_str {
 pub mod lexer;
 pub mod parser;
 pub mod str_cache_impl;
+pub mod parser2;
 
 type StaticStr = &'static str;
