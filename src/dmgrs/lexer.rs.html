@@ -271,6 +271,34 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Stuff that &quot;lexes&quot; source text into &quot;lexemes&quot;.
 //!
 //! Use the `DmgToken` enum and the [`Logos`](logos::Logos) trait to lex a
@@ -343,6 +371,20 @@
   /// *not* match any other case.
   </span><span class="attribute">#[regex(<span class="string">r&quot;[[:punct:]]&quot;</span>, |lex| lex.slice().chars().next().unwrap())]</span>
   Punct(char),
+
+  <span class="comment">// Keywords
+  </span><span class="attribute">#[token(<span class="string">&quot;const&quot;</span>)]</span>
+  KwConst,
+  <span class="attribute">#[token(<span class="string">&quot;fn&quot;</span>)]</span>
+  KwFn,
+  <span class="attribute">#[token(<span class="string">&quot;loop&quot;</span>)]</span>
+  KwLoop,
+  <span class="attribute">#[token(<span class="string">&quot;if&quot;</span>)]</span>
+  KwIf,
+  <span class="attribute">#[token(<span class="string">&quot;continue&quot;</span>)]</span>
+  KwContinue,
+  <span class="attribute">#[token(<span class="string">&quot;static&quot;</span>)]</span>
+  KwStatic,
 
   <span class="doccomment">/// A standard identifier in C-style langs: `[_a-zA-Z][_a-zA-Z0-9]*`
   ///
@@ -500,6 +542,13 @@
       Lexeme::DecimalLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;DecimalLiteral({n})&quot;</span>),
       Lexeme::HexLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;HexLiteral(0x{n:X})&quot;</span>),
 
+      Lexeme::KwConst =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwConst&quot;</span>),
+      Lexeme::KwFn =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwFn&quot;</span>),
+      Lexeme::KwLoop =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwLoop&quot;</span>),
+      Lexeme::KwIf =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwIf&quot;</span>),
+      Lexeme::KwContinue =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwContinue&quot;</span>),
+      Lexeme::KwStatic =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwStatic&quot;</span>),
+
       <span class="comment">// other payload variants print their payload
       </span>Lexeme::Punct(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Punct({p:?})&quot;</span>),
       Lexeme::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;Ident({i:?})&quot;</span>),
@@ -527,6 +576,13 @@
       Lexeme::DecimalLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{n}&quot;</span>),
       Lexeme::HexLiteral(n) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;${n:X}&quot;</span>),
 
+      Lexeme::KwConst =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;const&quot;</span>),
+      Lexeme::KwFn =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;fn&quot;</span>),
+      Lexeme::KwLoop =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;loop&quot;</span>),
+      Lexeme::KwIf =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;if&quot;</span>),
+      Lexeme::KwContinue =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;continue&quot;</span>),
+      Lexeme::KwStatic =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;static&quot;</span>),
+
       <span class="comment">// other payload variants print their payload
       </span>Lexeme::Punct(p) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{p}&quot;</span>),
       Lexeme::Ident(i) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{i}&quot;</span>),
@@ -545,4 +601,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (801821d15 2022-08-14)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (40336865f 2022-08-15)" ></div></body></html>
