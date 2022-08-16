@@ -71,6 +71,20 @@ pub enum Lexeme {
   #[regex(r"[[:punct:]]", |lex| lex.slice().chars().next().unwrap())]
   Punct(char),
 
+  // Keywords
+  #[token("const")]
+  KwConst,
+  #[token("fn")]
+  KwFn,
+  #[token("loop")]
+  KwLoop,
+  #[token("if")]
+  KwIf,
+  #[token("continue")]
+  KwContinue,
+  #[token("static")]
+  KwStatic,
+
   /// A standard identifier in C-style langs: `[_a-zA-Z][_a-zA-Z0-9]*`
   ///
   /// The lone character `_` ends up matching as an Ident rather than a
@@ -227,6 +241,13 @@ impl core::fmt::Debug for Lexeme {
       Lexeme::DecimalLiteral(n) => write!(f, "DecimalLiteral({n})"),
       Lexeme::HexLiteral(n) => write!(f, "HexLiteral(0x{n:X})"),
 
+      Lexeme::KwConst => write!(f, "KwConst"),
+      Lexeme::KwFn => write!(f, "KwFn"),
+      Lexeme::KwLoop => write!(f, "KwLoop"),
+      Lexeme::KwIf => write!(f, "KwIf"),
+      Lexeme::KwContinue => write!(f, "KwContinue"),
+      Lexeme::KwStatic => write!(f, "KwStatic"),
+
       // other payload variants print their payload
       Lexeme::Punct(p) => write!(f, "Punct({p:?})"),
       Lexeme::Ident(i) => write!(f, "Ident({i:?})"),
@@ -253,6 +274,13 @@ impl core::fmt::Display for Lexeme {
       Lexeme::BinaryLiteral(n) => write!(f, "%{n:b}"),
       Lexeme::DecimalLiteral(n) => write!(f, "{n}"),
       Lexeme::HexLiteral(n) => write!(f, "${n:X}"),
+
+      Lexeme::KwConst => write!(f, "const"),
+      Lexeme::KwFn => write!(f, "fn"),
+      Lexeme::KwLoop => write!(f, "loop"),
+      Lexeme::KwIf => write!(f, "if"),
+      Lexeme::KwContinue => write!(f, "continue"),
+      Lexeme::KwStatic => write!(f, "static"),
 
       // other payload variants print their payload
       Lexeme::Punct(p) => write!(f, "{p}"),

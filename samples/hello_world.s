@@ -36,7 +36,7 @@
 
 const NR52 = $FF26; // hex literals start with $ or 0x, interior _ is allowed
 const LCDC = $FF40;
-const LCDC_LCD_ON = bit![7] 
+const LCDC_LCD_ON = bit![7];
 const LCDC_WIN_TILEMAP1 = bit![6];
 const LCDC_WIN_ON = bit![5];
 const LCDC_CHARBLOCK_LOW = bit![4];
