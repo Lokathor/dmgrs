@@ -124,10 +124,7 @@ fn simple_copy {
     or a, c
     if nz, continue
   }
-  // A `ret` instruction is automatically inserted at the end of this function
-  // during compilation, you don't have to state it explicitly. You could if you
-  // really want (and the compiler won't put two `ret` in a row in that case),
-  // but you just don't have to.
+  ret
 }
 
 // A `static` puts non-instruction data into the output rom. In this case, we're
