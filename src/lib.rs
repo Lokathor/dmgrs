@@ -1,5 +1,4 @@
 #![warn(missing_docs)]
-#![allow(dead_code)]
 #![cfg_attr(test, allow(nonstandard_style))]
 
 //! Stuff to work with Dmgrs assembly files.
@@ -12,8 +11,9 @@ macro_rules! box_str {
 }
 
 pub mod lexer;
+pub mod multi_line_comments;
 pub mod parser;
+pub mod repeated_newline_filter;
 pub mod str_cache_impl;
-pub mod parser2;
 
 type StaticStr = &'static str;

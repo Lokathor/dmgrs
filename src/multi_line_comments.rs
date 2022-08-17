@@ -5,7 +5,9 @@
 //! the initial lexing phase, so `//` can prevent multi-line openings and
 //! endings from showing up in the lexeme stream.
 
-use super::*;
+use std::ops::Range;
+
+use crate::lexer::{Lexeme, Lexeme::*};
 
 /// This iterator adapter will remove all multi-line comments from the lexeme
 /// stream.

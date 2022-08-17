@@ -1,8 +1,7 @@
 //! Repeated newlines are not needed, it's better to handle them early.
 
-use std::iter::Peekable;
-
-use super::*;
+use crate::lexer::{Lexeme, Lexeme::*};
+use std::{iter::Peekable, ops::Range};
 
 /// This iterator adapter will collapse all repeated newlines into a single end
 /// of line.

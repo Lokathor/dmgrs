@@ -1,11 +1,7 @@
 use chumsky::{Parser as _, Stream};
 use dmgrs::{
-  lexer::Lexeme,
-  parser::{
-    multi_line_comments::MultiLineCommentFilter,
-    repeated_newline_filter::RepeatedNewlineFilter,
-  },
-  parser2::parser,
+  lexer::Lexeme, multi_line_comments::MultiLineCommentFilter, parser::parser,
+  repeated_newline_filter::RepeatedNewlineFilter,
 };
 use logos::Logos;
 
