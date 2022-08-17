@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["AstStaticDecl","A static declaration is like `static NAME: TYPE = EXPR;`"]]};

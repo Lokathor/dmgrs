@@ -18,7 +18,6 @@
 <span id="18">18</span>
 <span id="19">19</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]</span>
-<span class="attribute">#![allow(dead_code)]</span>
 <span class="attribute">#![cfg_attr(test, allow(nonstandard_style))]</span>
 
 <span class="doccomment">//! Stuff to work with Dmgrs assembly files.
@@ -31,10 +30,11 @@
 }
 
 <span class="kw">pub mod </span>lexer;
+<span class="kw">pub mod </span>multi_line_comments;
 <span class="kw">pub mod </span>parser;
+<span class="kw">pub mod </span>repeated_newline_filter;
 <span class="kw">pub mod </span>str_cache_impl;
-<span class="kw">pub mod </span>parser2;
 
 <span class="kw">type </span>StaticStr = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (40336865f 2022-08-15)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (86c6ebee8 2022-08-16)" ></div></body></html>
