@@ -65,6 +65,7 @@
 <span id="65">65</span>
 <span id="66">66</span>
 <span id="67">67</span>
+<span id="68">68</span>
 </pre><pre class="rust"><code><span class="doccomment">//! A multi-line comment is any amount of stuff between `/*` and `*/`, nesting
 //! allowed.
 //!
@@ -78,7 +79,8 @@
 
 <span class="doccomment">/// This iterator adapter will remove all multi-line comments from the lexeme
 /// stream.
-</span><span class="kw">pub struct </span>MultiLineCommentFilter&lt;I: Iterator&lt;Item = (Lexeme, Range&lt;usize&gt;)&gt;&gt; {
+</span><span class="attribute">#[derive(Clone)]</span>
+<span class="kw">pub struct </span>MultiLineCommentFilter&lt;I: Iterator&lt;Item = (Lexeme, Range&lt;usize&gt;)&gt;&gt; {
   i: I,
 }
 <span class="kw">impl</span>&lt;I: Iterator&lt;Item = (Lexeme, Range&lt;usize&gt;)&gt;&gt; MultiLineCommentFilter&lt;I&gt; {
@@ -133,4 +135,4 @@
   <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">None</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (86c6ebee8 2022-08-16)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (0b79f758c 2022-08-18)" ></div></body></html>

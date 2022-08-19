@@ -278,27 +278,6 @@
 <span id="278">278</span>
 <span id="279">279</span>
 <span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Stuff that &quot;lexes&quot; source text into &quot;lexemes&quot;.
 //!
 //! Use the `DmgToken` enum and the [`Logos`](logos::Logos) trait to lex a
@@ -372,18 +351,29 @@
   </span><span class="attribute">#[regex(<span class="string">r&quot;[[:punct:]]&quot;</span>, |lex| lex.slice().chars().next().unwrap())]</span>
   Punct(char),
 
-  <span class="comment">// Keywords
+  <span class="doccomment">/// Starts a constant declaration
   </span><span class="attribute">#[token(<span class="string">&quot;const&quot;</span>)]</span>
   KwConst,
   <span class="attribute">#[token(<span class="string">&quot;fn&quot;</span>)]</span>
-  KwFn,
-  <span class="attribute">#[token(<span class="string">&quot;loop&quot;</span>)]</span>
+  <span class="doccomment">/// Starts a function declaration
+  </span>KwFn,
+  <span class="doccomment">/// Used at the opening of a loop
+  </span><span class="attribute">#[token(<span class="string">&quot;loop&quot;</span>)]</span>
   KwLoop,
-  <span class="attribute">#[token(<span class="string">&quot;if&quot;</span>)]</span>
+  <span class="doccomment">/// Used for branching around code blocks
+  </span><span class="attribute">#[token(<span class="string">&quot;if&quot;</span>)]</span>
   KwIf,
-  <span class="attribute">#[token(<span class="string">&quot;continue&quot;</span>)]</span>
+  <span class="doccomment">/// Used for branching around code blocks
+  </span><span class="attribute">#[token(<span class="string">&quot;else&quot;</span>)]</span>
+  KwElse,
+  <span class="doccomment">/// Continue a loop (jump to the start)
+  </span><span class="attribute">#[token(<span class="string">&quot;continue&quot;</span>)]</span>
   KwContinue,
-  <span class="attribute">#[token(<span class="string">&quot;static&quot;</span>)]</span>
+  <span class="doccomment">/// Break a loop (jump to the end)
+  </span><span class="attribute">#[token(<span class="string">&quot;break&quot;</span>)]</span>
+  KwBreak,
+  <span class="doccomment">/// Starts a static declaration
+  </span><span class="attribute">#[token(<span class="string">&quot;static&quot;</span>)]</span>
   KwStatic,
 
   <span class="doccomment">/// A standard identifier in C-style langs: `[_a-zA-Z][_a-zA-Z0-9]*`
@@ -426,42 +416,6 @@
   /// * Use of `_` is allowed in the literal, but they don&#39;t change the value.
   </span><span class="attribute">#[regex(<span class="string">r&quot;(\$|0x)[0-9a-fA-F_]+&quot;</span>, |lex| {<span class="kw">let </span>s = lex.slice(); try_hex_str_to_u16(<span class="kw">if </span>s.starts_with(<span class="string">&#39;$&#39;</span>) { <span class="kw-2">&amp;</span>s[<span class="number">1</span>..]</span> } <span class="kw">else </span>{ <span class="kw-2">&amp;</span>s[<span class="number">2</span>..] }) })]
   HexLiteral(u16),
-}
-<span class="kw">impl </span>Lexeme {
-  <span class="doccomment">/// If this token is an `Ident`
-  </span><span class="kw">pub const fn </span>is_ident(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-    <span class="kw">match </span><span class="self">self </span>{
-      <span class="self">Self</span>::Ident(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-      <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
-    }
-  }
-
-  <span class="doccomment">/// Unwraps the `Ident` content
-  </span><span class="kw">pub const fn </span>unwrap_ident(<span class="self">self</span>) -&gt; StaticStr {
-    <span class="kw">match </span><span class="self">self </span>{
-      <span class="self">Self</span>::Ident(i) =&gt; i,
-      <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;unwrapped a non-ident&quot;</span>),
-    }
-  }
-
-  <span class="doccomment">/// If this token is any number token
-  </span><span class="kw">pub const fn </span>is_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-    <span class="kw">match </span><span class="self">self </span>{
-      <span class="self">Self</span>::BinaryLiteral(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-      <span class="self">Self</span>::DecimalLiteral(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-      <span class="self">Self</span>::HexLiteral(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-      <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
-    }
-  }
-  <span class="doccomment">/// Unwraps the number inside.
-  </span><span class="kw">pub const fn </span>unwrap_number(<span class="self">self</span>) -&gt; u16 {
-    <span class="kw">match </span><span class="self">self </span>{
-      <span class="self">Self</span>::BinaryLiteral(n) =&gt; n,
-      <span class="self">Self</span>::DecimalLiteral(n) =&gt; n,
-      <span class="self">Self</span>::HexLiteral(n) =&gt; n,
-      <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;unwrapped a non-number&quot;</span>),
-    }
-  }
 }
 
 <span class="doccomment">/// Tries to parse a binary digit string into a `u16`.
@@ -546,7 +500,9 @@
       Lexeme::KwFn =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwFn&quot;</span>),
       Lexeme::KwLoop =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwLoop&quot;</span>),
       Lexeme::KwIf =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwIf&quot;</span>),
+      Lexeme::KwElse =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwElse&quot;</span>),
       Lexeme::KwContinue =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwContinue&quot;</span>),
+      Lexeme::KwBreak =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwBreak&quot;</span>),
       Lexeme::KwStatic =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KwStatic&quot;</span>),
 
       <span class="comment">// other payload variants print their payload
@@ -580,7 +536,9 @@
       Lexeme::KwFn =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;fn&quot;</span>),
       Lexeme::KwLoop =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;loop&quot;</span>),
       Lexeme::KwIf =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;if&quot;</span>),
+      Lexeme::KwElse =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;else&quot;</span>),
       Lexeme::KwContinue =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;continue&quot;</span>),
+      Lexeme::KwBreak =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;break&quot;</span>),
       Lexeme::KwStatic =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;static&quot;</span>),
 
       <span class="comment">// other payload variants print their payload
@@ -601,4 +559,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (86c6ebee8 2022-08-16)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (0b79f758c 2022-08-18)" ></div></body></html>

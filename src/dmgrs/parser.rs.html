@@ -295,6 +295,73 @@
 <span id="295">295</span>
 <span id="296">296</span>
 <span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The &quot;parser&quot; stage turns the stream of lexemes (from the lexer) into ab
 //! &quot;abstract syntax tree&quot;.
 //!
@@ -307,82 +374,347 @@
 
 <span class="kw">type </span>Spanned&lt;T&gt; = (T, Range&lt;usize&gt;);
 
-<span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub enum </span>Attr {
-  Call(Spanned&lt;StaticStr&gt;, Vec&lt;Attr&gt;),
-  Eq(Spanned&lt;StaticStr&gt;, Spanned&lt;StaticStr&gt;),
+<span class="doccomment">/// Attributes for the program or for a specific `fn` or `static`.
+///
+/// * Program attributes are written using `#![words here]`
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
+<span class="kw">pub enum </span>Attribute {
+  <span class="doccomment">/// Call attributes are like `foo(bar)`, `foo()`, or even `foo`
+  ///
+  /// The current parser can&#39;t distingush between `foo()` (with parens) and
+  /// `foo` (no parens). This is suspected to not ever be important.
+  </span>Call(Spanned&lt;StaticStr&gt;, Vec&lt;Attribute&gt;),
+  <span class="doccomment">/// Eq attributes are like `foo = &quot;bar&quot;`.
+  </span>Eq(Spanned&lt;StaticStr&gt;, Spanned&lt;StaticStr&gt;),
+}
+<span class="kw">impl </span>Attribute {
+  <span class="doccomment">/// Parses lexeme streams into Attributes.
+  </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, <span class="self">Self</span>, Error = Simple&lt;Lexeme&gt;&gt; {
+    <span class="comment">// Parses the internals of an attribute (i.e: in `#![mbc(rom_only)]`, it
+    // parses the `mbc(rom_only)`)
+    </span><span class="kw">let </span>attr_inner = recursive(|attr_inner| {
+      <span class="comment">// Parses `foo = &quot;bar&quot;`
+      </span><span class="kw">let </span>eq_attr = ident_parser()
+        .then_ignore(just(Lexeme::Punct(<span class="string">&#39;=&#39;</span>)))
+        .then(string_parser())
+        .map(|(lhs, rhs)| Attribute::Eq(lhs, rhs));
+
+      <span class="comment">// Parses `foo` and `foo(...)`
+      </span><span class="kw">let </span>call_attr = ident_parser()
+        .then(
+          attr_inner
+            .separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>)))
+            .allow_trailing()
+            .delimited_by(just(Lexeme::Punct(<span class="string">&#39;(&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;)&#39;</span>)))
+            .or_not(),
+        )
+        .map(|(name, args)| Attribute::Call(name, args.unwrap_or_default()));
+
+      eq_attr.or(call_attr)
+    });
+
+    <span class="comment">// Parses attributes like `#![...]`
+    </span>just(Lexeme::Punct(<span class="string">&#39;#&#39;</span>)).then(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>))).ignore_then(
+      attr_inner
+        .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
+    )
+  }
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// An &quot;expression&quot; means an integer constant expression.
+///
+/// They can assigned to a `const`, or used inline in an instruction.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub enum </span>Expr {
-  Num(u16),
-  Const(StaticStr),
-  BitOr(Box&lt;Spanned&lt;Expr&gt;&gt;, Box&lt;Spanned&lt;Expr&gt;&gt;),
-  BitMacro(Box&lt;Spanned&lt;Expr&gt;&gt;),
-  SizeOfValMacro(Box&lt;Spanned&lt;Expr&gt;&gt;),
+  <span class="doccomment">/// An actual numeric value, without anything more to look up or evaluate.
+  </span>Num(Spanned&lt;u16&gt;),
+  <span class="doccomment">/// The name of a `const`
+  </span>Ident(Spanned&lt;StaticStr&gt;),
+  <span class="doccomment">/// Bitwise OR operation, left and right hand sides.
+  </span>BitOr(Box&lt;Spanned&lt;Expr&gt;&gt;, Box&lt;Spanned&lt;Expr&gt;&gt;),
+  <span class="doccomment">/// `bit![x]`, an arguably more readable way to write `1 &lt;&lt; x`
+  </span>DirectiveBit(Box&lt;Spanned&lt;Expr&gt;&gt;),
+  <span class="doccomment">/// `size_of_val![ident]` gives the size (in bytes) of a named `fn` or
+  /// `static`
+  </span>DirectiveSizeOfVal(Spanned&lt;StaticStr&gt;),
+}
+<span class="kw">impl </span>Expr {
+  <span class="doccomment">/// Parses any expression, which means it parses a heck of a lot.
+  </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Expr, Error = Simple&lt;Lexeme&gt;&gt; {
+    recursive(|expr| {
+      <span class="kw">let </span>literal = <span class="macro">select!</span> {
+        Lexeme::HexLiteral(x) =&gt; x,
+        Lexeme::DecimalLiteral(x) =&gt; x,
+        Lexeme::BinaryLiteral(x) =&gt; x,
+      }
+      .map_with_span(|x, span| Expr::Num((x, span)));
+
+      <span class="kw">let </span>constant = <span class="macro">select!</span> { Lexeme::Ident(s) =&gt; s }
+        .map_with_span(|s, span| Expr::Ident((s, span)));
+
+      <span class="kw">let </span>bit_macro = just(Lexeme::Ident(<span class="string">&quot;bit&quot;</span>))
+        .then_ignore(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>)))
+        .ignore_then(
+          expr
+            .clone()
+            .map_with_span(|expr, span| (expr, span))
+            .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
+        )
+        .map(|expr| Expr::DirectiveBit(Box::new(expr)));
+
+      <span class="kw">let </span>size_of_val_macro = just(Lexeme::Ident(<span class="string">&quot;size_of_val&quot;</span>))
+        .then_ignore(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>)))
+        .ignore_then(
+          <span class="macro">select!</span> { Lexeme::Ident(s) =&gt; s }
+            .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
+        )
+        .map_with_span(|s, span| Expr::DirectiveSizeOfVal((s, span)));
+
+      <span class="kw">let </span>expr_macro = bit_macro.or(size_of_val_macro);
+
+      <span class="kw">let </span>atom = literal
+        .or(expr_macro)
+        .or(constant)
+        .map_with_span(|expr, span: Range&lt;usize&gt;| (expr, span));
+
+      <span class="kw">let </span>bitor = atom
+        .clone()
+        .then(just(Lexeme::Punct(<span class="string">&#39;|&#39;</span>)).ignore_then(atom).repeated())
+        .foldl(|lhs, rhs| {
+          <span class="kw">let </span>span = lhs.<span class="number">1</span>.start..rhs.<span class="number">1</span>.end;
+          (Expr::BitOr(Box::new(lhs), Box::new(rhs)), span)
+        });
+
+      bitor.map(|(expr, _span)| expr)
+    })
+  }
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// A constant declaration: `const FOO = EXPR;`
+///
+/// A `const` exists only at compile time, they do not appear at any fixed
+/// location into the ROM.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub struct </span>Const {
-  <span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
-  <span class="kw">pub </span>expr: Spanned&lt;Expr&gt;,
+  <span class="doccomment">/// The name of the `const`, which other code can now refer to.
+  </span><span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
+  <span class="doccomment">/// The expression that this `const` is equivalent to.
+  </span><span class="kw">pub </span>expr: Spanned&lt;Expr&gt;,
+}
+<span class="kw">impl </span>Const {
+  <span class="doccomment">/// Parses for a `const` declaration.
+  </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Const, Error = Simple&lt;Lexeme&gt;&gt; {
+    just(Lexeme::KwConst)
+      .ignore_then(ident_parser())
+      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;=&#39;</span>)))
+      .then(Expr::parser().map_with_span(|expr, span| (expr, span)))
+      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;;&#39;</span>)))
+      .map(|(name, expr)| Const { name, expr })
+  }
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// A static declaration: `static FOO: [u8] = [EXPR, EXPR, EXPR, ...];`
+///
+/// A `static` is a series of bytes that end up in the ROM, which can be copied
+/// into VRAM or similar. In assembler terms, every `static` is its own section
+/// which can be placed during the linking phase.
+///
+/// **Note:** At the moment, only a literal slice of bytes is allowed, but in
+/// the future it&#39;s planned that other static expressions will become possible.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub struct </span>Static {
-  <span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
-  <span class="kw">pub </span>items: Vec&lt;Spanned&lt;Expr&gt;&gt;,
+  <span class="doccomment">/// The name of this `static`
+  </span><span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
+  <span class="doccomment">/// The list of byte expressions in the static slice.
+  </span><span class="kw">pub </span>items: Vec&lt;Spanned&lt;Expr&gt;&gt;,
+}
+<span class="kw">impl </span>Static {
+  <span class="doccomment">/// Parser for a `static` declaration.
+  </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Static, Error = Simple&lt;Lexeme&gt;&gt; {
+    <span class="kw">let </span>eols = just(Lexeme::EndOfLine).ignored().repeated();
+
+    <span class="comment">// TODO: Generalize this
+    </span><span class="kw">let </span>ty = just(Lexeme::Ident(<span class="string">&quot;u8&quot;</span>))
+      .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>)));
+
+    <span class="comment">// TODO: Allow more than just arrays of expressions
+    </span><span class="kw">let </span>static_expr = Expr::parser()
+      .map_with_span(|expr, span| (expr, span))
+      .padded_by(eols)
+      .separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>)))
+      .allow_trailing()
+      .padded_by(eols)
+      .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>)));
+
+    just(Lexeme::KwStatic)
+      .ignore_then(ident_parser())
+      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;:&#39;</span>)))
+      .then_ignore(ty)
+      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;=&#39;</span>)))
+      .then(static_expr)
+      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;;&#39;</span>)))
+      .map(|(name, items)| Static { name, items })
+  }
 }
 
-<span class="attribute">#[derive(Clone, Debug)]</span>
-<span class="kw">pub enum </span>FnRet {
-  Nothing,
-  Never,
-  Irq,
-}
-
-<span class="attribute">#[derive(Clone, Debug)]</span>
+<span class="doccomment">/// Where to branch the loop to
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub enum </span>BranchTgt {
-  Continue,
+  <span class="doccomment">/// Continue looping, branch to the start of the loop
+  </span>Continue,
+  <span class="doccomment">/// Break the loop, branch to the end of the loop
+  </span>Break,
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// An argument to an instruction.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub enum </span>InstrArg {
-  Reg(StaticStr),
-  Deref(Expr, isize),
-  Expr(Expr),
+  <span class="doccomment">/// A register name.
+  </span>Reg(StaticStr),
+  <span class="doccomment">/// A register dereference, with optional post-op offset.
+  </span>Deref(Expr, isize),
+  <span class="doccomment">/// An expression.
+  </span>Expr(Expr),
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// A single statement within a block.
+///
+/// **Note:** This doesn&#39;t currently have support for `if` or `if-else`
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub enum </span>Stmt {
-  Loop(Box&lt;Spanned&lt;Block&gt;&gt;),
-  Branch(Spanned&lt;StaticStr&gt;, Spanned&lt;BranchTgt&gt;),
-  Instr(Spanned&lt;StaticStr&gt;, Vec&lt;Spanned&lt;InstrArg&gt;&gt;),
+  <span class="doccomment">/// A single CPU instruction.
+  </span>Instr(Spanned&lt;StaticStr&gt;, Vec&lt;Spanned&lt;InstrArg&gt;&gt;),
+  <span class="doccomment">/// A conditional branch to the start or end of the loop.
+  </span>ConditionalBranch(Spanned&lt;StaticStr&gt;, Spanned&lt;BranchTgt&gt;),
+  <span class="doccomment">/// An unconditional branch to the start of end of the loop.
+  </span>AlwaysBranch(Spanned&lt;BranchTgt&gt;),
+  <span class="doccomment">/// A loop over 0 or more statements.
+  </span>Loop(Box&lt;Spanned&lt;Block&gt;&gt;),
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// A block of statements
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub struct </span>Block {
-  <span class="kw">pub </span>stmts: Vec&lt;Stmt&gt;,
+  <span class="doccomment">/// The list of statements in the block
+  </span><span class="kw">pub </span>stmts: Vec&lt;Stmt&gt;,
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// A function in the program.
+///
+/// Because this is assembly programming, functions don&#39;t take or return args.
+/// When you `call` a function the return address is pushed to the stack, and
+/// when you return it&#39;s popped from the stack. That&#39;s about the extent of the
+/// support that the compiler and CPU give you.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub struct </span>Fn {
-  <span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
-  <span class="kw">pub </span>ret: FnRet,
-  <span class="kw">pub </span>block: Spanned&lt;Block&gt;,
+  <span class="doccomment">/// The name of the function
+  </span><span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
+  <span class="doccomment">/// The block of statements for the function
+  </span><span class="kw">pub </span>block: Spanned&lt;Block&gt;,
+}
+<span class="kw">impl </span>Fn {
+  <span class="doccomment">/// Parser for individual functions.
+  </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Fn, Error = Simple&lt;Lexeme&gt;&gt; {
+    <span class="kw">let </span>eols = just(Lexeme::EndOfLine).ignored().repeated();
+
+    <span class="kw">let </span>block = recursive(|block| {
+      <span class="kw">let </span>loop_parser = just(Lexeme::KwLoop)
+        .ignore_then(block)
+        .map(|block| Stmt::Loop(Box::new(block)));
+
+      <span class="kw">const </span>REGS: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str] = <span class="kw-2">&amp;</span>[
+        <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>, <span class="string">&quot;e&quot;</span>, <span class="string">&quot;h&quot;</span>, <span class="string">&quot;l&quot;</span>, <span class="string">&quot;sp&quot;</span>, <span class="string">&quot;pc&quot;</span>, <span class="string">&quot;af&quot;</span>, <span class="string">&quot;bc&quot;</span>, <span class="string">&quot;de&quot;</span>, <span class="string">&quot;hl&quot;</span>,
+      ];
+      <span class="kw">let </span>instr_arg =
+              <span class="comment">// Register args: `a`
+              </span><span class="macro">select!</span> { Lexeme::Ident(s) <span class="kw">if </span>REGS.contains(<span class="kw-2">&amp;</span>s) =&gt; InstrArg::Reg(s) }
+              <span class="comment">// Expression args: `FOO + BAR`
+              </span>.or(Expr::parser().map(InstrArg::Expr))
+              <span class="comment">// Deref args: `[FOO]`, `[BAR-]`, `[BAZ++]`
+              </span>.or(Expr::parser()
+                  .then(just(Lexeme::Punct(<span class="string">&#39;+&#39;</span>)).to(<span class="number">1</span>)
+                      .or(just(Lexeme::Punct(<span class="string">&#39;-&#39;</span>)).to(-<span class="number">1</span>))
+                      .repeated())
+                  .map(|(ptr, shift)| InstrArg::Deref(ptr, shift.into_iter().sum()))
+                  .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))))
+              .map_with_span(|arg, span| (arg, span));
+
+      <span class="kw">let </span>instr = ident_parser()
+        .then(instr_arg.separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>))))
+        .map(|(name, args)| Stmt::Instr(name, args));
+
+      <span class="kw">let </span>branch_if = just(Lexeme::KwIf)
+        .ignore_then(ident_parser())
+        .then_ignore(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>)))
+        .then(
+          ((just(Lexeme::KwContinue).to(BranchTgt::Continue))
+            .or(just(Lexeme::KwBreak).to(BranchTgt::Break)))
+          .map_with_span(|tgt, span| (tgt, span)),
+        )
+        .map(|(condition, tgt)| Stmt::ConditionalBranch(condition, tgt));
+
+      <span class="kw">let </span>branch_always = just(Lexeme::KwBreak)
+        .to(BranchTgt::Break)
+        .or(just(Lexeme::KwContinue).to(BranchTgt::Continue))
+        .map_with_span(|tgt, span| Stmt::AlwaysBranch((tgt, span)));
+
+      <span class="kw">let </span>branch = branch_if.or(branch_always);
+
+      <span class="kw">let </span>stmt = loop_parser.or(instr).or(branch);
+
+      stmt
+        .separated_by(eols.at_least(<span class="number">1</span>))
+        .allow_leading()
+        .allow_trailing()
+        .delimited_by(just(Lexeme::Punct(<span class="string">&#39;{&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;}&#39;</span>)))
+        .map_with_span(|stmts, span| (Block { stmts }, span))
+    });
+
+    just(Lexeme::KwFn)
+      .ignore_then(ident_parser())
+      .then(block)
+      .map(|(name, block)| Fn { name, block })
+  }
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// An item is anything that can appear at the top level of a source file.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub enum </span>Item {
-  Attr(Attr),
-  Const(Const),
-  Fn(Fn),
-  Static(Static),
+  <span class="doccomment">/// Program attributes
+  </span>Attr(Attribute),
+  <span class="doccomment">/// Constants
+  </span>Const(Const),
+  <span class="doccomment">/// Functions
+  </span>Fn(Fn),
+  <span class="doccomment">/// Static data
+  </span>Static(Static),
 }
 
-<span class="attribute">#[derive(Debug)]</span>
+<span class="doccomment">/// The Abstract Syntax Tree of a Dmgrs program.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub struct </span>Ast {
-  <span class="kw">pub </span>items: Vec&lt;Spanned&lt;Item&gt;&gt;,
+  <span class="doccomment">/// The list of items in the program.
+  </span><span class="kw">pub </span>items: Vec&lt;Spanned&lt;Item&gt;&gt;,
+}
+<span class="kw">impl </span>Ast {
+  <span class="doccomment">/// The parser for the AST.
+  </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Ast, Error = Simple&lt;Lexeme&gt;&gt; {
+    <span class="kw">let </span>eols = just(Lexeme::EndOfLine).ignored().repeated();
+
+    <span class="kw">let </span>item = choice((
+      Attribute::parser().map(Item::Attr),
+      Const::parser().map(Item::Const),
+      Fn::parser().map(Item::Fn),
+      Static::parser().map(Item::Static),
+    ));
+
+    item
+      .map_with_span(|item, span| (item, span))
+      .padded_by(eols)
+      .repeated()
+      .map(|items| Ast { items })
+      .then_ignore(end())
+  }
 }
 
 <span class="kw">fn </span>ident_parser(
@@ -394,203 +726,5 @@
 ) -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Spanned&lt;StaticStr&gt;, Error = Simple&lt;Lexeme&gt;&gt; {
   <span class="macro">select!</span> { Lexeme::Str(s) =&gt; s }.map_with_span(|name, span| (name, span))
 }
-
-<span class="kw">fn </span>attr_parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Attr, Error = Simple&lt;Lexeme&gt;&gt; {
-  <span class="comment">// Parses the internals of an attribute (i.e: in `#![mbc(rom_only)]`, it
-  // parses the `mbc(rom_only)`)
-  </span><span class="kw">let </span>attr_inner = recursive(|attr_inner| {
-    <span class="comment">// Parses `foo = &quot;bar&quot;`
-    </span><span class="kw">let </span>eq_attr = ident_parser()
-      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;=&#39;</span>)))
-      .then(string_parser())
-      .map(|(lhs, rhs)| Attr::Eq(lhs, rhs));
-
-    <span class="comment">// Parses `foo` and `foo(...)`
-    </span><span class="kw">let </span>call_attr = ident_parser()
-      .then(
-        attr_inner
-          .separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>)))
-          .allow_trailing()
-          .delimited_by(just(Lexeme::Punct(<span class="string">&#39;(&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;)&#39;</span>)))
-          .or_not(),
-      )
-      .map(|(name, args)| Attr::Call(name, args.unwrap_or_default()));
-
-    eq_attr.or(call_attr)
-  });
-
-  <span class="comment">// Parses attributes like `#![...]`
-  </span>just(Lexeme::Punct(<span class="string">&#39;#&#39;</span>)).then(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>))).ignore_then(
-    attr_inner.delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
-  )
-}
-
-<span class="kw">fn </span>expr_parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Expr, Error = Simple&lt;Lexeme&gt;&gt; {
-  recursive(|expr| {
-    <span class="kw">let </span>literal = <span class="macro">select!</span> { Lexeme::HexLiteral(x) =&gt; Expr::Num(x) }
-      .or(<span class="macro">select!</span> { Lexeme::DecimalLiteral(x) =&gt; Expr::Num(x) })
-      .or(<span class="macro">select!</span> { Lexeme::BinaryLiteral(x) =&gt; Expr::Num(x) });
-
-    <span class="kw">let </span>constant = <span class="macro">select!</span> { Lexeme::Ident(s) =&gt; s }.map(Expr::Const);
-
-    <span class="kw">let </span>bit_macro = just(Lexeme::Ident(<span class="string">&quot;bit&quot;</span>))
-      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>)))
-      .ignore_then(
-        expr
-          .clone()
-          .map_with_span(|expr, span| (expr, span))
-          .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
-      )
-      .map(|expr| Expr::BitMacro(Box::new(expr)));
-
-    <span class="kw">let </span>size_of_val_macro = just(Lexeme::Ident(<span class="string">&quot;size_of_val&quot;</span>))
-      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>)))
-      .ignore_then(
-        expr
-          .clone()
-          .map_with_span(|expr, span| (expr, span))
-          .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
-      )
-      .map(|expr| Expr::SizeOfValMacro(Box::new(expr)));
-
-    <span class="kw">let </span>expr_macro = bit_macro.or(size_of_val_macro);
-
-    <span class="kw">let </span>atom = literal
-      .or(expr_macro)
-      .or(constant)
-      .map_with_span(|expr, span: Range&lt;usize&gt;| (expr, span));
-
-    <span class="kw">let </span>bitor = atom
-      .clone()
-      .then(just(Lexeme::Punct(<span class="string">&#39;|&#39;</span>)).ignore_then(atom).repeated())
-      .foldl(|lhs, rhs| {
-        <span class="kw">let </span>span = lhs.<span class="number">1</span>.start..rhs.<span class="number">1</span>.end;
-        (Expr::BitOr(Box::new(lhs), Box::new(rhs)), span)
-      });
-
-    bitor.map(|(expr, _span)| expr)
-  })
-}
-
-<span class="kw">fn </span>const_parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Const, Error = Simple&lt;Lexeme&gt;&gt; {
-  just(Lexeme::KwConst)
-    .ignore_then(ident_parser())
-    .then_ignore(just(Lexeme::Punct(<span class="string">&#39;=&#39;</span>)))
-    .then(expr_parser().map_with_span(|expr, span| (expr, span)))
-    .then_ignore(just(Lexeme::Punct(<span class="string">&#39;;&#39;</span>)))
-    .map(|(name, expr)| Const { name, expr })
-}
-
-<span class="kw">fn </span>static_parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Static, Error = Simple&lt;Lexeme&gt;&gt; {
-  <span class="kw">let </span>eols = just(Lexeme::EndOfLine).ignored().repeated();
-
-  <span class="comment">// TODO: Generalize this
-  </span><span class="kw">let </span>ty = just(Lexeme::Ident(<span class="string">&quot;u8&quot;</span>))
-    .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>)));
-
-  <span class="comment">// TODO: Allow more than just arrays of expressions
-  </span><span class="kw">let </span>static_expr = expr_parser()
-    .map_with_span(|expr, span| (expr, span))
-    .padded_by(eols)
-    .separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>)))
-    .allow_trailing()
-    .padded_by(eols)
-    .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>)));
-
-  just(Lexeme::KwStatic)
-    .ignore_then(ident_parser())
-    .then_ignore(just(Lexeme::Punct(<span class="string">&#39;:&#39;</span>)))
-    .then_ignore(ty)
-    .then_ignore(just(Lexeme::Punct(<span class="string">&#39;=&#39;</span>)))
-    .then(static_expr)
-    .then_ignore(just(Lexeme::Punct(<span class="string">&#39;;&#39;</span>)))
-    .map(|(name, items)| Static { name, items })
-}
-
-<span class="kw">fn </span>fn_parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Fn, Error = Simple&lt;Lexeme&gt;&gt; {
-  <span class="kw">let </span>eols = just(Lexeme::EndOfLine).ignored().repeated();
-
-  <span class="comment">// Parses the return of a function (`` or `-&gt; !` or `-&gt; Irq`)
-  // TODO: `-&gt;` should be a single lexeme!
-  </span><span class="kw">let </span>ret = just(Lexeme::Punct(<span class="string">&#39;-&#39;</span>))
-    .then(just(Lexeme::Punct(<span class="string">&#39;&gt;&#39;</span>)))
-    .ignore_then(
-      just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>))
-        .to(FnRet::Never)
-        .or(just(Lexeme::Ident(<span class="string">&quot;Irq&quot;</span>)).to(FnRet::Irq)),
-    )
-    .or_not()
-    .map(|ret| ret.unwrap_or(FnRet::Nothing));
-
-  <span class="kw">let </span>block = recursive(|block| {
-    <span class="kw">let </span>loop_parser = just(Lexeme::KwLoop)
-      .ignore_then(block)
-      .map(|block| Stmt::Loop(Box::new(block)));
-
-    <span class="kw">const </span>REGS: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str] = <span class="kw-2">&amp;</span>[
-      <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>, <span class="string">&quot;e&quot;</span>, <span class="string">&quot;h&quot;</span>, <span class="string">&quot;l&quot;</span>, <span class="string">&quot;sp&quot;</span>, <span class="string">&quot;pc&quot;</span>, <span class="string">&quot;af&quot;</span>, <span class="string">&quot;bc&quot;</span>, <span class="string">&quot;de&quot;</span>, <span class="string">&quot;hl&quot;</span>,
-      <span class="string">&quot;f&quot;</span>,
-    ];
-    <span class="kw">let </span>instr_arg =
-            <span class="comment">// Register args: `a`
-            </span><span class="macro">select!</span> { Lexeme::Ident(s) <span class="kw">if </span>REGS.contains(<span class="kw-2">&amp;</span>s) =&gt; InstrArg::Reg(s) }
-            <span class="comment">// Expression args: `FOO + BAR`
-            </span>.or(expr_parser().map(InstrArg::Expr))
-            <span class="comment">// Deref args: `[FOO]`, `[BAR-]`, `[BAZ++]`
-            </span>.or(expr_parser()
-                .then(just(Lexeme::Punct(<span class="string">&#39;+&#39;</span>)).to(<span class="number">1</span>)
-                    .or(just(Lexeme::Punct(<span class="string">&#39;-&#39;</span>)).to(-<span class="number">1</span>))
-                    .repeated())
-                .map(|(ptr, shift)| InstrArg::Deref(ptr, shift.into_iter().sum()))
-                .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))))
-            .map_with_span(|arg, span| (arg, span));
-
-    <span class="kw">let </span>instr = ident_parser()
-      .then(instr_arg.separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>))))
-      .map(|(name, args)| Stmt::Instr(name, args));
-
-    <span class="kw">let </span>branch = just(Lexeme::KwIf)
-      .ignore_then(ident_parser())
-      .then_ignore(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>)))
-      .then(
-        just(Lexeme::KwContinue)
-          .to(BranchTgt::Continue)
-          .map_with_span(|tgt, span| (tgt, span)),
-      )
-      .map(|(condition, tgt)| Stmt::Branch(condition, tgt));
-
-    <span class="kw">let </span>stmt = loop_parser.or(instr).or(branch);
-
-    stmt
-      .separated_by(eols.at_least(<span class="number">1</span>))
-      .allow_leading()
-      .allow_trailing()
-      .delimited_by(just(Lexeme::Punct(<span class="string">&#39;{&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;}&#39;</span>)))
-      .map_with_span(|stmts, span| (Block { stmts }, span))
-  });
-
-  just(Lexeme::KwFn)
-    .ignore_then(ident_parser())
-    .then(ret)
-    .then(block)
-    .map(|((name, ret), block)| Fn { name, ret, block })
-}
-
-<span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Ast, Error = Simple&lt;Lexeme&gt;&gt; {
-  <span class="kw">let </span>eols = just(Lexeme::EndOfLine).ignored().repeated();
-
-  <span class="kw">let </span>item = attr_parser()
-    .map(Item::Attr)
-    .or(const_parser().map(Item::Const))
-    .or(fn_parser().map(Item::Fn))
-    .or(static_parser().map(Item::Static));
-
-  item
-    .map_with_span(|item, span| (item, span))
-    .padded_by(eols)
-    .repeated()
-    .map(|items| Ast { items })
-    .then_ignore(end())
-}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (86c6ebee8 2022-08-16)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (0b79f758c 2022-08-18)" ></div></body></html>

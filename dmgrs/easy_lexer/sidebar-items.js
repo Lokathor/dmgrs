@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["EasyLexer","This wraps the basic “spanned” lexeme iterator provided by the `logos` crate with adapters to cleanup the lexeme stream."]]};
