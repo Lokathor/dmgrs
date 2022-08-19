@@ -10,6 +10,7 @@ macro_rules! box_str {
   };
 }
 
+pub mod easy_lexer;
 pub mod lexer;
 pub mod multi_line_comments;
 pub mod parser;

@@ -71,17 +71,28 @@ pub enum Lexeme {
   #[regex(r"[[:punct:]]", |lex| lex.slice().chars().next().unwrap())]
   Punct(char),
 
-  // Keywords
+  /// Starts a constant declaration
   #[token("const")]
   KwConst,
   #[token("fn")]
+  /// Starts a function declaration
   KwFn,
+  /// Used at the opening of a loop
   #[token("loop")]
   KwLoop,
+  /// Used for branching around code blocks
   #[token("if")]
   KwIf,
+  /// Used for branching around code blocks
+  #[token("else")]
+  KwElse,
+  /// Continue a loop (jump to the start)
   #[token("continue")]
   KwContinue,
+  /// Break a loop (jump to the end)
+  #[token("break")]
+  KwBreak,
+  /// Starts a static declaration
   #[token("static")]
   KwStatic,
 
@@ -125,42 +136,6 @@ pub enum Lexeme {
   /// * Use of `_` is allowed in the literal, but they don't change the value.
   #[regex(r"(\$|0x)[0-9a-fA-F_]+", |lex| {let s = lex.slice(); try_hex_str_to_u16(if s.starts_with('$') { &s[1..] } else { &s[2..] }) })]
   HexLiteral(u16),
-}
-impl Lexeme {
-  /// If this token is an `Ident`
-  pub const fn is_ident(&self) -> bool {
-    match self {
-      Self::Ident(_) => true,
-      _ => false,
-    }
-  }
-
-  /// Unwraps the `Ident` content
-  pub const fn unwrap_ident(self) -> StaticStr {
-    match self {
-      Self::Ident(i) => i,
-      _ => panic!("unwrapped a non-ident"),
-    }
-  }
-
-  /// If this token is any number token
-  pub const fn is_number(&self) -> bool {
-    match self {
-      Self::BinaryLiteral(_) => true,
-      Self::DecimalLiteral(_) => true,
-      Self::HexLiteral(_) => true,
-      _ => false,
-    }
-  }
-  /// Unwraps the number inside.
-  pub const fn unwrap_number(self) -> u16 {
-    match self {
-      Self::BinaryLiteral(n) => n,
-      Self::DecimalLiteral(n) => n,
-      Self::HexLiteral(n) => n,
-      _ => panic!("unwrapped a non-number"),
-    }
-  }
 }
 
 /// Tries to parse a binary digit string into a `u16`.
@@ -245,7 +220,9 @@ impl core::fmt::Debug for Lexeme {
       Lexeme::KwFn => write!(f, "KwFn"),
       Lexeme::KwLoop => write!(f, "KwLoop"),
       Lexeme::KwIf => write!(f, "KwIf"),
+      Lexeme::KwElse => write!(f, "KwElse"),
       Lexeme::KwContinue => write!(f, "KwContinue"),
+      Lexeme::KwBreak => write!(f, "KwBreak"),
       Lexeme::KwStatic => write!(f, "KwStatic"),
 
       // other payload variants print their payload
@@ -279,7 +256,9 @@ impl core::fmt::Display for Lexeme {
       Lexeme::KwFn => write!(f, "fn"),
       Lexeme::KwLoop => write!(f, "loop"),
       Lexeme::KwIf => write!(f, "if"),
+      Lexeme::KwElse => write!(f, "else"),
       Lexeme::KwContinue => write!(f, "continue"),
+      Lexeme::KwBreak => write!(f, "break"),
       Lexeme::KwStatic => write!(f, "static"),
 
       // other payload variants print their payload

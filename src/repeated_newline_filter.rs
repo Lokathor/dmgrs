@@ -5,6 +5,7 @@ use std::{iter::Peekable, ops::Range};
 
 /// This iterator adapter will collapse all repeated newlines into a single end
 /// of line.
+#[derive(Clone)]
 pub struct RepeatedNewlineFilter<I: Iterator<Item = (Lexeme, Range<usize>)>> {
   i: Peekable<I>,
 }

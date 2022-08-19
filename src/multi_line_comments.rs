@@ -11,6 +11,7 @@ use crate::lexer::{Lexeme, Lexeme::*};
 
 /// This iterator adapter will remove all multi-line comments from the lexeme
 /// stream.
+#[derive(Clone)]
 pub struct MultiLineCommentFilter<I: Iterator<Item = (Lexeme, Range<usize>)>> {
   i: I,
 }

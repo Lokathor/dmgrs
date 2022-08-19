@@ -10,82 +10,347 @@ use std::ops::Range;
 
 type Spanned<T> = (T, Range<usize>);
 
-#[derive(Debug)]
-pub enum Attr {
-  Call(Spanned<StaticStr>, Vec<Attr>),
+/// Attributes for the program or for a specific `fn` or `static`.
+///
+/// * Program attributes are written using `#![words here]`
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Attribute {
+  /// Call attributes are like `foo(bar)`, `foo()`, or even `foo`
+  ///
+  /// The current parser can't distingush between `foo()` (with parens) and
+  /// `foo` (no parens). This is suspected to not ever be important.
+  Call(Spanned<StaticStr>, Vec<Attribute>),
+  /// Eq attributes are like `foo = "bar"`.
   Eq(Spanned<StaticStr>, Spanned<StaticStr>),
 }
+impl Attribute {
+  /// Parses lexeme streams into Attributes.
+  pub fn parser() -> impl Parser<Lexeme, Self, Error = Simple<Lexeme>> {
+    // Parses the internals of an attribute (i.e: in `#![mbc(rom_only)]`, it
+    // parses the `mbc(rom_only)`)
+    let attr_inner = recursive(|attr_inner| {
+      // Parses `foo = "bar"`
+      let eq_attr = ident_parser()
+        .then_ignore(just(Lexeme::Punct('=')))
+        .then(string_parser())
+        .map(|(lhs, rhs)| Attribute::Eq(lhs, rhs));
 
-#[derive(Debug)]
-pub enum Expr {
-  Num(u16),
-  Const(StaticStr),
-  BitOr(Box<Spanned<Expr>>, Box<Spanned<Expr>>),
-  BitMacro(Box<Spanned<Expr>>),
-  SizeOfValMacro(Box<Spanned<Expr>>),
+      // Parses `foo` and `foo(...)`
+      let call_attr = ident_parser()
+        .then(
+          attr_inner
+            .separated_by(just(Lexeme::Punct(',')))
+            .allow_trailing()
+            .delimited_by(just(Lexeme::Punct('(')), just(Lexeme::Punct(')')))
+            .or_not(),
+        )
+        .map(|(name, args)| Attribute::Call(name, args.unwrap_or_default()));
+
+      eq_attr.or(call_attr)
+    });
+
+    // Parses attributes like `#![...]`
+    just(Lexeme::Punct('#')).then(just(Lexeme::Punct('!'))).ignore_then(
+      attr_inner
+        .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
+    )
+  }
 }
 
-#[derive(Debug)]
+/// An "expression" means an integer constant expression.
+///
+/// They can assigned to a `const`, or used inline in an instruction.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Expr {
+  /// An actual numeric value, without anything more to look up or evaluate.
+  Num(Spanned<u16>),
+  /// The name of a `const`
+  Ident(Spanned<StaticStr>),
+  /// Bitwise OR operation, left and right hand sides.
+  BitOr(Box<Spanned<Expr>>, Box<Spanned<Expr>>),
+  /// `bit![x]`, an arguably more readable way to write `1 << x`
+  DirectiveBit(Box<Spanned<Expr>>),
+  /// `size_of_val![ident]` gives the size (in bytes) of a named `fn` or
+  /// `static`
+  DirectiveSizeOfVal(Spanned<StaticStr>),
+}
+impl Expr {
+  /// Parses any expression, which means it parses a heck of a lot.
+  pub fn parser() -> impl Parser<Lexeme, Expr, Error = Simple<Lexeme>> {
+    recursive(|expr| {
+      let literal = select! {
+        Lexeme::HexLiteral(x) => x,
+        Lexeme::DecimalLiteral(x) => x,
+        Lexeme::BinaryLiteral(x) => x,
+      }
+      .map_with_span(|x, span| Expr::Num((x, span)));
+
+      let constant = select! { Lexeme::Ident(s) => s }
+        .map_with_span(|s, span| Expr::Ident((s, span)));
+
+      let bit_macro = just(Lexeme::Ident("bit"))
+        .then_ignore(just(Lexeme::Punct('!')))
+        .ignore_then(
+          expr
+            .clone()
+            .map_with_span(|expr, span| (expr, span))
+            .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
+        )
+        .map(|expr| Expr::DirectiveBit(Box::new(expr)));
+
+      let size_of_val_macro = just(Lexeme::Ident("size_of_val"))
+        .then_ignore(just(Lexeme::Punct('!')))
+        .ignore_then(
+          select! { Lexeme::Ident(s) => s }
+            .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
+        )
+        .map_with_span(|s, span| Expr::DirectiveSizeOfVal((s, span)));
+
+      let expr_macro = bit_macro.or(size_of_val_macro);
+
+      let atom = literal
+        .or(expr_macro)
+        .or(constant)
+        .map_with_span(|expr, span: Range<usize>| (expr, span));
+
+      let bitor = atom
+        .clone()
+        .then(just(Lexeme::Punct('|')).ignore_then(atom).repeated())
+        .foldl(|lhs, rhs| {
+          let span = lhs.1.start..rhs.1.end;
+          (Expr::BitOr(Box::new(lhs), Box::new(rhs)), span)
+        });
+
+      bitor.map(|(expr, _span)| expr)
+    })
+  }
+}
+
+/// A constant declaration: `const FOO = EXPR;`
+///
+/// A `const` exists only at compile time, they do not appear at any fixed
+/// location into the ROM.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Const {
+  /// The name of the `const`, which other code can now refer to.
   pub name: Spanned<StaticStr>,
+  /// The expression that this `const` is equivalent to.
   pub expr: Spanned<Expr>,
 }
+impl Const {
+  /// Parses for a `const` declaration.
+  pub fn parser() -> impl Parser<Lexeme, Const, Error = Simple<Lexeme>> {
+    just(Lexeme::KwConst)
+      .ignore_then(ident_parser())
+      .then_ignore(just(Lexeme::Punct('=')))
+      .then(Expr::parser().map_with_span(|expr, span| (expr, span)))
+      .then_ignore(just(Lexeme::Punct(';')))
+      .map(|(name, expr)| Const { name, expr })
+  }
+}
 
-#[derive(Debug)]
+/// A static declaration: `static FOO: [u8] = [EXPR, EXPR, EXPR, ...];`
+///
+/// A `static` is a series of bytes that end up in the ROM, which can be copied
+/// into VRAM or similar. In assembler terms, every `static` is its own section
+/// which can be placed during the linking phase.
+///
+/// **Note:** At the moment, only a literal slice of bytes is allowed, but in
+/// the future it's planned that other static expressions will become possible.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Static {
+  /// The name of this `static`
   pub name: Spanned<StaticStr>,
+  /// The list of byte expressions in the static slice.
   pub items: Vec<Spanned<Expr>>,
 }
+impl Static {
+  /// Parser for a `static` declaration.
+  pub fn parser() -> impl Parser<Lexeme, Static, Error = Simple<Lexeme>> {
+    let eols = just(Lexeme::EndOfLine).ignored().repeated();
 
-#[derive(Clone, Debug)]
-pub enum FnRet {
-  Nothing,
-  Never,
-  Irq,
+    // TODO: Generalize this
+    let ty = just(Lexeme::Ident("u8"))
+      .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']')));
+
+    // TODO: Allow more than just arrays of expressions
+    let static_expr = Expr::parser()
+      .map_with_span(|expr, span| (expr, span))
+      .padded_by(eols)
+      .separated_by(just(Lexeme::Punct(',')))
+      .allow_trailing()
+      .padded_by(eols)
+      .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']')));
+
+    just(Lexeme::KwStatic)
+      .ignore_then(ident_parser())
+      .then_ignore(just(Lexeme::Punct(':')))
+      .then_ignore(ty)
+      .then_ignore(just(Lexeme::Punct('=')))
+      .then(static_expr)
+      .then_ignore(just(Lexeme::Punct(';')))
+      .map(|(name, items)| Static { name, items })
+  }
 }
 
-#[derive(Clone, Debug)]
+/// Where to branch the loop to
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BranchTgt {
+  /// Continue looping, branch to the start of the loop
   Continue,
+  /// Break the loop, branch to the end of the loop
+  Break,
 }
 
-#[derive(Debug)]
+/// An argument to an instruction.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum InstrArg {
+  /// A register name.
   Reg(StaticStr),
+  /// A register dereference, with optional post-op offset.
   Deref(Expr, isize),
+  /// An expression.
   Expr(Expr),
 }
 
-#[derive(Debug)]
+/// A single statement within a block.
+///
+/// **Note:** This doesn't currently have support for `if` or `if-else`
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Stmt {
-  Loop(Box<Spanned<Block>>),
-  Branch(Spanned<StaticStr>, Spanned<BranchTgt>),
+  /// A single CPU instruction.
   Instr(Spanned<StaticStr>, Vec<Spanned<InstrArg>>),
+  /// A conditional branch to the start or end of the loop.
+  ConditionalBranch(Spanned<StaticStr>, Spanned<BranchTgt>),
+  /// An unconditional branch to the start of end of the loop.
+  AlwaysBranch(Spanned<BranchTgt>),
+  /// A loop over 0 or more statements.
+  Loop(Box<Spanned<Block>>),
 }
 
-#[derive(Debug)]
+/// A block of statements
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Block {
+  /// The list of statements in the block
   pub stmts: Vec<Stmt>,
 }
 
-#[derive(Debug)]
+/// A function in the program.
+///
+/// Because this is assembly programming, functions don't take or return args.
+/// When you `call` a function the return address is pushed to the stack, and
+/// when you return it's popped from the stack. That's about the extent of the
+/// support that the compiler and CPU give you.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Fn {
+  /// The name of the function
   pub name: Spanned<StaticStr>,
-  pub ret: FnRet,
+  /// The block of statements for the function
   pub block: Spanned<Block>,
 }
+impl Fn {
+  /// Parser for individual functions.
+  pub fn parser() -> impl Parser<Lexeme, Fn, Error = Simple<Lexeme>> {
+    let eols = just(Lexeme::EndOfLine).ignored().repeated();
 
-#[derive(Debug)]
+    let block = recursive(|block| {
+      let loop_parser = just(Lexeme::KwLoop)
+        .ignore_then(block)
+        .map(|block| Stmt::Loop(Box::new(block)));
+
+      const REGS: &[&str] = &[
+        "a", "b", "c", "d", "e", "h", "l", "sp", "pc", "af", "bc", "de", "hl",
+      ];
+      let instr_arg =
+              // Register args: `a`
+              select! { Lexeme::Ident(s) if REGS.contains(&s) => InstrArg::Reg(s) }
+              // Expression args: `FOO + BAR`
+              .or(Expr::parser().map(InstrArg::Expr))
+              // Deref args: `[FOO]`, `[BAR-]`, `[BAZ++]`
+              .or(Expr::parser()
+                  .then(just(Lexeme::Punct('+')).to(1)
+                      .or(just(Lexeme::Punct('-')).to(-1))
+                      .repeated())
+                  .map(|(ptr, shift)| InstrArg::Deref(ptr, shift.into_iter().sum()))
+                  .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))))
+              .map_with_span(|arg, span| (arg, span));
+
+      let instr = ident_parser()
+        .then(instr_arg.separated_by(just(Lexeme::Punct(','))))
+        .map(|(name, args)| Stmt::Instr(name, args));
+
+      let branch_if = just(Lexeme::KwIf)
+        .ignore_then(ident_parser())
+        .then_ignore(just(Lexeme::Punct(',')))
+        .then(
+          ((just(Lexeme::KwContinue).to(BranchTgt::Continue))
+            .or(just(Lexeme::KwBreak).to(BranchTgt::Break)))
+          .map_with_span(|tgt, span| (tgt, span)),
+        )
+        .map(|(condition, tgt)| Stmt::ConditionalBranch(condition, tgt));
+
+      let branch_always = just(Lexeme::KwBreak)
+        .to(BranchTgt::Break)
+        .or(just(Lexeme::KwContinue).to(BranchTgt::Continue))
+        .map_with_span(|tgt, span| Stmt::AlwaysBranch((tgt, span)));
+
+      let branch = branch_if.or(branch_always);
+
+      let stmt = loop_parser.or(instr).or(branch);
+
+      stmt
+        .separated_by(eols.at_least(1))
+        .allow_leading()
+        .allow_trailing()
+        .delimited_by(just(Lexeme::Punct('{')), just(Lexeme::Punct('}')))
+        .map_with_span(|stmts, span| (Block { stmts }, span))
+    });
+
+    just(Lexeme::KwFn)
+      .ignore_then(ident_parser())
+      .then(block)
+      .map(|(name, block)| Fn { name, block })
+  }
+}
+
+/// An item is anything that can appear at the top level of a source file.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Item {
-  Attr(Attr),
+  /// Program attributes
+  Attr(Attribute),
+  /// Constants
   Const(Const),
+  /// Functions
   Fn(Fn),
+  /// Static data
   Static(Static),
 }
 
-#[derive(Debug)]
+/// The Abstract Syntax Tree of a Dmgrs program.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Ast {
+  /// The list of items in the program.
   pub items: Vec<Spanned<Item>>,
+}
+impl Ast {
+  /// The parser for the AST.
+  pub fn parser() -> impl Parser<Lexeme, Ast, Error = Simple<Lexeme>> {
+    let eols = just(Lexeme::EndOfLine).ignored().repeated();
+
+    let item = choice((
+      Attribute::parser().map(Item::Attr),
+      Const::parser().map(Item::Const),
+      Fn::parser().map(Item::Fn),
+      Static::parser().map(Item::Static),
+    ));
+
+    item
+      .map_with_span(|item, span| (item, span))
+      .padded_by(eols)
+      .repeated()
+      .map(|items| Ast { items })
+      .then_ignore(end())
+  }
 }
 
 fn ident_parser(
@@ -96,202 +361,4 @@ fn ident_parser(
 fn string_parser(
 ) -> impl Parser<Lexeme, Spanned<StaticStr>, Error = Simple<Lexeme>> {
   select! { Lexeme::Str(s) => s }.map_with_span(|name, span| (name, span))
-}
-
-fn attr_parser() -> impl Parser<Lexeme, Attr, Error = Simple<Lexeme>> {
-  // Parses the internals of an attribute (i.e: in `#![mbc(rom_only)]`, it
-  // parses the `mbc(rom_only)`)
-  let attr_inner = recursive(|attr_inner| {
-    // Parses `foo = "bar"`
-    let eq_attr = ident_parser()
-      .then_ignore(just(Lexeme::Punct('=')))
-      .then(string_parser())
-      .map(|(lhs, rhs)| Attr::Eq(lhs, rhs));
-
-    // Parses `foo` and `foo(...)`
-    let call_attr = ident_parser()
-      .then(
-        attr_inner
-          .separated_by(just(Lexeme::Punct(',')))
-          .allow_trailing()
-          .delimited_by(just(Lexeme::Punct('(')), just(Lexeme::Punct(')')))
-          .or_not(),
-      )
-      .map(|(name, args)| Attr::Call(name, args.unwrap_or_default()));
-
-    eq_attr.or(call_attr)
-  });
-
-  // Parses attributes like `#![...]`
-  just(Lexeme::Punct('#')).then(just(Lexeme::Punct('!'))).ignore_then(
-    attr_inner.delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
-  )
-}
-
-fn expr_parser() -> impl Parser<Lexeme, Expr, Error = Simple<Lexeme>> {
-  recursive(|expr| {
-    let literal = select! { Lexeme::HexLiteral(x) => Expr::Num(x) }
-      .or(select! { Lexeme::DecimalLiteral(x) => Expr::Num(x) })
-      .or(select! { Lexeme::BinaryLiteral(x) => Expr::Num(x) });
-
-    let constant = select! { Lexeme::Ident(s) => s }.map(Expr::Const);
-
-    let bit_macro = just(Lexeme::Ident("bit"))
-      .then_ignore(just(Lexeme::Punct('!')))
-      .ignore_then(
-        expr
-          .clone()
-          .map_with_span(|expr, span| (expr, span))
-          .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
-      )
-      .map(|expr| Expr::BitMacro(Box::new(expr)));
-
-    let size_of_val_macro = just(Lexeme::Ident("size_of_val"))
-      .then_ignore(just(Lexeme::Punct('!')))
-      .ignore_then(
-        expr
-          .clone()
-          .map_with_span(|expr, span| (expr, span))
-          .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
-      )
-      .map(|expr| Expr::SizeOfValMacro(Box::new(expr)));
-
-    let expr_macro = bit_macro.or(size_of_val_macro);
-
-    let atom = literal
-      .or(expr_macro)
-      .or(constant)
-      .map_with_span(|expr, span: Range<usize>| (expr, span));
-
-    let bitor = atom
-      .clone()
-      .then(just(Lexeme::Punct('|')).ignore_then(atom).repeated())
-      .foldl(|lhs, rhs| {
-        let span = lhs.1.start..rhs.1.end;
-        (Expr::BitOr(Box::new(lhs), Box::new(rhs)), span)
-      });
-
-    bitor.map(|(expr, _span)| expr)
-  })
-}
-
-fn const_parser() -> impl Parser<Lexeme, Const, Error = Simple<Lexeme>> {
-  just(Lexeme::KwConst)
-    .ignore_then(ident_parser())
-    .then_ignore(just(Lexeme::Punct('=')))
-    .then(expr_parser().map_with_span(|expr, span| (expr, span)))
-    .then_ignore(just(Lexeme::Punct(';')))
-    .map(|(name, expr)| Const { name, expr })
-}
-
-fn static_parser() -> impl Parser<Lexeme, Static, Error = Simple<Lexeme>> {
-  let eols = just(Lexeme::EndOfLine).ignored().repeated();
-
-  // TODO: Generalize this
-  let ty = just(Lexeme::Ident("u8"))
-    .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']')));
-
-  // TODO: Allow more than just arrays of expressions
-  let static_expr = expr_parser()
-    .map_with_span(|expr, span| (expr, span))
-    .padded_by(eols)
-    .separated_by(just(Lexeme::Punct(',')))
-    .allow_trailing()
-    .padded_by(eols)
-    .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']')));
-
-  just(Lexeme::KwStatic)
-    .ignore_then(ident_parser())
-    .then_ignore(just(Lexeme::Punct(':')))
-    .then_ignore(ty)
-    .then_ignore(just(Lexeme::Punct('=')))
-    .then(static_expr)
-    .then_ignore(just(Lexeme::Punct(';')))
-    .map(|(name, items)| Static { name, items })
-}
-
-fn fn_parser() -> impl Parser<Lexeme, Fn, Error = Simple<Lexeme>> {
-  let eols = just(Lexeme::EndOfLine).ignored().repeated();
-
-  // Parses the return of a function (`` or `-> !` or `-> Irq`)
-  // TODO: `->` should be a single lexeme!
-  let ret = just(Lexeme::Punct('-'))
-    .then(just(Lexeme::Punct('>')))
-    .ignore_then(
-      just(Lexeme::Punct('!'))
-        .to(FnRet::Never)
-        .or(just(Lexeme::Ident("Irq")).to(FnRet::Irq)),
-    )
-    .or_not()
-    .map(|ret| ret.unwrap_or(FnRet::Nothing));
-
-  let block = recursive(|block| {
-    let loop_parser = just(Lexeme::KwLoop)
-      .ignore_then(block)
-      .map(|block| Stmt::Loop(Box::new(block)));
-
-    const REGS: &[&str] = &[
-      "a", "b", "c", "d", "e", "h", "l", "sp", "pc", "af", "bc", "de", "hl",
-      "f",
-    ];
-    let instr_arg =
-            // Register args: `a`
-            select! { Lexeme::Ident(s) if REGS.contains(&s) => InstrArg::Reg(s) }
-            // Expression args: `FOO + BAR`
-            .or(expr_parser().map(InstrArg::Expr))
-            // Deref args: `[FOO]`, `[BAR-]`, `[BAZ++]`
-            .or(expr_parser()
-                .then(just(Lexeme::Punct('+')).to(1)
-                    .or(just(Lexeme::Punct('-')).to(-1))
-                    .repeated())
-                .map(|(ptr, shift)| InstrArg::Deref(ptr, shift.into_iter().sum()))
-                .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))))
-            .map_with_span(|arg, span| (arg, span));
-
-    let instr = ident_parser()
-      .then(instr_arg.separated_by(just(Lexeme::Punct(','))))
-      .map(|(name, args)| Stmt::Instr(name, args));
-
-    let branch = just(Lexeme::KwIf)
-      .ignore_then(ident_parser())
-      .then_ignore(just(Lexeme::Punct(',')))
-      .then(
-        just(Lexeme::KwContinue)
-          .to(BranchTgt::Continue)
-          .map_with_span(|tgt, span| (tgt, span)),
-      )
-      .map(|(condition, tgt)| Stmt::Branch(condition, tgt));
-
-    let stmt = loop_parser.or(instr).or(branch);
-
-    stmt
-      .separated_by(eols.at_least(1))
-      .allow_leading()
-      .allow_trailing()
-      .delimited_by(just(Lexeme::Punct('{')), just(Lexeme::Punct('}')))
-      .map_with_span(|stmts, span| (Block { stmts }, span))
-  });
-
-  just(Lexeme::KwFn)
-    .ignore_then(ident_parser())
-    .then(ret)
-    .then(block)
-    .map(|((name, ret), block)| Fn { name, ret, block })
-}
-
-pub fn parser() -> impl Parser<Lexeme, Ast, Error = Simple<Lexeme>> {
-  let eols = just(Lexeme::EndOfLine).ignored().repeated();
-
-  let item = attr_parser()
-    .map(Item::Attr)
-    .or(const_parser().map(Item::Const))
-    .or(fn_parser().map(Item::Fn))
-    .or(static_parser().map(Item::Static));
-
-  item
-    .map_with_span(|item, span| (item, span))
-    .padded_by(eols)
-    .repeated()
-    .map(|items| Ast { items })
-    .then_ignore(end())
 }
