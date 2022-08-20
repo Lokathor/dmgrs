@@ -6,9 +6,48 @@
 
 use crate::{lexer::Lexeme, StaticStr};
 use chumsky::prelude::*;
-use std::ops::Range;
+use std::ops::{Deref, DerefMut, Range};
 
-type Spanned<T> = (T, Range<usize>);
+/// Wraps a span around any other type.
+///
+/// The contained value is accessable with [`Deref`] and [`DerefMut`].
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Spanned<T> {
+  t: T,
+  range_start: usize,
+  range_end: usize,
+}
+impl<T> Spanned<T> {
+  /// Constructs the spanned value
+  #[must_use]
+  pub const fn new(t: T, range: Range<usize>) -> Self {
+    Self { t, range_start: range.start, range_end: range.end }
+  }
+  /// Gets the span in the form of a [`Range<usize>`]
+  #[must_use]
+  pub const fn get_span_range(&self) -> Range<usize> {
+    self.range_start..self.range_end
+  }
+}
+impl<T> From<(T, Range<usize>)> for Spanned<T> {
+  #[must_use]
+  fn from((t, range): (T, Range<usize>)) -> Self {
+    Self::new(t, range)
+  }
+}
+impl<T> Deref for Spanned<T> {
+  type Target = T;
+  #[must_use]
+  fn deref(&self) -> &Self::Target {
+    &self.t
+  }
+}
+impl<T> DerefMut for Spanned<T> {
+  #[must_use]
+  fn deref_mut(&mut self) -> &mut Self::Target {
+    &mut self.t
+  }
+}
 
 /// Attributes for the program or for a specific `fn` or `static`.
 ///
@@ -83,10 +122,10 @@ impl Expr {
         Lexeme::DecimalLiteral(x) => x,
         Lexeme::BinaryLiteral(x) => x,
       }
-      .map_with_span(|x, span| Expr::Num((x, span)));
+      .map_with_span(|x, span| Expr::Num(Spanned::new(x, span)));
 
       let constant = select! { Lexeme::Ident(s) => s }
-        .map_with_span(|s, span| Expr::Ident((s, span)));
+        .map_with_span(|s, span| Expr::Ident(Spanned::new(s, span)));
 
       let bit_macro = just(Lexeme::Ident("bit"))
         .then_ignore(just(Lexeme::Punct('!')))
@@ -96,7 +135,7 @@ impl Expr {
             .map_with_span(|expr, span| (expr, span))
             .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
         )
-        .map(|expr| Expr::DirectiveBit(Box::new(expr)));
+        .map(|(x, span)| Expr::DirectiveBit(Box::new(Spanned::new(x, span))));
 
       let size_of_val_macro = just(Lexeme::Ident("size_of_val"))
         .then_ignore(just(Lexeme::Punct('!')))
@@ -104,7 +143,9 @@ impl Expr {
           select! { Lexeme::Ident(s) => s }
             .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))),
         )
-        .map_with_span(|s, span| Expr::DirectiveSizeOfVal((s, span)));
+        .map_with_span(|s, span| {
+          Expr::DirectiveSizeOfVal(Spanned::new(s, span))
+        });
 
       let expr_macro = bit_macro.or(size_of_val_macro);
 
@@ -116,9 +157,15 @@ impl Expr {
       let bitor = atom
         .clone()
         .then(just(Lexeme::Punct('|')).ignore_then(atom).repeated())
-        .foldl(|lhs, rhs| {
-          let span = lhs.1.start..rhs.1.end;
-          (Expr::BitOr(Box::new(lhs), Box::new(rhs)), span)
+        .foldl(|(lhs, lhs_span), (rhs, rhs_span)| {
+          let span = lhs_span.start..rhs_span.end;
+          (
+            Expr::BitOr(
+              Box::new(Spanned::new(lhs, lhs_span)),
+              Box::new(Spanned::new(rhs, rhs_span)),
+            ),
+            span,
+          )
         });
 
       bitor.map(|(expr, _span)| expr)
@@ -145,8 +192,13 @@ impl Const {
       .then_ignore(just(Lexeme::Punct('=')))
       .then(Expr::parser().map_with_span(|expr, span| (expr, span)))
       .then_ignore(just(Lexeme::Punct(';')))
-      .map(|(name, expr)| Const { name, expr })
+      .map(|(name, expr_span)| Const { name, expr: expr_span.into() })
   }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum StaticType {
+  ByteSlice,
 }
 
 /// A static declaration: `static FOO: [u8] = [EXPR, EXPR, EXPR, ...];`
@@ -161,6 +213,8 @@ impl Const {
 pub struct Static {
   /// The name of this `static`
   pub name: Spanned<StaticStr>,
+  /// The intended type of the static.
+  pub type_: Spanned<StaticType>,
   /// The list of byte expressions in the static slice.
   pub items: Vec<Spanned<Expr>>,
 }
@@ -169,13 +223,16 @@ impl Static {
   pub fn parser() -> impl Parser<Lexeme, Static, Error = Simple<Lexeme>> {
     let eols = just(Lexeme::EndOfLine).ignored().repeated();
 
-    // TODO: Generalize this
-    let ty = just(Lexeme::Ident("u8"))
-      .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']')));
+    let byte_slice = just(Lexeme::Punct('['))
+      .then(just(Lexeme::Ident("u8")))
+      .then(just(Lexeme::Punct(']')))
+      .to(StaticType::ByteSlice);
+
+    let ty = byte_slice.map_with_span(|t, span| Spanned::new(t, span));
 
     // TODO: Allow more than just arrays of expressions
     let static_expr = Expr::parser()
-      .map_with_span(|expr, span| (expr, span))
+      .map_with_span(|expr, span| Spanned::new(expr, span))
       .padded_by(eols)
       .separated_by(just(Lexeme::Punct(',')))
       .allow_trailing()
@@ -185,11 +242,11 @@ impl Static {
     just(Lexeme::KwStatic)
       .ignore_then(ident_parser())
       .then_ignore(just(Lexeme::Punct(':')))
-      .then_ignore(ty)
+      .then(ty)
       .then_ignore(just(Lexeme::Punct('=')))
       .then(static_expr)
       .then_ignore(just(Lexeme::Punct(';')))
-      .map(|(name, items)| Static { name, items })
+      .map(|((name, type_), items)| Static { name, type_, items })
   }
 }
 
@@ -273,7 +330,7 @@ impl Fn {
                       .repeated())
                   .map(|(ptr, shift)| InstrArg::Deref(ptr, shift.into_iter().sum()))
                   .delimited_by(just(Lexeme::Punct('[')), just(Lexeme::Punct(']'))))
-              .map_with_span(|arg, span| (arg, span));
+              .map_with_span(|arg, span| Spanned::new(arg, span));
 
       let instr = ident_parser()
         .then(instr_arg.separated_by(just(Lexeme::Punct(','))))
@@ -287,12 +344,12 @@ impl Fn {
             .or(just(Lexeme::KwBreak).to(BranchTgt::Break)))
           .map_with_span(|tgt, span| (tgt, span)),
         )
-        .map(|(condition, tgt)| Stmt::ConditionalBranch(condition, tgt));
+        .map(|(condition, tgt)| Stmt::ConditionalBranch(condition, tgt.into()));
 
       let branch_always = just(Lexeme::KwBreak)
         .to(BranchTgt::Break)
         .or(just(Lexeme::KwContinue).to(BranchTgt::Continue))
-        .map_with_span(|tgt, span| Stmt::AlwaysBranch((tgt, span)));
+        .map_with_span(|tgt, span| Stmt::AlwaysBranch((tgt, span).into()));
 
       let branch = branch_if.or(branch_always);
 
@@ -303,7 +360,7 @@ impl Fn {
         .allow_leading()
         .allow_trailing()
         .delimited_by(just(Lexeme::Punct('{')), just(Lexeme::Punct('}')))
-        .map_with_span(|stmts, span| (Block { stmts }, span))
+        .map_with_span(|stmts, span| Spanned::new(Block { stmts }, span))
     });
 
     just(Lexeme::KwFn)
@@ -345,7 +402,7 @@ impl Ast {
     ));
 
     item
-      .map_with_span(|item, span| (item, span))
+      .map_with_span(|item, span| Spanned::new(item, span))
       .padded_by(eols)
       .repeated()
       .map(|items| Ast { items })
@@ -355,10 +412,12 @@ impl Ast {
 
 fn ident_parser(
 ) -> impl Parser<Lexeme, Spanned<StaticStr>, Error = Simple<Lexeme>> {
-  select! { Lexeme::Ident(s) => s }.map_with_span(|name, span| (name, span))
+  select! { Lexeme::Ident(s) => s }
+    .map_with_span(|name, span| Spanned::new(name, span))
 }
 
 fn string_parser(
 ) -> impl Parser<Lexeme, Spanned<StaticStr>, Error = Simple<Lexeme>> {
-  select! { Lexeme::Str(s) => s }.map_with_span(|name, span| (name, span))
+  select! { Lexeme::Str(s) => s }
+    .map_with_span(|name, span| Spanned::new(name, span))
 }

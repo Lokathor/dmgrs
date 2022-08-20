@@ -5,7 +5,7 @@ const SRC: &str = include_str!("../samples/minimum-program.s");
 
 fn main() {
   println!("EasyLexer: {} lexemes found.", EasyLexer::new(SRC).count());
-  for (lex, r) in EasyLexer::new(SRC) {
+  for (lex, _r) in EasyLexer::new(SRC) {
     print!("{lex:?} ");
   }
 
