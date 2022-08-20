@@ -6,16 +6,28 @@
 
 use crate::{lexer::Lexeme, StaticStr};
 use chumsky::prelude::*;
-use std::ops::{Deref, DerefMut, Range};
+use std::{
+  fmt::Debug,
+  ops::{Deref, DerefMut, Range},
+};
 
 /// Wraps a span around any other type.
 ///
 /// The contained value is accessable with [`Deref`] and [`DerefMut`].
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Spanned<T> {
   t: T,
   range_start: usize,
   range_end: usize,
+}
+impl<T> Debug for Spanned<T>
+where
+  T: Debug,
+{
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    <T as Debug>::fmt(&self.t, f)?;
+    write!(f, "@({}..{})", self.range_start, self.range_end)
+  }
 }
 impl<T> Spanned<T> {
   /// Constructs the spanned value
@@ -99,7 +111,7 @@ impl Attribute {
 /// An "expression" means an integer constant expression.
 ///
 /// They can assigned to a `const`, or used inline in an instruction.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Expr {
   /// An actual numeric value, without anything more to look up or evaluate.
   Num(Spanned<u16>),
@@ -203,7 +215,7 @@ pub enum StaticType {
   ByteSlice,
 }
 
-/// A static declaration: `static FOO: [u8] = [EXPR, EXPR, EXPR, ...];`
+/// A static declaration: `static FOO: [u8] = [BYTE, BYTE, BYTE, ...];`
 ///
 /// A `static` is a series of bytes that end up in the ROM, which can be copied
 /// into VRAM or similar. In assembler terms, every `static` is its own section
@@ -261,8 +273,17 @@ pub enum BranchTgt {
   Break,
 }
 
+/// A single instruction within a function.
+#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Instruction {
+  /// The operation to perform
+  pub op: Spanned<StaticStr>,
+  /// The arguments to the operation
+  pub args: Vec<Spanned<InstrArg>>,
+}
+
 /// An argument to an instruction.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum InstrArg {
   /// A register name.
   Reg(StaticStr),
@@ -278,7 +299,7 @@ pub enum InstrArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Stmt {
   /// A single CPU instruction.
-  Instr(Spanned<StaticStr>, Vec<Spanned<InstrArg>>),
+  Instr(Instruction),
   /// A conditional branch to the start or end of the loop.
   ConditionalBranch(Spanned<StaticStr>, Spanned<BranchTgt>),
   /// An unconditional branch to the start of end of the loop.
@@ -336,7 +357,7 @@ impl Fn {
 
       let instr = ident_parser()
         .then(instr_arg.separated_by(just(Lexeme::Punct(','))))
-        .map(|(name, args)| Stmt::Instr(name, args));
+        .map(|(op, args)| Stmt::Instr(Instruction { op, args }));
 
       let branch_if = just(Lexeme::KwIf)
         .ignore_then(ident_parser())
