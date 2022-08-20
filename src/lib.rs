@@ -3,12 +3,7 @@
 
 //! Stuff to work with Dmgrs assembly files.
 
-#[allow(unused)]
-macro_rules! box_str {
-  ($x:expr) => {
-    $x.to_string().into_boxed_str()
-  };
-}
+use std::sync::atomic::AtomicUsize;
 
 pub mod easy_lexer;
 pub mod lexer;
@@ -18,3 +13,10 @@ pub mod repeated_newline_filter;
 pub mod str_cache_impl;
 
 type StaticStr = &'static str;
+
+/// Generates a `usize` id value, used for sticking on the end of made up
+/// labels.
+pub fn next_id() -> usize {
+  static GLOBAL_COUNTER: AtomicUsize = AtomicUsize::new(0);
+  GLOBAL_COUNTER.fetch_add(1, std::sync::atomic::Ordering::AcqRel)
+}
