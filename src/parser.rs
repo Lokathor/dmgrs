@@ -196,8 +196,10 @@ impl Const {
   }
 }
 
+/// The type of a `static` item.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum StaticType {
+  /// `[u8]`, a slice of bytes, without a specific length.
   ByteSlice,
 }
 
