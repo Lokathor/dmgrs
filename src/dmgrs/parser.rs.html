@@ -423,6 +423,27 @@
 <span id="423">423</span>
 <span id="424">424</span>
 <span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The &quot;parser&quot; stage turns the stream of lexemes (from the lexer) into ab
 //! &quot;abstract syntax tree&quot;.
 //!
@@ -431,16 +452,28 @@
 
 </span><span class="kw">use crate</span>::{lexer::Lexeme, StaticStr};
 <span class="kw">use </span>chumsky::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>std::ops::{Deref, DerefMut, Range};
+<span class="kw">use </span>std::{
+  fmt::Debug,
+  ops::{Deref, DerefMut, Range},
+};
 
 <span class="doccomment">/// Wraps a span around any other type.
 ///
 /// The contained value is accessable with [`Deref`] and [`DerefMut`].
-</span><span class="attribute">#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
+</span><span class="attribute">#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
 <span class="kw">pub struct </span>Spanned&lt;T&gt; {
   t: T,
   range_start: usize,
   range_end: usize,
+}
+<span class="kw">impl</span>&lt;T&gt; Debug <span class="kw">for </span>Spanned&lt;T&gt;
+<span class="kw">where
+  </span>T: Debug,
+{
+  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+    &lt;T <span class="kw">as </span>Debug&gt;::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.t, f)<span class="question-mark">?</span>;
+    <span class="macro">write!</span>(f, <span class="string">&quot;@({}..{})&quot;</span>, <span class="self">self</span>.range_start, <span class="self">self</span>.range_end)
+  }
 }
 <span class="kw">impl</span>&lt;T&gt; Spanned&lt;T&gt; {
   <span class="doccomment">/// Constructs the spanned value
@@ -524,7 +557,7 @@
 <span class="doccomment">/// An &quot;expression&quot; means an integer constant expression.
 ///
 /// They can assigned to a `const`, or used inline in an instruction.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
 <span class="kw">pub enum </span>Expr {
   <span class="doccomment">/// An actual numeric value, without anything more to look up or evaluate.
   </span>Num(Spanned&lt;u16&gt;),
@@ -628,7 +661,7 @@
   </span>ByteSlice,
 }
 
-<span class="doccomment">/// A static declaration: `static FOO: [u8] = [EXPR, EXPR, EXPR, ...];`
+<span class="doccomment">/// A static declaration: `static FOO: [u8] = [BYTE, BYTE, BYTE, ...];`
 ///
 /// A `static` is a series of bytes that end up in the ROM, which can be copied
 /// into VRAM or similar. In assembler terms, every `static` is its own section
@@ -686,8 +719,17 @@
   </span>Break,
 }
 
+<span class="doccomment">/// A single instruction within a function.
+</span><span class="attribute">#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
+<span class="kw">pub struct </span>Instruction {
+  <span class="doccomment">/// The operation to perform
+  </span><span class="kw">pub </span>op: Spanned&lt;StaticStr&gt;,
+  <span class="doccomment">/// The arguments to the operation
+  </span><span class="kw">pub </span>args: Vec&lt;Spanned&lt;InstrArg&gt;&gt;,
+}
+
 <span class="doccomment">/// An argument to an instruction.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
 <span class="kw">pub enum </span>InstrArg {
   <span class="doccomment">/// A register name.
   </span>Reg(StaticStr),
@@ -703,7 +745,7 @@
 </span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
 <span class="kw">pub enum </span>Stmt {
   <span class="doccomment">/// A single CPU instruction.
-  </span>Instr(Spanned&lt;StaticStr&gt;, Vec&lt;Spanned&lt;InstrArg&gt;&gt;),
+  </span>Instr(Instruction),
   <span class="doccomment">/// A conditional branch to the start or end of the loop.
   </span>ConditionalBranch(Spanned&lt;StaticStr&gt;, Spanned&lt;BranchTgt&gt;),
   <span class="doccomment">/// An unconditional branch to the start of end of the loop.
@@ -761,7 +803,7 @@
 
       <span class="kw">let </span>instr = ident_parser()
         .then(instr_arg.separated_by(just(Lexeme::Punct(<span class="string">&#39;,&#39;</span>))))
-        .map(|(name, args)| Stmt::Instr(name, args));
+        .map(|(op, args)| Stmt::Instr(Instruction { op, args }));
 
       <span class="kw">let </span>branch_if = just(Lexeme::KwIf)
         .ignore_then(ident_parser())
@@ -849,4 +891,4 @@
     .map_with_span(|name, span| Spanned::new(name, span))
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (0b79f758c 2022-08-18)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (e1b28cd2f 2022-08-19)" ></div></body></html>
