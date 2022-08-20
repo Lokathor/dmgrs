@@ -421,6 +421,8 @@
 <span id="421">421</span>
 <span id="422">422</span>
 <span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The &quot;parser&quot; stage turns the stream of lexemes (from the lexer) into ab
 //! &quot;abstract syntax tree&quot;.
 //!
@@ -619,9 +621,11 @@
   }
 }
 
-<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
+<span class="doccomment">/// The type of a `static` item.
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
 <span class="kw">pub enum </span>StaticType {
-  ByteSlice,
+  <span class="doccomment">/// `[u8]`, a slice of bytes, without a specific length.
+  </span>ByteSlice,
 }
 
 <span class="doccomment">/// A static declaration: `static FOO: [u8] = [EXPR, EXPR, EXPR, ...];`
