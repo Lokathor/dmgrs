@@ -18,17 +18,14 @@
 <span id="18">18</span>
 <span id="19">19</span>
 <span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]</span>
 <span class="attribute">#![cfg_attr(test, allow(nonstandard_style))]</span>
 
 <span class="doccomment">//! Stuff to work with Dmgrs assembly files.
 
-</span><span class="attribute">#[allow(unused)]</span>
-<span class="macro">macro_rules!</span> box_str {
-  (<span class="macro-nonterminal">$x</span>:expr) =&gt; {
-    <span class="macro-nonterminal">$x</span>.to_string().into_boxed_str()
-  };
-}
+</span><span class="kw">use </span>std::sync::atomic::AtomicUsize;
 
 <span class="kw">pub mod </span>easy_lexer;
 <span class="kw">pub mod </span>lexer;
@@ -38,5 +35,12 @@
 <span class="kw">pub mod </span>str_cache_impl;
 
 <span class="kw">type </span>StaticStr = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+
+<span class="doccomment">/// Generates a `usize` id value, used for sticking on the end of made up
+/// labels.
+</span><span class="kw">pub fn </span>next_id() -&gt; usize {
+  <span class="kw">static </span>GLOBAL_COUNTER: AtomicUsize = AtomicUsize::new(<span class="number">0</span>);
+  GLOBAL_COUNTER.fetch_add(<span class="number">1</span>, std::sync::atomic::Ordering::AcqRel)
+}
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (e1b28cd2f 2022-08-19)" ></div></body></html>
