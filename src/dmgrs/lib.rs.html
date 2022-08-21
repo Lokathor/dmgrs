@@ -20,6 +20,7 @@
 <span id="20">20</span>
 <span id="21">21</span>
 <span id="22">22</span>
+<span id="23">23</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]</span>
 <span class="attribute">#![cfg_attr(test, allow(nonstandard_style))]</span>
 
@@ -28,6 +29,7 @@
 </span><span class="kw">use </span>std::sync::atomic::AtomicUsize;
 
 <span class="kw">pub mod </span>easy_lexer;
+<span class="kw">pub mod </span>header;
 <span class="kw">pub mod </span>lexer;
 <span class="kw">pub mod </span>multi_line_comments;
 <span class="kw">pub mod </span>parser;
@@ -43,4 +45,4 @@
   GLOBAL_COUNTER.fetch_add(<span class="number">1</span>, std::sync::atomic::Ordering::AcqRel)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (e1b28cd2f 2022-08-19)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>

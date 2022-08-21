@@ -1,9 +1,10 @@
 var sourcesIndex = JSON.parse('{\
 "ahash":["",[],["convert.rs","fallback_hash.rs","lib.rs","operations.rs","random_state.rs","specialize.rs"]],\
 "beef":["",[],["generic.rs","lean.rs","lib.rs","traits.rs","wide.rs"]],\
+"bytemuck":["",[],["anybitpattern.rs","checked.rs","contiguous.rs","internal.rs","lib.rs","no_uninit.rs","offset_of.rs","pod.rs","pod_in_option.rs","transparent.rs","zeroable.rs","zeroable_in_option.rs"]],\
 "cfg_if":["",[],["lib.rs"]],\
 "chumsky":["",[],["chain.rs","combinator.rs","debug.rs","error.rs","lib.rs","primitive.rs","recovery.rs","recursive.rs","span.rs","stream.rs","text.rs"]],\
-"dmgrs":["",[],["easy_lexer.rs","lexer.rs","lib.rs","multi_line_comments.rs","parser.rs","repeated_newline_filter.rs","str_cache_impl.rs"]],\
+"dmgrs":["",[],["easy_lexer.rs","header.rs","lexer.rs","lib.rs","multi_line_comments.rs","parser.rs","repeated_newline_filter.rs","str_cache_impl.rs"]],\
 "fnv":["",[],["lib.rs"]],\
 "getrandom":["",[],["error.rs","lib.rs","linux_android.rs","use_file.rs","util.rs","util_libc.rs"]],\
 "hashbrown":["",[["external_trait_impls",[],["mod.rs"]],["raw",[],["alloc.rs","bitmask.rs","mod.rs","sse2.rs"]]],["lib.rs","macros.rs","map.rs","scopeguard.rs","set.rs"]],\
