@@ -142,6 +142,14 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The ROM header declares a bunch of stuff about the ROM.
 //!
 //! It is required to make a rom work, and also we want to automatically
@@ -267,8 +275,10 @@
   <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     <span class="kw">let </span><span class="kw-2">mut </span>bytes = [<span class="number">0</span>; <span class="number">0x14F</span>];
     bytes[<span class="number">0x04</span>..=<span class="number">0x33</span>].copy_from_slice(<span class="kw-2">&amp;</span>MAGIC_LOGO_DATA);
-    bytes[<span class="number">0x4B</span>] = <span class="number">0x33</span>; <span class="comment">// always declare new licensee system, required for SGB.
-    </span><span class="self">Self</span>(bytes)
+    <span class="comment">// always declare new licensee system, required for SGB.
+    // https://gbdev.io/pandocs/The_Cartridge_Header.html#014b---old-licensee-code
+    </span>bytes[<span class="number">0x4B</span>] = <span class="number">0x33</span>;
+    <span class="self">Self</span>(bytes)
   }
 }
 
@@ -285,6 +295,12 @@
       .field(<span class="string">&quot;version&quot;</span>, <span class="self">self</span>.version())
       .finish()
   }
+}
+
+<span class="kw">impl </span>AsRef&lt;[u8]&gt; <span class="kw">for </span>Header {
+  <span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
+    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+  </span>}
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
