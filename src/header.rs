@@ -123,7 +123,9 @@ impl Default for Header {
   fn default() -> Self {
     let mut bytes = [0; 0x14F];
     bytes[0x04..=0x33].copy_from_slice(&MAGIC_LOGO_DATA);
-    bytes[0x4B] = 0x33; // always declare new licensee system, required for SGB.
+    // always declare new licensee system, required for SGB.
+    // https://gbdev.io/pandocs/The_Cartridge_Header.html#014b---old-licensee-code
+    bytes[0x4B] = 0x33;
     Self(bytes)
   }
 }
@@ -140,5 +142,11 @@ impl Debug for Header {
       .field("ram_size", self.ram_size())
       .field("version", self.version())
       .finish()
+  }
+}
+
+impl AsRef<[u8]> for Header {
+  fn as_ref(&self) -> &[u8] {
+    &self.0
   }
 }
