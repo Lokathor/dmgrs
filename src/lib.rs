@@ -6,6 +6,7 @@
 use std::sync::atomic::AtomicUsize;
 
 pub mod easy_lexer;
+pub mod header;
 pub mod lexer;
 pub mod multi_line_comments;
 pub mod parser;

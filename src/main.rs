@@ -1,5 +1,5 @@
 use chumsky::{Parser, Stream};
-use dmgrs::{easy_lexer::EasyLexer, parser::Ast};
+use dmgrs::{easy_lexer::EasyLexer, header::Header, parser::Ast};
 
 const SRC: &str = include_str!("../samples/minimum-program.s");
 
@@ -13,4 +13,6 @@ fn main() {
   for item in ast.items.iter() {
     println!("Item: {item:?}");
   }
+
+  println!("Default Header: {:#?}", Header::default());
 }
