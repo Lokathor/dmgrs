@@ -15,4 +15,10 @@ fn main() {
   }
 
   println!("Default Header: {:#?}", Header::default());
+
+  let mut v = vec![0_u8; 0x100];
+  v.extend(Header::default().as_bytes());
+  v[0] = 0x18;
+  v[1] = (-2_i8) as u8;
+  std::fs::write("target/demo.gb", &v).unwrap();
 }

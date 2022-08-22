@@ -22,7 +22,7 @@ const MAGIC_LOGO_DATA: [u8; 48] = [
 ///
 /// See Also: [Pandocs: The Cartridge Header](https://gbdev.io/pandocs/The_Cartridge_Header.html#the-cartridge-header)
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Header([u8; 0x14F]);
+pub struct Header([u8; 0x50]);
 impl Header {
   /// The entry point is 4 bytes that will be executed immediately after the
   /// boot rom.
@@ -117,16 +117,22 @@ impl Header {
   pub fn updates_checksum(&mut self) {
     self.0[0x4D] = self.do_checksum();
   }
+
+  pub const fn as_bytes(&self) -> &[u8] {
+    &self.0
+  }
 }
 
 impl Default for Header {
   fn default() -> Self {
-    let mut bytes = [0; 0x14F];
+    let mut bytes = [0; 0x50];
     bytes[0x04..=0x33].copy_from_slice(&MAGIC_LOGO_DATA);
     // always declare new licensee system, required for SGB.
     // https://gbdev.io/pandocs/The_Cartridge_Header.html#014b---old-licensee-code
     bytes[0x4B] = 0x33;
-    Self(bytes)
+    let mut header = Self(bytes);
+    header.entry_point_mut()[1] = 0xC3;
+    header
   }
 }
 
@@ -147,6 +153,6 @@ impl Debug for Header {
 
 impl AsRef<[u8]> for Header {
   fn as_ref(&self) -> &[u8] {
-    &self.0
+    self.as_bytes()
   }
 }
