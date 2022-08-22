@@ -17,7 +17,7 @@ fn main() {
       SectionLine::JumpRelativeLabel("main~loop0", Condition::Always),
     ],
   };
-  // If any relative jumps go to far, or point at missing labels, this fails
+  // If any relative jumps go too far, or point at missing labels, this fails
   s_main.resolve_relative_label_jumps().unwrap();
 
   // Generate a blank 32k block of memory
