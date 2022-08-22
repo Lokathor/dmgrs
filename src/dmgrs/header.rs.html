@@ -150,6 +150,12 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The ROM header declares a bunch of stuff about the ROM.
 //!
 //! It is required to make a rom work, and also we want to automatically
@@ -174,7 +180,7 @@
 ///
 /// See Also: [Pandocs: The Cartridge Header](https://gbdev.io/pandocs/The_Cartridge_Header.html#the-cartridge-header)
 </span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub struct </span>Header([u8; <span class="number">0x14F</span>]);
+<span class="kw">pub struct </span>Header([u8; <span class="number">0x50</span>]);
 <span class="kw">impl </span>Header {
   <span class="doccomment">/// The entry point is 4 bytes that will be executed immediately after the
   /// boot rom.
@@ -269,16 +275,22 @@
   </span><span class="kw">pub fn </span>updates_checksum(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
     <span class="self">self</span>.<span class="number">0</span>[<span class="number">0x4D</span>] = <span class="self">self</span>.do_checksum();
   }
+
+  <span class="kw">pub const fn </span>as_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
+    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
+  </span>}
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>Header {
   <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-    <span class="kw">let </span><span class="kw-2">mut </span>bytes = [<span class="number">0</span>; <span class="number">0x14F</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>bytes = [<span class="number">0</span>; <span class="number">0x50</span>];
     bytes[<span class="number">0x04</span>..=<span class="number">0x33</span>].copy_from_slice(<span class="kw-2">&amp;</span>MAGIC_LOGO_DATA);
     <span class="comment">// always declare new licensee system, required for SGB.
     // https://gbdev.io/pandocs/The_Cartridge_Header.html#014b---old-licensee-code
     </span>bytes[<span class="number">0x4B</span>] = <span class="number">0x33</span>;
-    <span class="self">Self</span>(bytes)
+    <span class="kw">let </span><span class="kw-2">mut </span>header = <span class="self">Self</span>(bytes);
+    header.entry_point_mut()[<span class="number">1</span>] = <span class="number">0xC3</span>;
+    header
   }
 }
 
@@ -299,8 +311,8 @@
 
 <span class="kw">impl </span>AsRef&lt;[u8]&gt; <span class="kw">for </span>Header {
   <span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
-    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0
-  </span>}
+    <span class="self">self</span>.as_bytes()
+  }
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
