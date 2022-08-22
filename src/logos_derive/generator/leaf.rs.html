@@ -75,7 +75,7 @@
         };
 
         <span class="kw">match </span><span class="kw-2">&amp;</span>leaf.callback {
-            <span class="prelude-val">Some</span>(Callback::Label(callback)) =&gt; <span class="macro">quote!</span> {
+            <span class="prelude-val">Some</span>(Callback::Label(callback)) =&gt; <span class="macro">quote! </span>{
                 #bump
                 #callback(lex).construct(#constructor, lex);
             },
@@ -83,22 +83,22 @@
                 <span class="kw">let </span>arg = <span class="kw-2">&amp;</span>inline.arg;
                 <span class="kw">let </span>body = <span class="kw-2">&amp;</span>inline.body;
 
-                <span class="macro">quote!</span> {
+                <span class="macro">quote! </span>{
                     #bump
 
-                    <span class="attribute">#[inline]</span>
-                    <span class="kw">fn </span>callback&lt;<span class="lifetime">&#39;s</span>&gt;(#arg: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) -&gt; <span class="kw">impl </span>CallbackResult&lt;<span class="lifetime">&#39;s</span>, #ty, #this&gt; {
+                    <span class="attribute">#[inline]
+                    </span><span class="kw">fn </span>callback&lt;<span class="lifetime">&#39;s</span>&gt;(#arg: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) -&gt; <span class="kw">impl </span>CallbackResult&lt;<span class="lifetime">&#39;s</span>, #ty, #this&gt; {
                         #body
                     }
 
                     callback(lex).construct(#constructor, lex);
                 }
             }
-            <span class="prelude-val">None </span><span class="kw">if </span><span class="macro">matches!</span>(leaf.field, MaybeVoid::Void) =&gt; <span class="macro">quote!</span> {
+            <span class="prelude-val">None </span><span class="kw">if </span><span class="macro">matches!</span>(leaf.field, MaybeVoid::Void) =&gt; <span class="macro">quote! </span>{
                 #bump
                 lex.set(#name::#ident);
             },
-            <span class="prelude-val">None </span>=&gt; <span class="macro">quote!</span> {
+            <span class="prelude-val">None </span>=&gt; <span class="macro">quote! </span>{
                 #bump
                 <span class="kw">let </span>token = #name::#ident(lex.slice());
                 lex.set(token);
@@ -107,4 +107,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -13,17 +13,17 @@ interop with the compiler in a procedural macro. To parse a
 <span class="kw">use </span>quote::quote;
 <span class="kw">use </span>syn::DeriveInput;
 
-<span class="attribute">#[proc_macro_derive(MyMacro)]</span>
-<span class="kw">pub fn </span>my_macro(input: TokenStream) -&gt; TokenStream {
+<span class="attribute">#[proc_macro_derive(MyMacro)]
+</span><span class="kw">pub fn </span>my_macro(input: TokenStream) -&gt; TokenStream {
     <span class="comment">// Parse the tokens into a syntax tree
     </span><span class="kw">let </span>ast: DeriveInput = syn::parse(input).unwrap();
 
     <span class="comment">// Build the output, possibly using quasi-quotation
-    </span><span class="kw">let </span>expanded = <span class="macro">quote!</span> {
+    </span><span class="kw">let </span>expanded = <span class="macro">quote! </span>{
         <span class="comment">/* ... */
     </span>};
 
     <span class="comment">// Convert into a token stream and return it
     </span>expanded.into()
 }</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

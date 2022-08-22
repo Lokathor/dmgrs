@@ -82,8 +82,8 @@
 </span><span class="kw">pub type </span>Cow&lt;<span class="lifetime">&#39;a</span>, T&gt; = <span class="kw">crate</span>::generic::Cow&lt;<span class="lifetime">&#39;a</span>, T, Lean&gt;;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>internal {
-    <span class="attribute">#[derive(Clone, Copy, PartialEq, Eq)]</span>
-    <span class="kw">pub struct </span>Lean;
+    <span class="attribute">#[derive(Clone, Copy, PartialEq, Eq)]
+    </span><span class="kw">pub struct </span>Lean;
 }
 <span class="kw">use </span>internal::Lean;
 
@@ -91,8 +91,8 @@
 <span class="kw">const </span>MASK_HI: usize = !MASK_LO;
 
 <span class="kw">impl </span>Lean {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">pub const fn </span>mask_len(len: usize) -&gt; usize {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub const fn </span>mask_len(len: usize) -&gt; usize {
         len &amp; MASK_LO
     }
 }
@@ -101,18 +101,18 @@
     <span class="kw">type </span>Field = Lean;
     <span class="kw">type </span>NonZero = Lean;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>len(fat: usize) -&gt; usize {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>len(fat: usize) -&gt; usize {
         fat &amp; MASK_LO
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>empty(len: usize) -&gt; (usize, Lean) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>empty(len: usize) -&gt; (usize, Lean) {
         (len &amp; MASK_LO, Lean)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>store(len: usize, capacity: usize) -&gt; (usize, Lean) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>store(len: usize, capacity: usize) -&gt; (usize, Lean) {
         <span class="kw">if </span>capacity &amp; MASK_HI != <span class="number">0 </span>{
             <span class="macro">panic!</span>(<span class="string">&quot;beef::lean::Cow: Capacity out of bounds&quot;</span>);
         }
@@ -122,13 +122,13 @@
         (fat, Lean)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>unpack(fat: usize, <span class="kw">_</span>: Lean) -&gt; (usize, usize) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>unpack(fat: usize, <span class="kw">_</span>: Lean) -&gt; (usize, usize) {
         (fat &amp; MASK_LO, (fat &amp; MASK_HI) &gt;&gt; <span class="number">32</span>)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>maybe(fat: usize, <span class="kw">_</span>: Lean) -&gt; <span class="prelude-ty">Option</span>&lt;Lean&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>maybe(fat: usize, <span class="kw">_</span>: Lean) -&gt; <span class="prelude-ty">Option</span>&lt;Lean&gt; {
         <span class="kw">if </span>fat &amp; MASK_HI != <span class="number">0 </span>{
             <span class="prelude-val">Some</span>(Lean)
         } <span class="kw">else </span>{
@@ -137,4 +137,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beef" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beef" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

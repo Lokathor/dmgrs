@@ -1102,69 +1102,69 @@
 //! [`Span`]: https://docs.rs/proc-macro2/1.0/proc_macro2/struct.Span.html
 
 </span><span class="kw">use </span><span class="self">self</span>::private::WithSpan;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::error::Result;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::lifetime::Lifetime;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::lit::{Lit, LitBool, LitByte, LitByteStr, LitChar, LitFloat, LitInt, LitStr};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::lookahead;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::error::Result;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::lifetime::Lifetime;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::lit::{Lit, LitBool, LitByte, LitByteStr, LitChar, LitFloat, LitInt, LitStr};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::lookahead;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream};
 <span class="kw">use </span><span class="kw">crate</span>::span::IntoSpans;
-<span class="attribute">#[cfg(any(feature = <span class="string">&quot;parsing&quot;</span>, feature = <span class="string">&quot;printing&quot;</span>))]</span>
-<span class="kw">use </span>proc_macro2::Ident;
+<span class="attribute">#[cfg(any(feature = <span class="string">&quot;parsing&quot;</span>, feature = <span class="string">&quot;printing&quot;</span>))]
+</span><span class="kw">use </span>proc_macro2::Ident;
 <span class="kw">use </span>proc_macro2::Span;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">use </span>proc_macro2::TokenStream;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span>proc_macro2::{Delimiter, Literal, Punct, TokenTree};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">use </span>std::cmp;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">use </span>std::hash::{Hash, Hasher};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">use </span>proc_macro2::TokenStream;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span>proc_macro2::{Delimiter, Literal, Punct, TokenTree};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">use </span>std::cmp;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">use </span>std::hash::{Hash, Hasher};
 <span class="kw">use </span>std::ops::{Deref, DerefMut};
 
 <span class="doccomment">/// Marker trait for types that represent single tokens.
 ///
 /// This trait is sealed and cannot be implemented for types outside of Syn.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub trait </span>Token: private::Sealed {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub trait </span>Token: private::Sealed {
     <span class="comment">// Not public API.
-    </span><span class="attribute">#[doc(hidden)]</span>
-    <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool;
+    </span><span class="attribute">#[doc(hidden)]
+    </span><span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool;
 
     <span class="comment">// Not public API.
-    </span><span class="attribute">#[doc(hidden)]</span>
-    <span class="kw">fn </span>display() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+    </span><span class="attribute">#[doc(hidden)]
+    </span><span class="kw">fn </span>display() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
 }
 
 <span class="kw">mod </span>private {
     <span class="kw">use </span>proc_macro2::Span;
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-    <span class="kw">pub trait </span>Sealed {}
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+    </span><span class="kw">pub trait </span>Sealed {}
 
     <span class="doccomment">/// Support writing `token.span` rather than `token.spans[0]` on tokens that
     /// hold a single span.
-    </span><span class="attribute">#[repr(C)]</span>
-    <span class="kw">pub struct </span>WithSpan {
+    </span><span class="attribute">#[repr(C)]
+    </span><span class="kw">pub struct </span>WithSpan {
         <span class="kw">pub </span>span: Span,
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>private::Sealed <span class="kw">for </span>Ident {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>private::Sealed <span class="kw">for </span>Ident {}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">fn </span>peek_impl(cursor: Cursor, peek: <span class="kw">fn</span>(ParseStream) -&gt; bool) -&gt; bool {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">fn </span>peek_impl(cursor: Cursor, peek: <span class="kw">fn</span>(ParseStream) -&gt; bool) -&gt; bool {
     <span class="kw">use </span><span class="kw">crate</span>::parse::Unexpected;
     <span class="kw">use </span>std::cell::Cell;
     <span class="kw">use </span>std::rc::Rc;
@@ -1175,10 +1175,10 @@
     peek(<span class="kw-2">&amp;</span>buffer)
 }
 
-<span class="macro">macro_rules!</span> impl_token {
+<span class="macro">macro_rules! </span>impl_token {
     (<span class="macro-nonterminal">$display</span>:tt <span class="macro-nonterminal">$name</span>:ty) =&gt; {
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-        <span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+        </span><span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
             <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
                 <span class="kw">fn </span>peek(input: ParseStream) -&gt; bool {
                     &lt;<span class="macro-nonterminal">$name </span><span class="kw">as </span>Parse&gt;::parse(input).is_ok()
@@ -1191,8 +1191,8 @@
             </span>}
         }
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-        <span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+        </span><span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
     };
 }
 
@@ -1207,10 +1207,10 @@
 <span class="macro">impl_token!</span>(<span class="string">&quot;boolean literal&quot; </span>LitBool);
 <span class="macro">impl_token!</span>(<span class="string">&quot;group token&quot; </span>proc_macro2::Group);
 
-<span class="macro">macro_rules!</span> impl_low_level_token {
+<span class="macro">macro_rules! </span>impl_low_level_token {
     (<span class="macro-nonterminal">$display</span>:tt <span class="macro-nonterminal">$ty</span>:ident <span class="macro-nonterminal">$get</span>:ident) =&gt; {
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-        <span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+        </span><span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
             <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
                 cursor.<span class="macro-nonterminal">$get</span>().is_some()
             }
@@ -1220,8 +1220,8 @@
             </span>}
         }
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-        <span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{}
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+        </span><span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{}
     };
 }
 
@@ -1230,18 +1230,18 @@
 <span class="macro">impl_low_level_token!</span>(<span class="string">&quot;token&quot; </span>TokenTree token_tree);
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub trait </span>CustomToken {
+</span><span class="attribute">#[doc(hidden)]
+#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub trait </span>CustomToken {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool;
     <span class="kw">fn </span>display() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;T: CustomToken&gt; private::Sealed <span class="kw">for </span>T {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl</span>&lt;T: CustomToken&gt; private::Sealed <span class="kw">for </span>T {}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;T: CustomToken&gt; Token <span class="kw">for </span>T {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl</span>&lt;T: CustomToken&gt; Token <span class="kw">for </span>T {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         &lt;<span class="self">Self </span><span class="kw">as </span>CustomToken&gt;::peek(cursor)
     }
@@ -1251,11 +1251,11 @@
     }
 }
 
-<span class="macro">macro_rules!</span> define_keywords {
+<span class="macro">macro_rules! </span>define_keywords {
     ($(<span class="macro-nonterminal">$token</span>:tt <span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>:ident <span class="attribute">#[<span class="macro-nonterminal">$doc</span>:meta]</span>)<span class="kw-2">*</span>) =&gt; {
         $(
-            <span class="attribute">#[<span class="macro-nonterminal">$doc</span>]</span>
-            <span class="doccomment">///
+            <span class="attribute">#[<span class="macro-nonterminal">$doc</span>]
+            </span><span class="doccomment">///
             /// Don&#39;t try to remember the name of this type &amp;mdash; use the
             /// [`Token!`] macro instead.
             ///
@@ -1264,9 +1264,9 @@
                 <span class="kw">pub </span>span: Span,
             }
 
-            <span class="attribute">#[doc(hidden)]</span>
-            <span class="attribute">#[allow(non_snake_case)]</span>
-            <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>&lt;S: IntoSpans&lt;[Span; <span class="number">1</span>]&gt;&gt;(span: S) -&gt; <span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[doc(hidden)]
+            #[allow(non_snake_case)]
+            </span><span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>&lt;S: IntoSpans&lt;[Span; <span class="number">1</span>]&gt;&gt;(span: S) -&gt; <span class="macro-nonterminal">$name </span>{
                 <span class="macro-nonterminal">$name </span>{
                     span: span.into_spans()[<span class="number">0</span>],
                 }
@@ -1280,55 +1280,55 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-            <span class="kw">impl </span>Copy <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+            </span><span class="kw">impl </span>Copy <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-            <span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+            </span><span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
                     <span class="kw-2">*</span><span class="self">self
                 </span>}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>Debug <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>Debug <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
                     f.write_str(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$name</span>))
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>cmp::Eq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>cmp::Eq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$name</span>) -&gt; bool {
                     <span class="bool-val">true
                 </span>}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, _state: <span class="kw-2">&amp;mut </span>H) {}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-            <span class="kw">impl </span>ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+            </span><span class="kw">impl </span>ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
                     printing::keyword(<span class="macro-nonterminal">$token</span>, <span class="self">self</span>.span, tokens);
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-            <span class="kw">impl </span>Parse <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+            </span><span class="kw">impl </span>Parse <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
                     <span class="prelude-val">Ok</span>(<span class="macro-nonterminal">$name </span>{
                         span: parsing::keyword(input, <span class="macro-nonterminal">$token</span>)<span class="question-mark">?</span>,
@@ -1336,8 +1336,8 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            </span><span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
                     parsing::peek_keyword(cursor, <span class="macro-nonterminal">$token</span>)
                 }
@@ -1347,13 +1347,13 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            </span><span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
         )*
     };
 }
 
-<span class="macro">macro_rules!</span> impl_deref_if_len_is_1 {
+<span class="macro">macro_rules! </span>impl_deref_if_len_is_1 {
     (<span class="macro-nonterminal">$name</span>:ident/<span class="number">1</span>) =&gt; {
         <span class="kw">impl </span>Deref <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
             <span class="kw">type </span>Target = WithSpan;
@@ -1373,12 +1373,12 @@
     (<span class="macro-nonterminal">$name</span>:ident/<span class="macro-nonterminal">$len</span>:tt) =&gt; {};
 }
 
-<span class="macro">macro_rules!</span> define_punctuation_structs {
+<span class="macro">macro_rules! </span>define_punctuation_structs {
     ($(<span class="macro-nonterminal">$token</span>:tt <span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>:ident/<span class="macro-nonterminal">$len</span>:tt <span class="attribute">#[<span class="macro-nonterminal">$doc</span>:meta]</span>)<span class="kw-2">*</span>) =&gt; {
         $(
-            <span class="attribute">#[repr(C)]</span>
-            <span class="attribute">#[<span class="macro-nonterminal">$doc</span>]</span>
-            <span class="doccomment">///
+            <span class="attribute">#[repr(C)]
+            #[<span class="macro-nonterminal">$doc</span>]
+            </span><span class="doccomment">///
             /// Don&#39;t try to remember the name of this type &amp;mdash; use the
             /// [`Token!`] macro instead.
             ///
@@ -1387,9 +1387,9 @@
                 <span class="kw">pub </span>spans: [Span; <span class="macro-nonterminal">$len</span>],
             }
 
-            <span class="attribute">#[doc(hidden)]</span>
-            <span class="attribute">#[allow(non_snake_case)]</span>
-            <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>&lt;S: IntoSpans&lt;[Span; <span class="macro-nonterminal">$len</span>]&gt;&gt;(spans: S) -&gt; <span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[doc(hidden)]
+            #[allow(non_snake_case)]
+            </span><span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>&lt;S: IntoSpans&lt;[Span; <span class="macro-nonterminal">$len</span>]&gt;&gt;(spans: S) -&gt; <span class="macro-nonterminal">$name </span>{
                 <span class="macro-nonterminal">$name </span>{
                     spans: spans.into_spans(),
                 }
@@ -1403,41 +1403,41 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-            <span class="kw">impl </span>Copy <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+            </span><span class="kw">impl </span>Copy <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-            <span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+            </span><span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
                     <span class="kw-2">*</span><span class="self">self
                 </span>}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>Debug <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>Debug <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
                     f.write_str(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$name</span>))
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>cmp::Eq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>cmp::Eq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$name</span>) -&gt; bool {
                     <span class="bool-val">true
                 </span>}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, _state: <span class="kw-2">&amp;mut </span>H) {}
             }
 
@@ -1446,24 +1446,24 @@
     };
 }
 
-<span class="macro">macro_rules!</span> define_punctuation {
+<span class="macro">macro_rules! </span>define_punctuation {
     ($(<span class="macro-nonterminal">$token</span>:tt <span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>:ident/<span class="macro-nonterminal">$len</span>:tt <span class="attribute">#[<span class="macro-nonterminal">$doc</span>:meta]</span>)<span class="kw-2">*</span>) =&gt; {
         $(
-            <span class="macro">define_punctuation_structs!</span> {
-                <span class="macro-nonterminal">$token </span><span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>/<span class="macro-nonterminal">$len </span><span class="attribute">#[<span class="macro-nonterminal">$doc</span>]</span>
-            }
+            <span class="macro">define_punctuation_structs! </span>{
+                <span class="macro-nonterminal">$token </span><span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>/<span class="macro-nonterminal">$len </span><span class="attribute">#[<span class="macro-nonterminal">$doc</span>]
+            </span>}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-            <span class="kw">impl </span>ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+            </span><span class="kw">impl </span>ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
                     printing::punct(<span class="macro-nonterminal">$token</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.spans, tokens);
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-            <span class="kw">impl </span>Parse <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+            </span><span class="kw">impl </span>Parse <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
                     <span class="prelude-val">Ok</span>(<span class="macro-nonterminal">$name </span>{
                         spans: parsing::punct(input, <span class="macro-nonterminal">$token</span>)<span class="question-mark">?</span>,
@@ -1471,8 +1471,8 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            </span><span class="kw">impl </span>Token <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
                     parsing::peek_punct(cursor, <span class="macro-nonterminal">$token</span>)
                 }
@@ -1482,23 +1482,23 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            </span><span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
         )*
     };
 }
 
-<span class="macro">macro_rules!</span> define_delimiters {
+<span class="macro">macro_rules! </span>define_delimiters {
     ($(<span class="macro-nonterminal">$token</span>:tt <span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>:ident <span class="attribute">#[<span class="macro-nonterminal">$doc</span>:meta]</span>)<span class="kw-2">*</span>) =&gt; {
         $(
-            <span class="attribute">#[<span class="macro-nonterminal">$doc</span>]</span>
-            <span class="kw">pub struct </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[<span class="macro-nonterminal">$doc</span>]
+            </span><span class="kw">pub struct </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">pub </span>span: Span,
             }
 
-            <span class="attribute">#[doc(hidden)]</span>
-            <span class="attribute">#[allow(non_snake_case)]</span>
-            <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>&lt;S: IntoSpans&lt;[Span; <span class="number">1</span>]&gt;&gt;(span: S) -&gt; <span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[doc(hidden)]
+            #[allow(non_snake_case)]
+            </span><span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>&lt;S: IntoSpans&lt;[Span; <span class="number">1</span>]&gt;&gt;(span: S) -&gt; <span class="macro-nonterminal">$name </span>{
                 <span class="macro-nonterminal">$name </span>{
                     span: span.into_spans()[<span class="number">0</span>],
                 }
@@ -1512,47 +1512,47 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-            <span class="kw">impl </span>Copy <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+            </span><span class="kw">impl </span>Copy <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-            <span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+            </span><span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
                     <span class="kw-2">*</span><span class="self">self
                 </span>}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>Debug <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>Debug <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
                     f.write_str(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$name</span>))
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>cmp::Eq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>cmp::Eq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$name</span>) -&gt; bool {
                     <span class="bool-val">true
                 </span>}
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-            <span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+            #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+            </span><span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
                 <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, _state: <span class="kw-2">&amp;mut </span>H) {}
             }
 
             <span class="kw">impl </span><span class="macro-nonterminal">$name </span>{
-                <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-                <span class="kw">pub fn </span>surround&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream, f: F)
+                <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+                </span><span class="kw">pub fn </span>surround&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream, f: F)
                 <span class="kw">where
                     </span>F: FnOnce(<span class="kw-2">&amp;mut </span>TokenStream),
                 {
@@ -1560,27 +1560,27 @@
                 }
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-            <span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+            </span><span class="kw">impl </span>private::Sealed <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
         )*
     };
 }
 
-<span class="macro">define_punctuation_structs!</span> {
+<span class="macro">define_punctuation_structs! </span>{
     <span class="string">&quot;_&quot; </span><span class="kw">pub struct </span>Underscore/<span class="number">1 </span><span class="doccomment">/// `_`
 </span>}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-<span class="kw">impl </span>ToTokens <span class="kw">for </span>Underscore {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+</span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Underscore {
     <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
         tokens.append(Ident::new(<span class="string">&quot;_&quot;</span>, <span class="self">self</span>.span));
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>Underscore {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>Underscore {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| {
             <span class="kw">if let </span><span class="prelude-val">Some</span>((ident, rest)) = cursor.ident() {
@@ -1598,8 +1598,8 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>Token <span class="kw">for </span>Underscore {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>Token <span class="kw">for </span>Underscore {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         <span class="kw">if let </span><span class="prelude-val">Some</span>((ident, _rest)) = cursor.ident() {
             <span class="kw">return </span>ident == <span class="string">&quot;_&quot;</span>;
@@ -1615,11 +1615,11 @@
     </span>}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>private::Sealed <span class="kw">for </span>Underscore {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>private::Sealed <span class="kw">for </span>Underscore {}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>Token <span class="kw">for </span>Paren {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>Token <span class="kw">for </span>Paren {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         lookahead::is_delimiter(cursor, Delimiter::Parenthesis)
     }
@@ -1629,8 +1629,8 @@
     </span>}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>Token <span class="kw">for </span>Brace {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>Token <span class="kw">for </span>Brace {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         lookahead::is_delimiter(cursor, Delimiter::Brace)
     }
@@ -1640,8 +1640,8 @@
     </span>}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>Token <span class="kw">for </span>Bracket {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>Token <span class="kw">for </span>Bracket {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         lookahead::is_delimiter(cursor, Delimiter::Bracket)
     }
@@ -1651,8 +1651,8 @@
     </span>}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>Token <span class="kw">for </span>Group {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>Token <span class="kw">for </span>Group {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         lookahead::is_delimiter(cursor, Delimiter::None)
     }
@@ -1662,7 +1662,7 @@
     </span>}
 }
 
-<span class="macro">define_keywords!</span> {
+<span class="macro">define_keywords! </span>{
     <span class="string">&quot;abstract&quot;    </span><span class="kw">pub struct </span>Abstract     <span class="doccomment">/// `abstract`
     </span><span class="string">&quot;as&quot;          </span><span class="kw">pub struct </span>As           <span class="doccomment">/// `as`
     </span><span class="string">&quot;async&quot;       </span><span class="kw">pub struct </span>Async        <span class="doccomment">/// `async`
@@ -1717,7 +1717,7 @@
     </span><span class="string">&quot;yield&quot;       </span><span class="kw">pub struct </span>Yield        <span class="doccomment">/// `yield`
 </span>}
 
-<span class="macro">define_punctuation!</span> {
+<span class="macro">define_punctuation! </span>{
     <span class="string">&quot;+&quot;           </span><span class="kw">pub struct </span>Add/<span class="number">1        </span><span class="doccomment">/// `+`
     </span><span class="string">&quot;+=&quot;          </span><span class="kw">pub struct </span>AddEq/<span class="number">2      </span><span class="doccomment">/// `+=`
     </span><span class="string">&quot;&amp;&quot;           </span><span class="kw">pub struct </span>And/<span class="number">1        </span><span class="doccomment">/// `&amp;`
@@ -1766,14 +1766,14 @@
     </span><span class="string">&quot;~&quot;           </span><span class="kw">pub struct </span>Tilde/<span class="number">1      </span><span class="doccomment">/// `~`
 </span>}
 
-<span class="macro">define_delimiters!</span> {
+<span class="macro">define_delimiters! </span>{
     <span class="string">&quot;{&quot;           </span><span class="kw">pub struct </span>Brace        <span class="doccomment">/// `{...}`
     </span><span class="string">&quot;[&quot;           </span><span class="kw">pub struct </span>Bracket      <span class="doccomment">/// `[...]`
     </span><span class="string">&quot;(&quot;           </span><span class="kw">pub struct </span>Paren        <span class="doccomment">/// `(...)`
     </span><span class="string">&quot; &quot;           </span><span class="kw">pub struct </span>Group        <span class="doccomment">/// None-delimited group
 </span>}
 
-<span class="macro">macro_rules!</span> export_token_macro {
+<span class="macro">macro_rules! </span>export_token_macro {
     ($(<span class="macro-nonterminal">$await_rule</span>:tt)<span class="kw-2">*</span>) =&gt; {
         <span class="doccomment">/// A type-macro that expands to the name of the Rust type representation of a
         /// given token.
@@ -1783,8 +1783,8 @@
         /// [token module]: crate::token
         </span><span class="comment">// Unfortunate duplication due to a rustdoc bug.
         // https://github.com/rust-lang/rust/issues/45939
-        </span><span class="attribute">#[macro_export]</span>
-        <span class="macro">macro_rules!</span> Token {
+        </span><span class="attribute">#[macro_export]
+        </span><span class="macro">macro_rules! </span>Token {
             [<span class="kw">abstract</span>]    =&gt; { <span class="macro-nonterminal">$crate::token::Abstract </span>};
             [<span class="kw">as</span>]          =&gt; { <span class="macro-nonterminal">$crate::token::As </span>};
             [<span class="kw">async</span>]       =&gt; { <span class="macro-nonterminal">$crate::token::Async </span>};
@@ -1891,15 +1891,15 @@
 <span class="comment">// Old rustc does not permit `await` appearing anywhere in the source file.
 // https://github.com/rust-lang/rust/issues/57919
 // We put the Token![await] rule in a place that is not lexed by old rustc.
-</span><span class="attribute">#[cfg(not(syn_omit_await_from_token_macro))]</span>
-<span class="macro">include!</span>(<span class="string">&quot;await.rs&quot;</span>); <span class="comment">// export_token_macro! {[await]}
-</span><span class="attribute">#[cfg(syn_omit_await_from_token_macro)]</span>
-<span class="macro">export_token_macro!</span> {}
+</span><span class="attribute">#[cfg(not(syn_omit_await_from_token_macro))]
+</span><span class="macro">include!</span>(<span class="string">&quot;await.rs&quot;</span>); <span class="comment">// export_token_macro! {[await]}
+</span><span class="attribute">#[cfg(syn_omit_await_from_token_macro)]
+</span><span class="macro">export_token_macro! </span>{}
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+</span><span class="attribute">#[doc(hidden)]
+#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
     <span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
     <span class="kw">use </span><span class="kw">crate</span>::parse::ParseStream;
@@ -1978,9 +1978,9 @@
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">pub mod </span>printing {
+</span><span class="attribute">#[doc(hidden)]
+#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">pub mod </span>printing {
     <span class="kw">use </span>proc_macro2::{Delimiter, Group, Ident, Punct, Spacing, Span, TokenStream};
     <span class="kw">use </span>quote::TokenStreamExt;
 
@@ -2025,4 +2025,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

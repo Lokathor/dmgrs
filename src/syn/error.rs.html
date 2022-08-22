@@ -414,14 +414,14 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
-</pre><pre class="rust"><code><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
+</pre><pre class="rust"><code><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
 <span class="kw">use </span><span class="kw">crate</span>::thread::ThreadBound;
 <span class="kw">use </span>proc_macro2::{
     Delimiter, Group, Ident, LexError, Literal, Punct, Spacing, Span, TokenStream, TokenTree,
 };
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">use </span>quote::ToTokens;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">use </span>quote::ToTokens;
 <span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug, Display};
 <span class="kw">use </span>std::iter::FromIterator;
 <span class="kw">use </span>std::slice;
@@ -513,8 +513,8 @@
     message: String,
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">struct </span>_Test
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">struct </span>_Test
 <span class="kw">where
     </span>Error: Send + Sync;
 
@@ -572,8 +572,8 @@
     ///
     /// When in doubt it&#39;s recommended to stick to `Error::new` (or
     /// `ParseStream::error`)!
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-    <span class="kw">pub fn </span>new_spanned&lt;T: ToTokens, U: Display&gt;(tokens: T, message: U) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+    </span><span class="kw">pub fn </span>new_spanned&lt;T: ToTokens, U: Display&gt;(tokens: T, message: U) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span><span class="kw-2">mut </span>iter = tokens.into_token_stream().into_iter();
         <span class="kw">let </span>start = iter.next().map_or_else(Span::call_site, |t| t.span());
         <span class="kw">let </span>end = iter.last().map_or(start, |t| t.span());
@@ -692,8 +692,8 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub fn </span>new_at&lt;T: Display&gt;(scope: Span, cursor: Cursor, message: T) -&gt; Error {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub fn </span>new_at&lt;T: Display&gt;(scope: Span, cursor: Cursor, message: T) -&gt; Error {
     <span class="kw">if </span>cursor.eof() {
         Error::new(scope, <span class="macro">format!</span>(<span class="string">&quot;unexpected end of input, {}&quot;</span>, message))
     } <span class="kw">else </span>{
@@ -702,8 +702,8 @@
     }
 }
 
-<span class="attribute">#[cfg(all(feature = <span class="string">&quot;parsing&quot;</span>, any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>)))]</span>
-<span class="kw">pub fn </span>new2&lt;T: Display&gt;(start: Span, end: Span, message: T) -&gt; Error {
+<span class="attribute">#[cfg(all(feature = <span class="string">&quot;parsing&quot;</span>, any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>)))]
+</span><span class="kw">pub fn </span>new2&lt;T: Display&gt;(start: Span, end: Span, message: T) -&gt; Error {
     Error {
         messages: <span class="macro">vec!</span>[ErrorMessage {
             start_span: ThreadBound::new(start),
@@ -831,4 +831,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

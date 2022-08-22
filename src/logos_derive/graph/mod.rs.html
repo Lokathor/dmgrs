@@ -579,8 +579,8 @@
 
 <span class="doccomment">/// Disambiguation error during the attempt to merge two leaf
 /// nodes with the same priority
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>DisambiguationError(<span class="kw">pub </span>NodeId, <span class="kw">pub </span>NodeId);
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>DisambiguationError(<span class="kw">pub </span>NodeId, <span class="kw">pub </span>NodeId);
 
 <span class="kw">pub struct </span>Graph&lt;Leaf&gt; {
     <span class="doccomment">/// Internal storage of all allocated nodes. Once a node is
@@ -616,8 +616,8 @@
 
 <span class="doccomment">/// Id of a Node in the graph. `NodeId` can be referencing an empty
 /// slot that is going to be populated later in time.
-</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub struct </span>NodeId(NonZeroU32);
+</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>NodeId(NonZeroU32);
 
 <span class="kw">impl </span>NodeId {
     <span class="kw">fn </span>get(<span class="self">self</span>) -&gt; usize {
@@ -635,8 +635,8 @@
 /// be able to clone a `ReservedId`, or create a new one from `NodeId`.
 ///
 /// `ReservedId` is consumed once passed into `Graph::insert`.
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>ReservedId(NodeId);
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ReservedId(NodeId);
 
 <span class="kw">impl </span>ReservedId {
     <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeId {
@@ -650,8 +650,8 @@
 ///
 /// `Merge::new(a, b)` should always equal to `Merge::new(b, a)` to ensure
 /// that node merges are symmetric.
-</span><span class="attribute">#[derive(PartialEq, Eq, PartialOrd, Ord, Debug)]</span>
-<span class="kw">struct </span>Merge(NodeId, NodeId);
+</span><span class="attribute">#[derive(PartialEq, Eq, PartialOrd, Ord, Debug)]
+</span><span class="kw">struct </span>Merge(NodeId, NodeId);
 
 <span class="kw">impl </span>Merge {
     <span class="kw">fn </span>new(a: NodeId, b: NodeId) -&gt; <span class="self">Self </span>{
@@ -666,8 +666,8 @@
 <span class="doccomment">/// When attempting to merge two nodes, one of which was not yet created,
 /// we can record such attempt, and execute the merge later on when the
 /// `awaiting` has been `insert`ed into the graph.
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>DeferredMerge {
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>DeferredMerge {
     awaiting: NodeId,
     with: NodeId,
     into: ReservedId,
@@ -1024,8 +1024,8 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(test, derive(PartialEq))]</span>
-<span class="kw">pub enum </span>Node&lt;Leaf&gt; {
+<span class="attribute">#[cfg_attr(test, derive(PartialEq))]
+</span><span class="kw">pub enum </span>Node&lt;Leaf&gt; {
     <span class="doccomment">/// Fork node, can lead to more than one state
     </span>Fork(Fork),
     <span class="doccomment">/// Rope node, can lead to one state on match, one state on miss
@@ -1068,13 +1068,13 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span>pretty_assertions::assert_eq;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>leaf_stack_size() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>leaf_stack_size() {
         <span class="kw">use </span>std::mem::size_of;
 
         <span class="kw">const </span>WORD: usize = size_of::&lt;usize&gt;();
@@ -1083,8 +1083,8 @@
         <span class="macro">assert!</span>(NODE &lt;= <span class="number">6 </span>* WORD, <span class="string">&quot;Size of Node&lt;()&gt; is {} bytes!&quot;</span>, NODE);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>create_a_loop() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>create_a_loop() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>token = graph.push(Node::Leaf(<span class="string">&quot;IDENT&quot;</span>));
@@ -1096,8 +1096,8 @@
         <span class="macro">assert_eq!</span>(graph[root], Fork::new().branch(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>, root).miss(token),);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>fork_off() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>fork_off() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
@@ -1113,4 +1113,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

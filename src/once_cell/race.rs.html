@@ -322,30 +322,30 @@
 //! `Acquire` and `Release` have very little performance overhead on most
 //! architectures versus `Relaxed`.
 
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;atomic-polyfill&quot;</span>)]</span>
-<span class="kw">use </span>atomic_polyfill <span class="kw">as </span>atomic;
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;atomic-polyfill&quot;</span>))]</span>
-<span class="kw">use </span>core::sync::atomic;
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;atomic-polyfill&quot;</span>)]
+</span><span class="kw">use </span>atomic_polyfill <span class="kw">as </span>atomic;
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;atomic-polyfill&quot;</span>))]
+</span><span class="kw">use </span>core::sync::atomic;
 
 <span class="kw">use </span>atomic::{AtomicUsize, Ordering};
 <span class="kw">use </span>core::num::NonZeroUsize;
 
 <span class="doccomment">/// A thread-safe cell which can be written to only once.
-</span><span class="attribute">#[derive(Default, Debug)]</span>
-<span class="kw">pub struct </span>OnceNonZeroUsize {
+</span><span class="attribute">#[derive(Default, Debug)]
+</span><span class="kw">pub struct </span>OnceNonZeroUsize {
     inner: AtomicUsize,
 }
 
 <span class="kw">impl </span>OnceNonZeroUsize {
     <span class="doccomment">/// Creates a new empty cell.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub const fn </span>new() -&gt; OnceNonZeroUsize {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub const fn </span>new() -&gt; OnceNonZeroUsize {
         OnceNonZeroUsize { inner: AtomicUsize::new(<span class="number">0</span>) }
     }
 
     <span class="doccomment">/// Gets the underlying value.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NonZeroUsize&gt; {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NonZeroUsize&gt; {
         <span class="kw">let </span>val = <span class="self">self</span>.inner.load(Ordering::Acquire);
         NonZeroUsize::new(val)
     }
@@ -354,8 +354,8 @@
     ///
     /// Returns `Ok(())` if the cell was empty and `Err(())` if it was
     /// full.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>set(<span class="kw-2">&amp;</span><span class="self">self</span>, value: NonZeroUsize) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>set(<span class="kw-2">&amp;</span><span class="self">self</span>, value: NonZeroUsize) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
         <span class="kw">let </span>exchange =
             <span class="self">self</span>.inner.compare_exchange(<span class="number">0</span>, value.get(), Ordering::AcqRel, Ordering::Acquire);
         <span class="kw">match </span>exchange {
@@ -410,21 +410,21 @@
 }
 
 <span class="doccomment">/// A thread-safe cell which can be written to only once.
-</span><span class="attribute">#[derive(Default, Debug)]</span>
-<span class="kw">pub struct </span>OnceBool {
+</span><span class="attribute">#[derive(Default, Debug)]
+</span><span class="kw">pub struct </span>OnceBool {
     inner: OnceNonZeroUsize,
 }
 
 <span class="kw">impl </span>OnceBool {
     <span class="doccomment">/// Creates a new empty cell.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub const fn </span>new() -&gt; OnceBool {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub const fn </span>new() -&gt; OnceBool {
         OnceBool { inner: OnceNonZeroUsize::new() }
     }
 
     <span class="doccomment">/// Gets the underlying value.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
         <span class="self">self</span>.inner.get().map(OnceBool::from_usize)
     }
 
@@ -432,8 +432,8 @@
     ///
     /// Returns `Ok(())` if the cell was empty and `Err(())` if it was
     /// full.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>set(<span class="kw-2">&amp;</span><span class="self">self</span>, value: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>set(<span class="kw-2">&amp;</span><span class="self">self</span>, value: bool) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
         <span class="self">self</span>.inner.set(OnceBool::to_usize(value))
     }
 
@@ -464,21 +464,21 @@
         <span class="self">self</span>.inner.get_or_try_init(|| f().map(OnceBool::to_usize)).map(OnceBool::from_usize)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>from_usize(value: NonZeroUsize) -&gt; bool {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>from_usize(value: NonZeroUsize) -&gt; bool {
         value.get() == <span class="number">1
     </span>}
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>to_usize(value: bool) -&gt; NonZeroUsize {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>to_usize(value: bool) -&gt; NonZeroUsize {
         <span class="kw">unsafe </span>{ NonZeroUsize::new_unchecked(<span class="kw">if </span>value { <span class="number">1 </span>} <span class="kw">else </span>{ <span class="number">2 </span>}) }
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">pub use </span><span class="self">self</span>::once_box::OnceBox;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">pub use </span><span class="self">self</span>::once_box::OnceBox;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">mod </span>once_box {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">mod </span>once_box {
     <span class="kw">use </span><span class="kw">super</span>::atomic::{AtomicPtr, Ordering};
     <span class="kw">use </span>core::{marker::PhantomData, ptr};
 
@@ -605,4 +605,4 @@
     </span><span class="kw">fn </span>_dummy() {}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -133,9 +133,9 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
-</pre><pre class="rust"><code><span class="attribute">#![forbid(unsafe_code)]</span>
+</pre><pre class="rust"><code><span class="attribute">#![forbid(unsafe_code)]
 
-<span class="doccomment">/// Find the offset in bytes of the given `$field` of `$Type`. Requires an
+</span><span class="doccomment">/// Find the offset in bytes of the given `$field` of `$Type`. Requires an
 /// already initialized `$instance` value to work with.
 ///
 /// This is similar to the macro from [`memoffset`](https://docs.rs/memoffset),
@@ -246,14 +246,14 @@
 /// use them to lift the limitations of packed structs. For the duration of the
 /// `1.x` version of this crate that will be behind an on-by-default cargo
 /// feature (to maintain minimum rust version support).
-</span><span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> offset_of {
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>offset_of {
   (<span class="macro-nonterminal">$instance</span>:expr, <span class="macro-nonterminal">$Type</span>:path, <span class="macro-nonterminal">$field</span>:tt) =&gt; {{
-    <span class="attribute">#[forbid(safe_packed_borrows)]</span>
-    {
+    <span class="attribute">#[forbid(safe_packed_borrows)]
+    </span>{
       <span class="comment">// This helps us guard against field access going through a Deref impl.
-      </span><span class="attribute">#[allow(clippy::unneeded_field_pattern)]</span>
-      <span class="kw">let </span><span class="macro-nonterminal">$Type </span>{ <span class="macro-nonterminal">$field</span>: <span class="kw">_</span>, .. };
+      </span><span class="attribute">#[allow(clippy::unneeded_field_pattern)]
+      </span><span class="kw">let </span><span class="macro-nonterminal">$Type </span>{ <span class="macro-nonterminal">$field</span>: <span class="kw">_</span>, .. };
       <span class="kw">let </span>reference: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$Type </span>= <span class="kw-2">&amp;</span><span class="macro-nonterminal">$instance</span>;
       <span class="kw">let </span>address = reference <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span>usize;
       <span class="kw">let </span>field_pointer = <span class="kw-2">&amp;</span>reference.<span class="macro-nonterminal">$field </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as </span>usize;
@@ -269,4 +269,4 @@
   }};
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

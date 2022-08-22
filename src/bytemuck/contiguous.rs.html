@@ -317,8 +317,8 @@
   ///
   /// This is undefined behavior regardless, so it could have been the nasal
   /// demons at that point anyway ;).
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>from_integer(value: <span class="self">Self</span>::Int) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">fn </span>from_integer(value: <span class="self">Self</span>::Int) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
     <span class="comment">// Guard against an illegal implementation of Contiguous. Annoyingly we
     // can&#39;t rely on `transmute` to do this for us (see below), but
     // whatever, this gets compiled into nothing in release.
@@ -352,8 +352,8 @@
   ///
   /// This is undefined behavior regardless, so it could have been the nasal
   /// demons at that point anyway ;).
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>into_integer(<span class="self">self</span>) -&gt; <span class="self">Self</span>::Int {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">fn </span>into_integer(<span class="self">self</span>) -&gt; <span class="self">Self</span>::Int {
     <span class="comment">// Guard against an illegal implementation of Contiguous. Annoyingly we
     // can&#39;t rely on `transmute` to do the size check for us (see
     // `from_integer&#39;s comment`), but whatever, this gets compiled into
@@ -368,7 +368,7 @@
   }
 }
 
-<span class="macro">macro_rules!</span> impl_contiguous {
+<span class="macro">macro_rules! </span>impl_contiguous {
   ($(<span class="macro-nonterminal">$src</span>:ty <span class="kw">as </span><span class="macro-nonterminal">$repr</span>:ident <span class="kw">in </span>[<span class="macro-nonterminal">$min</span>:expr, <span class="macro-nonterminal">$max</span>:expr];)<span class="kw-2">*</span>) =&gt; {$(
     <span class="kw">unsafe impl </span>Contiguous <span class="kw">for </span><span class="macro-nonterminal">$src </span>{
       <span class="kw">type </span>Int = <span class="macro-nonterminal">$repr</span>;
@@ -378,7 +378,7 @@
   )<span class="kw-2">*</span>};
 }
 
-<span class="macro">impl_contiguous!</span> {
+<span class="macro">impl_contiguous! </span>{
   bool <span class="kw">as </span>u8 <span class="kw">in </span>[<span class="number">0</span>, <span class="number">1</span>];
 
   u8 <span class="kw">as </span>u8 <span class="kw">in </span>[<span class="number">0</span>, u8::max_value()];
@@ -403,4 +403,4 @@
   NonZeroUsize <span class="kw">as </span>usize <span class="kw">in </span>[<span class="number">1</span>, usize::max_value()];
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -379,8 +379,8 @@ This module provides a regular expression printer for `Hir`.
 ///
 /// Note that since a printer doesn&#39;t have any configuration knobs, this type
 /// remains unexported.
-</span><span class="attribute">#[derive(Clone, Debug)]</span>
-<span class="kw">struct </span>PrinterBuilder {
+</span><span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">struct </span>PrinterBuilder {
     _priv: (),
 }
 
@@ -416,8 +416,8 @@ This module provides a regular expression printer for `Hir`.
 /// library could provide a constructor from this HIR explicitly, but that
 /// creates an unnecessary public coupling between the regex library and this
 /// specific HIR representation.)
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>Printer {
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Printer {
     _priv: (),
 }
 
@@ -436,8 +436,8 @@ This module provides a regular expression printer for `Hir`.
     }
 }
 
-<span class="attribute">#[derive(Debug)]</span>
-<span class="kw">struct </span>Writer&lt;W&gt; {
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>Writer&lt;W&gt; {
     wtr: W,
 }
 
@@ -602,8 +602,8 @@ This module provides a regular expression printer for `Hir`.
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use </span><span class="kw">super</span>::Printer;
     <span class="kw">use </span><span class="kw">crate</span>::ParserBuilder;
 
@@ -633,8 +633,8 @@ This module provides a regular expression printer for `Hir`.
         <span class="macro">assert_eq!</span>(expected, dst);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_literal() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_literal() {
         roundtrip(<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>);
         roundtrip(<span class="string">r&quot;\xff&quot;</span>, <span class="string">&quot;\u{FF}&quot;</span>);
         roundtrip_bytes(<span class="string">r&quot;\xff&quot;</span>, <span class="string">&quot;\u{FF}&quot;</span>);
@@ -642,8 +642,8 @@ This module provides a regular expression printer for `Hir`.
         roundtrip(<span class="string">&quot;☃&quot;</span>, <span class="string">&quot;☃&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_class() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_class() {
         roundtrip(<span class="string">r&quot;[a]&quot;</span>, <span class="string">r&quot;[a]&quot;</span>);
         roundtrip(<span class="string">r&quot;[a-z]&quot;</span>, <span class="string">r&quot;[a-z]&quot;</span>);
         roundtrip(<span class="string">r&quot;[a-z--b-c--x-y]&quot;</span>, <span class="string">r&quot;[ad-wz]&quot;</span>);
@@ -668,24 +668,24 @@ This module provides a regular expression printer for `Hir`.
         roundtrip_bytes(<span class="string">r&quot;(?-u)[Z-_--Z]&quot;</span>, <span class="string">r&quot;(?-u:[\[-_])&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_anchor() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_anchor() {
         roundtrip(<span class="string">r&quot;^&quot;</span>, <span class="string">r&quot;\A&quot;</span>);
         roundtrip(<span class="string">r&quot;$&quot;</span>, <span class="string">r&quot;\z&quot;</span>);
         roundtrip(<span class="string">r&quot;(?m)^&quot;</span>, <span class="string">r&quot;(?m:^)&quot;</span>);
         roundtrip(<span class="string">r&quot;(?m)$&quot;</span>, <span class="string">r&quot;(?m:$)&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_word_boundary() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_word_boundary() {
         roundtrip(<span class="string">r&quot;\b&quot;</span>, <span class="string">r&quot;\b&quot;</span>);
         roundtrip(<span class="string">r&quot;\B&quot;</span>, <span class="string">r&quot;\B&quot;</span>);
         roundtrip(<span class="string">r&quot;(?-u)\b&quot;</span>, <span class="string">r&quot;(?-u:\b)&quot;</span>);
         roundtrip_bytes(<span class="string">r&quot;(?-u)\B&quot;</span>, <span class="string">r&quot;(?-u:\B)&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_repetition() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_repetition() {
         roundtrip(<span class="string">&quot;a?&quot;</span>, <span class="string">&quot;a?&quot;</span>);
         roundtrip(<span class="string">&quot;a??&quot;</span>, <span class="string">&quot;a??&quot;</span>);
         roundtrip(<span class="string">&quot;(?U)a?&quot;</span>, <span class="string">&quot;a??&quot;</span>);
@@ -709,8 +709,8 @@ This module provides a regular expression printer for `Hir`.
         roundtrip(<span class="string">&quot;(?U)a{1,5}&quot;</span>, <span class="string">&quot;a{1,5}?&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_group() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_group() {
         roundtrip(<span class="string">&quot;()&quot;</span>, <span class="string">&quot;()&quot;</span>);
         roundtrip(<span class="string">&quot;(?P&lt;foo&gt;)&quot;</span>, <span class="string">&quot;(?P&lt;foo&gt;)&quot;</span>);
         roundtrip(<span class="string">&quot;(?:)&quot;</span>, <span class="string">&quot;(?:)&quot;</span>);
@@ -722,8 +722,8 @@ This module provides a regular expression printer for `Hir`.
         roundtrip(<span class="string">&quot;((((a))))&quot;</span>, <span class="string">&quot;((((a))))&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>print_alternation() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>print_alternation() {
         roundtrip(<span class="string">&quot;|&quot;</span>, <span class="string">&quot;|&quot;</span>);
         roundtrip(<span class="string">&quot;||&quot;</span>, <span class="string">&quot;||&quot;</span>);
 
@@ -733,4 +733,4 @@ This module provides a regular expression printer for `Hir`.
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

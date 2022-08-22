@@ -156,7 +156,7 @@
 
 <span class="comment">// Limited set of types which this is implemented for, as we want to avoid types
 // which will often include non-identifier characters in their `Display` impl.
-</span><span class="macro">macro_rules!</span> ident_fragment_display {
+</span><span class="macro">macro_rules! </span>ident_fragment_display {
     ($(<span class="macro-nonterminal">$T</span>:ty),<span class="kw-2">*</span>) =&gt; {
         $(
             <span class="kw">impl </span>IdentFragment <span class="kw">for </span><span class="macro-nonterminal">$T </span>{
@@ -171,4 +171,4 @@
 <span class="macro">ident_fragment_display!</span>(bool, str, String, char);
 <span class="macro">ident_fragment_display!</span>(u8, u16, u32, u64, u128, usize);
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="quote" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="quote" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -509,11 +509,11 @@
 //! In contrast to binary search or the `ucd-trie` crate, performing lookups in
 //! this data structure is straight-line code with no need for branching.
 
-</span><span class="attribute">#![no_std]</span>
-<span class="attribute">#![allow(clippy::doc_markdown, clippy::must_use_candidate)]</span>
+</span><span class="attribute">#![no_std]
+#![allow(clippy::doc_markdown, clippy::must_use_candidate)]
 
-<span class="attribute">#[rustfmt::skip]</span>
-<span class="kw">mod </span>tables;
+#[rustfmt::skip]
+</span><span class="kw">mod </span>tables;
 
 <span class="kw">use </span><span class="kw">crate</span>::tables::{ASCII_CONTINUE, ASCII_START, CHUNK, LEAF, TRIE_CONTINUE, TRIE_START};
 
@@ -535,4 +535,4 @@
     <span class="kw">unsafe </span>{ LEAF.<span class="number">0</span>.get_unchecked(offset) }.wrapping_shr(ch <span class="kw">as </span>u32 % <span class="number">8</span>) &amp; <span class="number">1 </span>!= <span class="number">0
 </span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="unicode_ident" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="unicode_ident" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

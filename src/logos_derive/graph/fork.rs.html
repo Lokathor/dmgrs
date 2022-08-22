@@ -269,8 +269,8 @@
 <span id="267">267</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::graph::{Disambiguate, Graph, NodeId, Range};
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub struct </span>Fork {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>Fork {
     <span class="doccomment">/// LUT matching byte -&gt; node id
     </span>lut: Box&lt;[<span class="prelude-ty">Option</span>&lt;NodeId&gt;; <span class="number">256</span>]&gt;,
     <span class="doccomment">/// State to go to if no arms are matching
@@ -420,14 +420,14 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::graph::Node;
     <span class="kw">use </span>pretty_assertions::assert_eq;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>fork_iter() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>fork_iter() {
         <span class="kw">let </span><span class="kw-2">mut </span>buf = [<span class="prelude-val">None</span>; <span class="number">256</span>];
 
         <span class="kw">for </span>byte <span class="kw">in </span><span class="string">b&#39;4&#39;</span>..=<span class="string">b&#39;7&#39; </span>{
@@ -463,8 +463,8 @@
         );
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>merge_no_conflict() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>merge_no_conflict() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf1 = graph.push(Node::Leaf(<span class="string">&quot;FOO&quot;</span>));
@@ -477,8 +477,8 @@
         <span class="macro">assert_eq!</span>(fork, Fork::new().branch(<span class="string">b&#39;1&#39;</span>, leaf1).branch(<span class="string">b&#39;2&#39;</span>, leaf2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>merge_miss_right() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>merge_miss_right() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf1 = graph.push(Node::Leaf(<span class="string">&quot;FOO&quot;</span>));
@@ -491,8 +491,8 @@
         <span class="macro">assert_eq!</span>(fork, Fork::new().branch(<span class="string">b&#39;1&#39;</span>, leaf1).miss(leaf2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>merge_miss_left() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>merge_miss_left() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf1 = graph.push(Node::Leaf(<span class="string">&quot;FOO&quot;</span>));
@@ -505,15 +505,15 @@
         <span class="macro">assert_eq!</span>(fork, Fork::new().branch(<span class="string">b&#39;2&#39;</span>, leaf2).miss(leaf1));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>contains_byte() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>contains_byte() {
         <span class="kw">let </span>fork = Fork::new().branch(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>, NodeId::new(<span class="number">42</span>));
 
         <span class="macro">assert_eq!</span>(fork.contains(<span class="string">b&#39;t&#39;</span>), <span class="prelude-val">Some</span>(NodeId::new(<span class="number">42</span>)));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>contains_range() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>contains_range() {
         <span class="kw">let </span>fork = Fork::new()
             .branch(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;m&#39;</span>, NodeId::new(<span class="number">42</span>))
             .branch(<span class="string">&#39;n&#39;</span>..=<span class="string">&#39;z&#39;</span>, NodeId::new(<span class="number">42</span>));
@@ -522,8 +522,8 @@
         <span class="macro">assert_eq!</span>(fork.contains(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;z&#39;</span>), <span class="prelude-val">Some</span>(NodeId::new(<span class="number">42</span>)));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>contains_different_ranges() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>contains_different_ranges() {
         <span class="kw">let </span>fork = Fork::new()
             .branch(<span class="string">&#39;a&#39;</span>..=<span class="string">&#39;m&#39;</span>, NodeId::new(<span class="number">42</span>))
             .branch(<span class="string">&#39;n&#39;</span>..=<span class="string">&#39;z&#39;</span>, NodeId::new(<span class="number">47</span>));
@@ -535,4 +535,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

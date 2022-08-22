@@ -575,8 +575,8 @@
 
 <span class="comment">// Helper type used within interpolations to allow for repeated binding names.
 // Implements the relevant traits, and exports a dummy `next()` method.
-</span><span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>RepInterp&lt;T&gt;(<span class="kw">pub </span>T);
+</span><span class="attribute">#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>RepInterp&lt;T&gt;(<span class="kw">pub </span>T);
 
 <span class="kw">impl</span>&lt;T&gt; RepInterp&lt;T&gt; {
     <span class="comment">// This method is intended to look like `Iterator::next`, and is called when
@@ -717,7 +717,7 @@
     });
 }
 
-<span class="macro">macro_rules!</span> push_punct {
+<span class="macro">macro_rules! </span>push_punct {
     (<span class="macro-nonterminal">$name</span>:ident <span class="macro-nonterminal">$spanned</span>:ident <span class="macro-nonterminal">$char1</span>:tt) =&gt; {
         <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>(tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append(Punct::new(<span class="macro-nonterminal">$char1</span>, Spacing::Alone));
@@ -836,8 +836,8 @@
 // This struct also has forwarding implementations of the formatting traits
 // `Octal`, `LowerHex`, `UpperHex`, and `Binary` to allow for their use within
 // `format_ident!`.
-</span><span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>IdentFragmentAdapter&lt;T: IdentFragment&gt;(<span class="kw">pub </span>T);
+</span><span class="attribute">#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>IdentFragmentAdapter&lt;T: IdentFragment&gt;(<span class="kw">pub </span>T);
 
 <span class="kw">impl</span>&lt;T: IdentFragment&gt; IdentFragmentAdapter&lt;T&gt; {
     <span class="kw">pub fn </span>span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Span&gt; {
@@ -875,4 +875,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="quote" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="quote" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

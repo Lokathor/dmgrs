@@ -210,8 +210,8 @@
 ///   [`std::error::Error`](https://doc.rust-lang.org/std/error/trait.Error.html)
 /// - [`std::io::Error`](https://doc.rust-lang.org/std/io/struct.Error.html) implements
 ///   [`From&lt;getrandom::Error&gt;`](https://doc.rust-lang.org/std/convert/trait.From.html).
-</span><span class="attribute">#[derive(Copy, Clone, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Error(NonZeroU32);
+</span><span class="attribute">#[derive(Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Error(NonZeroU32);
 
 <span class="kw">const fn </span>internal_error(n: u16) -&gt; Error {
     <span class="comment">// SAFETY: code &gt; 0 as INTERNAL_START &gt; 0 and adding n won&#39;t overflow a u32.
@@ -259,16 +259,16 @@
     /// error value can still be formatted via the `Display` implementation.
     ///
     /// [1]: https://doc.rust-lang.org/std/io/struct.Error.html#method.raw_os_error
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>raw_os_error(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;i32&gt; {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>raw_os_error(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;i32&gt; {
         <span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.get() &lt; <span class="self">Self</span>::INTERNAL_START {
             <span class="kw">match </span>() {
-                <span class="attribute">#[cfg(target_os = <span class="string">&quot;solid_asp3&quot;</span>)]</span>
-                <span class="comment">// On SOLID, negate the error code again to obtain the original
+                <span class="attribute">#[cfg(target_os = <span class="string">&quot;solid_asp3&quot;</span>)]
+                </span><span class="comment">// On SOLID, negate the error code again to obtain the original
                 // error code.
                 </span>() =&gt; <span class="prelude-val">Some</span>(-(<span class="self">self</span>.<span class="number">0</span>.get() <span class="kw">as </span>i32)),
-                <span class="attribute">#[cfg(not(target_os = <span class="string">&quot;solid_asp3&quot;</span>))]</span>
-                () =&gt; <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">0</span>.get() <span class="kw">as </span>i32),
+                <span class="attribute">#[cfg(not(target_os = <span class="string">&quot;solid_asp3&quot;</span>))]
+                </span>() =&gt; <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">0</span>.get() <span class="kw">as </span>i32),
             }
         } <span class="kw">else </span>{
             <span class="prelude-val">None
@@ -279,14 +279,14 @@
     ///
     /// This code can either come from the underlying OS, or be a custom error.
     /// Use [`Error::raw_os_error()`] to disambiguate.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub const fn </span>code(<span class="self">self</span>) -&gt; NonZeroU32 {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub const fn </span>code(<span class="self">self</span>) -&gt; NonZeroU32 {
         <span class="self">self</span>.<span class="number">0
     </span>}
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(unix)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(unix)] </span>{
         <span class="kw">fn </span>os_err(errno: i32, buf: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
             <span class="kw">let </span>buf_ptr = buf.as_mut_ptr() <span class="kw">as </span><span class="kw-2">*mut </span>libc::c_char;
             <span class="kw">if unsafe </span>{ libc::strerror_r(errno, buf_ptr, buf.len()) } != <span class="number">0 </span>{
@@ -363,16 +363,16 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use </span><span class="kw">super</span>::Error;
     <span class="kw">use </span>core::mem::size_of;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_size() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_size() {
         <span class="macro">assert_eq!</span>(size_of::&lt;Error&gt;(), <span class="number">4</span>);
         <span class="macro">assert_eq!</span>(size_of::&lt;<span class="prelude-ty">Result</span>&lt;(), Error&gt;&gt;(), <span class="number">4</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="getrandom" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="getrandom" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

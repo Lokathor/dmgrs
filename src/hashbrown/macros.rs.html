@@ -68,14 +68,14 @@
 <span id="68">68</span>
 <span id="69">69</span>
 </pre><pre class="rust"><code><span class="comment">// See the cfg-if crate.
-</span><span class="macro">macro_rules!</span> cfg_if {
+</span><span class="macro">macro_rules! </span>cfg_if {
     <span class="comment">// match if/else chains with a final `else`
     </span>($(
-        <span class="kw">if </span><span class="attribute">#[cfg($(<span class="macro-nonterminal">$meta</span>:meta),<span class="kw-2">*</span>)]</span> { $(<span class="macro-nonterminal">$it</span>:item)* }
+        <span class="kw">if </span><span class="attribute">#[cfg($(<span class="macro-nonterminal">$meta</span>:meta),<span class="kw-2">*</span>)] </span>{ $(<span class="macro-nonterminal">$it</span>:item)* }
     ) <span class="kw">else </span>* <span class="kw">else </span>{
         $(<span class="macro-nonterminal">$it2</span>:item)*
     }) =&gt; {
-        <span class="macro">cfg_if!</span> {
+        <span class="macro">cfg_if! </span>{
             @__items
             () ;
             $( ( ($(<span class="macro-nonterminal">$meta</span>),<span class="kw-2">*</span>) ($(<span class="macro-nonterminal">$it</span>)<span class="kw-2">*</span>) ), )*
@@ -85,12 +85,12 @@
 
     <span class="comment">// match if/else chains lacking a final `else`
     </span>(
-        <span class="kw">if </span><span class="attribute">#[cfg($(<span class="macro-nonterminal">$i_met</span>:meta),<span class="kw-2">*</span>)]</span> { $(<span class="macro-nonterminal">$i_it</span>:item)* }
+        <span class="kw">if </span><span class="attribute">#[cfg($(<span class="macro-nonterminal">$i_met</span>:meta),<span class="kw-2">*</span>)] </span>{ $(<span class="macro-nonterminal">$i_it</span>:item)* }
         $(
-            <span class="kw">else if </span><span class="attribute">#[cfg($(<span class="macro-nonterminal">$e_met</span>:meta),<span class="kw-2">*</span>)]</span> { $(<span class="macro-nonterminal">$e_it</span>:item)* }
+            <span class="kw">else if </span><span class="attribute">#[cfg($(<span class="macro-nonterminal">$e_met</span>:meta),<span class="kw-2">*</span>)] </span>{ $(<span class="macro-nonterminal">$e_it</span>:item)* }
         )*
     ) =&gt; {
-        <span class="macro">cfg_if!</span> {
+        <span class="macro">cfg_if! </span>{
             @__items
             () ;
             ( ($(<span class="macro-nonterminal">$i_met</span>),<span class="kw-2">*</span>) ($(<span class="macro-nonterminal">$i_it</span>)<span class="kw-2">*</span>) ),
@@ -108,33 +108,33 @@
         <span class="comment">// Emit all items within one block, applying an approprate #[cfg]. The
         // #[cfg] will require all `$m` matchers specified and must also negate
         // all previous matchers.
-        </span><span class="macro">cfg_if!</span> { @__apply cfg(all($(<span class="macro-nonterminal">$m</span>,)* not(any($(<span class="macro-nonterminal">$not</span>),<span class="kw-2">*</span>)))), $(<span class="macro-nonterminal">$it</span>)* }
+        </span><span class="macro">cfg_if! </span>{ @__apply cfg(all($(<span class="macro-nonterminal">$m</span>,)* not(any($(<span class="macro-nonterminal">$not</span>),<span class="kw-2">*</span>)))), $(<span class="macro-nonterminal">$it</span>)* }
 
         <span class="comment">// Recurse to emit all other items in `$rest`, and when we do so add all
         // our `$m` matchers to the list of `$not` matchers as future emissions
         // will have to negate everything we just matched as well.
-        </span><span class="macro">cfg_if!</span> { @__items ($(<span class="macro-nonterminal">$not</span>,)* $(<span class="macro-nonterminal">$m</span>,)<span class="kw-2">*</span>) ; $(<span class="macro-nonterminal">$rest</span>)* }
+        </span><span class="macro">cfg_if! </span>{ @__items ($(<span class="macro-nonterminal">$not</span>,)* $(<span class="macro-nonterminal">$m</span>,)<span class="kw-2">*</span>) ; $(<span class="macro-nonterminal">$rest</span>)* }
     };
 
     <span class="comment">// Internal macro to Apply a cfg attribute to a list of items
     </span>(@__apply <span class="macro-nonterminal">$m</span>:meta, $(<span class="macro-nonterminal">$it</span>:item)<span class="kw-2">*</span>) =&gt; {
-        $(<span class="attribute">#[<span class="macro-nonterminal">$m</span>]</span> <span class="macro-nonterminal">$it</span>)*
+        $(<span class="attribute">#[<span class="macro-nonterminal">$m</span>] </span><span class="macro-nonterminal">$it</span>)*
     };
 }
 
 <span class="comment">// Helper macro for specialization. This also helps avoid parse errors if the
 // default fn syntax for specialization changes in the future.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-<span class="macro">macro_rules!</span> default_fn {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+</span><span class="macro">macro_rules! </span>default_fn {
 	($(<span class="macro-nonterminal">$tt</span>:tt)<span class="kw-2">*</span>) =&gt; {
         default $(<span class="macro-nonterminal">$tt</span>)*
     }
 }
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;nightly&quot;</span>))]</span>
-<span class="macro">macro_rules!</span> default_fn {
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;nightly&quot;</span>))]
+</span><span class="macro">macro_rules! </span>default_fn {
 	($(<span class="macro-nonterminal">$tt</span>:tt)<span class="kw-2">*</span>) =&gt; {
         $(<span class="macro-nonterminal">$tt</span>)*
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

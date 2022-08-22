@@ -872,13 +872,13 @@
 </pre><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::punctuated::Punctuated;
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A path at which a named item is exported (e.g. `std::collections::HashMap`).
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>Path {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>Path {
         <span class="kw">pub </span>leading_colon: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[::]&gt;,
         <span class="kw">pub </span>segments: Punctuated&lt;PathSegment, <span class="macro">Token!</span>[::]&gt;,
     }
@@ -898,13 +898,13 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A segment of a path together with any path arguments on that segment.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>PathSegment {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>PathSegment {
         <span class="kw">pub </span>ident: Ident,
         <span class="kw">pub </span>arguments: PathArguments,
     }
@@ -922,7 +922,7 @@
     }
 }
 
-<span class="macro">ast_enum!</span> {
+<span class="macro">ast_enum! </span>{
     <span class="doccomment">/// Angle bracketed or parenthesized arguments of a path segment.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
@@ -935,8 +935,8 @@
     /// ## Parenthesized
     ///
     /// The `(A, B) -&gt; C` in `Fn(A, B) -&gt; C`.
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub enum </span>PathArguments {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub enum </span>PathArguments {
         <span class="prelude-val">None</span>,
         <span class="doccomment">/// The `&lt;&#39;a, T&gt;` in `std::slice::iter&lt;&#39;a, T&gt;`.
         </span>AngleBracketed(AngleBracketedGenericArguments),
@@ -960,8 +960,8 @@
         }
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-    <span class="kw">fn </span>is_none(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+    </span><span class="kw">fn </span>is_none(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
             PathArguments::None =&gt; <span class="bool-val">true</span>,
             PathArguments::AngleBracketed(<span class="kw">_</span>) | PathArguments::Parenthesized(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
@@ -969,13 +969,13 @@
     }
 }
 
-<span class="macro">ast_enum!</span> {
+<span class="macro">ast_enum! </span>{
     <span class="doccomment">/// An individual generic argument, like `&#39;a`, `T`, or `Item = T`.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub enum </span>GenericArgument {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub enum </span>GenericArgument {
         <span class="doccomment">/// A lifetime argument.
         </span>Lifetime(Lifetime),
         <span class="doccomment">/// A type argument.
@@ -993,14 +993,14 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// Angle bracketed arguments of a path segment: the `&lt;K, V&gt;` in `HashMap&lt;K,
     /// V&gt;`.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>AngleBracketedGenericArguments {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>AngleBracketedGenericArguments {
         <span class="kw">pub </span>colon2_token: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[::]&gt;,
         <span class="kw">pub </span>lt_token: <span class="macro">Token!</span>[&lt;],
         <span class="kw">pub </span>args: Punctuated&lt;GenericArgument, <span class="macro">Token!</span>[,]&gt;,
@@ -1008,40 +1008,40 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A binding (equality constraint) on an associated type: `Item = u8`.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>Binding {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>Binding {
         <span class="kw">pub </span>ident: Ident,
         <span class="kw">pub </span>eq_token: <span class="macro">Token!</span>[=],
         <span class="kw">pub </span>ty: Type,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An associated type bound: `Iterator&lt;Item: Display&gt;`.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>Constraint {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>Constraint {
         <span class="kw">pub </span>ident: Ident,
         <span class="kw">pub </span>colon_token: <span class="macro">Token!</span>[:],
         <span class="kw">pub </span>bounds: Punctuated&lt;TypeParamBound, <span class="macro">Token!</span>[+]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// Arguments of a function path segment: the `(A, B) -&gt; C` in `Fn(A,B) -&gt;
     /// C`.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>ParenthesizedGenericArguments {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>ParenthesizedGenericArguments {
         <span class="kw">pub </span>paren_token: token::Paren,
         <span class="doccomment">/// `(A, B)`
         </span><span class="kw">pub </span>inputs: Punctuated&lt;Type, <span class="macro">Token!</span>[,]&gt;,
@@ -1050,7 +1050,7 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// The explicit Self type in a qualified path: the `T` in `&lt;T as
     /// Display&gt;::fmt`.
     ///
@@ -1070,8 +1070,8 @@
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` or `&quot;full&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]</span>
-    <span class="kw">pub struct </span>QSelf {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))))]
+    </span><span class="kw">pub struct </span>QSelf {
         <span class="kw">pub </span>lt_token: <span class="macro">Token!</span>[&lt;],
         <span class="kw">pub </span>ty: Box&lt;Type&gt;,
         <span class="kw">pub </span>position: usize,
@@ -1080,22 +1080,22 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="kw">use </span><span class="kw">crate</span>::ext::IdentExt;
     <span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream, <span class="prelude-ty">Result</span>};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Path {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Path {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="self">Self</span>::parse_helper(input, <span class="bool-val">false</span>)
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>GenericArgument {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>GenericArgument {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">if </span>input.peek(Lifetime) &amp;&amp; !input.peek2(<span class="macro">Token!</span>[+]) {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(GenericArgument::Lifetime(input.parse()<span class="question-mark">?</span>));
@@ -1112,13 +1112,13 @@
                 } <span class="kw">else if </span>input.peek(token::Brace) {
                     <span class="kw">let </span>begin = input.fork();
 
-                    <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-                    {
+                    <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+                    </span>{
                         input.parse::&lt;ExprBlock&gt;()<span class="question-mark">?</span>;
                     }
 
-                    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;full&quot;</span>))]</span>
-                    {
+                    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;full&quot;</span>))]
+                    </span>{
                         <span class="kw">let </span>content;
                         <span class="macro">braced!</span>(content <span class="kw">in </span>input);
                         content.parse::&lt;Expr&gt;()<span class="question-mark">?</span>;
@@ -1136,8 +1136,8 @@
                 }));
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-            {
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+            </span>{
                 <span class="kw">if </span>input.peek(Ident) &amp;&amp; input.peek2(<span class="macro">Token!</span>[:]) &amp;&amp; !input.peek2(<span class="macro">Token!</span>[::]) {
                     <span class="kw">return </span><span class="prelude-val">Ok</span>(GenericArgument::Constraint(input.parse()<span class="question-mark">?</span>));
                 }
@@ -1147,13 +1147,13 @@
                 <span class="kw">return </span>const_argument(input).map(GenericArgument::Const);
             }
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-            <span class="kw">let </span>begin = input.fork();
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+            </span><span class="kw">let </span>begin = input.fork();
 
             <span class="kw">let </span>argument: Type = input.parse()<span class="question-mark">?</span>;
 
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-            {
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+            </span>{
                 <span class="kw">if match </span><span class="kw-2">&amp;</span>argument {
                     Type::Path(argument)
                         <span class="kw">if </span>argument.qself.is_none()
@@ -1194,8 +1194,8 @@
             <span class="kw">return </span><span class="prelude-val">Ok</span>(Expr::Lit(lit));
         }
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-        {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+        </span>{
             <span class="kw">if </span>input.peek(Ident) {
                 <span class="kw">let </span>ident: Ident = input.parse()<span class="question-mark">?</span>;
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(Expr::Path(ExprPath {
@@ -1207,14 +1207,14 @@
         }
 
         <span class="kw">if </span>input.peek(token::Brace) {
-            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-            {
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+            </span>{
                 <span class="kw">let </span>block: ExprBlock = input.parse()<span class="question-mark">?</span>;
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(Expr::Block(block));
             }
 
-            <span class="attribute">#[cfg(not(feature = <span class="string">&quot;full&quot;</span>))]</span>
-            {
+            <span class="attribute">#[cfg(not(feature = <span class="string">&quot;full&quot;</span>))]
+            </span>{
                 <span class="kw">let </span>begin = input.fork();
                 <span class="kw">let </span>content;
                 <span class="macro">braced!</span>(content <span class="kw">in </span>input);
@@ -1227,8 +1227,8 @@
         <span class="prelude-val">Err</span>(lookahead.error())
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>AngleBracketedGenericArguments {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>AngleBracketedGenericArguments {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(AngleBracketedGenericArguments {
                 colon2_token: input.parse()<span class="question-mark">?</span>,
@@ -1254,8 +1254,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ParenthesizedGenericArguments {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ParenthesizedGenericArguments {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>content;
             <span class="prelude-val">Ok</span>(ParenthesizedGenericArguments {
@@ -1266,8 +1266,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>PathSegment {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>PathSegment {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="self">Self</span>::parse_helper(input, <span class="bool-val">false</span>)
         }
@@ -1299,8 +1299,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Binding {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Binding {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(Binding {
                 ident: input.parse()<span class="question-mark">?</span>,
@@ -1310,9 +1310,9 @@
         }
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Constraint {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Constraint {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(Constraint {
                 ident: input.parse()<span class="question-mark">?</span>,
@@ -1322,8 +1322,8 @@
         }
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-    <span class="kw">fn </span>constraint_bounds(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;Punctuated&lt;TypeParamBound, <span class="macro">Token!</span>[+]&gt;&gt; {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+    </span><span class="kw">fn </span>constraint_bounds(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;Punctuated&lt;TypeParamBound, <span class="macro">Token!</span>[+]&gt;&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>bounds = Punctuated::new();
         <span class="kw">loop </span>{
             <span class="kw">if </span>input.peek(<span class="macro">Token!</span>[,]) || input.peek(<span class="macro">Token!</span>[&gt;]) {
@@ -1374,8 +1374,8 @@
         ///     }
         /// }
         /// ```
-        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-        <span class="kw">pub fn </span>parse_mod_style(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+        </span><span class="kw">pub fn </span>parse_mod_style(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(Path {
                 leading_colon: input.parse()<span class="question-mark">?</span>,
                 segments: {
@@ -1438,8 +1438,8 @@
         ///     }
         /// }
         /// ```
-        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-        <span class="kw">pub fn </span>is_ident&lt;I: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ident: <span class="kw-2">&amp;</span>I) -&gt; bool
+        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+        </span><span class="kw">pub fn </span>is_ident&lt;I: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ident: <span class="kw-2">&amp;</span>I) -&gt; bool
         <span class="kw">where
             </span>Ident: PartialEq&lt;I&gt;,
         {
@@ -1460,8 +1460,8 @@
         ///
         /// *This function is available only if Syn is built with the `&quot;parsing&quot;`
         /// feature.*
-        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-        <span class="kw">pub fn </span>get_ident(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Ident&gt; {
+        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+        </span><span class="kw">pub fn </span>get_ident(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Ident&gt; {
             <span class="kw">if </span><span class="self">self</span>.leading_colon.is_none()
                 &amp;&amp; <span class="self">self</span>.segments.len() == <span class="number">1
                 </span>&amp;&amp; <span class="self">self</span>.segments[<span class="number">0</span>].arguments.is_none()
@@ -1554,32 +1554,32 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::print::TokensOrDefault;
     <span class="kw">use </span>proc_macro2::TokenStream;
     <span class="kw">use </span>quote::ToTokens;
     <span class="kw">use </span>std::cmp;
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Path {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Path {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.leading_colon.to_tokens(tokens);
             <span class="self">self</span>.segments.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PathSegment {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PathSegment {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.ident.to_tokens(tokens);
             <span class="self">self</span>.arguments.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PathArguments {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PathArguments {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="kw">match </span><span class="self">self </span>{
                 PathArguments::None =&gt; {}
@@ -1593,10 +1593,10 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>GenericArgument {
-        <span class="attribute">#[allow(clippy::match_same_arms)]</span>
-        <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>GenericArgument {
+        <span class="attribute">#[allow(clippy::match_same_arms)]
+        </span><span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="kw">match </span><span class="self">self </span>{
                 GenericArgument::Lifetime(lt) =&gt; lt.to_tokens(tokens),
                 GenericArgument::Type(ty) =&gt; ty.to_tokens(tokens),
@@ -1608,8 +1608,8 @@
                     <span class="comment">// NOTE: We should probably support parsing blocks with only
                     // expressions in them without the full feature for const
                     // generics.
-                    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-                    Expr::Block(<span class="kw">_</span>) =&gt; e.to_tokens(tokens),
+                    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+                    </span>Expr::Block(<span class="kw">_</span>) =&gt; e.to_tokens(tokens),
 
                     <span class="comment">// ERROR CORRECTION: Add braces to make sure that the
                     // generated code is valid.
@@ -1621,8 +1621,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>AngleBracketedGenericArguments {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>AngleBracketedGenericArguments {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.colon2_token.to_tokens(tokens);
             <span class="self">self</span>.lt_token.to_tokens(tokens);
@@ -1678,8 +1678,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Binding {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Binding {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.ident.to_tokens(tokens);
             <span class="self">self</span>.eq_token.to_tokens(tokens);
@@ -1687,8 +1687,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Constraint {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Constraint {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.ident.to_tokens(tokens);
             <span class="self">self</span>.colon_token.to_tokens(tokens);
@@ -1696,8 +1696,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ParenthesizedGenericArguments {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ParenthesizedGenericArguments {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.paren_token.surround(tokens, |tokens| {
                 <span class="self">self</span>.inputs.to_tokens(tokens);
@@ -1741,4 +1741,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

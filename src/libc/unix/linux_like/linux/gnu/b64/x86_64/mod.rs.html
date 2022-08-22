@@ -833,12 +833,12 @@
 <span class="kw">pub type </span>__u64 = ::c_ulonglong;
 <span class="kw">pub type </span>__s64 = ::c_longlong;
 
-<span class="macro">s!</span> {
+<span class="macro">s! </span>{
     <span class="kw">pub struct </span>sigaction {
         <span class="kw">pub </span>sa_sigaction: ::sighandler_t,
         <span class="kw">pub </span>sa_mask: ::sigset_t,
-        <span class="attribute">#[cfg(target_arch = <span class="string">&quot;sparc64&quot;</span>)]</span>
-        __reserved0: ::c_int,
+        <span class="attribute">#[cfg(target_arch = <span class="string">&quot;sparc64&quot;</span>)]
+        </span>__reserved0: ::c_int,
         <span class="kw">pub </span>sa_flags: ::c_int,
         <span class="kw">pub </span>sa_restorer: ::Option&lt;<span class="kw">extern fn</span>()&gt;,
     }
@@ -879,14 +879,14 @@
         <span class="kw">pub </span>si_signo: ::c_int,
         <span class="kw">pub </span>si_errno: ::c_int,
         <span class="kw">pub </span>si_code: ::c_int,
-        <span class="attribute">#[doc(hidden)]</span>
-        <span class="attribute">#[deprecated(
+        <span class="attribute">#[doc(hidden)]
+        #[deprecated(
             since=<span class="string">&quot;0.2.54&quot;</span>,
             note=<span class="string">&quot;Please leave a comment on \
                   https://github.com/rust-lang/libc/pull/1316 if you&#39;re using \
                   this field&quot;
-        </span>)]</span>
-        <span class="kw">pub </span>_pad: [::c_int; <span class="number">29</span>],
+        </span>)]
+        </span><span class="kw">pub </span>_pad: [::c_int; <span class="number">29</span>],
         _align: [u64; <span class="number">0</span>],
     }
 
@@ -969,10 +969,10 @@
     }
 
     <span class="kw">pub struct </span>pthread_attr_t {
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        __size: [u32; <span class="number">8</span>],
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
-        __size: [u64; <span class="number">7</span>]
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span>__size: [u32; <span class="number">8</span>],
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+        </span>__size: [u64; <span class="number">7</span>]
     }
 
     <span class="kw">pub struct </span>_libc_fpxreg {
@@ -1040,11 +1040,11 @@
         <span class="kw">pub </span>start_stack: ::c_ulonglong,
         <span class="kw">pub </span>signal: ::c_longlong,
         __reserved: ::c_int,
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        __pad1: u32,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span>__pad1: u32,
         <span class="kw">pub </span>u_ar0: <span class="kw-2">*mut </span>user_regs_struct,
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        __pad2: u32,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span>__pad2: u32,
         <span class="kw">pub </span>u_fpstate: <span class="kw-2">*mut </span>user_fpregs_struct,
         <span class="kw">pub </span>magic: ::c_ulonglong,
         <span class="kw">pub </span>u_comm: [::c_char; <span class="number">32</span>],
@@ -1091,7 +1091,7 @@
     }
 }
 
-<span class="macro">s_no_extra_traits!</span> {
+<span class="macro">s_no_extra_traits! </span>{
     <span class="kw">pub struct </span>user_fpregs_struct {
         <span class="kw">pub </span>cwd: ::c_ushort,
         <span class="kw">pub </span>swd: ::c_ushort,
@@ -1121,8 +1121,8 @@
     </span>}
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;extra_traits&quot;</span>)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;extra_traits&quot;</span>)] </span>{
         <span class="kw">impl </span>PartialEq <span class="kw">for </span>user_fpregs_struct {
             <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>user_fpregs_struct) -&gt; bool {
                 <span class="self">self</span>.cwd == other.cwd
@@ -1344,8 +1344,8 @@
 <span class="kw">pub const </span>SIGIO: ::c_int = <span class="number">29</span>;
 <span class="kw">pub const </span>SIGSYS: ::c_int = <span class="number">31</span>;
 <span class="kw">pub const </span>SIGSTKFLT: ::c_int = <span class="number">16</span>;
-<span class="attribute">#[deprecated(since = <span class="string">&quot;0.2.55&quot;</span>, note = <span class="string">&quot;Use SIGSYS instead&quot;</span>)]</span>
-<span class="kw">pub const </span>SIGUNUSED: ::c_int = <span class="number">31</span>;
+<span class="attribute">#[deprecated(since = <span class="string">&quot;0.2.55&quot;</span>, note = <span class="string">&quot;Use SIGSYS instead&quot;</span>)]
+</span><span class="kw">pub const </span>SIGUNUSED: ::c_int = <span class="number">31</span>;
 <span class="kw">pub const </span>SIGPOLL: ::c_int = <span class="number">29</span>;
 <span class="kw">pub const </span>SIGPWR: ::c_int = <span class="number">30</span>;
 <span class="kw">pub const </span>SIG_SETMASK: ::c_int = <span class="number">2</span>;
@@ -1630,8 +1630,8 @@
     <span class="kw">pub fn </span>ioperm(from: ::c_ulong, num: ::c_ulong, turn_on: ::c_int) -&gt; ::c_int;
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)] </span>{
         <span class="kw">mod </span>x32;
         <span class="kw">pub use </span><span class="self">self</span>::x32::<span class="kw-2">*</span>;
     } <span class="kw">else </span>{
@@ -1640,11 +1640,11 @@
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)] </span>{
         <span class="kw">mod </span>align;
         <span class="kw">pub use </span><span class="self">self</span>::align::<span class="kw-2">*</span>;
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -19,8 +19,8 @@ or <code>MutexGuard&lt;T&gt;</code>.</p>
 
 <span class="kw">use </span>once_cell::sync::OnceCell;
 
-<span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>Logger {
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Logger {
     <span class="comment">// ...
 </span>}
 <span class="kw">static </span>INSTANCE: OnceCell&lt;Logger&gt; = OnceCell::new();
@@ -109,7 +109,7 @@ directly, because that will allow you to access <code>self</code> during initial
 <p>This is a <code>regex!</code> macro which takes a string literal and returns an
 <em>expression</em> that evaluates to a <code>&amp;'static Regex</code>:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">macro_rules!</span> regex {
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">macro_rules! </span>regex {
     (<span class="macro-nonterminal">$re</span>:literal $(,)<span class="question-mark">?</span>) =&gt; {{
         <span class="kw">static </span>RE: once_cell::sync::OnceCell&lt;regex::Regex&gt; = once_cell::sync::OnceCell::new();
         RE.get_or_init(|| regex::Regex::new(<span class="macro-nonterminal">$re</span>).unwrap())
@@ -147,8 +147,8 @@ runtime:</p>
 
 <span class="kw">static </span>TEST_IMAGE: TestResource = TestResource::new(<span class="string">&quot;test_data/lena.png&quot;</span>);
 
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_sobel_filter() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_sobel_filter() {
     <span class="kw">let </span>rgb: <span class="kw-2">&amp;</span>[u8] = TEST_IMAGE.bytes();
     <span class="comment">// ...
 </span>}</code></pre></div>
@@ -158,8 +158,8 @@ runtime:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>once_cell::sync::OnceCell;
 
-<span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>LateInit&lt;T&gt; { cell: OnceCell&lt;T&gt; }
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>LateInit&lt;T&gt; { cell: OnceCell&lt;T&gt; }
 
 <span class="kw">impl</span>&lt;T&gt; LateInit&lt;T&gt; {
     <span class="kw">pub fn </span>init(<span class="kw-2">&amp;</span><span class="self">self</span>, value: T) {
@@ -178,13 +178,13 @@ runtime:</p>
     }
 }
 
-<span class="attribute">#[derive(Default, Debug)]</span>
-<span class="kw">struct </span>A&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="attribute">#[derive(Default, Debug)]
+</span><span class="kw">struct </span>A&lt;<span class="lifetime">&#39;a</span>&gt; {
     b: LateInit&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>B&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
 }
 
-<span class="attribute">#[derive(Default, Debug)]</span>
-<span class="kw">struct </span>B&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="attribute">#[derive(Default, Debug)]
+</span><span class="kw">struct </span>B&lt;<span class="lifetime">&#39;a</span>&gt; {
     a: LateInit&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>A&lt;<span class="lifetime">&#39;a</span>&gt;&gt;
 }
 
@@ -253,4 +253,4 @@ might be easier to debug than a deadlock.</p>
 See the <a href="https://github.com/rust-lang/rust/issues/74465">tracking issue</a>.</p>
 </div></details><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="race/index.html" title="once_cell::race mod">race</a></div><div class="item-right docblock-short"><p>Thread-safe, non-blocking, “first one wins” flavor of <code>OnceCell</code>.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="unsync/index.html" title="once_cell::unsync mod">unsync</a></div><div class="item-right docblock-short"><p>Single-threaded version of <code>OnceCell</code>.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

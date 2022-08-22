@@ -98,8 +98,8 @@
     initialize();
 }
 
-<span class="attribute">#[cfg(not(no_is_available))]</span>
-<span class="kw">fn </span>initialize() {
+<span class="attribute">#[cfg(not(no_is_available))]
+</span><span class="kw">fn </span>initialize() {
     <span class="kw">let </span>available = proc_macro::is_available();
     WORKS.store(available <span class="kw">as </span>usize + <span class="number">1</span>, Ordering::Relaxed);
 }
@@ -128,8 +128,8 @@
 // here. For now, if a user needs to guarantee that this failure mode does
 // not occur, they need to call e.g. `proc_macro2::Span::call_site()` from
 // the main thread before launching any other threads.
-</span><span class="attribute">#[cfg(no_is_available)]</span>
-<span class="kw">fn </span>initialize() {
+</span><span class="attribute">#[cfg(no_is_available)]
+</span><span class="kw">fn </span>initialize() {
     <span class="kw">use </span>std::panic::{<span class="self">self</span>, PanicInfo};
 
     <span class="kw">type </span>PanicHook = <span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>PanicInfo) + Sync + Send + <span class="lifetime">&#39;static</span>;
@@ -149,4 +149,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

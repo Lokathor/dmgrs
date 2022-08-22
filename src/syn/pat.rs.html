@@ -926,7 +926,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::punctuated::Punctuated;
 <span class="kw">use </span>proc_macro2::TokenStream;
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// A pattern in a local binding, function signature, match expression, or
     /// various other places.
     ///
@@ -937,9 +937,9 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="attribute">#[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]</span>
-    <span class="kw">pub enum </span>Pat {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    #[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]
+    </span><span class="kw">pub enum </span>Pat {
         <span class="doccomment">/// A box pattern: `box v`.
         </span>Box(PatBox),
 
@@ -1015,33 +1015,33 @@
         // a variant. You will be notified by a test failure when a variant is
         // added, so that you can add code to handle it, but your library will
         // continue to compile and work for downstream users in the interim.
-        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-        <span class="attribute">#[doc(hidden)]</span>
-        __NonExhaustive,
+        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]
+        #[doc(hidden)]
+        </span>__NonExhaustive,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A box pattern: `box v`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatBox {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatBox {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>box_token: <span class="macro">Token!</span>[<span class="kw">box</span>],
         <span class="kw">pub </span>pat: Box&lt;Pat&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A pattern that binds a new variable: `ref mut binding @ SUBPATTERN`.
     ///
     /// It may also be a unit struct or struct variant (e.g. `None`), or a
     /// constant; these cannot be distinguished syntactically.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatIdent {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatIdent {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>by_ref: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw-2">ref</span>]&gt;,
         <span class="kw">pub </span>mutability: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw-2">mut</span>]&gt;,
@@ -1050,44 +1050,44 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A literal pattern: `0`.
     ///
     /// This holds an `Expr` rather than a `Lit` because negative numbers
     /// are represented as an `Expr::Unary`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatLit {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatLit {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>expr: Box&lt;Expr&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A macro in pattern position.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatMacro {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatMacro {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>mac: Macro,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A pattern that matches any one of a set of cases.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatOr {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatOr {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>leading_vert: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[|]&gt;,
         <span class="kw">pub </span>cases: Punctuated&lt;Pat, <span class="macro">Token!</span>[|]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A path pattern like `Color::Red`, optionally qualified with a
     /// self-type.
     ///
@@ -1097,20 +1097,20 @@
     /// associated constants.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatPath {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatPath {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>qself: <span class="prelude-ty">Option</span>&lt;QSelf&gt;,
         <span class="kw">pub </span>path: Path,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A range pattern: `1..=2`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatRange {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatRange {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>lo: Box&lt;Expr&gt;,
         <span class="kw">pub </span>limits: RangeLimits,
@@ -1118,12 +1118,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A reference pattern: `&amp;mut var`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatReference {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatReference {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>and_token: <span class="macro">Token!</span>[<span class="kw-2">&amp;</span>],
         <span class="kw">pub </span>mutability: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw-2">mut</span>]&gt;,
@@ -1131,35 +1131,35 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// The dots in a tuple or slice pattern: `[0, 1, ..]`
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatRest {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatRest {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>dot2_token: <span class="macro">Token!</span>[..],
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A dynamically sized slice pattern: `[a, b, ref i @ .., y, z]`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatSlice {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatSlice {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>bracket_token: token::Bracket,
         <span class="kw">pub </span>elems: Punctuated&lt;Pat, <span class="macro">Token!</span>[,]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A struct or struct variant pattern: `Variant { x, y, .. }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatStruct {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatStruct {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>path: Path,
         <span class="kw">pub </span>brace_token: token::Brace,
@@ -1168,36 +1168,36 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A tuple pattern: `(a, b)`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatTuple {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatTuple {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>paren_token: token::Paren,
         <span class="kw">pub </span>elems: Punctuated&lt;Pat, <span class="macro">Token!</span>[,]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A tuple struct or tuple variant pattern: `Variant(x, y, .., z)`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatTupleStruct {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatTupleStruct {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>path: Path,
         <span class="kw">pub </span>pat: PatTuple,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A type ascription pattern: `foo: f64`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatType {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatType {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>pat: Box&lt;Pat&gt;,
         <span class="kw">pub </span>colon_token: <span class="macro">Token!</span>[:],
@@ -1205,26 +1205,26 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A pattern that matches any value: `_`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>PatWild {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>PatWild {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>underscore_token: <span class="macro">Token!</span>[<span class="kw">_</span>],
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A single field in a struct pattern.
     ///
     /// Patterns like the fields of Foo `{ x, ref y, ref mut z }` are treated
     /// the same as `x: x, y: ref y, z: ref mut z` but there is no colon token.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>FieldPat {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>FieldPat {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>member: Member,
         <span class="kw">pub </span>colon_token: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[:]&gt;,
@@ -1232,15 +1232,15 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::ext::IdentExt;
     <span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseBuffer, ParseStream, <span class="prelude-ty">Result</span>};
     <span class="kw">use </span><span class="kw">crate</span>::path;
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Pat {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Pat {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>begin = input.fork();
             <span class="kw">let </span>lookahead = input.lookahead1();
@@ -1680,23 +1680,23 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::attr::FilterAttrs;
     <span class="kw">use </span>proc_macro2::TokenStream;
     <span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatWild {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatWild {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.underscore_token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatIdent {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatIdent {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.by_ref.to_tokens(tokens);
@@ -1709,8 +1709,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatStruct {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatStruct {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.path.to_tokens(tokens);
@@ -1725,8 +1725,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatTupleStruct {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatTupleStruct {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.path.to_tokens(tokens);
@@ -1734,8 +1734,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatType {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.pat.to_tokens(tokens);
@@ -1744,16 +1744,16 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatPath {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatPath {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             path::printing::print_path(tokens, <span class="kw-2">&amp;</span><span class="self">self</span>.qself, <span class="kw-2">&amp;</span><span class="self">self</span>.path);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatTuple {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatTuple {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.paren_token.surround(tokens, |tokens| {
@@ -1762,8 +1762,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatBox {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatBox {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.box_token.to_tokens(tokens);
@@ -1771,8 +1771,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatReference {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatReference {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.and_token.to_tokens(tokens);
@@ -1781,24 +1781,24 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatRest {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatRest {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.dot2_token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatLit {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatLit {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.expr.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatRange {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatRange {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.lo.to_tokens(tokens);
@@ -1807,8 +1807,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatSlice {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatSlice {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.bracket_token.surround(tokens, |tokens| {
@@ -1817,16 +1817,16 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatMacro {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.mac.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>PatOr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>PatOr {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.leading_vert.to_tokens(tokens);
@@ -1834,8 +1834,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>FieldPat {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>FieldPat {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="kw">if let </span><span class="prelude-val">Some</span>(colon_token) = <span class="kw-2">&amp;</span><span class="self">self</span>.colon_token {
@@ -1847,4 +1847,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

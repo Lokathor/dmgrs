@@ -345,24 +345,24 @@
 <span id="345">345</span>
 </pre><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A braced block containing Rust statements.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>Block {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>Block {
         <span class="kw">pub </span>brace_token: token::Brace,
         <span class="doccomment">/// Statements in a block
         </span><span class="kw">pub </span>stmts: Vec&lt;Stmt&gt;,
     }
 }
 
-<span class="macro">ast_enum!</span> {
+<span class="macro">ast_enum! </span>{
     <span class="doccomment">/// A statement, usually ending in a semicolon.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub enum </span>Stmt {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub enum </span>Stmt {
         <span class="doccomment">/// A local (let) binding.
         </span>Local(Local),
 
@@ -377,12 +377,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A local `let` binding: `let x: u64 = s.parse()?`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>Local {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>Local {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>let_token: <span class="macro">Token!</span>[<span class="kw">let</span>],
         <span class="kw">pub </span>pat: Pat,
@@ -391,8 +391,8 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::parse::discouraged::Speculative;
     <span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseBuffer, ParseStream, <span class="prelude-ty">Result</span>};
@@ -451,8 +451,8 @@
         ///     }
         /// }
         /// ```
-        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-        <span class="kw">pub fn </span>parse_within(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Stmt&gt;&gt; {
+        </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+        </span><span class="kw">pub fn </span>parse_within(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Stmt&gt;&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>stmts = Vec::new();
             <span class="kw">loop </span>{
                 <span class="kw">while let </span><span class="prelude-val">Some</span>(semi) = input.parse::&lt;<span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[;]&gt;&gt;()<span class="question-mark">? </span>{
@@ -478,8 +478,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Block {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Block {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>content;
             <span class="prelude-val">Ok</span>(Block {
@@ -489,8 +489,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Stmt {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Stmt {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             parse_stmt(input, <span class="bool-val">false</span>)
         }
@@ -644,14 +644,14 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span>proc_macro2::TokenStream;
     <span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Block {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Block {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.brace_token.surround(tokens, |tokens| {
                 tokens.append_all(<span class="kw-2">&amp;</span><span class="self">self</span>.stmts);
@@ -659,8 +659,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Stmt {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Stmt {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="kw">match </span><span class="self">self </span>{
                 Stmt::Local(local) =&gt; local.to_tokens(tokens),
@@ -674,8 +674,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Local {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Local {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             expr::printing::outer_attrs_to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>.attrs, tokens);
             <span class="self">self</span>.let_token.to_tokens(tokens);
@@ -689,4 +689,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

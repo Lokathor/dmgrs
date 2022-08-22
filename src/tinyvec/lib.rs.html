@@ -105,18 +105,18 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
-</pre><pre class="rust"><code><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]</span>
-<span class="attribute">#![forbid(unsafe_code)]</span>
-<span class="attribute">#![cfg_attr(
+</pre><pre class="rust"><code><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
+#![forbid(unsafe_code)]
+#![cfg_attr(
   feature = <span class="string">&quot;nightly_slice_partition_dedup&quot;</span>,
   feature(slice_partition_dedup)
-)]</span>
-<span class="attribute">#![cfg_attr(docs_rs, feature(doc_cfg))]</span>
-<span class="attribute">#![warn(clippy::missing_inline_in_public_items)]</span>
-<span class="attribute">#![warn(clippy::must_use_candidate)]</span>
-<span class="attribute">#![warn(missing_docs)]</span>
+)]
+#![cfg_attr(docs_rs, feature(doc_cfg))]
+#![warn(clippy::missing_inline_in_public_items)]
+#![warn(clippy::must_use_candidate)]
+#![warn(missing_docs)]
 
-<span class="doccomment">//! `tinyvec` provides 100% safe vec-like data structures.
+</span><span class="doccomment">//! `tinyvec` provides 100% safe vec-like data structures.
 //!
 //! ## Provided Types
 //! With no features enabled, this crate provides the [`ArrayVec`] type, which
@@ -169,8 +169,8 @@
 //!   the `Array` trait. The actual usage of the crate is not expected to break
 //!   significantly in this transition.
 
-</span><span class="attribute">#[allow(unused_imports)]</span>
-<span class="kw">use </span>core::{
+</span><span class="attribute">#[allow(unused_imports)]
+</span><span class="kw">use </span>core::{
   borrow::{Borrow, BorrowMut},
   cmp::PartialEq,
   convert::AsMut,
@@ -186,8 +186,8 @@
   slice::SliceIndex,
 };
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span> <span class="comment">// re-export for macros
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+#[doc(hidden)] </span><span class="comment">// re-export for macros
 </span><span class="kw">pub extern crate </span>alloc;
 
 <span class="kw">mod </span>array;
@@ -202,15 +202,15 @@
 <span class="kw">mod </span>slicevec;
 <span class="kw">pub use </span>slicevec::<span class="kw-2">*</span>;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">mod </span>tinyvec;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">pub use </span><span class="kw">crate</span>::tinyvec::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">mod </span>tinyvec;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">pub use </span><span class="kw">crate</span>::tinyvec::<span class="kw-2">*</span>;
 
 <span class="comment">// TODO MSRV(1.40.0): Just call the normal `core::mem::take`
-</span><span class="attribute">#[inline(always)]</span>
-<span class="kw">fn </span>take&lt;T: Default&gt;(from: <span class="kw-2">&amp;mut </span>T) -&gt; T {
+</span><span class="attribute">#[inline(always)]
+</span><span class="kw">fn </span>take&lt;T: Default&gt;(from: <span class="kw-2">&amp;mut </span>T) -&gt; T {
   replace(from, T::default())
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

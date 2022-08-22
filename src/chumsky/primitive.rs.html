@@ -1159,8 +1159,8 @@
 <span class="kw">use </span>core::panic::Location;
 
 <span class="doccomment">/// See [`custom`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Custom&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Custom&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;F: Copy, E&gt; Copy <span class="kw">for </span>Custom&lt;F, E&gt; {}
 <span class="kw">impl</span>&lt;F: Clone, E&gt; Clone <span class="kw">for </span>Custom&lt;F, E&gt; {
@@ -1183,12 +1183,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1203,8 +1203,8 @@
 }
 
 <span class="doccomment">/// See [`end`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>End&lt;E&gt;(PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>End&lt;E&gt;(PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;E&gt; Clone <span class="kw">for </span>End&lt;E&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
@@ -1233,12 +1233,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1295,10 +1295,10 @@
     <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::collections::BTreeSet&lt;T&gt; {}
     <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>alloc::collections::BinaryHeap&lt;T&gt; {}
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>std::collections::HashSet&lt;T&gt; {}
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
-    <span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>hashbrown::HashSet&lt;T&gt; {}
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>std::collections::HashSet&lt;T&gt; {}
+    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+    </span><span class="kw">impl</span>&lt;T&gt; Sealed&lt;T&gt; <span class="kw">for </span>hashbrown::HashSet&lt;T&gt; {}
 }
 
 <span class="doccomment">/// A utility trait to abstract over container-like things.
@@ -1374,16 +1374,16 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>std::collections::HashSet&lt;T&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>std::collections::HashSet&lt;T&gt; {
     <span class="kw">type </span>Iter = std::collections::hash_set::IntoIter&lt;T&gt;;
     <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
         <span class="self">self</span>.clone().into_iter()
     }
 }
 
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>hashbrown::HashSet&lt;T&gt; {
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">impl</span>&lt;T: Clone&gt; Container&lt;T&gt; <span class="kw">for </span>hashbrown::HashSet&lt;T&gt; {
     <span class="kw">type </span>Iter = hashbrown::hash_set::IntoIter&lt;T&gt;;
     <span class="kw">fn </span>get_iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span>::Iter {
         <span class="self">self</span>.clone().into_iter()
@@ -1421,8 +1421,8 @@
 <span class="kw">impl</span>&lt;T: Clone&gt; OrderedContainer&lt;T&gt; <span class="kw">for </span>alloc::collections::VecDeque&lt;T&gt; {}
 
 <span class="doccomment">/// See [`just`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Just&lt;I, C: OrderedContainer&lt;I&gt;, E&gt;(C, PhantomData&lt;(I, E)&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Just&lt;I, C: OrderedContainer&lt;I&gt;, E&gt;(C, PhantomData&lt;(I, E)&gt;);
 
 <span class="kw">impl</span>&lt;I, C: Copy + OrderedContainer&lt;I&gt;, E&gt; Copy <span class="kw">for </span>Just&lt;I, C, E&gt; {}
 <span class="kw">impl</span>&lt;I, C: Clone + OrderedContainer&lt;I&gt;, E&gt; Clone <span class="kw">for </span>Just&lt;I, C, E&gt; {
@@ -1460,12 +1460,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, C, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, C, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1491,8 +1491,8 @@
 }
 
 <span class="doccomment">/// See [`seq`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Seq&lt;I, E&gt;(Vec&lt;I&gt;, PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Seq&lt;I, E&gt;(Vec&lt;I&gt;, PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;I: Clone, E&gt; Clone <span class="kw">for </span>Seq&lt;I, E&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
@@ -1527,12 +1527,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1559,14 +1559,14 @@
 </span><span class="attribute">#[deprecated(
     since = <span class="string">&quot;0.7.0&quot;</span>,
     note = <span class="string">&quot;Use `just` instead: it now works for many sequence-like types!&quot;
-</span>)]</span>
-<span class="kw">pub fn </span>seq&lt;I: Clone + PartialEq, Iter: IntoIterator&lt;Item = I&gt;, E&gt;(xs: Iter) -&gt; Seq&lt;I, E&gt; {
+</span>)]
+</span><span class="kw">pub fn </span>seq&lt;I: Clone + PartialEq, Iter: IntoIterator&lt;Item = I&gt;, E&gt;(xs: Iter) -&gt; Seq&lt;I, E&gt; {
     Seq(xs.into_iter().collect(), PhantomData)
 }
 
 <span class="doccomment">/// See [`one_of`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>OneOf&lt;I, C, E&gt;(C, PhantomData&lt;(I, E)&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>OneOf&lt;I, C, E&gt;(C, PhantomData&lt;(I, E)&gt;);
 
 <span class="kw">impl</span>&lt;I, C: Clone, E&gt; Clone <span class="kw">for </span>OneOf&lt;I, C, E&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
@@ -1597,12 +1597,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1627,8 +1627,8 @@
 }
 
 <span class="doccomment">/// See [`empty`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Empty&lt;E&gt;(PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Empty&lt;E&gt;(PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;E&gt; Clone <span class="kw">for </span>Empty&lt;E&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
@@ -1648,12 +1648,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, (), E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1665,8 +1665,8 @@
 }
 
 <span class="doccomment">/// See [`none_of`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>NoneOf&lt;I, C, E&gt;(C, PhantomData&lt;(I, E)&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>NoneOf&lt;I, C, E&gt;(C, PhantomData&lt;(I, E)&gt;);
 
 <span class="kw">impl</span>&lt;I, C: Clone, E&gt; Clone <span class="kw">for </span>NoneOf&lt;I, C, E&gt; {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
@@ -1697,12 +1697,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1729,9 +1729,9 @@
 }
 
 <span class="doccomment">/// See [`take_until`].
-</span><span class="attribute">#[must_use]</span>
-<span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>TakeUntil&lt;A&gt;(A);
+</span><span class="attribute">#[must_use]
+#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>TakeUntil&lt;A&gt;(A);
 
 <span class="kw">impl</span>&lt;I: Clone, O, A: Parser&lt;I, O&gt;&gt; Parser&lt;I, (Vec&lt;I&gt;, O)&gt; <span class="kw">for </span>TakeUntil&lt;A&gt; {
     <span class="kw">type </span>Error = A::Error;
@@ -1746,8 +1746,8 @@
 
         <span class="kw">loop </span>{
             <span class="kw">let </span>(errors, err) = <span class="kw">match </span>stream.try_parse(|stream| {
-                <span class="attribute">#[allow(deprecated)]</span>
-                <span class="self">self</span>.<span class="number">0</span>.parse_inner(debugger, stream)
+                <span class="attribute">#[allow(deprecated)]
+                </span><span class="self">self</span>.<span class="number">0</span>.parse_inner(debugger, stream)
             }) {
                 (errors, <span class="prelude-val">Ok</span>((out, a_alt))) =&gt; {
                     <span class="kw">break </span>(errors, <span class="prelude-val">Ok</span>(((outputs, out), merge_alts(alt, a_alt))))
@@ -1769,16 +1769,16 @@
         d: <span class="kw-2">&amp;mut </span>Verbose,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, A::Error&gt;,
     ) -&gt; PResult&lt;I, (Vec&lt;I&gt;, O), A::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         d: <span class="kw-2">&amp;mut </span>Silent,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, A::Error&gt;,
     ) -&gt; PResult&lt;I, (Vec&lt;I&gt;, O), A::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1825,8 +1825,8 @@
 }
 
 <span class="doccomment">/// See [`filter`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Filter&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Filter&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;F: Copy, E&gt; Copy <span class="kw">for </span>Filter&lt;F, E&gt; {}
 <span class="kw">impl</span>&lt;F: Clone, E&gt; Clone <span class="kw">for </span>Filter&lt;F, E&gt; {
@@ -1856,12 +1856,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, I, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1886,8 +1886,8 @@
 }
 
 <span class="doccomment">/// See [`filter_map`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>FilterMap&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>FilterMap&lt;F, E&gt;(F, PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;F: Copy, E&gt; Copy <span class="kw">for </span>FilterMap&lt;F, E&gt; {}
 <span class="kw">impl</span>&lt;F: Clone, E&gt; Clone <span class="kw">for </span>FilterMap&lt;F, E&gt; {
@@ -1919,12 +1919,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -1976,8 +1976,8 @@
 }
 
 <span class="doccomment">/// See [`fn@todo`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Todo&lt;I, O, E&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;, PhantomData&lt;(I, O, E)&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Todo&lt;I, O, E&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Location&lt;<span class="lifetime">&#39;static</span>&gt;, PhantomData&lt;(I, O, E)&gt;);
 
 <span class="doccomment">/// A parser that can be used wherever you need to implement a parser later.
 ///
@@ -2004,8 +2004,8 @@
 /// // Parsing hexadecimal numbers results in a panic because the parser is unimplemented
 /// int.parse(&quot;0xd4&quot;);
 /// ```
-</span><span class="attribute">#[track_caller]</span>
-<span class="kw">pub fn </span>todo&lt;I, O, E&gt;() -&gt; Todo&lt;I, O, E&gt; {
+</span><span class="attribute">#[track_caller]
+</span><span class="kw">pub fn </span>todo&lt;I, O, E&gt;() -&gt; Todo&lt;I, O, E&gt; {
     Todo(Location::caller(), PhantomData)
 }
 
@@ -2035,22 +2035,22 @@
         d: <span class="kw-2">&amp;mut </span>Verbose,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         d: <span class="kw-2">&amp;mut </span>Silent,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
 <span class="doccomment">/// See [`choice`].
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Choice&lt;T, E&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) T, <span class="kw">pub</span>(<span class="kw">crate</span>) PhantomData&lt;E&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Choice&lt;T, E&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) T, <span class="kw">pub</span>(<span class="kw">crate</span>) PhantomData&lt;E&gt;);
 
 <span class="kw">impl</span>&lt;T: Copy, E&gt; Copy <span class="kw">for </span>Choice&lt;T, E&gt; {}
 <span class="kw">impl</span>&lt;T: Clone, E&gt; Clone <span class="kw">for </span>Choice&lt;T, E&gt; {
@@ -2074,8 +2074,8 @@
 
         <span class="kw">for </span>parser <span class="kw">in </span>parsers {
             <span class="kw">match </span>stream.try_parse(|stream| {
-                <span class="attribute">#[allow(deprecated)]</span>
-                debugger.invoke(parser, stream)
+                <span class="attribute">#[allow(deprecated)]
+                </span>debugger.invoke(parser, stream)
             }) {
                 (errors, <span class="prelude-val">Ok</span>(out)) =&gt; <span class="kw">return </span>(errors, <span class="prelude-val">Ok</span>(out)),
                 (<span class="kw">_</span>, <span class="prelude-val">Err</span>(a_alt)) =&gt; {
@@ -2092,8 +2092,8 @@
         d: <span class="kw-2">&amp;mut </span>Verbose,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 
     <span class="kw">fn </span>parse_inner_silent(
@@ -2101,8 +2101,8 @@
         d: <span class="kw-2">&amp;mut </span>Silent,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -2119,8 +2119,8 @@
 
         <span class="kw">for </span>parser <span class="kw">in </span>parsers {
             <span class="kw">match </span>stream.try_parse(|stream| {
-                <span class="attribute">#[allow(deprecated)]</span>
-                debugger.invoke(parser, stream)
+                <span class="attribute">#[allow(deprecated)]
+                </span>debugger.invoke(parser, stream)
             }) {
                 (errors, <span class="prelude-val">Ok</span>(out)) =&gt; <span class="kw">return </span>(errors, <span class="prelude-val">Ok</span>(out)),
                 (<span class="kw">_</span>, <span class="prelude-val">Err</span>(a_alt)) =&gt; {
@@ -2137,8 +2137,8 @@
         d: <span class="kw-2">&amp;mut </span>Verbose,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 
     <span class="kw">fn </span>parse_inner_silent(
@@ -2146,20 +2146,20 @@
         d: <span class="kw-2">&amp;mut </span>Silent,
         s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="macro">macro_rules!</span> impl_for_tuple {
+<span class="macro">macro_rules! </span>impl_for_tuple {
     () =&gt; {};
     (<span class="macro-nonterminal">$head</span>:ident $(<span class="macro-nonterminal">$X</span>:ident)<span class="kw-2">*</span>) =&gt; {
         <span class="macro">impl_for_tuple!</span>($(<span class="macro-nonterminal">$X</span>)<span class="kw-2">*</span>);
         <span class="macro">impl_for_tuple!</span>(~ <span class="macro-nonterminal">$head </span>$(<span class="macro-nonterminal">$X</span>)<span class="kw-2">*</span>);
     };
     (~ $(<span class="macro-nonterminal">$X</span>:ident)<span class="kw-2">*</span>) =&gt; {
-        <span class="attribute">#[allow(unused_variables, non_snake_case)]</span>
-        <span class="kw">impl</span>&lt;I: Clone, O, E: Error&lt;I&gt;, $(<span class="macro-nonterminal">$X</span>: Parser&lt;I, O, Error = E&gt;),<span class="kw-2">*</span>&gt; Parser&lt;I, O&gt; <span class="kw">for </span>Choice&lt;($(<span class="macro-nonterminal">$X</span>,)<span class="kw-2">*</span>), E&gt; {
+        <span class="attribute">#[allow(unused_variables, non_snake_case)]
+        </span><span class="kw">impl</span>&lt;I: Clone, O, E: Error&lt;I&gt;, $(<span class="macro-nonterminal">$X</span>: Parser&lt;I, O, Error = E&gt;),<span class="kw-2">*</span>&gt; Parser&lt;I, O&gt; <span class="kw">for </span>Choice&lt;($(<span class="macro-nonterminal">$X</span>,)<span class="kw-2">*</span>), E&gt; {
             <span class="kw">type </span>Error = E;
 
             <span class="kw">fn </span>parse_inner&lt;D: Debugger&gt;(
@@ -2171,8 +2171,8 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>alt = <span class="prelude-val">None</span>;
                 $(
                     <span class="kw">match </span>stream.try_parse(|stream| {
-                        <span class="attribute">#[allow(deprecated)]</span>
-                        debugger.invoke(<span class="macro-nonterminal">$X</span>, stream)
+                        <span class="attribute">#[allow(deprecated)]
+                        </span>debugger.invoke(<span class="macro-nonterminal">$X</span>, stream)
                     }) {
                         (errors, <span class="prelude-val">Ok</span>(out)) =&gt; <span class="kw">return </span>(errors, <span class="prelude-val">Ok</span>(out)),
                         (errors, <span class="prelude-val">Err</span>(a_alt)) =&gt; {
@@ -2188,16 +2188,16 @@
                 d: <span class="kw-2">&amp;mut </span>Verbose,
                 s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
             ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-                <span class="attribute">#[allow(deprecated)]</span>
-                <span class="self">self</span>.parse_inner(d, s)
+                <span class="attribute">#[allow(deprecated)]
+                </span><span class="self">self</span>.parse_inner(d, s)
             }
             <span class="kw">fn </span>parse_inner_silent(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
                 d: <span class="kw-2">&amp;mut </span>Silent,
                 s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
             ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-                <span class="attribute">#[allow(deprecated)]</span>
-                <span class="self">self</span>.parse_inner(d, s)
+                <span class="attribute">#[allow(deprecated)]
+                </span><span class="self">self</span>.parse_inner(d, s)
             }
         }
     };
@@ -2283,4 +2283,4 @@
     Choice(parsers, PhantomData)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

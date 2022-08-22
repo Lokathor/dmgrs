@@ -4191,8 +4191,8 @@
 
 <span class="kw">pub type </span>iconv_t = <span class="kw-2">*mut </span>::c_void;
 
-<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]</span>
-<span class="kw">pub enum </span>fpos64_t {} <span class="comment">// FIXME: fill this out with a struct
+<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]
+</span><span class="kw">pub enum </span>fpos64_t {} <span class="comment">// FIXME: fill this out with a struct
 </span><span class="kw">impl </span>::Copy <span class="kw">for </span>fpos64_t {}
 <span class="kw">impl </span>::Clone <span class="kw">for </span>fpos64_t {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fpos64_t {
@@ -4200,7 +4200,7 @@
     </span>}
 }
 
-<span class="macro">s!</span> {
+<span class="macro">s! </span>{
     <span class="kw">pub struct </span>rlimit64 {
         <span class="kw">pub </span>rlim_cur: rlim64_t,
         <span class="kw">pub </span>rlim_max: rlim64_t,
@@ -4296,11 +4296,11 @@
 
     <span class="kw">pub struct </span>cpu_set_t {
         <span class="attribute">#[cfg(all(target_pointer_width = <span class="string">&quot;32&quot;</span>,
-                  not(target_arch = <span class="string">&quot;x86_64&quot;</span>)))]</span>
-        bits: [u32; <span class="number">32</span>],
+                  not(target_arch = <span class="string">&quot;x86_64&quot;</span>)))]
+        </span>bits: [u32; <span class="number">32</span>],
         <span class="attribute">#[cfg(not(all(target_pointer_width = <span class="string">&quot;32&quot;</span>,
-                      not(target_arch = <span class="string">&quot;x86_64&quot;</span>))))]</span>
-        bits: [u64; <span class="number">16</span>],
+                      not(target_arch = <span class="string">&quot;x86_64&quot;</span>))))]
+        </span>bits: [u64; <span class="number">16</span>],
     }
 
     <span class="kw">pub struct </span>if_nameindex {
@@ -4427,10 +4427,10 @@
         <span class="kw">pub </span>trigger: ff_trigger,
         <span class="kw">pub </span>replay: ff_replay,
         <span class="comment">// FIXME this is actually a union
-        </span><span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
-        <span class="kw">pub </span>u: [u64; <span class="number">4</span>],
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        <span class="kw">pub </span>u: [u32; <span class="number">7</span>],
+        </span><span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+        </span><span class="kw">pub </span>u: [u64; <span class="number">4</span>],
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span><span class="kw">pub </span>u: [u32; <span class="number">7</span>],
     }
 
     <span class="kw">pub struct </span>uinput_ff_upload {
@@ -4452,36 +4452,36 @@
     }
 
     <span class="kw">pub struct </span>dl_phdr_info {
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
-        <span class="kw">pub </span>dlpi_addr: Elf64_Addr,
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        <span class="kw">pub </span>dlpi_addr: Elf32_Addr,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+        </span><span class="kw">pub </span>dlpi_addr: Elf64_Addr,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span><span class="kw">pub </span>dlpi_addr: Elf32_Addr,
 
         <span class="kw">pub </span>dlpi_name: <span class="kw-2">*const </span>::c_char,
 
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
-        <span class="kw">pub </span>dlpi_phdr: <span class="kw-2">*const </span>Elf64_Phdr,
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        <span class="kw">pub </span>dlpi_phdr: <span class="kw-2">*const </span>Elf32_Phdr,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+        </span><span class="kw">pub </span>dlpi_phdr: <span class="kw-2">*const </span>Elf64_Phdr,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span><span class="kw">pub </span>dlpi_phdr: <span class="kw-2">*const </span>Elf32_Phdr,
 
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
-        <span class="kw">pub </span>dlpi_phnum: Elf64_Half,
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        <span class="kw">pub </span>dlpi_phnum: Elf32_Half,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+        </span><span class="kw">pub </span>dlpi_phnum: Elf64_Half,
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span><span class="kw">pub </span>dlpi_phnum: Elf32_Half,
 
         <span class="comment">// As of uClibc 1.0.36, the following fields are
         // gated behind a &quot;#if 0&quot; block which always evaluates
         // to false. So I&#39;m just removing these, and if uClibc changes
         // the #if block in the future to include the following fields, these
         // will probably need including here. tsidea, skrap
-        </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span>
-        <span class="kw">pub </span>dlpi_adds: ::c_ulonglong,
-        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span>
-        <span class="kw">pub </span>dlpi_subs: ::c_ulonglong,
-        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span>
-        <span class="kw">pub </span>dlpi_tls_modid: ::size_t,
-        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span>
-        <span class="kw">pub </span>dlpi_tls_data: <span class="kw-2">*mut </span>::c_void,
+        </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]
+        </span><span class="kw">pub </span>dlpi_adds: ::c_ulonglong,
+        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]
+        </span><span class="kw">pub </span>dlpi_subs: ::c_ulonglong,
+        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]
+        </span><span class="kw">pub </span>dlpi_tls_modid: ::size_t,
+        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]
+        </span><span class="kw">pub </span>dlpi_tls_data: <span class="kw-2">*mut </span>::c_void,
     }
 
     <span class="kw">pub struct </span>Elf32_Ehdr {
@@ -4611,10 +4611,10 @@
         __pgrp: ::pid_t,
         __sd: ::sigset_t,
         __ss: ::sigset_t,
-        <span class="attribute">#[cfg(target_env = <span class="string">&quot;musl&quot;</span>)]</span>
-        __prio: ::c_int,
-        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;musl&quot;</span>))]</span>
-        __sp: ::sched_param,
+        <span class="attribute">#[cfg(target_env = <span class="string">&quot;musl&quot;</span>)]
+        </span>__prio: ::c_int,
+        <span class="attribute">#[cfg(not(target_env = <span class="string">&quot;musl&quot;</span>))]
+        </span>__sp: ::sched_param,
         __policy: ::c_int,
         __pad: [::c_int; <span class="number">16</span>],
     }
@@ -4741,7 +4741,7 @@
     }
 }
 
-<span class="macro">s_no_extra_traits!</span> {
+<span class="macro">s_no_extra_traits! </span>{
     <span class="kw">pub struct </span>sockaddr_nl {
         <span class="kw">pub </span>nl_family: ::sa_family_t,
         nl_pad: ::c_ushort,
@@ -4795,8 +4795,8 @@
         note = <span class="string">&quot;this struct has unsafe trait implementations that will be \
                 removed in the future&quot;</span>,
         since = <span class="string">&quot;0.2.80&quot;
-    </span>)]</span>
-    <span class="kw">pub struct </span>af_alg_iv {
+    </span>)]
+    </span><span class="kw">pub struct </span>af_alg_iv {
         <span class="kw">pub </span>ivlen: u32,
         <span class="kw">pub </span>iv: [::c_uchar; <span class="number">0</span>],
     }
@@ -4804,51 +4804,51 @@
     <span class="comment">// x32 compatibility
     // See https://sourceware.org/bugzilla/show_bug.cgi?id=21279
     </span><span class="kw">pub struct </span>mq_attr {
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        <span class="kw">pub </span>mq_flags: i64,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        <span class="kw">pub </span>mq_maxmsg: i64,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        <span class="kw">pub </span>mq_msgsize: i64,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        <span class="kw">pub </span>mq_curmsgs: i64,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        pad: [i64; <span class="number">4</span>],
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span><span class="kw">pub </span>mq_flags: i64,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span><span class="kw">pub </span>mq_maxmsg: i64,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span><span class="kw">pub </span>mq_msgsize: i64,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span><span class="kw">pub </span>mq_curmsgs: i64,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>pad: [i64; <span class="number">4</span>],
 
-        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-        <span class="kw">pub </span>mq_flags: ::c_long,
-        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-        <span class="kw">pub </span>mq_maxmsg: ::c_long,
-        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-        <span class="kw">pub </span>mq_msgsize: ::c_long,
-        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-        <span class="kw">pub </span>mq_curmsgs: ::c_long,
-        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-        pad: [::c_long; <span class="number">4</span>],
+        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+        </span><span class="kw">pub </span>mq_flags: ::c_long,
+        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+        </span><span class="kw">pub </span>mq_maxmsg: ::c_long,
+        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+        </span><span class="kw">pub </span>mq_msgsize: ::c_long,
+        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+        </span><span class="kw">pub </span>mq_curmsgs: ::c_long,
+        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+        </span>pad: [::c_long; <span class="number">4</span>],
     }
 }
 
-<span class="macro">s_no_extra_traits!</span> {
+<span class="macro">s_no_extra_traits! </span>{
     <span class="comment">// linux/net_tstamp.h
-    </span><span class="attribute">#[allow(missing_debug_implementations)]</span>
-    <span class="kw">pub struct </span>sock_txtime {
+    </span><span class="attribute">#[allow(missing_debug_implementations)]
+    </span><span class="kw">pub struct </span>sock_txtime {
         <span class="kw">pub </span>clockid: ::clockid_t,
         <span class="kw">pub </span>flags: ::__u32,
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_union)]</span> {
-        <span class="macro">s_no_extra_traits!</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_union)] </span>{
+        <span class="macro">s_no_extra_traits! </span>{
             <span class="comment">// linux/can.h
-            </span><span class="attribute">#[allow(missing_debug_implementations)]</span>
-            <span class="kw">pub union </span>__c_anonymous_sockaddr_can_can_addr {
+            </span><span class="attribute">#[allow(missing_debug_implementations)]
+            </span><span class="kw">pub union </span>__c_anonymous_sockaddr_can_can_addr {
                 <span class="kw">pub </span>tp: __c_anonymous_sockaddr_can_tp,
                 <span class="kw">pub </span>j1939: __c_anonymous_sockaddr_can_j1939,
             }
 
-            <span class="attribute">#[allow(missing_debug_implementations)]</span>
-            <span class="kw">pub struct </span>sockaddr_can {
+            <span class="attribute">#[allow(missing_debug_implementations)]
+            </span><span class="kw">pub struct </span>sockaddr_can {
                 <span class="kw">pub </span>can_family: ::sa_family_t,
                 <span class="kw">pub </span>can_ifindex: ::c_int,
                 <span class="kw">pub </span>can_addr: __c_anonymous_sockaddr_can_can_addr,
@@ -4857,8 +4857,8 @@
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;extra_traits&quot;</span>)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;extra_traits&quot;</span>)] </span>{
         <span class="kw">impl </span>PartialEq <span class="kw">for </span>sockaddr_nl {
             <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>sockaddr_nl) -&gt; bool {
                 <span class="self">self</span>.nl_family == other.nl_family &amp;&amp;
@@ -5134,8 +5134,8 @@
             }
         }
 
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="kw">impl </span>af_alg_iv {
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="kw">impl </span>af_alg_iv {
             <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
                 <span class="kw">unsafe </span>{
                     ::core::slice::from_raw_parts(
@@ -5146,18 +5146,18 @@
             }
         }
 
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="kw">impl </span>PartialEq <span class="kw">for </span>af_alg_iv {
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="kw">impl </span>PartialEq <span class="kw">for </span>af_alg_iv {
             <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>af_alg_iv) -&gt; bool {
                 <span class="kw-2">*</span><span class="self">self</span>.as_slice() == <span class="kw-2">*</span>other.as_slice()
            }
         }
 
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="kw">impl </span>Eq <span class="kw">for </span>af_alg_iv {}
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="kw">impl </span>Eq <span class="kw">for </span>af_alg_iv {}
 
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="kw">impl </span>::fmt::Debug <span class="kw">for </span>af_alg_iv {
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="kw">impl </span>::fmt::Debug <span class="kw">for </span>af_alg_iv {
             <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>::fmt::Formatter) -&gt; ::fmt::Result {
                 f.debug_struct(<span class="string">&quot;af_alg_iv&quot;</span>)
                     .field(<span class="string">&quot;ivlen&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.ivlen)
@@ -5165,8 +5165,8 @@
             }
         }
 
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="kw">impl </span>::hash::Hash <span class="kw">for </span>af_alg_iv {
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="kw">impl </span>::hash::Hash <span class="kw">for </span>af_alg_iv {
             <span class="kw">fn </span>hash&lt;H: ::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
                 <span class="self">self</span>.as_slice().hash(state);
             }
@@ -5202,8 +5202,8 @@
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(any(target_env = <span class="string">&quot;gnu&quot;</span>, target_env = <span class="string">&quot;musl&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(any(target_env = <span class="string">&quot;gnu&quot;</span>, target_env = <span class="string">&quot;musl&quot;</span>))] </span>{
         <span class="kw">pub const </span>ABDAY_1: ::nl_item = <span class="number">0x20000</span>;
         <span class="kw">pub const </span>ABDAY_2: ::nl_item = <span class="number">0x20001</span>;
         <span class="kw">pub const </span>ABDAY_3: ::nl_item = <span class="number">0x20002</span>;
@@ -5641,7 +5641,7 @@
 <span class="kw">pub const </span>MPOL_F_RELATIVE_NODES: ::c_int = <span class="number">1 </span>&lt;&lt; <span class="number">14</span>;
 <span class="kw">pub const </span>MPOL_F_STATIC_NODES: ::c_int = <span class="number">1 </span>&lt;&lt; <span class="number">15</span>;
 
-<span class="macro">align_const!</span> {
+<span class="macro">align_const! </span>{
     <span class="kw">pub const </span>PTHREAD_MUTEX_INITIALIZER: pthread_mutex_t = pthread_mutex_t {
         size: [<span class="number">0</span>; __SIZEOF_PTHREAD_MUTEX_T],
     };
@@ -5689,8 +5689,8 @@
     note = <span class="string">&quot;This value was increased in the newer kernel \
             and we&#39;ll change this following upstream in the future release. \
             See #1896 for more info.&quot;
-</span>)]</span>
-<span class="kw">pub const </span>IPPROTO_MAX: ::c_int = <span class="number">256</span>;
+</span>)]
+</span><span class="kw">pub const </span>IPPROTO_MAX: ::c_int = <span class="number">256</span>;
 
 <span class="comment">// System V IPC
 </span><span class="kw">pub const </span>IPC_PRIVATE: ::key_t = <span class="number">0</span>;
@@ -5721,8 +5721,8 @@
 <span class="kw">pub const </span>SHM_UNLOCK: ::c_int = <span class="number">12</span>;
 
 <span class="kw">pub const </span>SHM_HUGETLB: ::c_int = <span class="number">0o4000</span>;
-<span class="attribute">#[cfg(not(all(target_env = <span class="string">&quot;uclibc&quot;</span>, target_arch = <span class="string">&quot;mips&quot;</span>)))]</span>
-<span class="kw">pub const </span>SHM_NORESERVE: ::c_int = <span class="number">0o10000</span>;
+<span class="attribute">#[cfg(not(all(target_env = <span class="string">&quot;uclibc&quot;</span>, target_arch = <span class="string">&quot;mips&quot;</span>)))]
+</span><span class="kw">pub const </span>SHM_NORESERVE: ::c_int = <span class="number">0o10000</span>;
 
 <span class="kw">pub const </span>QFMT_VFS_OLD: ::c_int = <span class="number">1</span>;
 <span class="kw">pub const </span>QFMT_VFS_V0: ::c_int = <span class="number">2</span>;
@@ -5773,8 +5773,8 @@
 <span class="kw">pub const </span>SYNC_FILE_RANGE_WRITE: ::c_uint = <span class="number">2</span>;
 <span class="kw">pub const </span>SYNC_FILE_RANGE_WAIT_AFTER: ::c_uint = <span class="number">4</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))] </span>{
         <span class="kw">pub const </span>AIO_CANCELED: ::c_int = <span class="number">0</span>;
         <span class="kw">pub const </span>AIO_NOTCANCELED: ::c_int = <span class="number">1</span>;
         <span class="kw">pub const </span>AIO_ALLDONE: ::c_int = <span class="number">2</span>;
@@ -5968,8 +5968,8 @@
 <span class="attribute">#[deprecated(
     since = <span class="string">&quot;0.2.55&quot;</span>,
     note = <span class="string">&quot;ENOATTR is not available on Linux; use ENODATA instead&quot;
-</span>)]</span>
-<span class="kw">pub const </span>ENOATTR: ::c_int = ::ENODATA;
+</span>)]
+</span><span class="kw">pub const </span>ENOATTR: ::c_int = ::ENODATA;
 
 <span class="kw">pub const </span>SO_ORIGINAL_DST: ::c_int = <span class="number">80</span>;
 
@@ -5998,8 +5998,8 @@
 <span class="kw">pub const </span>SK_MEMINFO_DROPS: ::c_int = <span class="number">8</span>;
 
 <span class="kw">pub const </span>IUTF8: ::tcflag_t = <span class="number">0x00004000</span>;
-<span class="attribute">#[cfg(not(all(target_env = <span class="string">&quot;uclibc&quot;</span>, target_arch = <span class="string">&quot;mips&quot;</span>)))]</span>
-<span class="kw">pub const </span>CMSPAR: ::tcflag_t = <span class="number">0o10000000000</span>;
+<span class="attribute">#[cfg(not(all(target_env = <span class="string">&quot;uclibc&quot;</span>, target_arch = <span class="string">&quot;mips&quot;</span>)))]
+</span><span class="kw">pub const </span>CMSPAR: ::tcflag_t = <span class="number">0o10000000000</span>;
 
 <span class="kw">pub const </span>MFD_CLOEXEC: ::c_uint = <span class="number">0x0001</span>;
 <span class="kw">pub const </span>MFD_ALLOW_SEALING: ::c_uint = <span class="number">0x0002</span>;
@@ -6849,8 +6849,8 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
     since = <span class="string">&quot;0.2.74&quot;</span>,
     note = <span class="string">&quot;VMADDR_CID_RESERVED is removed since Linux v5.6 and \
             replaced with VMADDR_CID_LOCAL&quot;
-</span>)]</span>
-<span class="kw">pub const </span>VMADDR_CID_RESERVED: ::c_uint = <span class="number">1</span>;
+</span>)]
+</span><span class="kw">pub const </span>VMADDR_CID_RESERVED: ::c_uint = <span class="number">1</span>;
 <span class="kw">pub const </span>VMADDR_CID_LOCAL: ::c_uint = <span class="number">1</span>;
 <span class="kw">pub const </span>VMADDR_CID_HOST: ::c_uint = <span class="number">2</span>;
 <span class="kw">pub const </span>VMADDR_PORT_ANY: ::c_uint = <span class="number">0xFFFFFFFF</span>;
@@ -6999,8 +6999,8 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
 <span class="kw">pub const </span>NFT_MSG_NEWGEN: ::c_int = <span class="number">15</span>;
 <span class="kw">pub const </span>NFT_MSG_GETGEN: ::c_int = <span class="number">16</span>;
 <span class="kw">pub const </span>NFT_MSG_TRACE: ::c_int = <span class="number">17</span>;
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;sparc64&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;sparc64&quot;</span>))] </span>{
         <span class="kw">pub const </span>NFT_MSG_NEWOBJ: ::c_int = <span class="number">18</span>;
         <span class="kw">pub const </span>NFT_MSG_GETOBJ: ::c_int = <span class="number">19</span>;
         <span class="kw">pub const </span>NFT_MSG_DELOBJ: ::c_int = <span class="number">20</span>;
@@ -7325,8 +7325,8 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
 <span class="kw">pub const </span>CANFD_BRS: ::c_int = <span class="number">0x01</span>;
 <span class="kw">pub const </span>CANFD_ESI: ::c_int = <span class="number">0x02</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)] </span>{
         <span class="kw">pub const </span>CAN_MTU: usize = ::mem::size_of::&lt;can_frame&gt;();
         <span class="kw">pub const </span>CANFD_MTU: usize = ::mem::size_of::&lt;canfd_frame&gt;();
     }
@@ -7396,7 +7396,7 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
 
 <span class="kw">pub const </span>J1939_FILTER_MAX: ::c_int = <span class="number">512</span>;
 
-<span class="macro">f!</span> {
+<span class="macro">f! </span>{
     <span class="kw">pub fn </span>NLA_ALIGN(len: ::c_int) -&gt; ::c_int {
         <span class="kw">return </span>((len) + NLA_ALIGNTO - <span class="number">1</span>) &amp; !(NLA_ALIGNTO - <span class="number">1</span>)
     }
@@ -7537,8 +7537,8 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))] </span>{
         <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{
             <span class="kw">pub fn </span>aio_read(aiocbp: <span class="kw-2">*mut </span>aiocb) -&gt; ::c_int;
             <span class="kw">pub fn </span>aio_write(aiocbp: <span class="kw-2">*mut </span>aiocb) -&gt; ::c_int;
@@ -7607,8 +7607,8 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
 }
 
 <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{
-    <span class="attribute">#[cfg_attr(not(target_env = <span class="string">&quot;musl&quot;</span>), link_name = <span class="string">&quot;__xpg_strerror_r&quot;</span>)]</span>
-    <span class="kw">pub fn </span>strerror_r(errnum: ::c_int, buf: <span class="kw-2">*mut </span>c_char, buflen: ::size_t) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(not(target_env = <span class="string">&quot;musl&quot;</span>), link_name = <span class="string">&quot;__xpg_strerror_r&quot;</span>)]
+    </span><span class="kw">pub fn </span>strerror_r(errnum: ::c_int, buf: <span class="kw-2">*mut </span>c_char, buflen: ::size_t) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>abs(i: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>atof(s: <span class="kw-2">*const </span>::c_char) -&gt; ::c_double;
@@ -8251,14 +8251,14 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
     <span class="kw">pub fn </span>pthread_setname_np(thread: ::pthread_t, name: <span class="kw-2">*const </span>::c_char) -&gt; ::c_int;
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;uclibc&quot;</span>)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;uclibc&quot;</span>)] </span>{
         <span class="kw">mod </span>uclibc;
         <span class="kw">pub use </span><span class="self">self</span>::uclibc::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;musl&quot;</span>)]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;musl&quot;</span>)] </span>{
         <span class="kw">mod </span>musl;
         <span class="kw">pub use </span><span class="self">self</span>::musl::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;gnu&quot;</span>)]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;gnu&quot;</span>)] </span>{
         <span class="kw">mod </span>gnu;
         <span class="kw">pub use </span><span class="self">self</span>::gnu::<span class="kw-2">*</span>;
     }
@@ -8267,22 +8267,22 @@ pub const NFQA_VLAN_TCI: ::c_int = 2;
 <span class="kw">mod </span>arch;
 <span class="kw">pub use </span><span class="self">self</span>::arch::<span class="kw-2">*</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)]</span> {
-        <span class="attribute">#[macro_use]</span>
-        <span class="kw">mod </span>align;
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)] </span>{
+        <span class="attribute">#[macro_use]
+        </span><span class="kw">mod </span>align;
     } <span class="kw">else </span>{
-        <span class="attribute">#[macro_use]</span>
-        <span class="kw">mod </span>no_align;
+        <span class="attribute">#[macro_use]
+        </span><span class="kw">mod </span>no_align;
     }
 }
 <span class="macro">expand_align!</span>();
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_non_exhaustive)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_non_exhaustive)] </span>{
         <span class="kw">mod </span>non_exhaustive;
         <span class="kw">pub use </span><span class="self">self</span>::non_exhaustive::<span class="kw-2">*</span>;
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

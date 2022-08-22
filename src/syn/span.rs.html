@@ -107,30 +107,30 @@
     </span>}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub trait </span>FromSpans: Sized {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub trait </span>FromSpans: Sized {
     <span class="kw">fn </span>from_spans(spans: <span class="kw-2">&amp;</span>[Span]) -&gt; <span class="self">Self</span>;
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>FromSpans <span class="kw">for </span>[Span; <span class="number">1</span>] {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>FromSpans <span class="kw">for </span>[Span; <span class="number">1</span>] {
     <span class="kw">fn </span>from_spans(spans: <span class="kw-2">&amp;</span>[Span]) -&gt; <span class="self">Self </span>{
         [spans[<span class="number">0</span>]]
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>FromSpans <span class="kw">for </span>[Span; <span class="number">2</span>] {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>FromSpans <span class="kw">for </span>[Span; <span class="number">2</span>] {
     <span class="kw">fn </span>from_spans(spans: <span class="kw-2">&amp;</span>[Span]) -&gt; <span class="self">Self </span>{
         [spans[<span class="number">0</span>], spans[<span class="number">1</span>]]
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>FromSpans <span class="kw">for </span>[Span; <span class="number">3</span>] {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>FromSpans <span class="kw">for </span>[Span; <span class="number">3</span>] {
     <span class="kw">fn </span>from_spans(spans: <span class="kw-2">&amp;</span>[Span]) -&gt; <span class="self">Self </span>{
         [spans[<span class="number">0</span>], spans[<span class="number">1</span>], spans[<span class="number">2</span>]]
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

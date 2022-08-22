@@ -1874,14 +1874,14 @@
 </pre><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 <span class="kw">use </span>core::convert::{TryFrom, TryInto};
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="kw">use </span>core::marker::PhantomData;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="kw">use </span>serde::de::{
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+</span><span class="kw">use </span>core::marker::PhantomData;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+</span><span class="kw">use </span>serde::de::{
   Deserialize, Deserializer, Error <span class="kw">as </span>DeserializeError, SeqAccess, Visitor,
 };
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="kw">use </span>serde::ser::{Serialize, SerializeSeq, Serializer};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+</span><span class="kw">use </span>serde::ser::{Serialize, SerializeSeq, Serializer};
 
 <span class="doccomment">/// Helper to make an `ArrayVec`.
 ///
@@ -1899,8 +1899,8 @@
 /// let empty_av: ArrayVec&lt;[u8; 10]&gt; = array_vec!();
 /// let some_ints: ArrayVec&lt;[u8; 10]&gt; = array_vec!(5, 6, 7, 8);
 /// ```
-</span><span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> array_vec {
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>array_vec {
   (<span class="macro-nonterminal">$array_type</span>:ty =&gt; $(<span class="macro-nonterminal">$elem</span>:expr),* $(,)<span class="question-mark">?</span>) =&gt; {
     {
       <span class="kw">let </span><span class="kw-2">mut </span>av: <span class="macro-nonterminal">$crate::ArrayVec</span>&lt;<span class="macro-nonterminal">$array_type</span>&gt; = Default::default();
@@ -1973,8 +1973,8 @@
 /// let no_ints: ArrayVec&lt;[u8; 5]&gt; = ArrayVec::from_array_empty([1, 2, 3, 4, 5]);
 /// assert_eq!(no_ints.len(), 0);
 /// ```
-</span><span class="attribute">#[<span class="macro-nonterminal">repr</span>(C)]</span>
-<span class="kw">pub struct </span>ArrayVec&lt;A&gt; {
+</span><span class="attribute">#[<span class="macro-nonterminal">repr</span>(C)]
+</span><span class="kw">pub struct </span>ArrayVec&lt;A&gt; {
   len: u16,
   <span class="kw">pub</span>(<span class="kw">crate</span>) data: A,
 }
@@ -1984,13 +1984,13 @@
   </span>A: Array + Clone,
   A::Item: Clone,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
     <span class="self">Self </span>{ data: <span class="self">self</span>.data.clone(), len: <span class="self">self</span>.len }
   }
 
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>clone_from(<span class="kw-2">&amp;mut </span><span class="self">self</span>, o: <span class="kw-2">&amp;</span><span class="self">Self</span>) {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>clone_from(<span class="kw-2">&amp;mut </span><span class="self">self</span>, o: <span class="kw-2">&amp;</span><span class="self">Self</span>) {
     <span class="kw">let </span>iter = <span class="self">self
       </span>.data
       .as_slice_mut()
@@ -2024,46 +2024,46 @@
 
 <span class="kw">impl</span>&lt;A: Array&gt; Deref <span class="kw">for </span>ArrayVec&lt;A&gt; {
   <span class="kw">type </span>Target = [A::Item];
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
     <span class="kw-2">&amp;</span><span class="self">self</span>.data.as_slice()[..<span class="self">self</span>.len <span class="kw">as </span>usize]
   }
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; DerefMut <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut()[..<span class="self">self</span>.len <span class="kw">as </span>usize]
   }
 }
 
 <span class="kw">impl</span>&lt;A: Array, I: SliceIndex&lt;[A::Item]&gt;&gt; Index&lt;I&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
   <span class="kw">type </span>Output = &lt;I <span class="kw">as </span>SliceIndex&lt;[A::Item]&gt;&gt;::Output;
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>, index: I) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Output {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>, index: I) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Output {
     <span class="kw-2">&amp;</span><span class="self">self</span>.deref()[index]
   }
 }
 
 <span class="kw">impl</span>&lt;A: Array, I: SliceIndex&lt;[A::Item]&gt;&gt; IndexMut&lt;I&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>index_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: I) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Output {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>index_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: I) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Output {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.deref_mut()[index]
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(docs_rs, doc(cfg(feature = <span class="string">&quot;serde&quot;</span>)))]</span>
-<span class="kw">impl</span>&lt;A: Array&gt; Serialize <span class="kw">for </span>ArrayVec&lt;A&gt;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+#[cfg_attr(docs_rs, doc(cfg(feature = <span class="string">&quot;serde&quot;</span>)))]
+</span><span class="kw">impl</span>&lt;A: Array&gt; Serialize <span class="kw">for </span>ArrayVec&lt;A&gt;
 <span class="kw">where
   </span>A::Item: Serialize,
 {
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>serialize&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, serializer: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
+  <span class="attribute">#[must_use]
+  </span><span class="kw">fn </span>serialize&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, serializer: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
   <span class="kw">where
     </span>S: Serializer,
   {
@@ -2075,9 +2075,9 @@
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(docs_rs, doc(cfg(feature = <span class="string">&quot;serde&quot;</span>)))]</span>
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, A: Array&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>ArrayVec&lt;A&gt;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+#[cfg_attr(docs_rs, doc(cfg(feature = <span class="string">&quot;serde&quot;</span>)))]
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, A: Array&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>ArrayVec&lt;A&gt;
 <span class="kw">where
   </span>A::Item: Deserialize&lt;<span class="lifetime">&#39;de</span>&gt;,
 {
@@ -2089,12 +2089,12 @@
   }
 }
 
-<span class="attribute">#[cfg(all(feature = <span class="string">&quot;arbitrary&quot;</span>, feature = <span class="string">&quot;nightly_const_generics&quot;</span>))]</span>
-<span class="attribute">#[cfg_attr(
+<span class="attribute">#[cfg(all(feature = <span class="string">&quot;arbitrary&quot;</span>, feature = <span class="string">&quot;nightly_const_generics&quot;</span>))]
+#[cfg_attr(
   docs_rs,
   doc(cfg(all(feature = <span class="string">&quot;arbitrary&quot;</span>, feature = <span class="string">&quot;nightly_const_generics&quot;</span>)))
-)]</span>
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T, <span class="kw">const </span>N: usize&gt; arbitrary::Arbitrary&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>ArrayVec&lt;[T; N]&gt;
+)]
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T, <span class="kw">const </span>N: usize&gt; arbitrary::Arbitrary&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for </span>ArrayVec&lt;[T; N]&gt;
 <span class="kw">where
   </span>T: arbitrary::Arbitrary&lt;<span class="lifetime">&#39;a</span>&gt; + Default,
 {
@@ -2120,8 +2120,8 @@
   /// assert_eq!(av, &amp;[1, 2, 3, 4, 5, 6][..]);
   /// assert_eq!(av2, &amp;[][..]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;mut </span><span class="self">Self</span>) {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;mut </span><span class="self">Self</span>) {
     <span class="macro">assert!</span>(
       <span class="self">self</span>.try_append(other).is_none(),
       <span class="string">&quot;ArrayVec::append&gt; total length {} exceeds capacity {}!&quot;</span>,
@@ -2146,8 +2146,8 @@
   /// assert_eq!(av, &amp;[1, 2, 3, 4, 5, 6][..]);
   /// assert_eq!(av3, &amp;[7, 8, 9][..]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>try_append&lt;<span class="lifetime">&#39;other</span>&gt;(
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>try_append&lt;<span class="lifetime">&#39;other</span>&gt;(
     <span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="lifetime">&#39;other </span><span class="kw-2">mut </span><span class="self">Self</span>,
   ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;other </span><span class="kw-2">mut </span><span class="self">Self</span>&gt; {
     <span class="kw">let </span>new_len = <span class="self">self</span>.len() + other.len();
@@ -2170,16 +2170,16 @@
   /// ## Safety
   ///
   /// This pointer has provenance over the _entire_ backing array.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>as_mut_ptr(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>A::Item {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>as_mut_ptr(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>A::Item {
     <span class="self">self</span>.data.as_slice_mut().as_mut_ptr()
   }
 
   <span class="doccomment">/// Performs a `deref_mut`, into unique slice form.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>as_mut_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>as_mut_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
     <span class="self">self</span>.deref_mut()
   }
 
@@ -2188,16 +2188,16 @@
   /// ## Safety
   ///
   /// This pointer has provenance over the _entire_ backing array.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>A::Item {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>A::Item {
     <span class="self">self</span>.data.as_slice().as_ptr()
   }
 
   <span class="doccomment">/// Performs a `deref`, into shared slice form.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
     <span class="self">self</span>.deref()
   }
 
@@ -2205,9 +2205,9 @@
   ///
   /// This is fixed based on the array type, but can&#39;t yet be made a `const fn`
   /// on Stable Rust.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
     <span class="comment">// Note: This shouldn&#39;t use A::CAPACITY, because unsafe code can&#39;t rely on
     // any Array invariants. This ensures that at the very least, the returned
     // value is a valid length for a subslice of the backing array.
@@ -2215,8 +2215,8 @@
   }
 
   <span class="doccomment">/// Truncates the `ArrayVec` down to length 0.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
     <span class="self">self</span>.truncate(<span class="number">0</span>)
   }
 
@@ -2238,8 +2238,8 @@
   /// av.drain(..);
   /// assert_eq!(av.as_slice(), &amp;[]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>drain&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: R) -&gt; ArrayVecDrain&lt;<span class="lifetime">&#39;_</span>, A::Item&gt;
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>drain&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, range: R) -&gt; ArrayVecDrain&lt;<span class="lifetime">&#39;_</span>, A::Item&gt;
   <span class="kw">where
     </span>R: RangeBounds&lt;usize&gt;,
   {
@@ -2271,8 +2271,8 @@
   /// let inner = arr_vec.into_inner();
   /// assert_eq!(inner, [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; A {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; A {
     <span class="self">self</span>.data
   }
 
@@ -2280,8 +2280,8 @@
   ///
   /// ## Panics
   /// * If the `ArrayVec` would overflow, this will panic.
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>extend_from_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>, sli: <span class="kw-2">&amp;</span>[A::Item])
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>extend_from_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>, sli: <span class="kw-2">&amp;</span>[A::Item])
   <span class="kw">where
     </span>A::Item: Clone,
   {
@@ -2327,8 +2327,8 @@
   /// assert_eq!(&amp;av[..], [0, 1, 2, 3]);
   /// assert_eq!(to_inf.next(), Some(4));
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>fill&lt;I: IntoIterator&lt;Item = A::Item&gt;&gt;(
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>fill&lt;I: IntoIterator&lt;Item = A::Item&gt;&gt;(
     <span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: I,
   ) -&gt; I::IntoIter {
     <span class="comment">// If this is written as a call to push for each element in iter, the
@@ -2355,10 +2355,10 @@
   ///
   /// * The length specified must be less than or equal to the capacity of the
   ///   array.
-  </span><span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="attribute">#[allow(clippy::match_wild_err_arm)]</span>
-  <span class="kw">pub fn </span>from_array_len(data: A, len: usize) -&gt; <span class="self">Self </span>{
+  </span><span class="attribute">#[inline]
+  #[must_use]
+  #[allow(clippy::match_wild_err_arm)]
+  </span><span class="kw">pub fn </span>from_array_len(data: A, len: usize) -&gt; <span class="self">Self </span>{
     <span class="kw">match </span><span class="self">Self</span>::try_from_array_len(data, len) {
       <span class="prelude-val">Ok</span>(out) =&gt; out,
       <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(
@@ -2385,8 +2385,8 @@
   /// av.insert(4, 5);
   /// assert_eq!(av.as_slice(), &amp;[1, 4, 2, 3, 5]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize, item: A::Item) {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize, item: A::Item) {
     <span class="kw">let </span>x = <span class="self">self</span>.try_insert(index, item);
     <span class="macro">assert!</span>(x.is_none(), <span class="string">&quot;ArrayVec::insert&gt; capacity overflow!&quot;</span>);
   }
@@ -2407,8 +2407,8 @@
   /// assert_eq!(av.as_slice(), &amp;[&quot;one&quot;, &quot;four&quot;, &quot;two&quot;, &quot;three&quot;]);
   /// assert_eq!(av.try_insert(4, &quot;five&quot;), Some(&quot;five&quot;));
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>try_insert(
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>try_insert(
     <span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize, <span class="kw-2">mut </span>item: A::Item,
   ) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
     <span class="macro">assert!</span>(
@@ -2439,23 +2439,23 @@
   }
 
   <span class="doccomment">/// Checks if the length is 0.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
     <span class="self">self</span>.len == <span class="number">0
   </span>}
 
   <span class="doccomment">/// The length of the `ArrayVec` (in elements).
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
     <span class="self">self</span>.len <span class="kw">as </span>usize
   }
 
   <span class="doccomment">/// Makes a new, empty `ArrayVec`.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+  </span><span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
     <span class="self">Self</span>::default()
   }
 
@@ -2472,8 +2472,8 @@
   /// assert_eq!(av.pop(), Some(1));
   /// assert_eq!(av.pop(), None);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>pop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>pop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
     <span class="kw">if </span><span class="self">self</span>.len &gt; <span class="number">0 </span>{
       <span class="self">self</span>.len -= <span class="number">1</span>;
       <span class="kw">let </span>out = take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut()[<span class="self">self</span>.len <span class="kw">as </span>usize]);
@@ -2499,8 +2499,8 @@
   /// assert_eq!(&amp;av[..], [1, 2]);
   /// // av.push(3); this would overflow the ArrayVec and panic!
   /// ```
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: A::Item) {
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: A::Item) {
     <span class="kw">let </span>x = <span class="self">self</span>.try_push(val);
     <span class="macro">assert!</span>(x.is_none(), <span class="string">&quot;ArrayVec::push&gt; capacity overflow!&quot;</span>);
   }
@@ -2518,8 +2518,8 @@
   /// assert_eq!(&amp;av[..], [1, 2]);
   /// assert_eq!(av.try_push(3), Some(3));
   /// ```
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>try_push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: A::Item) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>try_push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: A::Item) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
     <span class="macro">debug_assert!</span>(<span class="self">self</span>.len <span class="kw">as </span>usize &lt;= A::CAPACITY);
 
     <span class="kw">let </span>itemref = <span class="kw">match </span><span class="self">self</span>.data.as_slice_mut().get_mut(<span class="self">self</span>.len <span class="kw">as </span>usize) {
@@ -2548,8 +2548,8 @@
   /// assert_eq!(av.remove(1), 2);
   /// assert_eq!(&amp;av[..], [1, 3]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) -&gt; A::Item {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) -&gt; A::Item {
     <span class="kw">let </span>targets: <span class="kw-2">&amp;mut </span>[A::Item] = <span class="kw-2">&amp;mut </span><span class="self">self</span>.deref_mut()[index..];
     <span class="kw">let </span>item = take(<span class="kw-2">&amp;mut </span>targets[<span class="number">0</span>]);
 
@@ -2583,8 +2583,8 @@
   /// av.resize(2, 0);
   /// assert_eq!(&amp;av[..], [1, 2]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>resize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize, new_val: A::Item)
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>resize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize, new_val: A::Item)
   <span class="kw">where
     </span>A::Item: Clone,
   {
@@ -2613,8 +2613,8 @@
   /// });
   /// assert_eq!(&amp;av[..], [2, 4, 8, 16]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>resize_with&lt;F: FnMut() -&gt; A::Item&gt;(
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>resize_with&lt;F: FnMut() -&gt; A::Item&gt;(
     <span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize, <span class="kw-2">mut </span>f: F,
   ) {
     <span class="kw">match </span>new_len.checked_sub(<span class="self">self</span>.len <span class="kw">as </span>usize) {
@@ -2638,8 +2638,8 @@
   /// av.retain(|&amp;x| x % 2 == 0);
   /// assert_eq!(&amp;av[..], [2, 4]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>retain&lt;F: FnMut(<span class="kw-2">&amp;</span>A::Item) -&gt; bool&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>acceptable: F) {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>retain&lt;F: FnMut(<span class="kw-2">&amp;</span>A::Item) -&gt; bool&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>acceptable: F) {
     <span class="comment">// Drop guard to contain exactly the remaining elements when the test
     // panics.
     </span><span class="kw">struct </span>JoinOnDrop&lt;<span class="lifetime">&#39;vec</span>, Item&gt; {
@@ -2685,8 +2685,8 @@
   ///   &quot;initialized&quot; by Rust&#39;s rules.
   /// * Other than &quot;the memory is initialized&quot; there are no other guarantees
   ///   regarding what you find in the inactive portion of the vec.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>set_len(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize) {
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>set_len(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize) {
     <span class="kw">if </span>new_len &gt; A::CAPACITY {
       <span class="comment">// Note(Lokathor): Technically we don&#39;t have to panic here, and we could
       // just let some other call later on trigger a panic on accident when the
@@ -2722,8 +2722,8 @@
   /// assert_eq!(&amp;av[..], [1]);
   /// assert_eq!(&amp;av2[..], [2, 3]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>split_off(<span class="kw-2">&amp;mut </span><span class="self">self</span>, at: usize) -&gt; <span class="self">Self </span>{
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>split_off(<span class="kw-2">&amp;mut </span><span class="self">self</span>, at: usize) -&gt; <span class="self">Self </span>{
     <span class="comment">// FIXME: should this just use drain into the output?
     </span><span class="kw">if </span>at &gt; <span class="self">self</span>.len() {
       <span class="macro">panic!</span>(
@@ -2769,8 +2769,8 @@
   /// av.splice(.., None);
   /// assert_eq!(av.as_slice(), &amp;[]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>splice&lt;R, I&gt;(
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>splice&lt;R, I&gt;(
     <span class="kw-2">&amp;mut </span><span class="self">self</span>, range: R, replacement: I,
   ) -&gt; ArrayVecSplice&lt;<span class="lifetime">&#39;_</span>, A, core::iter::Fuse&lt;I::IntoIter&gt;&gt;
   <span class="kw">where
@@ -2825,8 +2825,8 @@
   /// assert_eq!(av.swap_remove(0), &quot;foo&quot;);
   /// assert_eq!(&amp;av[..], [&quot;quack&quot;, &quot;zap&quot;]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>swap_remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) -&gt; A::Item {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>swap_remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize) -&gt; A::Item {
     <span class="macro">assert!</span>(
       index &lt; <span class="self">self</span>.len(),
       <span class="string">&quot;ArrayVec::swap_remove&gt; index {} is out of bounds {}&quot;</span>,
@@ -2844,8 +2844,8 @@
   <span class="doccomment">/// Reduces the vec&#39;s length to the given value.
   ///
   /// If the vec is already shorter than the input, nothing happens.
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>truncate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize) {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>truncate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_len: usize) {
     <span class="kw">if </span>new_len &gt;= <span class="self">self</span>.len <span class="kw">as </span>usize {
       <span class="kw">return</span>;
     }
@@ -2871,8 +2871,8 @@
   ///
   /// If the given length is greater than the capacity of the array this will
   /// error, and you&#39;ll get the array back in the `Err`.
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">pub fn </span>try_from_array_len(data: A, len: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, A&gt; {
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">pub fn </span>try_from_array_len(data: A, len: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, A&gt; {
     <span class="comment">/* Note(Soveu): Should we allow A::CAPACITY &gt; u16::MAX for now? */
     </span><span class="kw">if </span>len &lt;= A::CAPACITY {
       <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ data, len: len <span class="kw">as </span>u16 })
@@ -2906,15 +2906,15 @@
   /// data.push(42);
   /// assert_eq!(&amp;data[..], &amp;[42]);
   /// ```
-  </span><span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub const fn </span>from_array_empty(data: A) -&gt; <span class="self">Self </span>{
+  </span><span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">pub const fn </span>from_array_empty(data: A) -&gt; <span class="self">Self </span>{
     <span class="self">Self </span>{ data, len: <span class="number">0 </span>}
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;grab_spare_slice&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;A: Array&gt; ArrayVec&lt;A&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;grab_spare_slice&quot;</span>)]
+</span><span class="kw">impl</span>&lt;A: Array&gt; ArrayVec&lt;A&gt; {
   <span class="doccomment">/// Obtain the shared slice of the array _after_ the active memory.
   ///
   /// ## Example
@@ -2928,8 +2928,8 @@
   /// av.push(13);
   /// assert_eq!(av.grab_spare_slice().len(), 0);
   /// ```
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>grab_spare_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>grab_spare_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
     <span class="kw-2">&amp;</span><span class="self">self</span>.data.as_slice()[<span class="self">self</span>.len <span class="kw">as </span>usize..]
   }
 
@@ -2944,17 +2944,17 @@
   /// av.push(11);
   /// assert_eq!(av.grab_spare_slice_mut().len(), 2);
   /// ```
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>grab_spare_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>grab_spare_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut()[<span class="self">self</span>.len <span class="kw">as </span>usize..]
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly_slice_partition_dedup&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;A: Array&gt; ArrayVec&lt;A&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly_slice_partition_dedup&quot;</span>)]
+</span><span class="kw">impl</span>&lt;A: Array&gt; ArrayVec&lt;A&gt; {
   <span class="doccomment">/// De-duplicates the vec contents.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>dedup(<span class="kw-2">&amp;mut </span><span class="self">self</span>)
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>dedup(<span class="kw-2">&amp;mut </span><span class="self">self</span>)
   <span class="kw">where
     </span>A::Item: PartialEq,
   {
@@ -2962,8 +2962,8 @@
   }
 
   <span class="doccomment">/// De-duplicates the vec according to the predicate given.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>dedup_by&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, same_bucket: F)
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>dedup_by&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, same_bucket: F)
   <span class="kw">where
     </span>F: FnMut(<span class="kw-2">&amp;mut </span>A::Item, <span class="kw-2">&amp;mut </span>A::Item) -&gt; bool,
   {
@@ -2975,8 +2975,8 @@
   }
 
   <span class="doccomment">/// De-duplicates the vec according to the key selector given.
-  </span><span class="attribute">#[inline(always)]</span>
-  <span class="kw">pub fn </span>dedup_by_key&lt;F, K&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>key: F)
+  </span><span class="attribute">#[inline(always)]
+  </span><span class="kw">pub fn </span>dedup_by_key&lt;F, K&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>key: F)
   <span class="kw">where
     </span>F: FnMut(<span class="kw-2">&amp;mut </span>A::Item) -&gt; K,
     K: PartialEq,
@@ -2999,8 +2999,8 @@
 {
   <span class="kw">type </span>Item = A::Item;
 
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
     <span class="kw">if </span><span class="self">self</span>.removal_start &lt; <span class="self">self</span>.removal_end {
       <span class="kw">match </span><span class="self">self</span>.replacement.next() {
         <span class="prelude-val">Some</span>(replacement) =&gt; {
@@ -3022,8 +3022,8 @@
     </span>}
   }
 
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
     <span class="kw">let </span>len = <span class="self">self</span>.len();
     (len, <span class="prelude-val">Some</span>(len))
   }
@@ -3034,8 +3034,8 @@
   </span>A: Array,
   I: Iterator&lt;Item = A::Item&gt;,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
     <span class="self">self</span>.removal_end - <span class="self">self</span>.removal_start
   }
 }
@@ -3052,8 +3052,8 @@
   </span>A: Array,
   I: Iterator&lt;Item = A::Item&gt; + DoubleEndedIterator,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
     <span class="kw">if </span><span class="self">self</span>.removal_start &lt; <span class="self">self</span>.removal_end {
       <span class="kw">match </span><span class="self">self</span>.replacement.next_back() {
         <span class="prelude-val">Some</span>(replacement) =&gt; {
@@ -3092,40 +3092,40 @@
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; AsMut&lt;[A::Item]&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; AsRef&lt;[A::Item]&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; Borrow&lt;[A::Item]&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>borrow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>borrow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; BorrowMut&lt;[A::Item]&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>borrow_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>borrow_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[A::Item] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; Extend&lt;A::Item&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>extend&lt;T: IntoIterator&lt;Item = A::Item&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: T) {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>extend&lt;T: IntoIterator&lt;Item = A::Item&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: T) {
     <span class="kw">for </span>t <span class="kw">in </span>iter {
       <span class="self">self</span>.push(t)
     }
@@ -3133,9 +3133,9 @@
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; From&lt;A&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="doccomment">/// The output has a length equal to the full array.
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="doccomment">/// The output has a length equal to the full array.
   ///
   /// If you want to select a length, use
   /// [`from_array_len`](ArrayVec::from_array_len)
@@ -3151,8 +3151,8 @@
 
 <span class="doccomment">/// The error type returned when a conversion from a slice to an [`ArrayVec`]
 /// fails.
-</span><span class="attribute">#[derive(Debug, Copy, Clone)]</span>
-<span class="kw">pub struct </span>TryFromSliceError(());
+</span><span class="attribute">#[derive(Debug, Copy, Clone)]
+</span><span class="kw">pub struct </span>TryFromSliceError(());
 
 <span class="kw">impl </span>core::fmt::Display <span class="kw">for </span>TryFromSliceError {
   <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
@@ -3160,8 +3160,8 @@
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">impl </span>std::error::Error <span class="kw">for </span>TryFromSliceError {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">impl </span>std::error::Error <span class="kw">for </span>TryFromSliceError {}
 
 <span class="kw">impl</span>&lt;T, A&gt; TryFrom&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>[T]&gt; <span class="kw">for </span>ArrayVec&lt;A&gt;
 <span class="kw">where
@@ -3170,9 +3170,9 @@
 {
   <span class="kw">type </span>Error = TryFromSliceError;
 
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="doccomment">/// The output has a length equal to that of the slice, with the same capacity
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="doccomment">/// The output has a length equal to that of the slice, with the same capacity
   /// as `A`.
   </span><span class="kw">fn </span>try_from(slice: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
     <span class="kw">if </span>slice.len() &gt; A::CAPACITY {
@@ -3194,9 +3194,9 @@
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; FromIterator&lt;A::Item&gt; <span class="kw">for </span>ArrayVec&lt;A&gt; {
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>from_iter&lt;T: IntoIterator&lt;Item = A::Item&gt;&gt;(iter: T) -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">fn </span>from_iter&lt;T: IntoIterator&lt;Item = A::Item&gt;&gt;(iter: T) -&gt; <span class="self">Self </span>{
     <span class="kw">let </span><span class="kw-2">mut </span>av = <span class="self">Self</span>::default();
     <span class="kw">for </span>i <span class="kw">in </span>iter {
       av.push(i)
@@ -3214,40 +3214,40 @@
 
 <span class="kw">impl</span>&lt;A: Array&gt; ArrayVecIterator&lt;A&gt; {
   <span class="doccomment">/// Returns the remaining items of this iterator as a slice.
-  </span><span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">pub fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
+  </span><span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">pub fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[A::Item] {
     <span class="kw-2">&amp;</span><span class="self">self</span>.data.as_slice()[<span class="self">self</span>.base <span class="kw">as </span>usize..<span class="self">self</span>.tail <span class="kw">as </span>usize]
   }
 }
 <span class="kw">impl</span>&lt;A: Array&gt; FusedIterator <span class="kw">for </span>ArrayVecIterator&lt;A&gt; {}
 <span class="kw">impl</span>&lt;A: Array&gt; Iterator <span class="kw">for </span>ArrayVecIterator&lt;A&gt; {
   <span class="kw">type </span>Item = A::Item;
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
     <span class="kw">let </span>slice =
       <span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut()[<span class="self">self</span>.base <span class="kw">as </span>usize..<span class="self">self</span>.tail <span class="kw">as </span>usize];
     <span class="kw">let </span>itemref = slice.first_mut()<span class="question-mark">?</span>;
     <span class="self">self</span>.base += <span class="number">1</span>;
     <span class="kw">return </span><span class="prelude-val">Some</span>(take(itemref));
   }
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
     <span class="kw">let </span>s = <span class="self">self</span>.tail - <span class="self">self</span>.base;
     <span class="kw">let </span>s = s <span class="kw">as </span>usize;
     (s, <span class="prelude-val">Some</span>(s))
   }
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>count(<span class="self">self</span>) -&gt; usize {
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>count(<span class="self">self</span>) -&gt; usize {
     <span class="self">self</span>.size_hint().<span class="number">0
   </span>}
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>last(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>last(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
     <span class="self">self</span>.next_back()
   }
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>nth(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>nth(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;A::Item&gt; {
     <span class="kw">let </span>slice = <span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut();
     <span class="kw">let </span>slice = <span class="kw-2">&amp;mut </span>slice[<span class="self">self</span>.base <span class="kw">as </span>usize..<span class="self">self</span>.tail <span class="kw">as </span>usize];
 
@@ -3263,17 +3263,17 @@
 }
 
 <span class="kw">impl</span>&lt;A: Array&gt; DoubleEndedIterator <span class="kw">for </span>ArrayVecIterator&lt;A&gt; {
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
     <span class="kw">let </span>slice =
       <span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut()[<span class="self">self</span>.base <span class="kw">as </span>usize..<span class="self">self</span>.tail <span class="kw">as </span>usize];
     <span class="kw">let </span>item = slice.last_mut()<span class="question-mark">?</span>;
     <span class="self">self</span>.tail -= <span class="number">1</span>;
     <span class="kw">return </span><span class="prelude-val">Some</span>(take(item));
   }
-  <span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_40&quot;</span>)]</span>
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>nth_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+  <span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_40&quot;</span>)]
+  #[inline]
+  </span><span class="kw">fn </span>nth_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
     <span class="kw">let </span>base = <span class="self">self</span>.base <span class="kw">as </span>usize;
     <span class="kw">let </span>tail = <span class="self">self</span>.tail <span class="kw">as </span>usize;
     <span class="kw">let </span>slice = <span class="kw-2">&amp;mut </span><span class="self">self</span>.data.as_slice_mut()[base..tail];
@@ -3295,8 +3295,8 @@
 <span class="kw">where
   </span>A::Item: Debug,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
     f.debug_tuple(<span class="string">&quot;ArrayVecIterator&quot;</span>).field(<span class="kw-2">&amp;</span><span class="self">self</span>.as_slice()).finish()
   }
 }
@@ -3304,9 +3304,9 @@
 <span class="kw">impl</span>&lt;A: Array&gt; IntoIterator <span class="kw">for </span>ArrayVec&lt;A&gt; {
   <span class="kw">type </span>Item = A::Item;
   <span class="kw">type </span>IntoIter = ArrayVecIterator&lt;A&gt;;
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
     ArrayVecIterator { base: <span class="number">0</span>, tail: <span class="self">self</span>.len, data: <span class="self">self</span>.data }
   }
 }
@@ -3314,9 +3314,9 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, A: Array&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ArrayVec&lt;A&gt; {
   <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>A::Item;
   <span class="kw">type </span>IntoIter = core::slice::IterMut&lt;<span class="lifetime">&#39;a</span>, A::Item&gt;;
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
     <span class="self">self</span>.iter_mut()
   }
 }
@@ -3324,9 +3324,9 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, A: Array&gt; IntoIterator <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ArrayVec&lt;A&gt; {
   <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>A::Item;
   <span class="kw">type </span>IntoIter = core::slice::Iter&lt;<span class="lifetime">&#39;a</span>, A::Item&gt;;
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
     <span class="self">self</span>.iter()
   }
 }
@@ -3335,9 +3335,9 @@
 <span class="kw">where
   </span>A::Item: PartialEq,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
     <span class="self">self</span>.as_slice().eq(other.as_slice())
   }
 }
@@ -3347,9 +3347,9 @@
 <span class="kw">where
   </span>A::Item: PartialOrd,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;core::cmp::Ordering&gt; {
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;core::cmp::Ordering&gt; {
     <span class="self">self</span>.as_slice().partial_cmp(other.as_slice())
   }
 }
@@ -3357,9 +3357,9 @@
 <span class="kw">where
   </span>A::Item: Ord,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; core::cmp::Ordering {
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; core::cmp::Ordering {
     <span class="self">self</span>.as_slice().cmp(other.as_slice())
   }
 }
@@ -3368,9 +3368,9 @@
 <span class="kw">where
   </span>A::Item: PartialEq,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: &amp;&amp;A) -&gt; bool {
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: &amp;&amp;A) -&gt; bool {
     <span class="self">self</span>.as_slice().eq(other.as_slice())
   }
 }
@@ -3379,9 +3379,9 @@
 <span class="kw">where
   </span>A::Item: PartialEq,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: &amp;&amp;[A::Item]) -&gt; bool {
+  <span class="attribute">#[inline]
+  #[must_use]
+  </span><span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: &amp;&amp;[A::Item]) -&gt; bool {
     <span class="self">self</span>.as_slice().eq(<span class="kw-2">*</span>other)
   }
 }
@@ -3390,14 +3390,14 @@
 <span class="kw">where
   </span>A::Item: Hash,
 {
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H) {
     <span class="self">self</span>.as_slice().hash(state)
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;experimental_write_impl&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;A: Array&lt;Item = u8&gt;&gt; core::fmt::Write <span class="kw">for </span>ArrayVec&lt;A&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;experimental_write_impl&quot;</span>)]
+</span><span class="kw">impl</span>&lt;A: Array&lt;Item = u8&gt;&gt; core::fmt::Write <span class="kw">for </span>ArrayVec&lt;A&gt; {
   <span class="kw">fn </span>write_str(<span class="kw-2">&amp;mut </span><span class="self">self</span>, s: <span class="kw-2">&amp;</span>str) -&gt; core::fmt::Result {
     <span class="kw">let </span>my_len = <span class="self">self</span>.len();
     <span class="kw">let </span>str_len = s.as_bytes().len();
@@ -3420,8 +3420,8 @@
 <span class="kw">where
   </span>A::Item: Binary,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3443,8 +3443,8 @@
 <span class="kw">where
   </span>A::Item: Debug,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3466,8 +3466,8 @@
 <span class="kw">where
   </span>A::Item: Display,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3489,8 +3489,8 @@
 <span class="kw">where
   </span>A::Item: LowerExp,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3512,8 +3512,8 @@
 <span class="kw">where
   </span>A::Item: LowerHex,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3535,8 +3535,8 @@
 <span class="kw">where
   </span>A::Item: Octal,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3558,8 +3558,8 @@
 <span class="kw">where
   </span>A::Item: Pointer,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3581,8 +3581,8 @@
 <span class="kw">where
   </span>A::Item: UpperExp,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3604,8 +3604,8 @@
 <span class="kw">where
   </span>A::Item: UpperHex,
 {
-  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]</span>
-  <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
+  <span class="attribute">#[allow(clippy::missing_inline_in_public_items)]
+  </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">if </span>f.alternate() {
       <span class="macro">write!</span>(f, <span class="string">&quot;\n    &quot;</span>)<span class="question-mark">?</span>;
@@ -3623,14 +3623,14 @@
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">use </span>alloc::vec::Vec;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">use </span>alloc::vec::Vec;
 
-<span class="attribute">#[cfg(all(feature = <span class="string">&quot;alloc&quot;</span>, feature = <span class="string">&quot;rustc_1_57&quot;</span>))]</span>
-<span class="kw">use </span>alloc::collections::TryReserveError;
+<span class="attribute">#[cfg(all(feature = <span class="string">&quot;alloc&quot;</span>, feature = <span class="string">&quot;rustc_1_57&quot;</span>))]
+</span><span class="kw">use </span>alloc::collections::TryReserveError;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;A: Array&gt; ArrayVec&lt;A&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">impl</span>&lt;A: Array&gt; ArrayVec&lt;A&gt; {
   <span class="doccomment">/// Drains all elements to a Vec, but reserves additional space
   /// ```
   /// # use tinyvec::*;
@@ -3663,8 +3663,8 @@
   /// assert_eq!(v, &amp;[1, 2, 3]);
   /// assert_eq!(v.capacity(), 13);
   /// ```
-  </span><span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_57&quot;</span>)]</span>
-  <span class="kw">pub fn </span>try_drain_to_vec_and_reserve(
+  </span><span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_57&quot;</span>)]
+  </span><span class="kw">pub fn </span>try_drain_to_vec_and_reserve(
     <span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize,
   ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;A::Item&gt;, TryReserveError&gt; {
     <span class="kw">let </span>cap = n + <span class="self">self</span>.len();
@@ -3704,17 +3704,17 @@
   /// // Vec may reserve more than necessary in order to prevent more future allocations.
   /// assert!(v.capacity() &gt;= 3);
   /// ```
-  </span><span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_57&quot;</span>)]</span>
-  <span class="kw">pub fn </span>try_drain_to_vec(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;A::Item&gt;, TryReserveError&gt; {
+  </span><span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_57&quot;</span>)]
+  </span><span class="kw">pub fn </span>try_drain_to_vec(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;A::Item&gt;, TryReserveError&gt; {
     <span class="self">self</span>.try_drain_to_vec_and_reserve(<span class="number">0</span>)
   }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="kw">struct </span>ArrayVecVisitor&lt;A: Array&gt;(PhantomData&lt;A&gt;);
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+</span><span class="kw">struct </span>ArrayVecVisitor&lt;A: Array&gt;(PhantomData&lt;A&gt;);
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, A: Array&gt; Visitor&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>ArrayVecVisitor&lt;A&gt;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, A: Array&gt; Visitor&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>ArrayVecVisitor&lt;A&gt;
 <span class="kw">where
   </span>A::Item: Deserialize&lt;<span class="lifetime">&#39;de</span>&gt;,
 {
@@ -3745,4 +3745,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -490,36 +490,36 @@
 <span class="kw">use </span><span class="kw">crate</span>::parser::Parser;
 <span class="kw">use </span><span class="kw">crate</span>::util::is_punct;
 
-<span class="attribute">#[derive(Clone, Copy, PartialEq, Eq)]</span>
-<span class="kw">pub struct </span>IgnoreFlags {
+<span class="attribute">#[derive(Clone, Copy, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>IgnoreFlags {
     bits: u8,
 }
 
-<span class="attribute">#[allow(non_upper_case_globals)]</span>
-<span class="kw">impl </span>IgnoreFlags {
+<span class="attribute">#[allow(non_upper_case_globals)]
+</span><span class="kw">impl </span>IgnoreFlags {
     <span class="kw">pub const </span>Empty: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="number">0x00</span>);
     <span class="kw">pub const </span>IgnoreCase: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="number">0x01</span>);
     <span class="kw">pub const </span>IgnoreAsciiCase: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="number">0x02</span>);
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">pub const fn </span>new(bits: u8) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub const fn </span>new(bits: u8) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ bits }
     }
 
     <span class="doccomment">/// Enables a variant.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>enable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, variant: <span class="self">Self</span>) {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>enable(<span class="kw-2">&amp;mut </span><span class="self">self</span>, variant: <span class="self">Self</span>) {
         <span class="self">self</span>.bits |= variant.bits;
     }
 
     <span class="doccomment">/// Checks if this `IgnoreFlags` contains *any* of the given variants.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, variants: <span class="self">Self</span>) -&gt; bool {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, variants: <span class="self">Self</span>) -&gt; bool {
         <span class="self">self</span>.bits &amp; variants.bits != <span class="number">0
     </span>}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.bits == <span class="number">0
     </span>}
 
@@ -744,13 +744,13 @@
             </span><span class="kw">let </span><span class="kw-2">mut </span>ranges = Vec::new();
 
             <span class="kw">for </span>range <span class="kw">in </span><span class="self">self</span>.ranges() {
-                <span class="attribute">#[inline]</span>
-                <span class="kw">fn </span>overlaps(st1: u8, end1: u8, st2: u8, end2: u8) -&gt; bool {
+                <span class="attribute">#[inline]
+                </span><span class="kw">fn </span>overlaps(st1: u8, end1: u8, st2: u8, end2: u8) -&gt; bool {
                     (st2 &lt;= st1 &amp;&amp; st1 &lt;= end2) || (st1 &lt;= st2 &amp;&amp; st2 &lt;= end1)
                 }
 
-                <span class="attribute">#[inline]</span>
-                <span class="kw">fn </span>make_ascii(c: char) -&gt; <span class="prelude-ty">Option</span>&lt;u8&gt; {
+                <span class="attribute">#[inline]
+                </span><span class="kw">fn </span>make_ascii(c: char) -&gt; <span class="prelude-ty">Option</span>&lt;u8&gt; {
                     <span class="kw">if </span>c.is_ascii() {
                         <span class="kw">return </span><span class="prelude-val">Some</span>(c <span class="kw">as </span>u8);
                     } <span class="kw">else </span>{
@@ -850,8 +850,8 @@
         }
     }
 
-    <span class="attribute">#[cfg(test)]</span>
-    <span class="kw">mod </span>tests {
+    <span class="attribute">#[cfg(test)]
+    </span><span class="kw">mod </span>tests {
         <span class="kw">use </span><span class="kw">super</span>::MakeAsciiCaseInsensitive;
         <span class="kw">use </span><span class="kw">crate</span>::mir::{Class, Mir};
         <span class="kw">use </span>regex_syntax::hir::{ClassUnicode, ClassUnicodeRange};
@@ -870,101 +870,101 @@
             };
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>no_letters_left() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>no_letters_left() {
             assert_range(<span class="string">&#39; &#39;</span>, <span class="string">&#39;+&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39; &#39;</span>, <span class="string">&#39;+&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>no_letters_right() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>no_letters_right() {
             assert_range(<span class="string">&#39;{&#39;</span>, <span class="string">&#39;~&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;{&#39;</span>, <span class="string">&#39;~&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>no_letters_middle() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>no_letters_middle() {
             assert_range(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;`&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;`&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>lowercase_left_edge() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>lowercase_left_edge() {
             assert_range(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>lowercase_right_edge() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>lowercase_right_edge() {
             assert_range(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>lowercase_total() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>lowercase_total() {
             assert_range(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>uppercase_left_edge() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>uppercase_left_edge() {
             assert_range(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;d&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;D&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>uppercase_right_edge() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>uppercase_right_edge() {
             assert_range(<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;r&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;R&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>uppercase_total() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>uppercase_total() {
             assert_range(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>lowercase_cross_left() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>lowercase_cross_left() {
             assert_range(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;h&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;[&#39;</span>, <span class="string">&#39;h&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;H&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>lowercase_cross_right() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>lowercase_cross_right() {
             assert_range(<span class="string">&#39;d&#39;</span>, <span class="string">&#39;}&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;d&#39;</span>, <span class="string">&#39;}&#39;</span>), (<span class="string">&#39;D&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>uppercase_cross_left() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>uppercase_cross_left() {
             assert_range(<span class="string">&#39;;&#39;</span>, <span class="string">&#39;H&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;;&#39;</span>, <span class="string">&#39;H&#39;</span>), (<span class="string">&#39;a&#39;</span>, <span class="string">&#39;h&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>uppercase_cross_right() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>uppercase_cross_right() {
             assert_range(<span class="string">&#39;T&#39;</span>, <span class="string">&#39;]&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;t&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;T&#39;</span>, <span class="string">&#39;]&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>cross_both() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>cross_both() {
             assert_range(<span class="string">&#39;X&#39;</span>, <span class="string">&#39;c&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;X&#39;</span>, <span class="string">&#39;c&#39;</span>), (<span class="string">&#39;x&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;C&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>all_letters() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>all_letters() {
             assert_range(<span class="string">&#39;+&#39;</span>, <span class="string">&#39;|&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;+&#39;</span>, <span class="string">&#39;|&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>oob_all_letters() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>oob_all_letters() {
             assert_range(<span class="string">&#39;#&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;#&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>oob_from_uppercase() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>oob_from_uppercase() {
             assert_range(<span class="string">&#39;Q&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;A&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>oob_from_lowercase() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>oob_from_lowercase() {
             assert_range(<span class="string">&#39;q&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;q&#39;</span>, <span class="string">&#39;é&#39;</span>), (<span class="string">&#39;Q&#39;</span>, <span class="string">&#39;Z&#39;</span>)]);
         }
 
-        <span class="attribute">#[test]</span>
-        <span class="kw">fn </span>oob_no_letters() {
+        <span class="attribute">#[test]
+        </span><span class="kw">fn </span>oob_no_letters() {
             assert_range(<span class="string">&#39;|&#39;</span>, <span class="string">&#39;é&#39;</span>, <span class="kw-2">&amp;</span>[(<span class="string">&#39;|&#39;</span>, <span class="string">&#39;é&#39;</span>)]);
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

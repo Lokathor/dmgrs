@@ -1521,8 +1521,8 @@ Defines an abstract syntax for regular expressions.
 /// an AST is constructed without error for `\p{Quux}`, but `Quux` is not a
 /// valid Unicode property name. That particular error is reported when
 /// translating an AST to the high-level intermediate representation (`HIR`).
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Error {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Error {
     <span class="doccomment">/// The kind of error.
     </span>kind: ErrorKind,
     <span class="doccomment">/// The original pattern that the parser generated the error from. Every
@@ -1567,8 +1567,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The type of an error that occurred while building an AST.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ErrorKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ErrorKind {
     <span class="doccomment">/// The capturing group limit was exceeded.
     ///
     /// Note that this represents a limit on the total number of capturing
@@ -1676,14 +1676,14 @@ Defines an abstract syntax for regular expressions.
     /// This enum may grow additional variants, so this makes sure clients
     /// don&#39;t count on exhaustive matching. (Otherwise, adding a new variant
     /// could break existing code.)
-    </span><span class="attribute">#[doc(hidden)]</span>
-    __Nonexhaustive,
+    </span><span class="attribute">#[doc(hidden)]
+    </span>__Nonexhaustive,
 }
 
 <span class="kw">impl </span>error::Error <span class="kw">for </span>Error {
     <span class="comment">// TODO: Remove this method entirely on the next breaking semver release.
-    </span><span class="attribute">#[allow(deprecated)]</span>
-    <span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    </span><span class="attribute">#[allow(deprecated)]
+    </span><span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="kw">use </span><span class="self">self</span>::ErrorKind::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self</span>.kind {
             CaptureLimitExceeded =&gt; <span class="string">&quot;capture group limit exceeded&quot;</span>,
@@ -1821,8 +1821,8 @@ Defines an abstract syntax for regular expressions.
 ///
 /// All span positions are absolute byte offsets that can be used on the
 /// original regular expression that was parsed.
-</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Span {
+</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Span {
     <span class="doccomment">/// The start byte offset.
     </span><span class="kw">pub </span>start: Position,
     <span class="doccomment">/// The end byte offset.
@@ -1851,8 +1851,8 @@ Defines an abstract syntax for regular expressions.
 ///
 /// A position encodes one half of a span, and include the byte offset, line
 /// number and column number.
-</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Position {
+</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Position {
     <span class="doccomment">/// The absolute offset of this position, starting at `0` from the
     /// beginning of the regular expression pattern string.
     </span><span class="kw">pub </span>offset: usize,
@@ -1939,8 +1939,8 @@ Defines an abstract syntax for regular expressions.
 /// Comments are not stored in the tree itself to avoid complexity. Each
 /// comment contains a span of precisely where it occurred in the original
 /// regular expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>WithComments {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>WithComments {
     <span class="doccomment">/// The actual ast.
     </span><span class="kw">pub </span>ast: Ast,
     <span class="doccomment">/// All comments found in the original regular expression.
@@ -1951,8 +1951,8 @@ Defines an abstract syntax for regular expressions.
 ///
 /// A regular expression can only contain comments when the `x` flag is
 /// enabled.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Comment {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Comment {
     <span class="doccomment">/// The span of this comment, including the beginning `#` and ending `\n`.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The comment text, starting with the first character following the `#`
@@ -1967,8 +1967,8 @@ Defines an abstract syntax for regular expressions.
 ///
 /// This type defines its own destructor that uses constant stack space and
 /// heap space proportional to the size of the `Ast`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>Ast {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Ast {
     <span class="doccomment">/// An empty regex that matches everything.
     </span>Empty(Span),
     <span class="doccomment">/// A set of flags, e.g., `(?is)`.
@@ -2051,8 +2051,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// An alternation of regular expressions.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Alternation {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Alternation {
     <span class="doccomment">/// The span of this alternation.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The alternate regular expressions.
@@ -2075,8 +2075,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A concatenation of regular expressions.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Concat {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Concat {
     <span class="doccomment">/// The span of this concatenation.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The concatenation regular expressions.
@@ -2103,8 +2103,8 @@ Defines an abstract syntax for regular expressions.
 /// A literal corresponds to a single Unicode scalar value. Literals may be
 /// represented in their literal form, e.g., `a` or in their escaped form,
 /// e.g., `\x61`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Literal {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Literal {
     <span class="doccomment">/// The span of this literal.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The kind of this literal.
@@ -2127,8 +2127,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The kind of a single literal expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>LiteralKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>LiteralKind {
     <span class="doccomment">/// The literal is written verbatim, e.g., `a` or `☃`.
     </span>Verbatim,
     <span class="doccomment">/// The literal is written as an escape because it is punctuation, e.g.,
@@ -2153,8 +2153,8 @@ Defines an abstract syntax for regular expressions.
 ///
 /// A special literal is a special escape sequence recognized by the regex
 /// parser, e.g., `\f` or `\n`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>SpecialLiteralKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>SpecialLiteralKind {
     <span class="doccomment">/// Bell, spelled `\a` (`\x07`).
     </span>Bell,
     <span class="doccomment">/// Form feed, spelled `\f` (`\x0C`).
@@ -2177,8 +2177,8 @@ Defines an abstract syntax for regular expressions.
 /// Note that all variants behave the same when used with brackets. They only
 /// differ when used without brackets in the number of hex digits that must
 /// follow.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>HexLiteralKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>HexLiteralKind {
     <span class="doccomment">/// A `\x` prefix. When used without brackets, this form is limited to
     /// two digits.
     </span>X,
@@ -2204,8 +2204,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A single character class expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>Class {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Class {
     <span class="doccomment">/// A Unicode character class, e.g., `\pL` or `\p{Greek}`.
     </span>Unicode(ClassUnicode),
     <span class="doccomment">/// A perl character class, e.g., `\d` or `\W`.
@@ -2228,8 +2228,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A Perl character class.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassPerl {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassPerl {
     <span class="doccomment">/// The span of this class.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The kind of Perl class.
@@ -2240,8 +2240,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The available Perl character classes.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassPerlKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassPerlKind {
     <span class="doccomment">/// Decimal numbers.
     </span>Digit,
     <span class="doccomment">/// Whitespace.
@@ -2251,8 +2251,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// An ASCII character class.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassAscii {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassAscii {
     <span class="doccomment">/// The span of this class.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The kind of ASCII class.
@@ -2263,8 +2263,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The available ASCII character classes.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassAsciiKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassAsciiKind {
     <span class="doccomment">/// `[0-9A-Za-z]`
     </span>Alnum,
     <span class="doccomment">/// `[A-Za-z]`
@@ -2326,8 +2326,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A Unicode character class.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassUnicode {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassUnicode {
     <span class="doccomment">/// The span of this class.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// Whether this class is negated or not.
@@ -2361,8 +2361,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The available forms of Unicode character classes.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassUnicodeKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassUnicodeKind {
     <span class="doccomment">/// A one letter abbreviated class, e.g., `\pN`.
     </span>OneLetter(char),
     <span class="doccomment">/// A binary property, general category or script. The string may be
@@ -2380,8 +2380,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The type of op used in a Unicode character class.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassUnicodeOpKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassUnicodeOpKind {
     <span class="doccomment">/// A property set to a specific value, e.g., `\p{scx=Katakana}`.
     </span>Equal,
     <span class="doccomment">/// A property set to a specific value using a colon, e.g.,
@@ -2402,8 +2402,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A bracketed character class, e.g., `[a-z0-9]`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassBracketed {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassBracketed {
     <span class="doccomment">/// The span of this class.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// Whether this class is negated or not. e.g., `[a]` is not negated but
@@ -2420,8 +2420,8 @@ Defines an abstract syntax for regular expressions.
 /// class. That is, every bracketed character is one of two types: a union of
 /// items (literals, ranges, other bracketed classes) or a tree of binary set
 /// operations.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassSet {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassSet {
     <span class="doccomment">/// An item, which can be a single literal, range, nested character class
     /// or a union of items.
     </span>Item(ClassSetItem),
@@ -2453,8 +2453,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A single component of a character class set.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassSetItem {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassSetItem {
     <span class="doccomment">/// An empty item.
     ///
     /// Note that a bracketed character class cannot contain a single empty
@@ -2496,8 +2496,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A single character class range in a set.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassSetRange {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassSetRange {
     <span class="doccomment">/// The span of this range.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The start of this range.
@@ -2517,8 +2517,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A union of items inside a character class set.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassSetUnion {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassSetUnion {
     <span class="doccomment">/// The span of the items in this operation. e.g., the `a-z0-9` in
     /// `[^a-z0-9]`
     </span><span class="kw">pub </span>span: Span,
@@ -2561,8 +2561,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A Unicode character class set operation.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassSetBinaryOp {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassSetBinaryOp {
     <span class="doccomment">/// The span of this operation. e.g., the `a-z--[h-p]` in `[a-z--h-p]`.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The type of this set operation.
@@ -2578,8 +2578,8 @@ Defines an abstract syntax for regular expressions.
 /// Note that this doesn&#39;t explicitly represent union since there is no
 /// explicit union operator. Concatenation inside a character class corresponds
 /// to the union operation.
-</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ClassSetBinaryOpKind {
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ClassSetBinaryOpKind {
     <span class="doccomment">/// The intersection of two sets, e.g., `\pN&amp;&amp;[a-z]`.
     </span>Intersection,
     <span class="doccomment">/// The difference of two sets, e.g., `\pN--[0-9]`.
@@ -2591,8 +2591,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A single zero-width assertion.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Assertion {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Assertion {
     <span class="doccomment">/// The span of this assertion.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The assertion kind, e.g., `\b` or `^`.
@@ -2600,8 +2600,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// An assertion kind.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>AssertionKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>AssertionKind {
     <span class="doccomment">/// `^`
     </span>StartLine,
     <span class="doccomment">/// `$`
@@ -2617,8 +2617,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A repetition operation applied to a regular expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Repetition {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Repetition {
     <span class="doccomment">/// The span of this operation.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The actual operation.
@@ -2630,8 +2630,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The repetition operator itself.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>RepetitionOp {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>RepetitionOp {
     <span class="doccomment">/// The span of this operator. This includes things like `+`, `*?` and
     /// `{m,n}`.
     </span><span class="kw">pub </span>span: Span,
@@ -2640,8 +2640,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The kind of a repetition operator.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>RepetitionKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>RepetitionKind {
     <span class="doccomment">/// `?`
     </span>ZeroOrOne,
     <span class="doccomment">/// `*`
@@ -2653,8 +2653,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A range repetition operator.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>RepetitionRange {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>RepetitionRange {
     <span class="doccomment">/// `{m}`
     </span>Exactly(u32),
     <span class="doccomment">/// `{m,}`
@@ -2682,8 +2682,8 @@ Defines an abstract syntax for regular expressions.
 /// include flag-only groups like `(?is)`, but does contain any group that
 /// contains a sub-expression, e.g., `(a)`, `(?P&lt;name&gt;a)`, `(?:a)` and
 /// `(?is:a)`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Group {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Group {
     <span class="doccomment">/// The span of this group.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The kind of this group.
@@ -2723,8 +2723,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The kind of a group.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>GroupKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>GroupKind {
     <span class="doccomment">/// `(a)`
     </span>CaptureIndex(u32),
     <span class="doccomment">/// `(?P&lt;name&gt;a)`
@@ -2737,8 +2737,8 @@ Defines an abstract syntax for regular expressions.
 ///
 /// This corresponds to the name itself between the angle brackets in, e.g.,
 /// `(?P&lt;foo&gt;expr)`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>CaptureName {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>CaptureName {
     <span class="doccomment">/// The span of this capture name.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The capture name.
@@ -2748,8 +2748,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A group of flags that is not applied to a particular regular expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>SetFlags {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>SetFlags {
     <span class="doccomment">/// The span of these flags, including the grouping parentheses.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The actual sequence of flags.
@@ -2759,8 +2759,8 @@ Defines an abstract syntax for regular expressions.
 <span class="doccomment">/// A group of flags.
 ///
 /// This corresponds only to the sequence of flags themselves, e.g., `is-u`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Flags {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Flags {
     <span class="doccomment">/// The span of this group of flags.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// A sequence of flag items. Each item is either a flag or a negation
@@ -2811,8 +2811,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A single item in a group of flags.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>FlagsItem {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>FlagsItem {
     <span class="doccomment">/// The span of this item.
     </span><span class="kw">pub </span>span: Span,
     <span class="doccomment">/// The kind of this item.
@@ -2820,8 +2820,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// The kind of an item in a group of flags.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>FlagsItemKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>FlagsItemKind {
     <span class="doccomment">/// A negation operator applied to all subsequent flags in the enclosing
     /// group.
     </span>Negation,
@@ -2840,8 +2840,8 @@ Defines an abstract syntax for regular expressions.
 }
 
 <span class="doccomment">/// A single flag.
-</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>Flag {
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Flag {
     <span class="doccomment">/// `i`
     </span>CaseInsensitive,
     <span class="doccomment">/// `m`
@@ -2966,17 +2966,17 @@ Defines an abstract syntax for regular expressions.
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="comment">// We use a thread with an explicit stack size to test that our destructor
     // for Ast can handle arbitrarily sized expressions in constant stack
     // space. In case we run on a platform without threads (WASM?), we limit
     // this test to Windows/Unix.
-    </span><span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(any(unix, windows))]</span>
-    <span class="kw">fn </span>no_stack_overflow_on_drop() {
+    </span><span class="attribute">#[test]
+    #[cfg(any(unix, windows))]
+    </span><span class="kw">fn </span>no_stack_overflow_on_drop() {
         <span class="kw">use </span>std::thread;
 
         <span class="kw">let </span>run = || {
@@ -3003,4 +3003,4 @@ Defines an abstract syntax for regular expressions.
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

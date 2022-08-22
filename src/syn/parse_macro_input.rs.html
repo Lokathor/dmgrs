@@ -282,9 +282,9 @@
 /// #     proc_macro::TokenStream::new()
 /// # }
 /// ```
-</span><span class="attribute">#[macro_export]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(all(feature = <span class="string">&quot;parsing&quot;</span>, feature = <span class="string">&quot;proc-macro&quot;</span>))))]</span>
-<span class="macro">macro_rules!</span> parse_macro_input {
+</span><span class="attribute">#[macro_export]
+#[cfg_attr(doc_cfg, doc(cfg(all(feature = <span class="string">&quot;parsing&quot;</span>, feature = <span class="string">&quot;proc-macro&quot;</span>))))]
+</span><span class="macro">macro_rules! </span>parse_macro_input {
     (<span class="macro-nonterminal">$tokenstream</span>:ident <span class="kw">as </span><span class="macro-nonterminal">$ty</span>:ty) =&gt; {
         <span class="kw">match </span><span class="macro-nonterminal">$crate::parse_macro_input::parse</span>::&lt;<span class="macro-nonterminal">$ty</span>&gt;(<span class="macro-nonterminal">$tokenstream</span>) {
             <span class="macro-nonterminal">$crate::__private::Ok</span>(data) =&gt; data,
@@ -313,14 +313,14 @@
 <span class="kw">use </span>proc_macro::TokenStream;
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[doc(hidden)]</span>
-<span class="kw">pub fn </span>parse&lt;T: ParseMacroInput&gt;(token_stream: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;T&gt; {
+</span><span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub fn </span>parse&lt;T: ParseMacroInput&gt;(token_stream: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;T&gt; {
     T::parse.parse(token_stream)
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[doc(hidden)]</span>
-<span class="kw">pub trait </span>ParseMacroInput: Sized {
+</span><span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub trait </span>ParseMacroInput: Sized {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt;;
 }
 
@@ -333,11 +333,11 @@
 <span class="comment">////////////////////////////////////////////////////////////////////////////////
 // Any other types that we want `parse_macro_input!` to be able to parse.
 
-</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-<span class="kw">use </span><span class="kw">crate</span>::AttributeArgs;
+</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+</span><span class="kw">use </span><span class="kw">crate</span>::AttributeArgs;
 
-<span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-<span class="kw">impl </span>ParseMacroInput <span class="kw">for </span>AttributeArgs {
+<span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+</span><span class="kw">impl </span>ParseMacroInput <span class="kw">for </span>AttributeArgs {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>metas = Vec::new();
 
@@ -357,4 +357,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

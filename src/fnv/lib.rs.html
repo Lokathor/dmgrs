@@ -427,38 +427,38 @@ set = FnvHashSet::with_capacity_and_hasher(10, Default::default());
 set.insert(1);
 set.insert(2);
 ```
-&quot;#</span>)]</span>
-<span class="doccomment">//!
+&quot;#</span>)]
+</span><span class="doccomment">//!
 //! [chongo]: http://www.isthe.com/chongo/tech/comp/fnv/index.html
 //! [faq]: https://www.rust-lang.org/en-US/faq.html#why-are-rusts-hashmaps-slow
 //! [graphs]: https://cglab.ca/~abeinges/blah/hash-rs/
 
-</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="attribute">#[cfg(all(not(feature = <span class="string">&quot;std&quot;</span>), test))]</span>
-<span class="kw">extern crate </span>alloc;
+#[cfg(all(not(feature = <span class="string">&quot;std&quot;</span>), test))]
+</span><span class="kw">extern crate </span>alloc;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">use </span>std::default::Default;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">use </span>std::hash::{Hasher, BuildHasherDefault};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">use </span>std::collections::{HashMap, HashSet};
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">use </span>core::default::Default;
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">use </span>core::hash::{Hasher, BuildHasherDefault};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">use </span>std::default::Default;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">use </span>std::hash::{Hasher, BuildHasherDefault};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">use </span>std::collections::{HashMap, HashSet};
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">use </span>core::default::Default;
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">use </span>core::hash::{Hasher, BuildHasherDefault};
 
 <span class="doccomment">/// An implementation of the Fowler–Noll–Vo hash function.
 ///
 /// See the [crate documentation](index.html) for more details.
-</span><span class="attribute">#[allow(missing_copy_implementations)]</span>
-<span class="kw">pub struct </span>FnvHasher(u64);
+</span><span class="attribute">#[allow(missing_copy_implementations)]
+</span><span class="kw">pub struct </span>FnvHasher(u64);
 
 <span class="kw">impl </span>Default <span class="kw">for </span>FnvHasher {
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>default() -&gt; FnvHasher {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>default() -&gt; FnvHasher {
         FnvHasher(<span class="number">0xcbf29ce484222325</span>)
     }
 }
@@ -466,20 +466,20 @@ set.insert(2);
 <span class="kw">impl </span>FnvHasher {
     <span class="doccomment">/// Create an FNV hasher starting with a state corresponding
     /// to the hash `key`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>with_key(key: u64) -&gt; FnvHasher {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>with_key(key: u64) -&gt; FnvHasher {
         FnvHasher(key)
     }
 }
 
 <span class="kw">impl </span>Hasher <span class="kw">for </span>FnvHasher {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="self">self</span>.<span class="number">0
     </span>}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>FnvHasher(<span class="kw-2">mut </span>hash) = <span class="kw-2">*</span><span class="self">self</span>;
 
         <span class="kw">for </span>byte <span class="kw">in </span>bytes.iter() {
@@ -495,21 +495,21 @@ set.insert(2);
 </span><span class="kw">pub type </span>FnvBuildHasher = BuildHasherDefault&lt;FnvHasher&gt;;
 
 <span class="doccomment">/// A `HashMap` using a default FNV hasher.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">pub type </span>FnvHashMap&lt;K, V&gt; = HashMap&lt;K, V, FnvBuildHasher&gt;;
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">pub type </span>FnvHashMap&lt;K, V&gt; = HashMap&lt;K, V, FnvBuildHasher&gt;;
 
 <span class="doccomment">/// A `HashSet` using a default FNV hasher.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">pub type </span>FnvHashSet&lt;T&gt; = HashSet&lt;T, FnvBuildHasher&gt;;
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">pub type </span>FnvHashSet&lt;T&gt; = HashSet&lt;T, FnvBuildHasher&gt;;
 
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>test {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">use </span>std::hash::Hasher;
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
-    <span class="kw">use </span>alloc::vec::Vec;
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">use </span>std::hash::Hasher;
+    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+    </span><span class="kw">use </span>alloc::vec::Vec;
 
     <span class="kw">fn </span>fnv1a(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; u64 {
         <span class="kw">let </span><span class="kw-2">mut </span>hasher = FnvHasher::default();
@@ -525,8 +525,8 @@ set.insert(2);
         (<span class="number">0</span>..<span class="number">500</span>).flat_map(|<span class="kw">_</span>| bytes.iter().cloned()).collect()
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>basic_tests() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>basic_tests() {
         <span class="macro">assert_eq!</span>(fnv1a(<span class="string">b&quot;&quot;</span>), <span class="number">0xcbf29ce484222325</span>);
         <span class="macro">assert_eq!</span>(fnv1a(<span class="string">b&quot;a&quot;</span>), <span class="number">0xaf63dc4c8601ec8c</span>);
         <span class="macro">assert_eq!</span>(fnv1a(<span class="string">b&quot;b&quot;</span>), <span class="number">0xaf63df4c8601f1a5</span>);
@@ -733,4 +733,4 @@ set.insert(2);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="fnv" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="fnv" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

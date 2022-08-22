@@ -51,8 +51,8 @@
 
 <span class="doccomment">/// This iterator adapter will collapse all repeated newlines into a single end
 /// of line.
-</span><span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub struct </span>RepeatedNewlineFilter&lt;I: Iterator&lt;Item = (Lexeme, Range&lt;usize&gt;)&gt;&gt; {
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>RepeatedNewlineFilter&lt;I: Iterator&lt;Item = (Lexeme, Range&lt;usize&gt;)&gt;&gt; {
   i: Peekable&lt;I&gt;,
 }
 <span class="kw">impl</span>&lt;I: Iterator&lt;Item = (Lexeme, Range&lt;usize&gt;)&gt;&gt; RepeatedNewlineFilter&lt;I&gt; {
@@ -78,8 +78,8 @@
   }
 }
 
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_RepeatedNewlineFilter() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_RepeatedNewlineFilter() {
   <span class="kw">let </span><span class="kw-2">mut </span>iter = RepeatedNewlineFilter::new(
     <span class="macro">vec!</span>[Str(<span class="string">&quot;hello&quot;</span>), EndOfLine, EndOfLine, EndOfLine, Str(<span class="string">&quot;world&quot;</span>)]
       .into_iter()
@@ -91,4 +91,4 @@
   <span class="macro">assert_eq!</span>(iter.next(), <span class="prelude-val">None</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

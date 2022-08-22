@@ -157,8 +157,8 @@
 <span class="kw">use </span>std::fmt::{<span class="self">self</span>, Display};
 <span class="kw">use </span>std::hash::{Hash, Hasher};
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::lookahead;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::lookahead;
 
 <span class="doccomment">/// A Rust lifetime: `&#39;a`.
 ///
@@ -266,20 +266,20 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[allow(non_snake_case)]</span>
-<span class="kw">pub fn </span>Lifetime(marker: lookahead::TokenMarker) -&gt; Lifetime {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[doc(hidden)]
+#[allow(non_snake_case)]
+</span><span class="kw">pub fn </span>Lifetime(marker: lookahead::TokenMarker) -&gt; Lifetime {
     <span class="kw">match </span>marker {}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream, <span class="prelude-ty">Result</span>};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Lifetime {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Lifetime {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             input.step(|cursor| {
                 cursor
@@ -290,14 +290,14 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span>proc_macro2::{Punct, Spacing, TokenStream};
     <span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Lifetime {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Lifetime {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="kw">let </span><span class="kw-2">mut </span>apostrophe = Punct::new(<span class="string">&#39;\&#39;&#39;</span>, Spacing::Joint);
             apostrophe.set_span(<span class="self">self</span>.apostrophe);
@@ -307,4 +307,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

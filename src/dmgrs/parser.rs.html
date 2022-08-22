@@ -460,8 +460,8 @@
 <span class="doccomment">/// Wraps a span around any other type.
 ///
 /// The contained value is accessable with [`Deref`] and [`DerefMut`].
-</span><span class="attribute">#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub struct </span>Spanned&lt;T&gt; {
+</span><span class="attribute">#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>Spanned&lt;T&gt; {
   t: T,
   range_start: usize,
   range_end: usize,
@@ -477,32 +477,32 @@
 }
 <span class="kw">impl</span>&lt;T&gt; Spanned&lt;T&gt; {
   <span class="doccomment">/// Constructs the spanned value
-  </span><span class="attribute">#[must_use]</span>
-  <span class="kw">pub const fn </span>new(t: T, range: Range&lt;usize&gt;) -&gt; <span class="self">Self </span>{
+  </span><span class="attribute">#[must_use]
+  </span><span class="kw">pub const fn </span>new(t: T, range: Range&lt;usize&gt;) -&gt; <span class="self">Self </span>{
     <span class="self">Self </span>{ t, range_start: range.start, range_end: range.end }
   }
   <span class="doccomment">/// Gets the span in the form of a [`Range&lt;usize&gt;`]
-  </span><span class="attribute">#[must_use]</span>
-  <span class="kw">pub const fn </span>get_span_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Range&lt;usize&gt; {
+  </span><span class="attribute">#[must_use]
+  </span><span class="kw">pub const fn </span>get_span_range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Range&lt;usize&gt; {
     <span class="self">self</span>.range_start..<span class="self">self</span>.range_end
   }
 }
 <span class="kw">impl</span>&lt;T&gt; From&lt;(T, Range&lt;usize&gt;)&gt; <span class="kw">for </span>Spanned&lt;T&gt; {
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>from((t, range): (T, Range&lt;usize&gt;)) -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[must_use]
+  </span><span class="kw">fn </span>from((t, range): (T, Range&lt;usize&gt;)) -&gt; <span class="self">Self </span>{
     <span class="self">Self</span>::new(t, range)
   }
 }
 <span class="kw">impl</span>&lt;T&gt; Deref <span class="kw">for </span>Spanned&lt;T&gt; {
   <span class="kw">type </span>Target = T;
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+  <span class="attribute">#[must_use]
+  </span><span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
     <span class="kw-2">&amp;</span><span class="self">self</span>.t
   }
 }
 <span class="kw">impl</span>&lt;T&gt; DerefMut <span class="kw">for </span>Spanned&lt;T&gt; {
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
+  <span class="attribute">#[must_use]
+  </span><span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.t
   }
 }
@@ -510,8 +510,8 @@
 <span class="doccomment">/// Attributes for the program or for a specific `fn` or `static`.
 ///
 /// * Program attributes are written using `#![words here]`
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub enum </span>Attribute {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Attribute {
   <span class="doccomment">/// Call attributes are like `foo(bar)`, `foo()`, or even `foo`
   ///
   /// The current parser can&#39;t distingush between `foo()` (with parens) and
@@ -557,8 +557,8 @@
 <span class="doccomment">/// An &quot;expression&quot; means an integer constant expression.
 ///
 /// They can assigned to a `const`, or used inline in an instruction.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub enum </span>Expr {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub enum </span>Expr {
   <span class="doccomment">/// An actual numeric value, without anything more to look up or evaluate.
   </span>Num(Spanned&lt;u16&gt;),
   <span class="doccomment">/// The name of a `const`
@@ -575,14 +575,14 @@
   <span class="doccomment">/// Parses any expression, which means it parses a heck of a lot.
   </span><span class="kw">pub fn </span>parser() -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Expr, Error = Simple&lt;Lexeme&gt;&gt; {
     recursive(|expr| {
-      <span class="kw">let </span>literal = <span class="macro">select!</span> {
+      <span class="kw">let </span>literal = <span class="macro">select! </span>{
         Lexeme::HexLiteral(x) =&gt; x,
         Lexeme::DecimalLiteral(x) =&gt; x,
         Lexeme::BinaryLiteral(x) =&gt; x,
       }
       .map_with_span(|x, span| Expr::Num(Spanned::new(x, span)));
 
-      <span class="kw">let </span>constant = <span class="macro">select!</span> { Lexeme::Ident(s) =&gt; s }
+      <span class="kw">let </span>constant = <span class="macro">select! </span>{ Lexeme::Ident(s) =&gt; s }
         .map_with_span(|s, span| Expr::Ident(Spanned::new(s, span)));
 
       <span class="kw">let </span>bit_macro = just(Lexeme::Ident(<span class="string">&quot;bit&quot;</span>))
@@ -598,7 +598,7 @@
       <span class="kw">let </span>size_of_val_macro = just(Lexeme::Ident(<span class="string">&quot;size_of_val&quot;</span>))
         .then_ignore(just(Lexeme::Punct(<span class="string">&#39;!&#39;</span>)))
         .ignore_then(
-          <span class="macro">select!</span> { Lexeme::Ident(s) =&gt; s }
+          <span class="macro">select! </span>{ Lexeme::Ident(s) =&gt; s }
             .delimited_by(just(Lexeme::Punct(<span class="string">&#39;[&#39;</span>)), just(Lexeme::Punct(<span class="string">&#39;]&#39;</span>))),
         )
         .map_with_span(|s, span| {
@@ -635,8 +635,8 @@
 ///
 /// A `const` exists only at compile time, they do not appear at any fixed
 /// location into the ROM.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub struct </span>Const {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Const {
   <span class="doccomment">/// The name of the `const`, which other code can now refer to.
   </span><span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
   <span class="doccomment">/// The expression that this `const` is equivalent to.
@@ -655,8 +655,8 @@
 }
 
 <span class="doccomment">/// The type of a `static` item.
-</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub enum </span>StaticType {
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub enum </span>StaticType {
   <span class="doccomment">/// `[u8]`, a slice of bytes, without a specific length.
   </span>ByteSlice,
 }
@@ -669,8 +669,8 @@
 ///
 /// **Note:** At the moment, only a literal slice of bytes is allowed, but in
 /// the future it&#39;s planned that other static expressions will become possible.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub struct </span>Static {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Static {
   <span class="doccomment">/// The name of this `static`
   </span><span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
   <span class="doccomment">/// The intended type of the static.
@@ -711,8 +711,8 @@
 }
 
 <span class="doccomment">/// Where to branch the loop to
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub enum </span>BranchTgt {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>BranchTgt {
   <span class="doccomment">/// Continue looping, branch to the start of the loop
   </span>Continue,
   <span class="doccomment">/// Break the loop, branch to the end of the loop
@@ -720,8 +720,8 @@
 }
 
 <span class="doccomment">/// A single instruction within a function.
-</span><span class="attribute">#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub struct </span>Instruction {
+</span><span class="attribute">#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>Instruction {
   <span class="doccomment">/// The operation to perform
   </span><span class="kw">pub </span>op: Spanned&lt;StaticStr&gt;,
   <span class="doccomment">/// The arguments to the operation
@@ -729,8 +729,8 @@
 }
 
 <span class="doccomment">/// An argument to an instruction.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub enum </span>InstrArg {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub enum </span>InstrArg {
   <span class="doccomment">/// A register name.
   </span>Reg(StaticStr),
   <span class="doccomment">/// A register dereference, with optional post-op offset.
@@ -742,8 +742,8 @@
 <span class="doccomment">/// A single statement within a block.
 ///
 /// **Note:** This doesn&#39;t currently have support for `if` or `if-else`
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub enum </span>Stmt {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Stmt {
   <span class="doccomment">/// A single CPU instruction.
   </span>Instr(Instruction),
   <span class="doccomment">/// A conditional branch to the start or end of the loop.
@@ -755,8 +755,8 @@
 }
 
 <span class="doccomment">/// A block of statements
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub struct </span>Block {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Block {
   <span class="doccomment">/// The list of statements in the block
   </span><span class="kw">pub </span>stmts: Vec&lt;Stmt&gt;,
 }
@@ -767,8 +767,8 @@
 /// When you `call` a function the return address is pushed to the stack, and
 /// when you return it&#39;s popped from the stack. That&#39;s about the extent of the
 /// support that the compiler and CPU give you.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub struct </span>Fn {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Fn {
   <span class="doccomment">/// The name of the function
   </span><span class="kw">pub </span>name: Spanned&lt;StaticStr&gt;,
   <span class="doccomment">/// The block of statements for the function
@@ -789,7 +789,7 @@
       ];
       <span class="kw">let </span>instr_arg =
               <span class="comment">// Register args: `a`
-              </span><span class="macro">select!</span> { Lexeme::Ident(s) <span class="kw">if </span>REGS.contains(<span class="kw-2">&amp;</span>s) =&gt; InstrArg::Reg(s) }
+              </span><span class="macro">select! </span>{ Lexeme::Ident(s) <span class="kw">if </span>REGS.contains(<span class="kw-2">&amp;</span>s) =&gt; InstrArg::Reg(s) }
               <span class="comment">// Expression args: `FOO + BAR`
               </span>.or(Expr::parser().map(InstrArg::Expr))
               <span class="comment">// Deref args: `[FOO]`, `[BAR-]`, `[BAZ++]`
@@ -840,8 +840,8 @@
 }
 
 <span class="doccomment">/// An item is anything that can appear at the top level of a source file.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub enum </span>Item {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Item {
   <span class="doccomment">/// Program attributes
   </span>Attr(Attribute),
   <span class="doccomment">/// Constants
@@ -853,8 +853,8 @@
 }
 
 <span class="doccomment">/// The Abstract Syntax Tree of a Dmgrs program.
-</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]</span>
-<span class="kw">pub struct </span>Ast {
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>Ast {
   <span class="doccomment">/// The list of items in the program.
   </span><span class="kw">pub </span>items: Vec&lt;Spanned&lt;Item&gt;&gt;,
 }
@@ -881,14 +881,14 @@
 
 <span class="kw">fn </span>ident_parser(
 ) -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Spanned&lt;StaticStr&gt;, Error = Simple&lt;Lexeme&gt;&gt; {
-  <span class="macro">select!</span> { Lexeme::Ident(s) =&gt; s }
+  <span class="macro">select! </span>{ Lexeme::Ident(s) =&gt; s }
     .map_with_span(|name, span| Spanned::new(name, span))
 }
 
 <span class="kw">fn </span>string_parser(
 ) -&gt; <span class="kw">impl </span>Parser&lt;Lexeme, Spanned&lt;StaticStr&gt;, Error = Simple&lt;Lexeme&gt;&gt; {
-  <span class="macro">select!</span> { Lexeme::Str(s) =&gt; s }
+  <span class="macro">select! </span>{ Lexeme::Str(s) =&gt; s }
     .map_with_span(|name, span| Spanned::new(name, span))
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

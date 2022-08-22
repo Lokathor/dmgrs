@@ -630,8 +630,8 @@
 <span class="kw">unsafe impl</span>&lt;T: AnyBitPattern&gt; CheckedBitPattern <span class="kw">for </span>T {
   <span class="kw">type </span>Bits = T;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>is_valid_bit_pattern(_bits: <span class="kw-2">&amp;</span>T) -&gt; bool {
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>is_valid_bit_pattern(_bits: <span class="kw-2">&amp;</span>T) -&gt; bool {
     <span class="bool-val">true
   </span>}
 }
@@ -639,8 +639,8 @@
 <span class="kw">unsafe impl </span>CheckedBitPattern <span class="kw">for </span>char {
   <span class="kw">type </span>Bits = u32;
 
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>is_valid_bit_pattern(bits: <span class="kw-2">&amp;</span><span class="self">Self</span>::Bits) -&gt; bool {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>is_valid_bit_pattern(bits: <span class="kw-2">&amp;</span><span class="self">Self</span>::Bits) -&gt; bool {
     core::char::from_u32(<span class="kw-2">*</span>bits).is_some()
   }
 }
@@ -648,8 +648,8 @@
 <span class="kw">unsafe impl </span>CheckedBitPattern <span class="kw">for </span>bool {
   <span class="kw">type </span>Bits = u8;
 
-  <span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>is_valid_bit_pattern(bits: <span class="kw-2">&amp;</span><span class="self">Self</span>::Bits) -&gt; bool {
+  <span class="attribute">#[inline]
+  </span><span class="kw">fn </span>is_valid_bit_pattern(bits: <span class="kw-2">&amp;</span><span class="self">Self</span>::Bits) -&gt; bool {
     <span class="kw">match </span><span class="kw-2">*</span>bits {
       <span class="number">0 </span>| <span class="number">1 </span>=&gt; <span class="bool-val">true</span>,
       <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
@@ -659,8 +659,8 @@
 
 <span class="doccomment">/// The things that can go wrong when casting between [`CheckedBitPattern`] data
 /// forms.
-</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]</span>
-<span class="kw">pub enum </span>CheckedCastError {
+</span><span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+</span><span class="kw">pub enum </span>CheckedCastError {
   <span class="doccomment">/// An error occurred during a true-[`Pod`] cast
   </span>PodCastError(<span class="kw">crate</span>::PodCastError),
   <span class="doccomment">/// When casting to a [`CheckedBitPattern`] type, it is possible that the
@@ -670,14 +670,14 @@
   </span>InvalidBitPattern,
 }
 
-<span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;spirv&quot;</span>))]</span>
-<span class="kw">impl </span>core::fmt::Display <span class="kw">for </span>CheckedCastError {
+<span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;spirv&quot;</span>))]
+</span><span class="kw">impl </span>core::fmt::Display <span class="kw">for </span>CheckedCastError {
   <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>core::fmt::Formatter) -&gt; core::fmt::Result {
     <span class="macro">write!</span>(f, <span class="string">&quot;{:?}&quot;</span>, <span class="self">self</span>)
   }
 }
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extern_crate_std&quot;</span>)]</span>
-<span class="kw">impl </span>std::error::Error <span class="kw">for </span>CheckedCastError {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extern_crate_std&quot;</span>)]
+</span><span class="kw">impl </span>std::error::Error <span class="kw">for </span>CheckedCastError {}
 
 <span class="kw">impl </span>From&lt;<span class="kw">crate</span>::PodCastError&gt; <span class="kw">for </span>CheckedCastError {
   <span class="kw">fn </span>from(err: <span class="kw">crate</span>::PodCastError) -&gt; CheckedCastError {
@@ -692,8 +692,8 @@
 /// * If the slice isn&#39;t aligned for the new type
 /// * If the slice&#39;s length isn’t exactly the size of the new type
 /// * If the slice contains an invalid bit pattern for `T`
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_from_bytes&lt;T: CheckedBitPattern&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_from_bytes&lt;T: CheckedBitPattern&gt;(
   s: <span class="kw-2">&amp;</span>[u8],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>T, CheckedCastError&gt; {
   <span class="kw">let </span>pod = <span class="kw">unsafe </span>{ internal::try_from_bytes(s) }<span class="question-mark">?</span>;
@@ -712,8 +712,8 @@
 /// * If the slice isn&#39;t aligned for the new type
 /// * If the slice&#39;s length isn’t exactly the size of the new type
 /// * If the slice contains an invalid bit pattern for `T`
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_from_bytes_mut&lt;T: CheckedBitPattern + NoUninit&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_from_bytes_mut&lt;T: CheckedBitPattern + NoUninit&gt;(
   s: <span class="kw-2">&amp;mut </span>[u8],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>T, CheckedCastError&gt; {
   <span class="kw">let </span>pod = <span class="kw">unsafe </span>{ internal::try_from_bytes_mut(s) }<span class="question-mark">?</span>;
@@ -730,8 +730,8 @@
 /// ## Failure
 /// * If the `bytes` length is not equal to `size_of::&lt;T&gt;()`.
 /// * If the slice contains an invalid bit pattern for `T`
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_pod_read_unaligned&lt;T: CheckedBitPattern&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_pod_read_unaligned&lt;T: CheckedBitPattern&gt;(
   bytes: <span class="kw-2">&amp;</span>[u8],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;T, CheckedCastError&gt; {
   <span class="kw">let </span>pod = <span class="kw">unsafe </span>{ internal::try_pod_read_unaligned(bytes) }<span class="question-mark">?</span>;
@@ -754,8 +754,8 @@
 ///
 /// * If the types don&#39;t have the same size this fails.
 /// * If `a` contains an invalid bit pattern for `B` this fails.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_cast&lt;A: NoUninit, B: CheckedBitPattern&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_cast&lt;A: NoUninit, B: CheckedBitPattern&gt;(
   a: A,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;B, CheckedCastError&gt; {
   <span class="kw">let </span>pod = <span class="kw">unsafe </span>{ internal::try_cast(a) }<span class="question-mark">?</span>;
@@ -774,8 +774,8 @@
 /// * If the reference isn&#39;t aligned in the new type
 /// * If the source type and target type aren&#39;t the same size.
 /// * If `a` contains an invalid bit pattern for `B` this fails.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_cast_ref&lt;A: NoUninit, B: CheckedBitPattern&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_cast_ref&lt;A: NoUninit, B: CheckedBitPattern&gt;(
   a: <span class="kw-2">&amp;</span>A,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>B, CheckedCastError&gt; {
   <span class="kw">let </span>pod = <span class="kw">unsafe </span>{ internal::try_cast_ref(a) }<span class="question-mark">?</span>;
@@ -790,8 +790,8 @@
 <span class="doccomment">/// Try to convert a `&amp;mut T` into `&amp;mut U`.
 ///
 /// As [`checked_cast_ref`], but `mut`.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_cast_mut&lt;
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_cast_mut&lt;
   A: NoUninit + AnyBitPattern,
   B: CheckedBitPattern + NoUninit,
 &gt;(
@@ -823,8 +823,8 @@
 ///   and a non-ZST.
 /// * If any element of the converted slice would contain an invalid bit pattern
 ///   for `B` this fails.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_cast_slice&lt;A: NoUninit, B: CheckedBitPattern&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_cast_slice&lt;A: NoUninit, B: CheckedBitPattern&gt;(
   a: <span class="kw-2">&amp;</span>[A],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>[B], CheckedCastError&gt; {
   <span class="kw">let </span>pod = <span class="kw">unsafe </span>{ internal::try_cast_slice(a) }<span class="question-mark">?</span>;
@@ -842,8 +842,8 @@
 /// length).
 ///
 /// As [`checked_cast_slice`], but `&amp;mut`.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>try_cast_slice_mut&lt;
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>try_cast_slice_mut&lt;
   A: NoUninit + AnyBitPattern,
   B: CheckedBitPattern + NoUninit,
 &gt;(
@@ -865,8 +865,8 @@
 /// ## Panics
 ///
 /// This is [`try_from_bytes`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>from_bytes&lt;T: CheckedBitPattern&gt;(s: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span>T {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>from_bytes&lt;T: CheckedBitPattern&gt;(s: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span>T {
   <span class="kw">match </span>try_from_bytes(s) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;from_bytes&quot;</span>, e),
@@ -878,8 +878,8 @@
 /// ## Panics
 ///
 /// This is [`try_from_bytes_mut`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>from_bytes_mut&lt;T: NoUninit + CheckedBitPattern&gt;(s: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="kw-2">&amp;mut </span>T {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>from_bytes_mut&lt;T: NoUninit + CheckedBitPattern&gt;(s: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="kw-2">&amp;mut </span>T {
   <span class="kw">match </span>try_from_bytes_mut(s) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;from_bytes_mut&quot;</span>, e),
@@ -890,8 +890,8 @@
 ///
 /// ## Panics
 /// * This is like `try_pod_read_unaligned` but will panic on failure.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>pod_read_unaligned&lt;T: AnyBitPattern&gt;(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; T {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>pod_read_unaligned&lt;T: AnyBitPattern&gt;(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; T {
   <span class="kw">match </span>try_pod_read_unaligned(bytes) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;pod_read_unaligned&quot;</span>, e),
@@ -903,8 +903,8 @@
 /// ## Panics
 ///
 /// * This is like [`try_cast`](try_cast), but will panic on a size mismatch.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>cast&lt;A: NoUninit, B: CheckedBitPattern&gt;(a: A) -&gt; B {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>cast&lt;A: NoUninit, B: CheckedBitPattern&gt;(a: A) -&gt; B {
   <span class="kw">match </span>try_cast(a) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;cast&quot;</span>, e),
@@ -916,8 +916,8 @@
 /// ## Panics
 ///
 /// This is [`try_cast_mut`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>cast_mut&lt;
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>cast_mut&lt;
   A: NoUninit + AnyBitPattern,
   B: NoUninit + CheckedBitPattern,
 &gt;(
@@ -934,8 +934,8 @@
 /// ## Panics
 ///
 /// This is [`try_cast_ref`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>cast_ref&lt;A: NoUninit, B: CheckedBitPattern&gt;(a: <span class="kw-2">&amp;</span>A) -&gt; <span class="kw-2">&amp;</span>B {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>cast_ref&lt;A: NoUninit, B: CheckedBitPattern&gt;(a: <span class="kw-2">&amp;</span>A) -&gt; <span class="kw-2">&amp;</span>B {
   <span class="kw">match </span>try_cast_ref(a) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;cast_ref&quot;</span>, e),
@@ -947,8 +947,8 @@
 /// ## Panics
 ///
 /// This is [`try_cast_slice`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>cast_slice&lt;A: NoUninit, B: CheckedBitPattern&gt;(a: <span class="kw-2">&amp;</span>[A]) -&gt; <span class="kw-2">&amp;</span>[B] {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>cast_slice&lt;A: NoUninit, B: CheckedBitPattern&gt;(a: <span class="kw-2">&amp;</span>[A]) -&gt; <span class="kw-2">&amp;</span>[B] {
   <span class="kw">match </span>try_cast_slice(a) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;cast_slice&quot;</span>, e),
@@ -960,8 +960,8 @@
 /// ## Panics
 ///
 /// This is [`try_cast_slice_mut`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>cast_slice_mut&lt;
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>cast_slice_mut&lt;
   A: NoUninit + AnyBitPattern,
   B: NoUninit + CheckedBitPattern,
 &gt;(
@@ -973,4 +973,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

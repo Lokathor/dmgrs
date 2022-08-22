@@ -135,13 +135,13 @@
 <span class="kw">pub type </span>fsblkcnt_t = u64;
 <span class="kw">pub type </span>fsfilcnt_t = u64;
 <span class="kw">pub type </span>rlim_t = u64;
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-<span class="kw">pub type </span>__syscall_ulong_t = ::c_ulonglong;
-<span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-<span class="kw">pub type </span>__syscall_ulong_t = ::c_ulong;
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+</span><span class="kw">pub type </span>__syscall_ulong_t = ::c_ulonglong;
+<span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+</span><span class="kw">pub type </span>__syscall_ulong_t = ::c_ulong;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))] </span>{
         <span class="kw">pub type </span>clock_t = i32;
         <span class="kw">pub type </span>time_t = i32;
         <span class="kw">pub type </span>__fsword_t = i32;
@@ -152,12 +152,12 @@
     }
 }
 
-<span class="macro">s!</span> {
+<span class="macro">s! </span>{
     <span class="kw">pub struct </span>sigset_t {
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]</span>
-        __val: [u32; <span class="number">32</span>],
-        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]</span>
-        __val: [u64; <span class="number">16</span>],
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+        </span>__val: [u32; <span class="number">32</span>],
+        <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+        </span>__val: [u64; <span class="number">16</span>],
     }
 
     <span class="kw">pub struct </span>sysinfo {
@@ -200,8 +200,8 @@
             target_arch = <span class="string">&quot;mips64&quot;</span>,
             target_arch = <span class="string">&quot;powerpc64&quot;</span>,
             target_arch = <span class="string">&quot;riscv64&quot;</span>,
-            target_arch = <span class="string">&quot;sparc64&quot;</span>)))]</span>
-        __reserved: ::__syscall_ulong_t,
+            target_arch = <span class="string">&quot;sparc64&quot;</span>)))]
+        </span>__reserved: ::__syscall_ulong_t,
         <span class="kw">pub </span>sem_ctime: ::time_t,
         <span class="attribute">#[cfg(not(any(
             target_arch = <span class="string">&quot;aarch64&quot;</span>,
@@ -209,8 +209,8 @@
             target_arch = <span class="string">&quot;mips64&quot;</span>,
             target_arch = <span class="string">&quot;powerpc64&quot;</span>,
             target_arch = <span class="string">&quot;riscv64&quot;</span>,
-            target_arch = <span class="string">&quot;sparc64&quot;</span>)))]</span>
-        __reserved2: ::__syscall_ulong_t,
+            target_arch = <span class="string">&quot;sparc64&quot;</span>)))]
+        </span>__reserved2: ::__syscall_ulong_t,
         <span class="kw">pub </span>sem_nsems: ::__syscall_ulong_t,
         __glibc_reserved3: ::__syscall_ulong_t,
         __glibc_reserved4: ::__syscall_ulong_t,
@@ -221,29 +221,29 @@
 
 <span class="kw">pub const </span>O_LARGEFILE: ::c_int = <span class="number">0</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(target_arch = <span class="string">&quot;aarch64&quot;</span>)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(target_arch = <span class="string">&quot;aarch64&quot;</span>)] </span>{
         <span class="kw">mod </span>aarch64;
         <span class="kw">pub use </span><span class="self">self</span>::aarch64::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;powerpc64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;powerpc64&quot;</span>))] </span>{
         <span class="kw">mod </span>powerpc64;
         <span class="kw">pub use </span><span class="self">self</span>::powerpc64::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;sparc64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;sparc64&quot;</span>))] </span>{
         <span class="kw">mod </span>sparc64;
         <span class="kw">pub use </span><span class="self">self</span>::sparc64::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;mips64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;mips64&quot;</span>))] </span>{
         <span class="kw">mod </span>mips64;
         <span class="kw">pub use </span><span class="self">self</span>::mips64::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;s390x&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;s390x&quot;</span>))] </span>{
         <span class="kw">mod </span>s390x;
         <span class="kw">pub use </span><span class="self">self</span>::s390x::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;x86_64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;x86_64&quot;</span>))] </span>{
         <span class="kw">mod </span>x86_64;
         <span class="kw">pub use </span><span class="self">self</span>::x86_64::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;riscv64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;riscv64&quot;</span>))] </span>{
         <span class="kw">mod </span>riscv64;
         <span class="kw">pub use </span><span class="self">self</span>::riscv64::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;loongarch64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;loongarch64&quot;</span>))] </span>{
         <span class="kw">mod </span>loongarch64;
         <span class="kw">pub use </span><span class="self">self</span>::loongarch64::<span class="kw-2">*</span>;
     } <span class="kw">else </span>{
@@ -251,4 +251,4 @@
     </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

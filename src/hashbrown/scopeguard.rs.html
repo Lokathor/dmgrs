@@ -58,8 +58,8 @@
     value: T,
 }
 
-<span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>guard&lt;T, F&gt;(value: T, dropfn: F) -&gt; ScopeGuard&lt;T, F&gt;
+<span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>guard&lt;T, F&gt;(value: T, dropfn: F) -&gt; ScopeGuard&lt;T, F&gt;
 <span class="kw">where
     </span>F: FnMut(<span class="kw-2">&amp;mut </span>T),
 {
@@ -71,8 +71,8 @@
     </span>F: FnMut(<span class="kw-2">&amp;mut </span>T),
 {
     <span class="kw">type </span>Target = T;
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
         <span class="kw-2">&amp;</span><span class="self">self</span>.value
     }
 }
@@ -81,8 +81,8 @@
 <span class="kw">where
     </span>F: FnMut(<span class="kw-2">&amp;mut </span>T),
 {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>T {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>T {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.value
     }
 }
@@ -91,10 +91,10 @@
 <span class="kw">where
     </span>F: FnMut(<span class="kw-2">&amp;mut </span>T),
 {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         (<span class="self">self</span>.dropfn)(<span class="kw-2">&amp;mut </span><span class="self">self</span>.value)
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

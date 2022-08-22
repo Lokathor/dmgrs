@@ -415,88 +415,88 @@
     html_logo_url = <span class="string">&quot;https://www.rust-lang.org/logos/rust-logo-128x128-blk.png&quot;</span>,
     html_favicon_url = <span class="string">&quot;https://www.rust-lang.org/favicon.ico&quot;</span>,
     html_root_url = <span class="string">&quot;https://docs.rs/getrandom/0.2.7&quot;
-</span>)]</span>
-<span class="attribute">#![no_std]</span>
-<span class="attribute">#![warn(rust_2018_idioms, unused_lifetimes, missing_docs)]</span>
-<span class="attribute">#![cfg_attr(docsrs, feature(doc_cfg))]</span>
+</span>)]
+#![no_std]
+#![warn(rust_2018_idioms, unused_lifetimes, missing_docs)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
-<span class="attribute">#[macro_use]</span>
-<span class="kw">extern crate </span>cfg_if;
+#[macro_use]
+</span><span class="kw">extern crate </span>cfg_if;
 
 <span class="kw">mod </span>error;
 <span class="kw">mod </span>util;
 <span class="comment">// To prevent a breaking change when targets are added, we always export the
 // register_custom_getrandom macro, so old Custom RNG crates continue to build.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;custom&quot;</span>)]</span>
-<span class="kw">mod </span>custom;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">mod </span>error_impls;
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;custom&quot;</span>)]
+</span><span class="kw">mod </span>custom;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">mod </span>error_impls;
 
 <span class="kw">pub use </span><span class="kw">crate</span>::error::Error;
 
 <span class="comment">// System-specific implementations.
 //
 // These should all provide getrandom_inner with the same signature as getrandom.
-</span><span class="macro">cfg_if!</span> {
+</span><span class="macro">cfg_if! </span>{
     <span class="kw">if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;emscripten&quot;</span>, target_os = <span class="string">&quot;haiku&quot;</span>,
-                 target_os = <span class="string">&quot;redox&quot;</span>))]</span> {
+                 target_os = <span class="string">&quot;redox&quot;</span>))] </span>{
         <span class="kw">mod </span>util_libc;
-        <span class="attribute">#[path = <span class="string">&quot;use_file.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;android&quot;</span>, target_os = <span class="string">&quot;linux&quot;</span>))]</span> {
-        <span class="kw">mod </span>util_libc;
-        <span class="kw">mod </span>use_file;
-        <span class="attribute">#[path = <span class="string">&quot;linux_android.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;illumos&quot;</span>, target_os = <span class="string">&quot;solaris&quot;</span>))]</span> {
+        <span class="attribute">#[path = <span class="string">&quot;use_file.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;android&quot;</span>, target_os = <span class="string">&quot;linux&quot;</span>))] </span>{
         <span class="kw">mod </span>util_libc;
         <span class="kw">mod </span>use_file;
-        <span class="attribute">#[path = <span class="string">&quot;solaris_illumos.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;netbsd&quot;</span>))]</span> {
-        <span class="kw">mod </span>util_libc;
-        <span class="attribute">#[path = <span class="string">&quot;bsd_arandom.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;dragonfly&quot;</span>)]</span> {
+        <span class="attribute">#[path = <span class="string">&quot;linux_android.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;illumos&quot;</span>, target_os = <span class="string">&quot;solaris&quot;</span>))] </span>{
         <span class="kw">mod </span>util_libc;
         <span class="kw">mod </span>use_file;
-        <span class="attribute">#[path = <span class="string">&quot;dragonfly.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;fuchsia&quot;</span>)]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;fuchsia.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;ios&quot;</span>)]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;ios.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;macos&quot;</span>)]</span> {
+        <span class="attribute">#[path = <span class="string">&quot;solaris_illumos.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;freebsd&quot;</span>, target_os = <span class="string">&quot;netbsd&quot;</span>))] </span>{
+        <span class="kw">mod </span>util_libc;
+        <span class="attribute">#[path = <span class="string">&quot;bsd_arandom.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;dragonfly&quot;</span>)] </span>{
         <span class="kw">mod </span>util_libc;
         <span class="kw">mod </span>use_file;
-        <span class="attribute">#[path = <span class="string">&quot;macos.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;openbsd&quot;</span>)]</span> {
+        <span class="attribute">#[path = <span class="string">&quot;dragonfly.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;fuchsia&quot;</span>)] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;fuchsia.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;ios&quot;</span>)] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;ios.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;macos&quot;</span>)] </span>{
         <span class="kw">mod </span>util_libc;
-        <span class="attribute">#[path = <span class="string">&quot;openbsd.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;wasi&quot;</span>)]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;wasi.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_os = <span class="string">&quot;hermit&quot;</span>))]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;rdrand.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;vxworks&quot;</span>)]</span> {
+        <span class="kw">mod </span>use_file;
+        <span class="attribute">#[path = <span class="string">&quot;macos.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;openbsd&quot;</span>)] </span>{
         <span class="kw">mod </span>util_libc;
-        <span class="attribute">#[path = <span class="string">&quot;vxworks.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;solid_asp3&quot;</span>)]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;solid.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;espidf&quot;</span>)]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;espidf.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(windows)]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;windows.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_env = <span class="string">&quot;sgx&quot;</span>))]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;rdrand.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
+        <span class="attribute">#[path = <span class="string">&quot;openbsd.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;wasi&quot;</span>)] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;wasi.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_os = <span class="string">&quot;hermit&quot;</span>))] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;rdrand.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;vxworks&quot;</span>)] </span>{
+        <span class="kw">mod </span>util_libc;
+        <span class="attribute">#[path = <span class="string">&quot;vxworks.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;solid_asp3&quot;</span>)] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;solid.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;espidf&quot;</span>)] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;espidf.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(windows)] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;windows.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_env = <span class="string">&quot;sgx&quot;</span>))] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;rdrand.rs&quot;</span>] </span><span class="kw">mod </span>imp;
     } <span class="kw">else if </span><span class="attribute">#[cfg(all(feature = <span class="string">&quot;rdrand&quot;</span>,
-                        any(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>)))]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;rdrand.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
+                        any(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>)))] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;rdrand.rs&quot;</span>] </span><span class="kw">mod </span>imp;
     } <span class="kw">else if </span><span class="attribute">#[cfg(all(feature = <span class="string">&quot;js&quot;</span>,
-                        target_arch = <span class="string">&quot;wasm32&quot;</span>, target_os = <span class="string">&quot;unknown&quot;</span>))]</span> {
-        <span class="attribute">#[path = <span class="string">&quot;js.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_os = <span class="string">&quot;horizon&quot;</span>, target_arch = <span class="string">&quot;arm&quot;</span>))]</span> {
+                        target_arch = <span class="string">&quot;wasm32&quot;</span>, target_os = <span class="string">&quot;unknown&quot;</span>))] </span>{
+        <span class="attribute">#[path = <span class="string">&quot;js.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_os = <span class="string">&quot;horizon&quot;</span>, target_arch = <span class="string">&quot;arm&quot;</span>))] </span>{
         <span class="comment">// We check for target_arch = &quot;arm&quot; because the Nintendo Switch also
         // uses Horizon OS (it is aarch64).
         </span><span class="kw">mod </span>util_libc;
-        <span class="attribute">#[path = <span class="string">&quot;3ds.rs&quot;</span>]</span> <span class="kw">mod </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;custom&quot;</span>)]</span> {
+        <span class="attribute">#[path = <span class="string">&quot;3ds.rs&quot;</span>] </span><span class="kw">mod </span>imp;
+    } <span class="kw">else if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;custom&quot;</span>)] </span>{
         <span class="kw">use </span>custom <span class="kw">as </span>imp;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, target_os = <span class="string">&quot;unknown&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, target_os = <span class="string">&quot;unknown&quot;</span>))] </span>{
         <span class="macro">compile_error!</span>(<span class="string">&quot;the wasm32-unknown-unknown target is not supported by \
                         default, you may need to enable the \&quot;js\&quot; feature. \
                         For more information see: \
@@ -527,4 +527,4 @@
     imp::getrandom_inner(dest)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="getrandom" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="getrandom" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

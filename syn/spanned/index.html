@@ -19,11 +19,11 @@ static assertion that <code>Sync</code> is implemented for that type.</p>
 <span class="kw">use </span>syn::Type;
 <span class="kw">use </span>syn::spanned::Spanned;
 
-<span class="attribute">#[proc_macro_derive(MyMacro)]</span>
-<span class="kw">pub fn </span>my_macro(input: TokenStream) -&gt; TokenStream {
+<span class="attribute">#[proc_macro_derive(MyMacro)]
+</span><span class="kw">pub fn </span>my_macro(input: TokenStream) -&gt; TokenStream {
     <span class="comment">/* ... */
 
-    </span><span class="kw">let </span>assert_sync = <span class="macro">quote_spanned!</span> {ty.span()=&gt;
+    </span><span class="kw">let </span>assert_sync = <span class="macro">quote_spanned! </span>{ty.span()=&gt;
         <span class="kw">struct </span>_AssertSync <span class="kw">where </span>#ty: Sync;
     };
 
@@ -51,4 +51,4 @@ able to span the error correctly under the complete syntax tree node without
 needing the unstable <code>join</code>.</p>
 </div></details><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Spanned.html" title="syn::spanned::Spanned trait">Spanned</a></div><div class="item-right docblock-short"><p>A trait that can provide the <code>Span</code> of the complete contents of a syntax
 tree node.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

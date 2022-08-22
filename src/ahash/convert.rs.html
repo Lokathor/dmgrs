@@ -169,19 +169,19 @@
     <span class="kw">fn </span>convert(<span class="self">self</span>) -&gt; To;
 }
 
-<span class="macro">macro_rules!</span> convert {
+<span class="macro">macro_rules! </span>convert {
     (<span class="macro-nonterminal">$a</span>:ty, <span class="macro-nonterminal">$b</span>:ty) =&gt; {
         <span class="kw">impl </span>Convert&lt;<span class="macro-nonterminal">$b</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$a </span>{
-            <span class="attribute">#[inline(always)]</span>
-            <span class="kw">fn </span>convert(<span class="self">self</span>) -&gt; <span class="macro-nonterminal">$b </span>{
+            <span class="attribute">#[inline(always)]
+            </span><span class="kw">fn </span>convert(<span class="self">self</span>) -&gt; <span class="macro-nonterminal">$b </span>{
                 <span class="kw">unsafe </span>{
                     core::mem::transmute::&lt;<span class="macro-nonterminal">$a</span>, <span class="macro-nonterminal">$b</span>&gt;(<span class="self">self</span>)
                 }
             }
         }
         <span class="kw">impl </span>Convert&lt;<span class="macro-nonterminal">$a</span>&gt; <span class="kw">for </span><span class="macro-nonterminal">$b </span>{
-            <span class="attribute">#[inline(always)]</span>
-            <span class="kw">fn </span>convert(<span class="self">self</span>) -&gt; <span class="macro-nonterminal">$a </span>{
+            <span class="attribute">#[inline(always)]
+            </span><span class="kw">fn </span>convert(<span class="self">self</span>) -&gt; <span class="macro-nonterminal">$a </span>{
                 <span class="kw">unsafe </span>{
                     core::mem::transmute::&lt;<span class="macro-nonterminal">$b</span>, <span class="macro-nonterminal">$a</span>&gt;(<span class="self">self</span>)
                 }
@@ -231,11 +231,11 @@
 <span class="macro">convert!</span>([f32; <span class="number">2</span>], [u8; <span class="number">8</span>]);
 <span class="macro">convert!</span>(f32, [u8; <span class="number">4</span>]);
 
-<span class="macro">macro_rules!</span> as_array {
+<span class="macro">macro_rules! </span>as_array {
     (<span class="macro-nonterminal">$input</span>:expr, <span class="macro-nonterminal">$len</span>:expr) =&gt; {{
         {
-            <span class="attribute">#[inline(always)]</span>
-            <span class="kw">fn </span>as_array&lt;T&gt;(slice: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="kw-2">&amp;</span>[T; <span class="macro-nonterminal">$len</span>] {
+            <span class="attribute">#[inline(always)]
+            </span><span class="kw">fn </span>as_array&lt;T&gt;(slice: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="kw-2">&amp;</span>[T; <span class="macro-nonterminal">$len</span>] {
                 <span class="macro">assert_eq!</span>(slice.len(), <span class="macro-nonterminal">$len</span>);
                 <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(slice.as_ptr() <span class="kw">as </span><span class="kw-2">*const </span>[<span class="kw">_</span>; <span class="macro-nonterminal">$len</span>]) }
             }
@@ -260,77 +260,77 @@
 }
 
 <span class="kw">impl </span>ReadFromSlice <span class="kw">for </span>[u8] {
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_u16(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u16, <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u16(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u16, <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>(value, rest) = <span class="self">self</span>.split_at(<span class="number">2</span>);
         (<span class="macro">as_array!</span>(value, <span class="number">2</span>).convert(), rest)
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_u32(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u32(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>(value, rest) = <span class="self">self</span>.split_at(<span class="number">4</span>);
         (<span class="macro">as_array!</span>(value, <span class="number">4</span>).convert(), rest)
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_u64(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u64, <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u64(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u64, <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>(value, rest) = <span class="self">self</span>.split_at(<span class="number">8</span>);
         (<span class="macro">as_array!</span>(value, <span class="number">8</span>).convert(), rest)
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_u128(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u128, <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u128(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u128, <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>(value, rest) = <span class="self">self</span>.split_at(<span class="number">16</span>);
         (<span class="macro">as_array!</span>(value, <span class="number">16</span>).convert(), rest)
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_u128x2(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ([u128; <span class="number">2</span>], <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u128x2(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ([u128; <span class="number">2</span>], <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>(value, rest) = <span class="self">self</span>.split_at(<span class="number">32</span>);
         (<span class="macro">as_array!</span>(value, <span class="number">32</span>).convert(), rest)
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_u128x4(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ([u128; <span class="number">4</span>], <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_u128x4(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ([u128; <span class="number">4</span>], <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span>(value, rest) = <span class="self">self</span>.split_at(<span class="number">64</span>);
         (<span class="macro">as_array!</span>(value, <span class="number">64</span>).convert(), rest)
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_last_u16(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_last_u16(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
         <span class="kw">let </span>(<span class="kw">_</span>, value) = <span class="self">self</span>.split_at(<span class="self">self</span>.len() - <span class="number">2</span>);
         <span class="macro">as_array!</span>(value, <span class="number">2</span>).convert()
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_last_u32(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_last_u32(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
         <span class="kw">let </span>(<span class="kw">_</span>, value) = <span class="self">self</span>.split_at(<span class="self">self</span>.len() - <span class="number">4</span>);
         <span class="macro">as_array!</span>(value, <span class="number">4</span>).convert()
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_last_u64(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_last_u64(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="kw">let </span>(<span class="kw">_</span>, value) = <span class="self">self</span>.split_at(<span class="self">self</span>.len() - <span class="number">8</span>);
         <span class="macro">as_array!</span>(value, <span class="number">8</span>).convert()
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_last_u128(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u128 {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_last_u128(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u128 {
         <span class="kw">let </span>(<span class="kw">_</span>, value) = <span class="self">self</span>.split_at(<span class="self">self</span>.len() - <span class="number">16</span>);
         <span class="macro">as_array!</span>(value, <span class="number">16</span>).convert()
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_last_u128x2(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u128; <span class="number">2</span>] {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_last_u128x2(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u128; <span class="number">2</span>] {
         <span class="kw">let </span>(<span class="kw">_</span>, value) = <span class="self">self</span>.split_at(<span class="self">self</span>.len() - <span class="number">32</span>);
         <span class="macro">as_array!</span>(value, <span class="number">32</span>).convert()
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="kw">fn </span>read_last_u128x4(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u128; <span class="number">4</span>] {
+    <span class="attribute">#[inline(always)]
+    </span><span class="kw">fn </span>read_last_u128x4(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u128; <span class="number">4</span>] {
         <span class="kw">let </span>(<span class="kw">_</span>, value) = <span class="self">self</span>.split_at(<span class="self">self</span>.len() - <span class="number">64</span>);
         <span class="macro">as_array!</span>(value, <span class="number">64</span>).convert()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ahash" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ahash" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

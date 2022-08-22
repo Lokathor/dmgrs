@@ -412,8 +412,8 @@
 /// [Clone] is also provided in case you wish to calculate hashes for two different items that
 /// start with the same data.
 ///
-</span><span class="attribute">#[derive(Debug, Clone)]</span>
-<span class="kw">pub struct </span>AHasher {
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>AHasher {
     buffer: u64,
     pad: u64,
     extra_keys: [u64; <span class="number">2</span>],
@@ -421,8 +421,8 @@
 
 <span class="kw">impl </span>AHasher {
     <span class="doccomment">/// Creates a new hasher keyed to the provided key.
-    </span><span class="attribute">#[inline]</span>
-    <span class="attribute">#[allow(dead_code)]</span> <span class="comment">// Is not called if non-fallback hash is used.
+    </span><span class="attribute">#[inline]
+    #[allow(dead_code)] </span><span class="comment">// Is not called if non-fallback hash is used.
     </span><span class="kw">pub fn </span>new_with_keys(key1: u128, key2: u128) -&gt; AHasher {
         <span class="kw">let </span>pi: [u128; <span class="number">2</span>] = PI.convert();
         <span class="kw">let </span>key1: [u64; <span class="number">2</span>] = (key1 ^ pi[<span class="number">0</span>]).convert();
@@ -434,7 +434,7 @@
         }
     }
 
-    <span class="attribute">#[allow(unused)]</span> <span class="comment">// False positive
+    <span class="attribute">#[allow(unused)] </span><span class="comment">// False positive
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>test_with_keys(key1: u128, key2: u128) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>key1: [u64; <span class="number">2</span>] = key1.convert();
         <span class="kw">let </span>key2: [u64; <span class="number">2</span>] = key2.convert();
@@ -445,8 +445,8 @@
         }
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[allow(dead_code)]</span> <span class="comment">// Is not called if non-fallback hash is used.
+    <span class="attribute">#[inline]
+    #[allow(dead_code)] </span><span class="comment">// Is not called if non-fallback hash is used.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>from_random_state(rand_state: <span class="kw-2">&amp;</span>RandomState) -&gt; AHasher {
         AHasher {
             buffer: rand_state.k0,
@@ -484,15 +484,15 @@
     /// bit. The addition carries in the multiplication and at the end additionally mean that the even if an
     /// attacker somehow knew part of (but not all) the contents of the buffer before hand,
     /// they would not be able to predict any of the bits in the buffer at the end.
-    </span><span class="attribute">#[inline(always)]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;folded_multiply&quot;</span>)]</span>
-    <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u64) {
+    </span><span class="attribute">#[inline(always)]
+    #[cfg(feature = <span class="string">&quot;folded_multiply&quot;</span>)]
+    </span><span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u64) {
         <span class="self">self</span>.buffer = folded_multiply(new_data ^ <span class="self">self</span>.buffer, MULTIPLE);
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;folded_multiply&quot;</span>))]</span>
-    <span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u64) {
+    <span class="attribute">#[inline(always)]
+    #[cfg(not(feature = <span class="string">&quot;folded_multiply&quot;</span>))]
+    </span><span class="kw">fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u64) {
         <span class="kw">let </span>d1 = (new_data ^ <span class="self">self</span>.buffer).wrapping_mul(MULTIPLE);
         <span class="self">self</span>.pad = (<span class="self">self</span>.pad ^ d1).rotate_left(<span class="number">8</span>).wrapping_mul(MULTIPLE);
         <span class="self">self</span>.buffer = (<span class="self">self</span>.buffer ^ <span class="self">self</span>.pad).rotate_left(<span class="number">24</span>);
@@ -509,25 +509,25 @@
     /// Add followed by xor is not the same as xor followed by add, and rotate ensures that the same out bits
     /// can&#39;t be changed by the same set of input bits. To cancel this sequence with subsequent input would require
     /// knowing the keys.
-    </span><span class="attribute">#[inline(always)]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;folded_multiply&quot;</span>)]</span>
-    <span class="kw">fn </span>large_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u128) {
+    </span><span class="attribute">#[inline(always)]
+    #[cfg(feature = <span class="string">&quot;folded_multiply&quot;</span>)]
+    </span><span class="kw">fn </span>large_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u128) {
         <span class="kw">let </span>block: [u64; <span class="number">2</span>] = new_data.convert();
         <span class="kw">let </span>combined = folded_multiply(block[<span class="number">0</span>] ^ <span class="self">self</span>.extra_keys[<span class="number">0</span>], block[<span class="number">1</span>] ^ <span class="self">self</span>.extra_keys[<span class="number">1</span>]);
         <span class="self">self</span>.buffer = (<span class="self">self</span>.buffer.wrapping_add(<span class="self">self</span>.pad) ^ combined).rotate_left(ROT);
     }
 
-    <span class="attribute">#[inline(always)]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;folded_multiply&quot;</span>))]</span>
-    <span class="kw">fn </span>large_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u128) {
+    <span class="attribute">#[inline(always)]
+    #[cfg(not(feature = <span class="string">&quot;folded_multiply&quot;</span>))]
+    </span><span class="kw">fn </span>large_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new_data: u128) {
         <span class="kw">let </span>block: [u64; <span class="number">2</span>] = new_data.convert();
         <span class="self">self</span>.update(block[<span class="number">0</span>] ^ <span class="self">self</span>.extra_keys[<span class="number">0</span>]);
         <span class="self">self</span>.update(block[<span class="number">1</span>] ^ <span class="self">self</span>.extra_keys[<span class="number">1</span>]);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-    <span class="kw">fn </span>short_finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+    <span class="attribute">#[inline]
+    #[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+    </span><span class="kw">fn </span>short_finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="self">self</span>.buffer.wrapping_add(<span class="self">self</span>.pad)
     }
 }
@@ -536,46 +536,46 @@
 ///
 /// [Hasher]: core::hash::Hasher
 </span><span class="kw">impl </span>Hasher <span class="kw">for </span>AHasher {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u8) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u8) {
         <span class="self">self</span>.update(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u16) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u16) {
         <span class="self">self</span>.update(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u32) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u32) {
         <span class="self">self</span>.update(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u64) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u64) {
         <span class="self">self</span>.update(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u128) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u128) {
         <span class="self">self</span>.large_update(i);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(any(target_pointer_width = <span class="string">&quot;64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>, target_pointer_width = <span class="string">&quot;16&quot;</span>))]</span>
-    <span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) {
+    <span class="attribute">#[inline]
+    #[cfg(any(target_pointer_width = <span class="string">&quot;64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>, target_pointer_width = <span class="string">&quot;16&quot;</span>))]
+    </span><span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(target_pointer_width = <span class="string">&quot;128&quot;</span>)]</span>
-    <span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) {
+    <span class="attribute">#[inline]
+    #[cfg(target_pointer_width = <span class="string">&quot;128&quot;</span>)]
+    </span><span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) {
         <span class="self">self</span>.write_u128(i <span class="kw">as </span>u128);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[allow(clippy::collapsible_if)]</span>
-    <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, input: <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline]
+    #[allow(clippy::collapsible_if)]
+    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, input: <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">let </span><span class="kw-2">mut </span>data = input;
         <span class="kw">let </span>length = data.len() <span class="kw">as </span>u64;
         <span class="comment">//Needs to be an add rather than an xor because otherwise it could be canceled with carefully formed input.
@@ -599,133 +599,133 @@
         }
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;folded_multiply&quot;</span>)]</span>
-    <span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+    <span class="attribute">#[inline]
+    #[cfg(feature = <span class="string">&quot;folded_multiply&quot;</span>)]
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="kw">let </span>rot = (<span class="self">self</span>.buffer &amp; <span class="number">63</span>) <span class="kw">as </span>u32;
         folded_multiply(<span class="self">self</span>.buffer, <span class="self">self</span>.pad).rotate_left(rot)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;folded_multiply&quot;</span>))]</span>
-    <span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+    <span class="attribute">#[inline]
+    #[cfg(not(feature = <span class="string">&quot;folded_multiply&quot;</span>))]
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="kw">let </span>rot = (<span class="self">self</span>.buffer &amp; <span class="number">63</span>) <span class="kw">as </span>u32;
         (<span class="self">self</span>.buffer.wrapping_mul(MULTIPLE) ^ <span class="self">self</span>.pad).rotate_left(rot)
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AHasherU64 {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AHasherU64 {
     <span class="kw">pub</span>(<span class="kw">crate</span>) buffer: u64,
     <span class="kw">pub</span>(<span class="kw">crate</span>) pad: u64,
 }
 
 <span class="doccomment">/// A specialized hasher for only primitives under 64 bits.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-<span class="kw">impl </span>Hasher <span class="kw">for </span>AHasherU64 {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+</span><span class="kw">impl </span>Hasher <span class="kw">for </span>AHasherU64 {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="kw">let </span>rot = (<span class="self">self</span>.pad &amp; <span class="number">63</span>) <span class="kw">as </span>u32;
         <span class="self">self</span>.buffer.rotate_left(rot)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _bytes: <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _bytes: <span class="kw-2">&amp;</span>[u8]) {
         <span class="macro">unreachable!</span>(<span class="string">&quot;Specialized hasher was called with a different type of object&quot;</span>)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u8) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u8) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u16) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u16) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u32) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u32) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u64) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u64) {
         <span class="self">self</span>.buffer = folded_multiply(i ^ <span class="self">self</span>.buffer, MULTIPLE);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u128) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u128) {
         <span class="macro">unreachable!</span>(<span class="string">&quot;Specialized hasher was called with a different type of object&quot;</span>)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: usize) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: usize) {
         <span class="macro">unreachable!</span>(<span class="string">&quot;Specialized hasher was called with a different type of object&quot;</span>)
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AHasherFixed(<span class="kw">pub </span>AHasher);
+<span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AHasherFixed(<span class="kw">pub </span>AHasher);
 
 <span class="doccomment">/// A specialized hasher for fixed size primitives larger than 64 bits.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-<span class="kw">impl </span>Hasher <span class="kw">for </span>AHasherFixed {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+</span><span class="kw">impl </span>Hasher <span class="kw">for </span>AHasherFixed {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="self">self</span>.<span class="number">0</span>.short_finish()
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span>[u8]) {
         <span class="self">self</span>.<span class="number">0</span>.write(bytes)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u8) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u8) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u16) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u16) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u32) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u32) {
         <span class="self">self</span>.write_u64(i <span class="kw">as </span>u64);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u64) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u64) {
         <span class="self">self</span>.<span class="number">0</span>.write_u64(i);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u128) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: u128) {
         <span class="self">self</span>.<span class="number">0</span>.write_u128(i);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) {
         <span class="self">self</span>.<span class="number">0</span>.write_usize(i);
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AHasherStr(<span class="kw">pub </span>AHasher);
+<span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AHasherStr(<span class="kw">pub </span>AHasher);
 
 <span class="doccomment">/// A specialized hasher for a single string
 /// Note that the other types don&#39;t panic because the hash impl for String tacks on an unneeded call. (As does vec)
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]</span>
-<span class="kw">impl </span>Hasher <span class="kw">for </span>AHasherStr {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;specialize&quot;</span>)]
+</span><span class="kw">impl </span>Hasher <span class="kw">for </span>AHasherStr {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>finish(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
         <span class="self">self</span>.<span class="number">0</span>.finish()
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span>[u8]) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bytes: <span class="kw-2">&amp;</span>[u8]) {
         <span class="kw">if </span>bytes.len() &gt; <span class="number">8 </span>{
             <span class="self">self</span>.<span class="number">0</span>.write(bytes)
         } <span class="kw">else </span>{
@@ -736,32 +736,32 @@
         }
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u8) {}
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u8(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u8) {}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u16) {}
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u16(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u16) {}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u32) {}
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u32(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u32) {}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u64) {}
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u64(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u64) {}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u128) {}
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_u128(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: u128) {}
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: usize) {}
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>write_usize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _i: usize) {}
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use </span><span class="kw">crate</span>::convert::Convert;
     <span class="kw">use </span><span class="kw">crate</span>::fallback_hash::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_hash() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_hash() {
         <span class="kw">let </span><span class="kw-2">mut </span>hasher = AHasher::new_with_keys(<span class="number">0</span>, <span class="number">0</span>);
         <span class="kw">let </span>value: u64 = <span class="number">1 </span>&lt;&lt; <span class="number">32</span>;
         hasher.update(value);
@@ -775,12 +775,12 @@
         <span class="macro">assert_ne!</span>(hex::encode(result), hex::encode(result2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_conversion() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_conversion() {
         <span class="kw">let </span>input: <span class="kw-2">&amp;</span>[u8] = <span class="string">&quot;dddddddd&quot;</span>.as_bytes();
         <span class="kw">let </span>bytes: u64 = <span class="macro">as_array!</span>(input, <span class="number">8</span>).convert();
         <span class="macro">assert_eq!</span>(bytes, <span class="number">0x6464646464646464</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ahash" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ahash" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

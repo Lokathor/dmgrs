@@ -9624,20 +9624,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">0</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     []
   }
 }
@@ -9646,20 +9646,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">1</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [T::default()]
   }
 }
@@ -9668,20 +9668,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">2</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [T::default(), T::default()]
   }
 }
@@ -9690,20 +9690,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">3</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [T::default(), T::default(), T::default()]
   }
 }
@@ -9712,20 +9712,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">4</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [T::default(), T::default(), T::default(), T::default()]
   }
 }
@@ -9734,20 +9734,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">5</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [T::default(), T::default(), T::default(), T::default(), T::default()]
   }
 }
@@ -9756,20 +9756,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">6</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9785,20 +9785,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">7</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9815,20 +9815,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">8</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9846,20 +9846,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">9</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9878,20 +9878,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">10</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9911,20 +9911,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">11</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9945,20 +9945,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">12</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -9980,20 +9980,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">13</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10016,20 +10016,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">14</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10053,20 +10053,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">15</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10091,20 +10091,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">16</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10130,20 +10130,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">17</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10170,20 +10170,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">18</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10211,20 +10211,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">19</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10253,20 +10253,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">20</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10296,20 +10296,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">21</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10340,20 +10340,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">22</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10385,20 +10385,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">23</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10431,20 +10431,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">24</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10478,20 +10478,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">25</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10526,20 +10526,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">26</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10575,20 +10575,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">27</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10625,20 +10625,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">28</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10676,20 +10676,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">29</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10728,20 +10728,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">30</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10781,20 +10781,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">31</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10835,20 +10835,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">32</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10890,20 +10890,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">33</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -10946,20 +10946,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">64</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -11033,20 +11033,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">128</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -11184,20 +11184,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">256</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -11463,20 +11463,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">512</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -11998,20 +11998,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">1024</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -13045,20 +13045,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">2048</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -15116,20 +15116,20 @@
   <span class="kw">type </span>Item = T;
   <span class="kw">const </span>CAPACITY: usize = <span class="number">4096</span>;
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
     <span class="kw-2">&amp;*</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="attribute">#[must_use]</span>
-  <span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+  <span class="attribute">#[inline(always)]
+  #[must_use]
+  </span><span class="kw">fn </span>as_slice_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
     <span class="kw-2">&amp;mut *</span><span class="self">self
   </span>}
 
-  <span class="attribute">#[inline(always)]</span>
-  <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+  <span class="attribute">#[inline(always)]
+  </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
     [
       T::default(),
       T::default(),
@@ -19231,4 +19231,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

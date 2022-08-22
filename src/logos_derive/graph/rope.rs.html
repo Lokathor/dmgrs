@@ -334,15 +334,15 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::graph::{Disambiguate, Fork, Graph, NodeId, Range};
 
-<span class="attribute">#[derive(PartialEq, Clone, Hash)]</span>
-<span class="kw">pub struct </span>Rope {
+<span class="attribute">#[derive(PartialEq, Clone, Hash)]
+</span><span class="kw">pub struct </span>Rope {
     <span class="kw">pub </span>pattern: Pattern,
     <span class="kw">pub </span>then: NodeId,
     <span class="kw">pub </span>miss: Miss,
 }
 
-<span class="attribute">#[derive(PartialEq, Clone, Hash)]</span>
-<span class="kw">pub struct </span>Pattern(<span class="kw">pub </span>Vec&lt;Range&gt;);
+<span class="attribute">#[derive(PartialEq, Clone, Hash)]
+</span><span class="kw">pub struct </span>Pattern(<span class="kw">pub </span>Vec&lt;Range&gt;);
 
 <span class="kw">impl </span>Deref <span class="kw">for </span>Pattern {
     <span class="kw">type </span>Target = [Range];
@@ -354,8 +354,8 @@
 
 <span class="doccomment">/// Because Ropes could potentially fail a match mid-pattern,
 /// a regular `Option` is not sufficient here.
-</span><span class="attribute">#[derive(PartialEq, Clone, Copy, Hash)]</span>
-<span class="kw">pub enum </span>Miss {
+</span><span class="attribute">#[derive(PartialEq, Clone, Copy, Hash)]
+</span><span class="kw">pub enum </span>Miss {
     <span class="doccomment">/// Same as Option::None, error on fail
     </span><span class="prelude-val">None</span>,
     <span class="doccomment">/// Jump to id if first byte does not match, fail on partial match
@@ -559,14 +559,14 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::graph::Node;
     <span class="kw">use </span>pretty_assertions::assert_eq;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>into_fork() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>into_fork() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
@@ -579,8 +579,8 @@
         <span class="macro">assert_eq!</span>(graph[NodeId::new(<span class="number">2</span>)], Rope::new(<span class="string">&quot;oobar&quot;</span>, leaf));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>into_fork_one_byte() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>into_fork_one_byte() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
@@ -592,8 +592,8 @@
         <span class="macro">assert_eq!</span>(fork, Fork::new().branch(<span class="string">b&#39;!&#39;</span>, NodeId::new(<span class="number">1</span>)));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>into_fork_miss_any() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>into_fork_miss_any() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
@@ -614,8 +614,8 @@
         );
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>into_fork_miss_first() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>into_fork_miss_first() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
@@ -633,8 +633,8 @@
         <span class="macro">assert_eq!</span>(graph[NodeId::new(<span class="number">2</span>)], Rope::new(<span class="string">&quot;2&quot;</span>, leaf));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>split_at() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>split_at() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>leaf = graph.push(Node::Leaf(<span class="string">&quot;LEAF&quot;</span>));
@@ -649,8 +649,8 @@
         <span class="macro">assert_eq!</span>(graph[expected_id], Rope::new(<span class="string">&quot;bar&quot;</span>, leaf));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>pattern_to_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>pattern_to_bytes() {
         <span class="kw">let </span>pat = Pattern::from(<span class="string">&quot;foobar&quot;</span>);
 
         <span class="macro">assert_eq!</span>(pat.to_bytes().unwrap(), <span class="string">b&quot;foobar&quot;</span>);
@@ -661,4 +661,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -307,8 +307,8 @@
     /// can be sliced, starting from `index`.
     ///
     /// For binary sources (`&amp;[u8]`) this should just return `index` back.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>find_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; usize {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>find_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; usize {
         index
     }
 
@@ -322,13 +322,13 @@
 <span class="kw">impl </span>Source <span class="kw">for </span>str {
     <span class="kw">type </span>Slice = str;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.len()
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>read&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>read&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
     <span class="kw">where
         </span>Chunk: <span class="self">self</span>::Chunk&lt;<span class="lifetime">&#39;a</span>&gt;,
     {
@@ -339,21 +339,21 @@
         </span>}
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>read_unchecked&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; Chunk
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>read_unchecked&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; Chunk
     <span class="kw">where
         </span>Chunk: <span class="self">self</span>::Chunk&lt;<span class="lifetime">&#39;a</span>&gt;,
     {
         Chunk::from_ptr(<span class="self">self</span>.as_ptr().add(offset))
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
         <span class="self">self</span>.get(range)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>slice_unchecked(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="kw-2">&amp;</span>str {
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>slice_unchecked(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="macro">debug_assert!</span>(
             range.start &lt;= <span class="self">self</span>.len() &amp;&amp; range.end &lt;= <span class="self">self</span>.len(),
             <span class="string">&quot;Reading out of bounds {:?} for {}!&quot;</span>,
@@ -364,8 +364,8 @@
         <span class="self">self</span>.get_unchecked(range)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>find_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>index: usize) -&gt; usize {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>find_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>index: usize) -&gt; usize {
         <span class="kw">while </span>!<span class="self">self</span>.is_char_boundary(index) {
             index += <span class="number">1</span>;
         }
@@ -373,8 +373,8 @@
         index
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>is_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; bool {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>is_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; bool {
         <span class="self">self</span>.is_char_boundary(index)
     }
 }
@@ -382,13 +382,13 @@
 <span class="kw">impl </span>Source <span class="kw">for </span>[u8] {
     <span class="kw">type </span>Slice = [u8];
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.len()
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>read&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>read&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
     <span class="kw">where
         </span>Chunk: <span class="self">self</span>::Chunk&lt;<span class="lifetime">&#39;a</span>&gt;,
     {
@@ -399,21 +399,21 @@
         </span>}
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>read_unchecked&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; Chunk
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>read_unchecked&lt;<span class="lifetime">&#39;a</span>, Chunk&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, offset: usize) -&gt; Chunk
     <span class="kw">where
         </span>Chunk: <span class="self">self</span>::Chunk&lt;<span class="lifetime">&#39;a</span>&gt;,
     {
         Chunk::from_ptr(<span class="self">self</span>.as_ptr().add(offset))
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
         <span class="self">self</span>.get(range)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>slice_unchecked(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="kw-2">&amp;</span>[u8] {
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>slice_unchecked(<span class="kw-2">&amp;</span><span class="self">self</span>, range: Range&lt;usize&gt;) -&gt; <span class="kw-2">&amp;</span>[u8] {
         <span class="macro">debug_assert!</span>(
             range.start &lt;= <span class="self">self</span>.len() &amp;&amp; range.end &lt;= <span class="self">self</span>.len(),
             <span class="string">&quot;Reading out of bounds {:?} for {}!&quot;</span>,
@@ -424,8 +424,8 @@
         <span class="self">self</span>.get_unchecked(range)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>is_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; bool {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>is_boundary(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; bool {
         index &lt;= <span class="self">self</span>.len()
     }
 }
@@ -444,8 +444,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;source</span>&gt; Chunk&lt;<span class="lifetime">&#39;source</span>&gt; <span class="kw">for </span>u8 {
     <span class="kw">const </span>SIZE: usize = <span class="number">1</span>;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>from_ptr(ptr: <span class="kw-2">*const </span>u8) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>from_ptr(ptr: <span class="kw-2">*const </span>u8) -&gt; <span class="self">Self </span>{
         <span class="kw-2">*</span>ptr
     }
 }
@@ -453,10 +453,10 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;source</span>, <span class="kw">const </span>N: usize&gt; Chunk&lt;<span class="lifetime">&#39;source</span>&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>[u8; N] {
     <span class="kw">const </span>SIZE: usize = N;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>from_ptr(ptr: <span class="kw-2">*const </span>u8) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>from_ptr(ptr: <span class="kw-2">*const </span>u8) -&gt; <span class="self">Self </span>{
         <span class="kw-2">&amp;*</span>(ptr <span class="kw">as </span><span class="kw-2">*const </span>[u8; N])
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

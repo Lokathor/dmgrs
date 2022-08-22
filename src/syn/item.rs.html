@@ -3324,10 +3324,10 @@
 <span class="kw">use </span><span class="kw">crate</span>::punctuated::Punctuated;
 <span class="kw">use </span>proc_macro2::TokenStream;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span>std::mem;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span>std::mem;
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// Things that can appear directly inside of a module or scope.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
@@ -3337,9 +3337,9 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="attribute">#[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]</span>
-    <span class="kw">pub enum </span>Item {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    #[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]
+    </span><span class="kw">pub enum </span>Item {
         <span class="doccomment">/// A constant item: `const MAX: u16 = 65535`.
         </span>Const(ItemConst),
 
@@ -3411,18 +3411,18 @@
         // a variant. You will be notified by a test failure when a variant is
         // added, so that you can add code to handle it, but your library will
         // continue to compile and work for downstream users in the interim.
-        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-        <span class="attribute">#[doc(hidden)]</span>
-        __NonExhaustive,
+        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]
+        #[doc(hidden)]
+        </span>__NonExhaustive,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A constant item: `const MAX: u16 = 65535`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemConst {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemConst {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>const_token: <span class="macro">Token!</span>[<span class="kw">const</span>],
@@ -3435,12 +3435,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An enum definition: `enum Foo&lt;A, B&gt; { A(A), B(B) }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemEnum {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemEnum {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>enum_token: <span class="macro">Token!</span>[<span class="kw">enum</span>],
@@ -3451,12 +3451,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An `extern crate` item: `extern crate serde`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemExternCrate {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemExternCrate {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>extern_token: <span class="macro">Token!</span>[<span class="kw">extern</span>],
@@ -3467,13 +3467,13 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A free-standing function: `fn process(n: usize) -&gt; Result&lt;()&gt; { ...
     /// }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemFn {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemFn {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>sig: Signature,
@@ -3481,12 +3481,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A block of foreign items: `extern &quot;C&quot; { ... }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemForeignMod {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemForeignMod {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>abi: Abi,
         <span class="kw">pub </span>brace_token: token::Brace,
@@ -3494,13 +3494,13 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An impl block providing trait or associated items: `impl&lt;A&gt; Trait
     /// for Data&lt;A&gt; { ... }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemImpl {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemImpl {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>defaultness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[default]&gt;,
         <span class="kw">pub </span>unsafety: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">unsafe</span>]&gt;,
@@ -3515,12 +3515,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A macro invocation, which includes `macro_rules!` definitions.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemMacro {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemMacro {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="doccomment">/// The `example` in `macro_rules! example { ... }`.
         </span><span class="kw">pub </span>ident: <span class="prelude-ty">Option</span>&lt;Ident&gt;,
@@ -3529,12 +3529,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A 2.0-style declarative macro introduced by the `macro` keyword.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemMacro2 {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemMacro2 {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>macro_token: <span class="macro">Token!</span>[<span class="kw">macro</span>],
@@ -3543,12 +3543,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A module or module declaration: `mod m` or `mod m { ... }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemMod {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemMod {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>mod_token: <span class="macro">Token!</span>[<span class="kw">mod</span>],
@@ -3558,12 +3558,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A static item: `static BIKE: Shed = Shed(42)`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemStatic {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemStatic {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>static_token: <span class="macro">Token!</span>[<span class="kw">static</span>],
@@ -3577,12 +3577,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A struct definition: `struct Foo&lt;A&gt; { x: A }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemStruct {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemStruct {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>struct_token: <span class="macro">Token!</span>[<span class="kw">struct</span>],
@@ -3593,12 +3593,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A trait definition: `pub trait Iterator { ... }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemTrait {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemTrait {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>unsafety: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">unsafe</span>]&gt;,
@@ -3613,12 +3613,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A trait alias: `pub trait SharableIterator = Iterator + Sync`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemTraitAlias {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemTraitAlias {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>trait_token: <span class="macro">Token!</span>[<span class="kw">trait</span>],
@@ -3630,12 +3630,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A type alias: `type Result&lt;T&gt; = std::result::Result&lt;T, MyError&gt;`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemType {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemType {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>type_token: <span class="macro">Token!</span>[<span class="kw">type</span>],
@@ -3647,12 +3647,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A union definition: `union Foo&lt;A, B&gt; { x: A, y: B }`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemUnion {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemUnion {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>union_token: <span class="macro">Token!</span>[union],
@@ -3662,12 +3662,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A use declaration: `use std::collections::HashMap`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ItemUse {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ItemUse {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>use_token: <span class="macro">Token!</span>[<span class="kw">use</span>],
@@ -3678,8 +3678,8 @@
 }
 
 <span class="kw">impl </span>Item {
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>replace_attrs(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new: Vec&lt;Attribute&gt;) -&gt; Vec&lt;Attribute&gt; {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>replace_attrs(<span class="kw-2">&amp;mut </span><span class="self">self</span>, new: Vec&lt;Attribute&gt;) -&gt; Vec&lt;Attribute&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             Item::ExternCrate(ItemExternCrate { attrs, .. })
             | Item::Use(ItemUse { attrs, .. })
@@ -3699,8 +3699,8 @@
             | Item::Macro2(ItemMacro2 { attrs, .. }) =&gt; mem::replace(attrs, new),
             Item::Verbatim(<span class="kw">_</span>) =&gt; Vec::new(),
 
-            <span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+            <span class="attribute">#[cfg(syn_no_non_exhaustive)]
+            </span><span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
@@ -3785,7 +3785,7 @@
     }
 }
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// A suffix of an import tree in a `use` item: `Type as Renamed` or `*`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
@@ -3795,8 +3795,8 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub enum </span>UseTree {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub enum </span>UseTree {
         <span class="doccomment">/// A path prefix of imports in a `use` item: `std::...`.
         </span>Path(UsePath),
 
@@ -3814,62 +3814,62 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A path prefix of imports in a `use` item: `std::...`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>UsePath {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>UsePath {
         <span class="kw">pub </span>ident: Ident,
         <span class="kw">pub </span>colon2_token: <span class="macro">Token!</span>[::],
         <span class="kw">pub </span>tree: Box&lt;UseTree&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An identifier imported by a `use` item: `HashMap`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>UseName {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>UseName {
         <span class="kw">pub </span>ident: Ident,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An renamed identifier imported by a `use` item: `HashMap as Map`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>UseRename {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>UseRename {
         <span class="kw">pub </span>ident: Ident,
         <span class="kw">pub </span>as_token: <span class="macro">Token!</span>[<span class="kw">as</span>],
         <span class="kw">pub </span>rename: Ident,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A glob import in a `use` item: `*`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>UseGlob {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>UseGlob {
         <span class="kw">pub </span>star_token: <span class="macro">Token!</span>[<span class="kw-2">*</span>],
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A braced group of imports in a `use` item: `{A, B, C}`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>UseGroup {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>UseGroup {
         <span class="kw">pub </span>brace_token: token::Brace,
         <span class="kw">pub </span>items: Punctuated&lt;UseTree, <span class="macro">Token!</span>[,]&gt;,
     }
 }
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// An item within an `extern` block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
@@ -3879,9 +3879,9 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="attribute">#[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]</span>
-    <span class="kw">pub enum </span>ForeignItem {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    #[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]
+    </span><span class="kw">pub enum </span>ForeignItem {
         <span class="doccomment">/// A foreign function in an `extern` block.
         </span>Fn(ForeignItemFn),
 
@@ -3915,18 +3915,18 @@
         // a variant. You will be notified by a test failure when a variant is
         // added, so that you can add code to handle it, but your library will
         // continue to compile and work for downstream users in the interim.
-        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-        <span class="attribute">#[doc(hidden)]</span>
-        __NonExhaustive,
+        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]
+        #[doc(hidden)]
+        </span>__NonExhaustive,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A foreign function in an `extern` block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ForeignItemFn {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ForeignItemFn {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>sig: Signature,
@@ -3934,12 +3934,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A foreign static item in an `extern` block: `static ext: u8`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ForeignItemStatic {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ForeignItemStatic {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>static_token: <span class="macro">Token!</span>[<span class="kw">static</span>],
@@ -3951,12 +3951,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A foreign type in an `extern` block: `type void`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ForeignItemType {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ForeignItemType {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>type_token: <span class="macro">Token!</span>[<span class="kw">type</span>],
@@ -3965,19 +3965,19 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A macro invocation within an extern block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ForeignItemMacro {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ForeignItemMacro {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>mac: Macro,
         <span class="kw">pub </span>semi_token: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[;]&gt;,
     }
 }
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// An item declaration within the definition of a trait.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
@@ -3987,9 +3987,9 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="attribute">#[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]</span>
-    <span class="kw">pub enum </span>TraitItem {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    #[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]
+    </span><span class="kw">pub enum </span>TraitItem {
         <span class="doccomment">/// An associated constant within the definition of a trait.
         </span>Const(TraitItemConst),
 
@@ -4023,18 +4023,18 @@
         // a variant. You will be notified by a test failure when a variant is
         // added, so that you can add code to handle it, but your library will
         // continue to compile and work for downstream users in the interim.
-        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-        <span class="attribute">#[doc(hidden)]</span>
-        __NonExhaustive,
+        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]
+        #[doc(hidden)]
+        </span>__NonExhaustive,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An associated constant within the definition of a trait.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>TraitItemConst {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>TraitItemConst {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>const_token: <span class="macro">Token!</span>[<span class="kw">const</span>],
         <span class="kw">pub </span>ident: Ident,
@@ -4045,12 +4045,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A trait method within the definition of a trait.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>TraitItemMethod {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>TraitItemMethod {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>sig: Signature,
         <span class="kw">pub </span>default: <span class="prelude-ty">Option</span>&lt;Block&gt;,
@@ -4058,12 +4058,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An associated type within the definition of a trait.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>TraitItemType {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>TraitItemType {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>type_token: <span class="macro">Token!</span>[<span class="kw">type</span>],
         <span class="kw">pub </span>ident: Ident,
@@ -4075,19 +4075,19 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A macro invocation within the definition of a trait.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>TraitItemMacro {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>TraitItemMacro {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>mac: Macro,
         <span class="kw">pub </span>semi_token: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[;]&gt;,
     }
 }
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// An item within an impl block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
@@ -4097,9 +4097,9 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="attribute">#[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]</span>
-    <span class="kw">pub enum </span>ImplItem {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    #[cfg_attr(not(syn_no_non_exhaustive), non_exhaustive)]
+    </span><span class="kw">pub enum </span>ImplItem {
         <span class="doccomment">/// An associated constant within an impl block.
         </span>Const(ImplItemConst),
 
@@ -4133,18 +4133,18 @@
         // a variant. You will be notified by a test failure when a variant is
         // added, so that you can add code to handle it, but your library will
         // continue to compile and work for downstream users in the interim.
-        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-        <span class="attribute">#[doc(hidden)]</span>
-        __NonExhaustive,
+        </span><span class="attribute">#[cfg(syn_no_non_exhaustive)]
+        #[doc(hidden)]
+        </span>__NonExhaustive,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An associated constant within an impl block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ImplItemConst {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ImplItemConst {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>defaultness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[default]&gt;,
@@ -4158,12 +4158,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A method within an impl block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ImplItemMethod {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ImplItemMethod {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>defaultness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[default]&gt;,
@@ -4172,12 +4172,12 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An associated type within an impl block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ImplItemType {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ImplItemType {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>vis: Visibility,
         <span class="kw">pub </span>defaultness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[default]&gt;,
@@ -4190,25 +4190,25 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A macro invocation within an impl block.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>ImplItemMacro {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>ImplItemMacro {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>mac: Macro,
         <span class="kw">pub </span>semi_token: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[;]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A function signature in a trait or implementation: `unsafe fn
     /// initialize(&amp;self)`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>Signature {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>Signature {
         <span class="kw">pub </span>constness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">const</span>]&gt;,
         <span class="kw">pub </span>asyncness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">async</span>]&gt;,
         <span class="kw">pub </span>unsafety: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">unsafe</span>]&gt;,
@@ -4241,12 +4241,12 @@
     }
 }
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// An argument in a function signature: the `n: usize` in `fn f(n: usize)`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub enum </span>FnArg {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub enum </span>FnArg {
         <span class="doccomment">/// The `self` argument of an associated method, whether taken by value
         /// or by reference.
         ///
@@ -4259,7 +4259,7 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// The `self` argument of an associated method, whether taken by value
     /// or by reference.
     ///
@@ -4267,8 +4267,8 @@
     /// Box&lt;Self&gt;`, are parsed as a `FnArg::Typed`.
     ///
     /// *This type is available only if Syn is built with the `&quot;full&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>Receiver {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;full&quot;</span>)))]
+    </span><span class="kw">pub struct </span>Receiver {
         <span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
         <span class="kw">pub </span>reference: <span class="prelude-ty">Option</span>&lt;(<span class="macro">Token!</span>[<span class="kw-2">&amp;</span>], <span class="prelude-ty">Option</span>&lt;Lifetime&gt;)&gt;,
         <span class="kw">pub </span>mutability: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw-2">mut</span>]&gt;,
@@ -4282,8 +4282,8 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::ext::IdentExt;
     <span class="kw">use </span><span class="kw">crate</span>::parse::discouraged::Speculative;
@@ -4294,8 +4294,8 @@
 
     <span class="macro">crate::custom_keyword!</span>(macro_rules);
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Item {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Item {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>begin = input.fork();
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
@@ -4488,8 +4488,8 @@
         <span class="comment">// type Ty&lt;T&gt; where T: &#39;static = T;
         </span>BeforeEq,
         <span class="comment">// type Ty&lt;T&gt; = T where T: &#39;static;
-        </span><span class="attribute">#[allow(dead_code)]</span>
-        AfterEq,
+        </span><span class="attribute">#[allow(dead_code)]
+        </span>AfterEq,
         <span class="comment">// TODO: goes away once the migration period on rust-lang/rust#89122 is over
         </span>Both,
     }
@@ -4555,8 +4555,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemMacro {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>path = input.call(Path::parse_mod_style)<span class="question-mark">?</span>;
@@ -4582,8 +4582,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemMacro2 {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemMacro2 {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -4623,8 +4623,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemExternCrate {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemExternCrate {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ItemExternCrate {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -4656,8 +4656,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemUse {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemUse {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ItemUse {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -4670,8 +4670,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>UseTree {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>UseTree {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;UseTree&gt; {
             <span class="kw">let </span>lookahead = input.lookahead1();
             <span class="kw">if </span>lookahead.peek(Ident)
@@ -4719,8 +4719,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemStatic {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemStatic {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ItemStatic {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -4737,8 +4737,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemConst {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemConst {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ItemConst {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -4818,8 +4818,8 @@
             &amp;&amp; fork.peek(<span class="macro">Token!</span>[<span class="kw">fn</span>])
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Signature {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Signature {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>constness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">const</span>]&gt; = input.parse()<span class="question-mark">?</span>;
             <span class="kw">let </span>asyncness: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[<span class="kw">async</span>]&gt; = input.parse()<span class="question-mark">?</span>;
@@ -4853,8 +4853,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemFn {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemFn {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>outer_attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -4882,8 +4882,8 @@
         })
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>FnArg {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>FnArg {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
 
@@ -4902,8 +4902,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Receiver {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Receiver {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(Receiver {
                 attrs: Vec::new(),
@@ -4998,8 +4998,8 @@
         })
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemMod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemMod {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -5040,8 +5040,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemForeignMod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemForeignMod {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>abi: Abi = input.parse()<span class="question-mark">?</span>;
@@ -5063,8 +5063,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItem {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItem {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>begin = input.fork();
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
@@ -5135,8 +5135,8 @@
                 ForeignItem::Macro(item) =&gt; <span class="kw-2">&amp;mut </span>item.attrs,
                 ForeignItem::Verbatim(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(item),
 
-                <span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+                <span class="attribute">#[cfg(syn_no_non_exhaustive)]
+                </span><span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
             };
             attrs.append(item_attrs);
             <span class="kw-2">*</span>item_attrs = attrs;
@@ -5145,8 +5145,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemFn {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemFn {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -5161,8 +5161,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemStatic {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemStatic {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ForeignItemStatic {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -5177,8 +5177,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemType {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ForeignItemType {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -5221,8 +5221,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ForeignItemMacro {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>mac: Macro = input.parse()<span class="question-mark">?</span>;
@@ -5239,8 +5239,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemType {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ItemType {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -5289,8 +5289,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemStruct {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemStruct {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis = input.parse::&lt;Visibility&gt;()<span class="question-mark">?</span>;
@@ -5313,8 +5313,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemEnum {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemEnum {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis = input.parse::&lt;Visibility&gt;()<span class="question-mark">?</span>;
@@ -5337,8 +5337,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemUnion {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemUnion {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis = input.parse::&lt;Visibility&gt;()<span class="question-mark">?</span>;
@@ -5388,8 +5388,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemTrait {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemTrait {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>outer_attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -5462,8 +5462,8 @@
         })
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemTraitAlias {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemTraitAlias {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>(attrs, vis, trait_token, ident, generics) = parse_start_of_trait_alias(input)<span class="question-mark">?</span>;
             parse_rest_of_trait_alias(input, attrs, vis, trait_token, ident, generics)
@@ -5518,8 +5518,8 @@
         })
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>TraitItem {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>TraitItem {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>begin = input.fork();
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
@@ -5569,8 +5569,8 @@
                 TraitItem::Macro(item) =&gt; <span class="kw-2">&amp;mut </span>item.attrs,
                 TraitItem::Verbatim(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
 
-                <span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-                <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+                <span class="attribute">#[cfg(syn_no_non_exhaustive)]
+                </span><span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
             };
             attrs.append(item_attrs);
             <span class="kw-2">*</span>item_attrs = attrs;
@@ -5578,8 +5578,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemConst {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemConst {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(TraitItemConst {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -5608,8 +5608,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemMethod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemMethod {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>sig: Signature = input.parse()<span class="question-mark">?</span>;
@@ -5637,8 +5637,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemType {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>type_token: <span class="macro">Token!</span>[<span class="kw">type</span>] = input.parse()<span class="question-mark">?</span>;
@@ -5710,8 +5710,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>TraitItemMacro {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>mac: Macro = input.parse()<span class="question-mark">?</span>;
@@ -5728,8 +5728,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ItemImpl {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ItemImpl {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>allow_verbatim_impl = <span class="bool-val">false</span>;
             parse_impl(input, allow_verbatim_impl).map(Option::unwrap)
@@ -5772,8 +5772,8 @@
             <span class="prelude-val">None
         </span>};
 
-        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;printing&quot;</span>))]</span>
-        <span class="kw">let </span>first_ty_span = input.span();
+        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;printing&quot;</span>))]
+        </span><span class="kw">let </span>first_ty_span = input.span();
         <span class="kw">let </span><span class="kw-2">mut </span>first_ty: Type = input.parse()<span class="question-mark">?</span>;
         <span class="kw">let </span>self_ty: Type;
         <span class="kw">let </span>trait_;
@@ -5795,10 +5795,10 @@
                     <span class="macro">unreachable!</span>();
                 }
             } <span class="kw">else if </span>!allow_verbatim_impl {
-                <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new_spanned(first_ty_ref, <span class="string">&quot;expected trait path&quot;</span>));
-                <span class="attribute">#[cfg(not(feature = <span class="string">&quot;printing&quot;</span>))]</span>
-                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(first_ty_span, <span class="string">&quot;expected trait path&quot;</span>));
+                <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+                </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::new_spanned(first_ty_ref, <span class="string">&quot;expected trait path&quot;</span>));
+                <span class="attribute">#[cfg(not(feature = <span class="string">&quot;printing&quot;</span>))]
+                </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(first_ty_span, <span class="string">&quot;expected trait path&quot;</span>));
             } <span class="kw">else </span>{
                 trait_ = <span class="prelude-val">None</span>;
             }
@@ -5840,8 +5840,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ImplItem {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ImplItem {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>begin = input.fork();
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
@@ -5910,8 +5910,8 @@
                     ImplItem::Macro(item) =&gt; <span class="kw-2">&amp;mut </span>item.attrs,
                     ImplItem::Verbatim(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(item),
 
-                    <span class="attribute">#[cfg(syn_no_non_exhaustive)]</span>
-                    <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
+                    <span class="attribute">#[cfg(syn_no_non_exhaustive)]
+                    </span><span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(),
                 };
                 attrs.append(item_attrs);
                 <span class="kw-2">*</span>item_attrs = attrs;
@@ -5921,8 +5921,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemConst {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemConst {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="prelude-val">Ok</span>(ImplItemConst {
                 attrs: input.call(Attribute::parse_outer)<span class="question-mark">?</span>,
@@ -5946,8 +5946,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemMethod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemMethod {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span><span class="kw-2">mut </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -5986,8 +5986,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemType {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis: Visibility = input.parse()<span class="question-mark">?</span>;
@@ -6044,8 +6044,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>ImplItemMacro {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>mac: Macro = input.parse()<span class="question-mark">?</span>;
@@ -6081,8 +6081,8 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::attr::FilterAttrs;
     <span class="kw">use </span><span class="kw">crate</span>::print::TokensOrDefault;
@@ -6090,8 +6090,8 @@
     <span class="kw">use </span>proc_macro2::TokenStream;
     <span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemExternCrate {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemExternCrate {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6106,8 +6106,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemUse {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemUse {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6118,8 +6118,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemStatic {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemStatic {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6134,8 +6134,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemConst {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemConst {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6149,8 +6149,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemFn {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemFn {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6162,8 +6162,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemMod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemMod {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6180,8 +6180,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemForeignMod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemForeignMod {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.abi.to_tokens(tokens);
@@ -6192,8 +6192,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemType {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6207,8 +6207,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemEnum {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemEnum {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6222,8 +6222,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemStruct {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemStruct {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6248,8 +6248,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemUnion {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemUnion {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6261,8 +6261,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemTrait {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemTrait {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6283,8 +6283,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemTraitAlias {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemTraitAlias {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6298,8 +6298,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemImpl {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemImpl {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.defaultness.to_tokens(tokens);
@@ -6320,8 +6320,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemMacro {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.mac.path.to_tokens(tokens);
@@ -6342,8 +6342,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemMacro2 {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ItemMacro2 {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6353,8 +6353,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>UsePath {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>UsePath {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.ident.to_tokens(tokens);
             <span class="self">self</span>.colon2_token.to_tokens(tokens);
@@ -6362,15 +6362,15 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>UseName {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>UseName {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.ident.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>UseRename {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>UseRename {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.ident.to_tokens(tokens);
             <span class="self">self</span>.as_token.to_tokens(tokens);
@@ -6378,15 +6378,15 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>UseGlob {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>UseGlob {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.star_token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>UseGroup {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>UseGroup {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.brace_token.surround(tokens, |tokens| {
                 <span class="self">self</span>.items.to_tokens(tokens);
@@ -6394,8 +6394,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemConst {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemConst {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.const_token.to_tokens(tokens);
@@ -6410,8 +6410,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemMethod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemMethod {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.sig.to_tokens(tokens);
@@ -6429,8 +6429,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemType {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.type_token.to_tokens(tokens);
@@ -6449,8 +6449,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>TraitItemMacro {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.mac.to_tokens(tokens);
@@ -6458,8 +6458,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemConst {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemConst {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6474,8 +6474,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemMethod {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemMethod {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6496,8 +6496,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemType {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6512,8 +6512,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ImplItemMacro {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.mac.to_tokens(tokens);
@@ -6521,8 +6521,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemFn {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemFn {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6531,8 +6531,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemStatic {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemStatic {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6545,8 +6545,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemType {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemType {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.vis.to_tokens(tokens);
@@ -6556,8 +6556,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemMacro {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>ForeignItemMacro {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="self">self</span>.mac.to_tokens(tokens);
@@ -6592,8 +6592,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Signature {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Signature {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.constness.to_tokens(tokens);
             <span class="self">self</span>.asyncness.to_tokens(tokens);
@@ -6627,8 +6627,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>Receiver {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>Receiver {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append_all(<span class="self">self</span>.attrs.outer());
             <span class="kw">if let </span><span class="prelude-val">Some</span>((ampersand, lifetime)) = <span class="kw-2">&amp;</span><span class="self">self</span>.reference {
@@ -6641,4 +6641,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

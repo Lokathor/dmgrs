@@ -163,8 +163,8 @@
 <span class="kw">use </span>core::panic::Location;
 
 <span class="doccomment">/// Information about a specific parser.
-</span><span class="attribute">#[allow(dead_code)]</span>
-<span class="kw">pub struct </span>ParserInfo {
+</span><span class="attribute">#[allow(dead_code)]
+</span><span class="kw">pub struct </span>ParserInfo {
     name: Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;,
     display: Rc&lt;<span class="kw">dyn </span>fmt::Display&gt;,
     location: Location&lt;<span class="lifetime">&#39;static</span>&gt;,
@@ -193,8 +193,8 @@
 <span class="doccomment">/// A trait implemented by parser debuggers.
 </span><span class="attribute">#[deprecated(
     note = <span class="string">&quot;This trait is excluded from the semver guarantees of chumsky. If you decide to use it, broken builds are your fault.&quot;
-</span>)]</span>
-<span class="kw">pub trait </span>Debugger {
+</span>)]
+</span><span class="kw">pub trait </span>Debugger {
     <span class="doccomment">/// Create a new debugging scope.
     </span><span class="kw">fn </span>scope&lt;R, Info: FnOnce() -&gt; ParserInfo, F: FnOnce(<span class="kw-2">&amp;mut </span><span class="self">Self</span>) -&gt; R&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
@@ -222,11 +222,11 @@
         <span class="self">Self </span>{ events: Vec::new() }
     }
 
-    <span class="attribute">#[allow(unused_variables)]</span>
-    <span class="kw">fn </span>print_inner(<span class="kw-2">&amp;</span><span class="self">self</span>, depth: usize) {
+    <span class="attribute">#[allow(unused_variables)]
+    </span><span class="kw">fn </span>print_inner(<span class="kw-2">&amp;</span><span class="self">self</span>, depth: usize) {
         <span class="comment">// a no-op on no_std!
-        </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-        <span class="kw">for </span>event <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.events {
+        </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+        </span><span class="kw">for </span>event <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.events {
             <span class="kw">for _ in </span><span class="number">0</span>..depth * <span class="number">4 </span>{
                 <span class="macro">print!</span>(<span class="string">&quot; &quot;</span>);
             }
@@ -307,4 +307,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

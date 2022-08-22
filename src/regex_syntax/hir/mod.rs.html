@@ -2318,8 +2318,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="kw">mod </span>visitor;
 
 <span class="doccomment">/// An error that can occur while translating an `Ast` to a `Hir`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Error {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Error {
     <span class="doccomment">/// The kind of error.
     </span>kind: ErrorKind,
     <span class="doccomment">/// The original pattern that the translator&#39;s Ast was parsed from. Every
@@ -2349,8 +2349,8 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="doccomment">/// The type of an error that occurred while building an `Hir`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>ErrorKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>ErrorKind {
     <span class="doccomment">/// This error occurs when a Unicode feature is used when Unicode
     /// support is disabled. For example `(?-u:\pL)` would trigger this error.
     </span>UnicodeNotAllowed,
@@ -2382,14 +2382,14 @@ Defines a high-level intermediate representation for regular expressions.
     /// This enum may grow additional variants, so this makes sure clients
     /// don&#39;t count on exhaustive matching. (Otherwise, adding a new variant
     /// could break existing code.)
-    </span><span class="attribute">#[doc(hidden)]</span>
-    __Nonexhaustive,
+    </span><span class="attribute">#[doc(hidden)]
+    </span>__Nonexhaustive,
 }
 
 <span class="kw">impl </span>ErrorKind {
     <span class="comment">// TODO: Remove this method entirely on the next breaking semver release.
-    </span><span class="attribute">#[allow(deprecated)]</span>
-    <span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    </span><span class="attribute">#[allow(deprecated)]
+    </span><span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="kw">use </span><span class="self">self</span>::ErrorKind::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
             UnicodeNotAllowed =&gt; <span class="string">&quot;Unicode not allowed here&quot;</span>,
@@ -2412,8 +2412,8 @@ Defines a high-level intermediate representation for regular expressions.
 
 <span class="kw">impl </span>error::Error <span class="kw">for </span>Error {
     <span class="comment">// TODO: Remove this method entirely on the next breaking semver release.
-    </span><span class="attribute">#[allow(deprecated)]</span>
-    <span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    </span><span class="attribute">#[allow(deprecated)]
+    </span><span class="kw">fn </span>description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="self">self</span>.kind.description()
     }
 }
@@ -2427,8 +2427,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>ErrorKind {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
         <span class="comment">// TODO: Remove this on the next breaking semver release.
-        </span><span class="attribute">#[allow(deprecated)]</span>
-        f.write_str(<span class="self">self</span>.description())
+        </span><span class="attribute">#[allow(deprecated)]
+        </span>f.write_str(<span class="self">self</span>.description())
     }
 }
 
@@ -2467,8 +2467,8 @@ Defines a high-level intermediate representation for regular expressions.
 /// Also, an `Hir`&#39;s `fmt::Display` implementation prints an HIR as a regular
 /// expression pattern string, and uses constant stack space and heap space
 /// proportional to the size of the `Hir`.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Hir {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Hir {
     <span class="doccomment">/// The underlying HIR kind.
     </span>kind: HirKind,
     <span class="doccomment">/// Analysis info about this HIR, computed during construction.
@@ -2476,8 +2476,8 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="doccomment">/// The kind of an arbitrary `Hir` expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>HirKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>HirKind {
     <span class="doccomment">/// The empty regular expression, which matches everything, including the
     /// empty string.
     </span>Empty,
@@ -3039,8 +3039,8 @@ Defines a high-level intermediate representation for regular expressions.
 /// defined by a Unicode scalar value or an arbitrary byte. Unicode characters
 /// are preferred whenever possible. In particular, a `Byte` variant is only
 /// ever produced when it could match invalid UTF-8.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>Literal {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Literal {
     <span class="doccomment">/// A single character represented by a Unicode scalar value.
     </span>Unicode(char),
     <span class="doccomment">/// A single character represented by an arbitrary byte.
@@ -3075,8 +3075,8 @@ Defines a high-level intermediate representation for regular expressions.
 /// expression to disable Unicode mode, which in turn impacts the semantics of
 /// case insensitive matching. For example, `(?i)k` and `(?i-u)k` will not
 /// match the same set of strings.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>Class {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Class {
     <span class="doccomment">/// A set of characters represented by Unicode scalar values.
     </span>Unicode(ClassUnicode),
     <span class="doccomment">/// A set of characters represented by arbitrary bytes (one byte per
@@ -3129,8 +3129,8 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="doccomment">/// A set of characters represented by Unicode scalar values.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassUnicode {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassUnicode {
     set: IntervalSet&lt;ClassUnicodeRange&gt;,
 }
 
@@ -3250,8 +3250,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="doccomment">/// An iterator over all ranges in a Unicode character class.
 ///
 /// The lifetime `&#39;a` refers to the lifetime of the underlying class.
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>ClassUnicodeIter&lt;<span class="lifetime">&#39;a</span>&gt;(IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, ClassUnicodeRange&gt;);
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ClassUnicodeIter&lt;<span class="lifetime">&#39;a</span>&gt;(IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, ClassUnicodeRange&gt;);
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>ClassUnicodeIter&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ClassUnicodeRange;
@@ -3265,8 +3265,8 @@ Defines a high-level intermediate representation for regular expressions.
 ///
 /// The range is closed. That is, the start and end of the range are included
 /// in the range.
-</span><span class="attribute">#[derive(Clone, Copy, Default, Eq, PartialEq, PartialOrd, Ord)]</span>
-<span class="kw">pub struct </span>ClassUnicodeRange {
+</span><span class="attribute">#[derive(Clone, Copy, Default, Eq, PartialEq, PartialOrd, Ord)]
+</span><span class="kw">pub struct </span>ClassUnicodeRange {
     start: char,
     end: char,
 }
@@ -3294,20 +3294,20 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="kw">impl </span>Interval <span class="kw">for </span>ClassUnicodeRange {
     <span class="kw">type </span>Bound = char;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>lower(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>lower(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
         <span class="self">self</span>.start
     }
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>upper(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>upper(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; char {
         <span class="self">self</span>.end
     }
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>set_lower(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: char) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>set_lower(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: char) {
         <span class="self">self</span>.start = bound;
     }
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>set_upper(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: char) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>set_upper(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: char) {
         <span class="self">self</span>.end = bound;
     }
 
@@ -3372,8 +3372,8 @@ Defines a high-level intermediate representation for regular expressions.
 
 <span class="doccomment">/// A set of characters represented by arbitrary bytes (where one byte
 /// corresponds to one character).
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>ClassBytes {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>ClassBytes {
     set: IntervalSet&lt;ClassBytesRange&gt;,
 }
 
@@ -3467,8 +3467,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="doccomment">/// An iterator over all ranges in a byte character class.
 ///
 /// The lifetime `&#39;a` refers to the lifetime of the underlying class.
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>ClassBytesIter&lt;<span class="lifetime">&#39;a</span>&gt;(IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, ClassBytesRange&gt;);
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ClassBytesIter&lt;<span class="lifetime">&#39;a</span>&gt;(IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, ClassBytesRange&gt;);
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>ClassBytesIter&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ClassBytesRange;
@@ -3482,8 +3482,8 @@ Defines a high-level intermediate representation for regular expressions.
 ///
 /// The range is closed. That is, the start and end of the range are included
 /// in the range.
-</span><span class="attribute">#[derive(Clone, Copy, Default, Eq, PartialEq, PartialOrd, Ord)]</span>
-<span class="kw">pub struct </span>ClassBytesRange {
+</span><span class="attribute">#[derive(Clone, Copy, Default, Eq, PartialEq, PartialOrd, Ord)]
+</span><span class="kw">pub struct </span>ClassBytesRange {
     start: u8,
     end: u8,
 }
@@ -3491,20 +3491,20 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="kw">impl </span>Interval <span class="kw">for </span>ClassBytesRange {
     <span class="kw">type </span>Bound = u8;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>lower(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>lower(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
         <span class="self">self</span>.start
     }
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>upper(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>upper(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
         <span class="self">self</span>.end
     }
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>set_lower(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: u8) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>set_lower(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: u8) {
         <span class="self">self</span>.start = bound;
     }
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>set_upper(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: u8) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>set_upper(<span class="kw-2">&amp;mut </span><span class="self">self</span>, bound: u8) {
         <span class="self">self</span>.end = bound;
     }
 
@@ -3577,8 +3577,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="doccomment">/// The high-level intermediate representation for an anchor assertion.
 ///
 /// A matching anchor assertion is always zero-length.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>Anchor {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>Anchor {
     <span class="doccomment">/// Match the beginning of a line or the beginning of text. Specifically,
     /// this matches at the starting position of the input, or at the position
     /// immediately following a `\n` character.
@@ -3598,8 +3598,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="doccomment">/// The high-level intermediate representation for a word-boundary assertion.
 ///
 /// A matching word boundary assertion is always zero-length.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>WordBoundary {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>WordBoundary {
     <span class="doccomment">/// Match a Unicode-aware word boundary. That is, this matches a position
     /// where the left adjacent character and right adjacent character
     /// correspond to a word and non-word or a non-word and word character.
@@ -3631,8 +3631,8 @@ Defines a high-level intermediate representation for regular expressions.
 /// 1. A non-capturing group (e.g., `(?:expr)`).
 /// 2. A capturing group (e.g., `(expr)`).
 /// 3. A named capturing group (e.g., `(?P&lt;name&gt;expr)`).
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Group {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Group {
     <span class="doccomment">/// The kind of this group. If it is a capturing group, then the kind
     /// contains the capture group index (and the name, if it is a named
     /// group).
@@ -3642,8 +3642,8 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="doccomment">/// The kind of group.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>GroupKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>GroupKind {
     <span class="doccomment">/// A normal unnamed capturing group.
     ///
     /// The value is the capture index of the group.
@@ -3663,8 +3663,8 @@ Defines a high-level intermediate representation for regular expressions.
 ///
 /// A repetition operator permits the repetition of an arbitrary
 /// sub-expression.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>Repetition {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>Repetition {
     <span class="doccomment">/// The kind of this repetition operator.
     </span><span class="kw">pub </span>kind: RepetitionKind,
     <span class="doccomment">/// Whether this repetition operator is greedy or not. A greedy operator
@@ -3702,8 +3702,8 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="doccomment">/// The kind of a repetition operator.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>RepetitionKind {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>RepetitionKind {
     <span class="doccomment">/// Matches a sub-expression zero or one times.
     </span>ZeroOrOne,
     <span class="doccomment">/// Matches a sub-expression zero or more times.
@@ -3715,8 +3715,8 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="doccomment">/// The kind of a counted repetition operator.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub enum </span>RepetitionRange {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub enum </span>RepetitionRange {
     <span class="doccomment">/// Matches a sub-expression exactly this many times.
     </span>Exactly(u32),
     <span class="doccomment">/// Matches a sub-expression at least this many times.
@@ -3772,8 +3772,8 @@ Defines a high-level intermediate representation for regular expressions.
 <span class="doccomment">/// A type that documents various attributes of an HIR expression.
 ///
 /// These attributes are typically defined inductively on the HIR.
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">struct </span>HirInfo {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">struct </span>HirInfo {
     <span class="doccomment">/// Represent yes/no questions by a bitfield to conserve space, since
     /// this is included in every HIR expression.
     ///
@@ -3783,7 +3783,7 @@ Defines a high-level intermediate representation for regular expressions.
 }
 
 <span class="comment">// A simple macro for defining bitfield accessors/mutators.
-</span><span class="macro">macro_rules!</span> define_bool {
+</span><span class="macro">macro_rules! </span>define_bool {
     (<span class="macro-nonterminal">$bit</span>:expr, <span class="macro-nonterminal">$is_fn_name</span>:ident, <span class="macro-nonterminal">$set_fn_name</span>:ident) =&gt; {
         <span class="kw">fn </span><span class="macro-nonterminal">$is_fn_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
             <span class="self">self</span>.bools &amp; (<span class="number">0b1 </span>&lt;&lt; <span class="macro-nonterminal">$bit</span>) &gt; <span class="number">0
@@ -3817,8 +3817,8 @@ Defines a high-level intermediate representation for regular expressions.
     <span class="macro">define_bool!</span>(<span class="number">10</span>, is_alternation_literal, set_alternation_literal);
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
     <span class="kw">fn </span>uclass(ranges: <span class="kw-2">&amp;</span>[(char, char)]) -&gt; ClassUnicode {
@@ -3839,8 +3839,8 @@ Defines a high-level intermediate representation for regular expressions.
         cls.iter().map(|x| (x.start(), x.end())).collect()
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;unicode-case&quot;</span>)]</span>
-    <span class="kw">fn </span>ucasefold(cls: <span class="kw-2">&amp;</span>ClassUnicode) -&gt; ClassUnicode {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;unicode-case&quot;</span>)]
+    </span><span class="kw">fn </span>ucasefold(cls: <span class="kw-2">&amp;</span>ClassUnicode) -&gt; ClassUnicode {
         <span class="kw">let </span><span class="kw-2">mut </span>cls_ = cls.clone();
         cls_.case_fold_simple();
         cls_
@@ -3919,22 +3919,22 @@ Defines a high-level intermediate representation for regular expressions.
         cls_
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_range_canonical_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_range_canonical_unicode() {
         <span class="kw">let </span>range = ClassUnicodeRange::new(<span class="string">&#39;\u{00FF}&#39;</span>, <span class="string">&#39;\0&#39;</span>);
         <span class="macro">assert_eq!</span>(<span class="string">&#39;\0&#39;</span>, range.start());
         <span class="macro">assert_eq!</span>(<span class="string">&#39;\u{00FF}&#39;</span>, range.end());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_range_canonical_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_range_canonical_bytes() {
         <span class="kw">let </span>range = ClassBytesRange::new(<span class="string">b&#39;\xFF&#39;</span>, <span class="string">b&#39;\0&#39;</span>);
         <span class="macro">assert_eq!</span>(<span class="string">b&#39;\0&#39;</span>, range.start());
         <span class="macro">assert_eq!</span>(<span class="string">b&#39;\xFF&#39;</span>, range.end());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_canonicalize_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_canonicalize_unicode() {
         <span class="kw">let </span>cls = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;c&#39;</span>), (<span class="string">&#39;x&#39;</span>, <span class="string">&#39;z&#39;</span>)]);
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;c&#39;</span>), (<span class="string">&#39;x&#39;</span>, <span class="string">&#39;z&#39;</span>)];
         <span class="macro">assert_eq!</span>(expected, uranges(<span class="kw-2">&amp;</span>cls));
@@ -3971,8 +3971,8 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, uranges(<span class="kw-2">&amp;</span>cls));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_canonicalize_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_canonicalize_bytes() {
         <span class="kw">let </span>cls = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;c&#39;</span>), (<span class="string">b&#39;x&#39;</span>, <span class="string">b&#39;z&#39;</span>)]);
         <span class="kw">let </span>expected = <span class="macro">vec!</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;c&#39;</span>), (<span class="string">b&#39;x&#39;</span>, <span class="string">b&#39;z&#39;</span>)];
         <span class="macro">assert_eq!</span>(expected, branges(<span class="kw-2">&amp;</span>cls));
@@ -4009,9 +4009,9 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, branges(<span class="kw-2">&amp;</span>cls));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;unicode-case&quot;</span>)]</span>
-    <span class="kw">fn </span>class_case_fold_unicode() {
+    <span class="attribute">#[test]
+    #[cfg(feature = <span class="string">&quot;unicode-case&quot;</span>)]
+    </span><span class="kw">fn </span>class_case_fold_unicode() {
         <span class="kw">let </span>cls = uclass(<span class="kw-2">&amp;</span>[
             (<span class="string">&#39;C&#39;</span>, <span class="string">&#39;F&#39;</span>),
             (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;G&#39;</span>),
@@ -4068,9 +4068,9 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(cls, ucasefold(<span class="kw-2">&amp;</span>cls));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;unicode-case&quot;</span>))]</span>
-    <span class="kw">fn </span>class_case_fold_unicode_disabled() {
+    <span class="attribute">#[test]
+    #[cfg(not(feature = <span class="string">&quot;unicode-case&quot;</span>))]
+    </span><span class="kw">fn </span>class_case_fold_unicode_disabled() {
         <span class="kw">let </span><span class="kw-2">mut </span>cls = uclass(<span class="kw-2">&amp;</span>[
             (<span class="string">&#39;C&#39;</span>, <span class="string">&#39;F&#39;</span>),
             (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;G&#39;</span>),
@@ -4083,10 +4083,10 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert!</span>(cls.try_case_fold_simple().is_err());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[should_panic]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;unicode-case&quot;</span>))]</span>
-    <span class="kw">fn </span>class_case_fold_unicode_disabled_panics() {
+    <span class="attribute">#[test]
+    #[should_panic]
+    #[cfg(not(feature = <span class="string">&quot;unicode-case&quot;</span>))]
+    </span><span class="kw">fn </span>class_case_fold_unicode_disabled_panics() {
         <span class="kw">let </span><span class="kw-2">mut </span>cls = uclass(<span class="kw-2">&amp;</span>[
             (<span class="string">&#39;C&#39;</span>, <span class="string">&#39;F&#39;</span>),
             (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;G&#39;</span>),
@@ -4099,8 +4099,8 @@ Defines a high-level intermediate representation for regular expressions.
         cls.case_fold_simple();
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_case_fold_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_case_fold_bytes() {
         <span class="kw">let </span>cls = bclass(<span class="kw-2">&amp;</span>[
             (<span class="string">b&#39;C&#39;</span>, <span class="string">b&#39;F&#39;</span>),
             (<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;G&#39;</span>),
@@ -4141,8 +4141,8 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(cls, bcasefold(<span class="kw-2">&amp;</span>cls));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_negate_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_negate_unicode() {
         <span class="kw">let </span>cls = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>)]);
         <span class="kw">let </span>expected = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;\x00&#39;</span>, <span class="string">&#39;\x60&#39;</span>), (<span class="string">&#39;\x62&#39;</span>, <span class="string">&#39;\u{10FFFF}&#39;</span>)]);
         <span class="macro">assert_eq!</span>(expected, unegate(<span class="kw-2">&amp;</span>cls));
@@ -4197,8 +4197,8 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, unegate(<span class="kw-2">&amp;</span>cls));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_negate_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_negate_bytes() {
         <span class="kw">let </span>cls = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;a&#39;</span>)]);
         <span class="kw">let </span>expected = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;\x00&#39;</span>, <span class="string">b&#39;\x60&#39;</span>), (<span class="string">b&#39;\x62&#39;</span>, <span class="string">b&#39;\xFF&#39;</span>)]);
         <span class="macro">assert_eq!</span>(expected, bnegate(<span class="kw-2">&amp;</span>cls));
@@ -4236,24 +4236,24 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, bnegate(<span class="kw-2">&amp;</span>cls));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_union_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_union_unicode() {
         <span class="kw">let </span>cls1 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;g&#39;</span>), (<span class="string">&#39;m&#39;</span>, <span class="string">&#39;t&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;C&#39;</span>)]);
         <span class="kw">let </span>cls2 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>)]);
         <span class="kw">let </span>expected = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;z&#39;</span>), (<span class="string">&#39;A&#39;</span>, <span class="string">&#39;C&#39;</span>)]);
         <span class="macro">assert_eq!</span>(expected, uunion(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_union_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_union_bytes() {
         <span class="kw">let </span>cls1 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;g&#39;</span>), (<span class="string">b&#39;m&#39;</span>, <span class="string">b&#39;t&#39;</span>), (<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;C&#39;</span>)]);
         <span class="kw">let </span>cls2 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;z&#39;</span>)]);
         <span class="kw">let </span>expected = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;z&#39;</span>), (<span class="string">b&#39;A&#39;</span>, <span class="string">b&#39;C&#39;</span>)]);
         <span class="macro">assert_eq!</span>(expected, bunion(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_intersect_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_intersect_unicode() {
         <span class="kw">let </span>cls1 = uclass(<span class="kw-2">&amp;</span>[]);
         <span class="kw">let </span>cls2 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>)]);
         <span class="kw">let </span>expected = uclass(<span class="kw-2">&amp;</span>[]);
@@ -4325,8 +4325,8 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, uintersect(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_intersect_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_intersect_bytes() {
         <span class="kw">let </span>cls1 = bclass(<span class="kw-2">&amp;</span>[]);
         <span class="kw">let </span>cls2 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;a&#39;</span>)]);
         <span class="kw">let </span>expected = bclass(<span class="kw-2">&amp;</span>[]);
@@ -4398,8 +4398,8 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, bintersect(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_difference_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_difference_unicode() {
         <span class="kw">let </span>cls1 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>)]);
         <span class="kw">let </span>cls2 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;a&#39;</span>)]);
         <span class="kw">let </span>expected = uclass(<span class="kw-2">&amp;</span>[]);
@@ -4461,8 +4461,8 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, udifference(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_difference_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_difference_bytes() {
         <span class="kw">let </span>cls1 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;a&#39;</span>)]);
         <span class="kw">let </span>cls2 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;a&#39;</span>)]);
         <span class="kw">let </span>expected = bclass(<span class="kw-2">&amp;</span>[]);
@@ -4524,25 +4524,25 @@ Defines a high-level intermediate representation for regular expressions.
         <span class="macro">assert_eq!</span>(expected, bdifference(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_symmetric_difference_unicode() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_symmetric_difference_unicode() {
         <span class="kw">let </span>cls1 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;m&#39;</span>)]);
         <span class="kw">let </span>cls2 = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;g&#39;</span>, <span class="string">&#39;t&#39;</span>)]);
         <span class="kw">let </span>expected = uclass(<span class="kw-2">&amp;</span>[(<span class="string">&#39;a&#39;</span>, <span class="string">&#39;f&#39;</span>), (<span class="string">&#39;n&#39;</span>, <span class="string">&#39;t&#39;</span>)]);
         <span class="macro">assert_eq!</span>(expected, usymdifference(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>class_symmetric_difference_bytes() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>class_symmetric_difference_bytes() {
         <span class="kw">let </span>cls1 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;m&#39;</span>)]);
         <span class="kw">let </span>cls2 = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;g&#39;</span>, <span class="string">b&#39;t&#39;</span>)]);
         <span class="kw">let </span>expected = bclass(<span class="kw-2">&amp;</span>[(<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;f&#39;</span>), (<span class="string">b&#39;n&#39;</span>, <span class="string">b&#39;t&#39;</span>)]);
         <span class="macro">assert_eq!</span>(expected, bsymdifference(<span class="kw-2">&amp;</span>cls1, <span class="kw-2">&amp;</span>cls2));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[should_panic]</span>
-    <span class="kw">fn </span>hir_byte_literal_non_ascii() {
+    <span class="attribute">#[test]
+    #[should_panic]
+    </span><span class="kw">fn </span>hir_byte_literal_non_ascii() {
         Hir::literal(Literal::Byte(<span class="string">b&#39;a&#39;</span>));
     }
 
@@ -4550,9 +4550,9 @@ Defines a high-level intermediate representation for regular expressions.
     // for Hir can handle arbitrarily sized expressions in constant stack
     // space. In case we run on a platform without threads (WASM?), we limit
     // this test to Windows/Unix.
-    </span><span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(any(unix, windows))]</span>
-    <span class="kw">fn </span>no_stack_overflow_on_drop() {
+    </span><span class="attribute">#[test]
+    #[cfg(any(unix, windows))]
+    </span><span class="kw">fn </span>no_stack_overflow_on_drop() {
         <span class="kw">use </span>std::thread;
 
         <span class="kw">let </span>run = || {
@@ -4591,4 +4591,4 @@ Defines a high-level intermediate representation for regular expressions.
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

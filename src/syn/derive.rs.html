@@ -275,12 +275,12 @@
 </pre><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::punctuated::Punctuated;
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// Data structure sent to a `proc_macro_derive` macro.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>DeriveInput {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]
+    </span><span class="kw">pub struct </span>DeriveInput {
         <span class="doccomment">/// Attributes tagged on the whole struct or enum.
         </span><span class="kw">pub </span>attrs: Vec&lt;Attribute&gt;,
 
@@ -298,7 +298,7 @@
     }
 }
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// The storage of a struct, enum or union data structure.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;` feature.*
@@ -308,8 +308,8 @@
     /// This type is a [syntax tree enum].
     ///
     /// [syntax tree enum]: Expr#syntax-tree-enums
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]</span>
-    <span class="kw">pub enum </span>Data {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]
+    </span><span class="kw">pub enum </span>Data {
         <span class="doccomment">/// A struct input to a `proc_macro_derive` macro.
         </span>Struct(DataStruct),
 
@@ -323,51 +323,51 @@
     do_not_generate_to_tokens
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A struct input to a `proc_macro_derive` macro.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>DataStruct {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]
+    </span><span class="kw">pub struct </span>DataStruct {
         <span class="kw">pub </span>struct_token: <span class="macro">Token!</span>[<span class="kw">struct</span>],
         <span class="kw">pub </span>fields: Fields,
         <span class="kw">pub </span>semi_token: <span class="prelude-ty">Option</span>&lt;<span class="macro">Token!</span>[;]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An enum input to a `proc_macro_derive` macro.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>DataEnum {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]
+    </span><span class="kw">pub struct </span>DataEnum {
         <span class="kw">pub </span>enum_token: <span class="macro">Token!</span>[<span class="kw">enum</span>],
         <span class="kw">pub </span>brace_token: token::Brace,
         <span class="kw">pub </span>variants: Punctuated&lt;Variant, <span class="macro">Token!</span>[,]&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An untagged union input to a `proc_macro_derive` macro.
     ///
     /// *This type is available only if Syn is built with the `&quot;derive&quot;`
     /// feature.*
-    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]</span>
-    <span class="kw">pub struct </span>DataUnion {
+    </span><span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;derive&quot;</span>)))]
+    </span><span class="kw">pub struct </span>DataUnion {
         <span class="kw">pub </span>union_token: <span class="macro">Token!</span>[union],
         <span class="kw">pub </span>fields: FieldsNamed,
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream, <span class="prelude-ty">Result</span>};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>DeriveInput {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>DeriveInput {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>attrs = input.call(Attribute::parse_outer)<span class="question-mark">?</span>;
             <span class="kw">let </span>vis = input.parse::&lt;Visibility&gt;()<span class="question-mark">?</span>;
@@ -494,16 +494,16 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::attr::FilterAttrs;
     <span class="kw">use </span><span class="kw">crate</span>::print::TokensOrDefault;
     <span class="kw">use </span>proc_macro2::TokenStream;
     <span class="kw">use </span>quote::ToTokens;
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>DeriveInput {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>DeriveInput {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="kw">for </span>attr <span class="kw">in </span><span class="self">self</span>.attrs.outer() {
                 attr.to_tokens(tokens);
@@ -547,4 +547,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

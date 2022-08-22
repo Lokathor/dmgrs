@@ -13,14 +13,14 @@
 <span id="13">13</span>
 <span id="14">14</span>
 <span id="15">15</span>
-</pre><pre class="rust"><code><span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;mips&quot;</span>, target_arch = <span class="string">&quot;mips64&quot;</span>))]</span> {
+</pre><pre class="rust"><code><span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;mips&quot;</span>, target_arch = <span class="string">&quot;mips64&quot;</span>))] </span>{
         <span class="kw">mod </span>mips;
         <span class="kw">pub use </span><span class="self">self</span>::mips::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;powerpc&quot;</span>, target_arch = <span class="string">&quot;powerpc64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;powerpc&quot;</span>, target_arch = <span class="string">&quot;powerpc64&quot;</span>))] </span>{
         <span class="kw">mod </span>powerpc;
         <span class="kw">pub use </span><span class="self">self</span>::powerpc::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;sparc&quot;</span>, target_arch = <span class="string">&quot;sparc64&quot;</span>))]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_arch = <span class="string">&quot;sparc&quot;</span>, target_arch = <span class="string">&quot;sparc64&quot;</span>))] </span>{
         <span class="kw">mod </span>sparc;
         <span class="kw">pub use </span><span class="self">self</span>::sparc::<span class="kw-2">*</span>;
     } <span class="kw">else </span>{
@@ -29,4 +29,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

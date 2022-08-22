@@ -4922,25 +4922,25 @@
 <span id="4922">4922</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::raw::{Allocator, Bucket, Global, RawDrain, RawIntoIter, RawIter, RawTable};
 <span class="kw">use </span><span class="kw">crate</span>::TryReserveError;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::UnavailableMutError;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::UnavailableMutError;
 <span class="kw">use </span>core::borrow::Borrow;
 <span class="kw">use </span>core::fmt::{<span class="self">self</span>, Debug};
 <span class="kw">use </span>core::hash::{BuildHasher, Hash};
 <span class="kw">use </span>core::iter::{FromIterator, FusedIterator};
 <span class="kw">use </span>core::marker::PhantomData;
 <span class="kw">use </span>core::mem;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-<span class="kw">use </span>core::mem::MaybeUninit;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+</span><span class="kw">use </span>core::mem::MaybeUninit;
 <span class="kw">use </span>core::ops::Index;
 
 <span class="doccomment">/// Default hasher for `HashMap`.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;ahash&quot;</span>)]</span>
-<span class="kw">pub type </span>DefaultHashBuilder = ahash::RandomState;
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;ahash&quot;</span>)]
+</span><span class="kw">pub type </span>DefaultHashBuilder = ahash::RandomState;
 
 <span class="doccomment">/// Dummy default hasher for `HashMap`.
-</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;ahash&quot;</span>))]</span>
-<span class="kw">pub enum </span>DefaultHashBuilder {}
+</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;ahash&quot;</span>))]
+</span><span class="kw">pub enum </span>DefaultHashBuilder {}
 
 <span class="doccomment">/// A hash map implemented with quadratic probing and SIMD lookup.
 ///
@@ -5134,8 +5134,8 @@
 
 <span class="doccomment">/// Ensures that a single closure type across uses of this which, in turn prevents multiple
 /// instances of any functions like RawTable::reserve from being generated
-</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_hasher&lt;K, Q, V, S&gt;(hash_builder: <span class="kw-2">&amp;</span>S) -&gt; <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>(Q, V)) -&gt; u64 + <span class="lifetime">&#39;_
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_hasher&lt;K, Q, V, S&gt;(hash_builder: <span class="kw-2">&amp;</span>S) -&gt; <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>(Q, V)) -&gt; u64 + <span class="lifetime">&#39;_
 </span><span class="kw">where
     </span>K: Borrow&lt;Q&gt;,
     Q: Hash,
@@ -5146,8 +5146,8 @@
 
 <span class="doccomment">/// Ensures that a single closure type across uses of this which, in turn prevents multiple
 /// instances of any functions like RawTable::reserve from being generated
-</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-<span class="kw">fn </span>equivalent_key&lt;Q, K, V&gt;(k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>(K, V)) -&gt; bool + <span class="lifetime">&#39;_
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+</span><span class="kw">fn </span>equivalent_key&lt;Q, K, V&gt;(k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>(K, V)) -&gt; bool + <span class="lifetime">&#39;_
 </span><span class="kw">where
     </span>K: Borrow&lt;Q&gt;,
     Q: <span class="question-mark">?</span>Sized + Eq,
@@ -5157,8 +5157,8 @@
 
 <span class="doccomment">/// Ensures that a single closure type across uses of this which, in turn prevents multiple
 /// instances of any functions like RawTable::reserve from being generated
-</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-<span class="kw">fn </span>equivalent&lt;Q, K&gt;(k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>K) -&gt; bool + <span class="lifetime">&#39;_
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+</span><span class="kw">fn </span>equivalent&lt;Q, K&gt;(k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>K) -&gt; bool + <span class="lifetime">&#39;_
 </span><span class="kw">where
     </span>K: Borrow&lt;Q&gt;,
     Q: <span class="question-mark">?</span>Sized + Eq,
@@ -5166,8 +5166,8 @@
     <span class="kw">move </span>|x| k.eq(x.borrow())
 }
 
-<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_hash&lt;K, Q, S&gt;(hash_builder: <span class="kw-2">&amp;</span>S, val: <span class="kw-2">&amp;</span>Q) -&gt; u64
+<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_hash&lt;K, Q, S&gt;(hash_builder: <span class="kw-2">&amp;</span>S, val: <span class="kw-2">&amp;</span>Q) -&gt; u64
 <span class="kw">where
     </span>K: Borrow&lt;Q&gt;,
     Q: Hash + <span class="question-mark">?</span>Sized,
@@ -5179,8 +5179,8 @@
     state.finish()
 }
 
-<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_insert_hash&lt;K, S&gt;(hash_builder: <span class="kw-2">&amp;</span>S, val: <span class="kw-2">&amp;</span>K) -&gt; u64
+<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_insert_hash&lt;K, S&gt;(hash_builder: <span class="kw-2">&amp;</span>S, val: <span class="kw-2">&amp;</span>K) -&gt; u64
 <span class="kw">where
     </span>K: Hash,
     S: BuildHasher,
@@ -5191,8 +5191,8 @@
     state.finish()
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;ahash&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;K, V&gt; HashMap&lt;K, V, DefaultHashBuilder&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;ahash&quot;</span>)]
+</span><span class="kw">impl</span>&lt;K, V&gt; HashMap&lt;K, V, DefaultHashBuilder&gt; {
     <span class="doccomment">/// Creates an empty `HashMap`.
     ///
     /// The hash map is initially created with a capacity of 0, so it will not allocate until it
@@ -5204,8 +5204,8 @@
     /// use hashbrown::HashMap;
     /// let mut map: HashMap&lt;&amp;str, i32&gt; = HashMap::new();
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::default()
     }
 
@@ -5220,20 +5220,20 @@
     /// use hashbrown::HashMap;
     /// let mut map: HashMap&lt;&amp;str, i32&gt; = HashMap::with_capacity(10);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>with_capacity(capacity: usize) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>with_capacity(capacity: usize) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::with_capacity_and_hasher(capacity, DefaultHashBuilder::default())
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;ahash&quot;</span>)]</span>
-<span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; HashMap&lt;K, V, DefaultHashBuilder, A&gt; {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;ahash&quot;</span>)]
+</span><span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; HashMap&lt;K, V, DefaultHashBuilder, A&gt; {
     <span class="doccomment">/// Creates an empty `HashMap` using the given allocator.
     ///
     /// The hash map is initially created with a capacity of 0, so it will not allocate until it
     /// is first inserted into.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>new_in(alloc: A) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>new_in(alloc: A) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::with_hasher_in(DefaultHashBuilder::default(), alloc)
     }
 
@@ -5241,8 +5241,8 @@
     ///
     /// The hash map will be able to hold at least `capacity` elements without
     /// reallocating. If `capacity` is 0, the hash map will not allocate.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>with_capacity_in(capacity: usize, alloc: A) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>with_capacity_in(capacity: usize, alloc: A) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::with_capacity_and_hasher_in(capacity, DefaultHashBuilder::default(), alloc)
     }
 }
@@ -5273,8 +5273,8 @@
     /// ```
     ///
     /// [`BuildHasher`]: ../../std/hash/trait.BuildHasher.html
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub const fn </span>with_hasher(hash_builder: S) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub const fn </span>with_hasher(hash_builder: S) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             hash_builder,
             table: RawTable::new(),
@@ -5307,8 +5307,8 @@
     /// ```
     ///
     /// [`BuildHasher`]: ../../std/hash/trait.BuildHasher.html
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>with_capacity_and_hasher(capacity: usize, hash_builder: S) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>with_capacity_and_hasher(capacity: usize, hash_builder: S) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             hash_builder,
             table: RawTable::with_capacity(capacity),
@@ -5337,8 +5337,8 @@
     /// let mut map = HashMap::with_hasher(s);
     /// map.insert(1, 2);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>with_hasher_in(hash_builder: S, alloc: A) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>with_hasher_in(hash_builder: S, alloc: A) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             hash_builder,
             table: RawTable::new_in(alloc),
@@ -5366,8 +5366,8 @@
     /// let mut map = HashMap::with_capacity_and_hasher(10, s);
     /// map.insert(1, 2);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>with_capacity_and_hasher_in(capacity: usize, hash_builder: S, alloc: A) -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>with_capacity_and_hasher_in(capacity: usize, hash_builder: S, alloc: A) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             hash_builder,
             table: RawTable::with_capacity_in(capacity, alloc),
@@ -5388,8 +5388,8 @@
     /// let map: HashMap&lt;i32, i32&gt; = HashMap::with_hasher(hasher);
     /// let hasher: &amp;DefaultHashBuilder = map.hasher();
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>hasher(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>S {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>hasher(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>S {
         <span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder
     }
 
@@ -5405,8 +5405,8 @@
     /// let map: HashMap&lt;i32, i32&gt; = HashMap::with_capacity(100);
     /// assert!(map.capacity() &gt;= 100);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.table.capacity()
     }
 
@@ -5427,8 +5427,8 @@
     ///     println!(&quot;{}&quot;, key);
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Keys&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Keys&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         Keys { inner: <span class="self">self</span>.iter() }
     }
 
@@ -5449,8 +5449,8 @@
     ///     println!(&quot;{}&quot;, val);
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>values(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Values&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>values(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Values&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         Values { inner: <span class="self">self</span>.iter() }
     }
 
@@ -5476,8 +5476,8 @@
     ///     println!(&quot;{}&quot;, val);
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>values_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ValuesMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>values_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; ValuesMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         ValuesMut {
             inner: <span class="self">self</span>.iter_mut(),
         }
@@ -5500,8 +5500,8 @@
     ///     println!(&quot;key: {} val: {}&quot;, key, val);
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         <span class="comment">// Here we tie the lifetime of self to the iter.
         </span><span class="kw">unsafe </span>{
             Iter {
@@ -5534,8 +5534,8 @@
     ///     println!(&quot;key: {} val: {}&quot;, key, val);
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>iter_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; IterMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>iter_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; IterMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         <span class="comment">// Here we tie the lifetime of self to the iter.
         </span><span class="kw">unsafe </span>{
             IterMut {
@@ -5545,9 +5545,9 @@
         }
     }
 
-    <span class="attribute">#[cfg(test)]</span>
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>raw_capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg(test)]
+    #[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>raw_capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.table.buckets()
     }
 
@@ -5563,8 +5563,8 @@
     /// a.insert(1, &quot;a&quot;);
     /// assert_eq!(a.len(), 1);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.table.len()
     }
 
@@ -5580,8 +5580,8 @@
     /// a.insert(1, &quot;a&quot;);
     /// assert!(!a.is_empty());
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.len() == <span class="number">0
     </span>}
 
@@ -5604,8 +5604,8 @@
     ///
     /// assert!(a.is_empty());
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>drain(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Drain&lt;<span class="lifetime">&#39;_</span>, K, V, A&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>drain(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Drain&lt;<span class="lifetime">&#39;_</span>, K, V, A&gt; {
         Drain {
             inner: <span class="self">self</span>.table.drain(),
         }
@@ -5664,8 +5664,8 @@
     /// assert_eq!(evens, vec![0, 2, 4, 6]);
     /// assert_eq!(odds, vec![1, 3, 5, 7]);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>drain_filter&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) -&gt; DrainFilter&lt;<span class="lifetime">&#39;_</span>, K, V, F, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>drain_filter&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) -&gt; DrainFilter&lt;<span class="lifetime">&#39;_</span>, K, V, F, A&gt;
     <span class="kw">where
         </span>F: FnMut(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;mut </span>V) -&gt; bool,
     {
@@ -5691,8 +5691,8 @@
     /// a.clear();
     /// assert!(a.is_empty());
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.table.clear();
     }
 }
@@ -5720,8 +5720,8 @@
     /// let mut map: HashMap&lt;&amp;str, i32&gt; = HashMap::new();
     /// map.reserve(10);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) {
         <span class="self">self</span>.table
             .reserve(additional, make_hasher::&lt;K, <span class="kw">_</span>, V, S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder));
     }
@@ -5742,8 +5742,8 @@
     /// let mut map: HashMap&lt;&amp;str, isize&gt; = HashMap::new();
     /// map.try_reserve(10).expect(&quot;why is the test harness OOMing on 10 bytes?&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>try_reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(), TryReserveError&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>try_reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(), TryReserveError&gt; {
         <span class="self">self</span>.table
             .try_reserve(additional, make_hasher::&lt;K, <span class="kw">_</span>, V, S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder))
     }
@@ -5764,8 +5764,8 @@
     /// map.shrink_to_fit();
     /// assert!(map.capacity() &gt;= 2);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>shrink_to_fit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>shrink_to_fit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.table
             .shrink_to(<span class="number">0</span>, make_hasher::&lt;K, <span class="kw">_</span>, V, S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder));
     }
@@ -5793,8 +5793,8 @@
     /// map.shrink_to(10);
     /// assert!(map.capacity() &gt;= 2);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>shrink_to(<span class="kw-2">&amp;mut </span><span class="self">self</span>, min_capacity: usize) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>shrink_to(<span class="kw-2">&amp;mut </span><span class="self">self</span>, min_capacity: usize) {
         <span class="self">self</span>.table
             .shrink_to(min_capacity, make_hasher::&lt;K, <span class="kw">_</span>, V, S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder));
     }
@@ -5818,8 +5818,8 @@
     /// assert_eq!(letters[&amp;&#39;u&#39;], 1);
     /// assert_eq!(letters.get(&amp;&#39;y&#39;), None);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>entry(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: K) -&gt; Entry&lt;<span class="lifetime">&#39;_</span>, K, V, S, A&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>entry(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: K) -&gt; Entry&lt;<span class="lifetime">&#39;_</span>, K, V, S, A&gt; {
         <span class="kw">let </span>hash = make_insert_hash::&lt;K, S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder, <span class="kw-2">&amp;</span>key);
         <span class="kw">if let </span><span class="prelude-val">Some</span>(elem) = <span class="self">self</span>.table.find(hash, equivalent_key(<span class="kw-2">&amp;</span>key)) {
             Entry::Occupied(OccupiedEntry {
@@ -5856,8 +5856,8 @@
     /// assert_eq!(map.get(&amp;1), Some(&amp;&quot;a&quot;));
     /// assert_eq!(map.get(&amp;2), None);
     /// ```
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>get&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>V&gt;
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>get&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>V&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -5888,8 +5888,8 @@
     /// assert_eq!(map.get_key_value(&amp;1), Some((&amp;1, &amp;&quot;a&quot;)));
     /// assert_eq!(map.get_key_value(&amp;2), None);
     /// ```
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>get_key_value&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;</span>V)&gt;
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>get_key_value&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;</span>V)&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -5901,8 +5901,8 @@
         }
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>get_inner&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(K, V)&gt;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>get_inner&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(K, V)&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -5934,8 +5934,8 @@
     /// assert_eq!(map.get_key_value_mut(&amp;1), Some((&amp;1, &amp;mut &quot;b&quot;)));
     /// assert_eq!(map.get_key_value_mut(&amp;2), None);
     /// ```
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>get_key_value_mut&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;mut </span>V)&gt;
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>get_key_value_mut&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;mut </span>V)&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -5966,8 +5966,8 @@
     /// assert_eq!(map.contains_key(&amp;1), true);
     /// assert_eq!(map.contains_key(&amp;2), false);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>contains_key&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; bool
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>contains_key&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; bool
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -5996,8 +5996,8 @@
     /// }
     /// assert_eq!(map[&amp;1], &quot;b&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get_mut&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>V&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get_mut&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>V&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -6009,8 +6009,8 @@
         }
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>get_inner_mut&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>(K, V)&gt;
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>get_inner_mut&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>(K, V)&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -6056,8 +6056,8 @@
     ///     ]
     /// );
     /// ```
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">pub fn </span>get_each_mut&lt;Q: <span class="question-mark">?</span>Sized, <span class="kw">const </span>N: usize&gt;(
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">pub fn </span>get_each_mut&lt;Q: <span class="question-mark">?</span>Sized, <span class="kw">const </span>N: usize&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         ks: [<span class="kw-2">&amp;</span>Q; N],
     ) -&gt; [<span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span>V, UnavailableMutError&gt;; N]
@@ -6115,8 +6115,8 @@
     ///     ]
     /// );
     /// ```
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">pub fn </span>get_each_key_value_mut&lt;Q: <span class="question-mark">?</span>Sized, <span class="kw">const </span>N: usize&gt;(
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">pub fn </span>get_each_key_value_mut&lt;Q: <span class="question-mark">?</span>Sized, <span class="kw">const </span>N: usize&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         ks: [<span class="kw-2">&amp;</span>Q; N],
     ) -&gt; [<span class="prelude-ty">Result</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span>V), UnavailableMutError&gt;; N]
@@ -6137,8 +6137,8 @@
         <span class="kw">unsafe </span>{ MaybeUninit::array_assume_init(out) }
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">fn </span>get_each_inner_mut&lt;Q: <span class="question-mark">?</span>Sized, <span class="kw">const </span>N: usize&gt;(
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">fn </span>get_each_inner_mut&lt;Q: <span class="question-mark">?</span>Sized, <span class="kw">const </span>N: usize&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         ks: [<span class="kw-2">&amp;</span>Q; N],
     ) -&gt; [<span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><span class="kw-2">mut </span>(K, V), UnavailableMutError&gt;; N]
@@ -6179,8 +6179,8 @@
     /// assert_eq!(map.insert(37, &quot;c&quot;), Some(&quot;b&quot;));
     /// assert_eq!(map[&amp;37], &quot;c&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: K, v: V) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: K, v: V) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt; {
         <span class="kw">let </span>hash = make_insert_hash::&lt;K, S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_builder, <span class="kw-2">&amp;</span>k);
         <span class="kw">if let </span><span class="prelude-val">Some</span>((<span class="kw">_</span>, item)) = <span class="self">self</span>.table.get_mut(hash, equivalent_key(<span class="kw-2">&amp;</span>k)) {
             <span class="prelude-val">Some</span>(mem::replace(item, v))
@@ -6214,8 +6214,8 @@
     /// assert_eq!(err.entry.get(), &amp;&quot;a&quot;);
     /// assert_eq!(err.value, &quot;b&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>try_insert(
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>try_insert(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         key: K,
         value: V,
@@ -6246,8 +6246,8 @@
     /// assert_eq!(map.remove(&amp;1), Some(&quot;a&quot;));
     /// assert_eq!(map.remove(&amp;1), None);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>remove&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>remove&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -6279,8 +6279,8 @@
     /// assert_eq!(map.remove_entry(&amp;1), Some((1, &quot;a&quot;)));
     /// assert_eq!(map.remove(&amp;1), None);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>remove_entry&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>remove_entry&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Hash + Eq,
@@ -6322,8 +6322,8 @@
     /// so that the map now contains keys which compare equal, search may start
     /// acting erratically, with two keys randomly masking each other. Implementations
     /// are free to assume this doesn&#39;t happen (within the limits of memory-safety).
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>raw_entry_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RawEntryBuilderMut&lt;<span class="lifetime">&#39;_</span>, K, V, S, A&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>raw_entry_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RawEntryBuilderMut&lt;<span class="lifetime">&#39;_</span>, K, V, S, A&gt; {
         RawEntryBuilderMut { map: <span class="self">self </span>}
     }
 
@@ -6342,8 +6342,8 @@
     /// `get` should be preferred.
     ///
     /// Immutable raw entries have very limited use; you might instead want `raw_entry_mut`.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>raw_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawEntryBuilder&lt;<span class="lifetime">&#39;_</span>, K, V, S, A&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>raw_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RawEntryBuilder&lt;<span class="lifetime">&#39;_</span>, K, V, S, A&gt; {
         RawEntryBuilder { map: <span class="self">self </span>}
     }
 }
@@ -6391,8 +6391,8 @@
     A: Default + Allocator + Clone,
 {
     <span class="doccomment">/// Creates an empty `HashMap&lt;K, V, S, A&gt;`, with the `Default` value for the hasher and allocator.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::with_hasher_in(Default::default(), Default::default())
     }
 }
@@ -6411,8 +6411,8 @@
     /// # Panics
     ///
     /// Panics if the key is not present in the `HashMap`.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>Q) -&gt; <span class="kw-2">&amp;</span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>index(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>Q) -&gt; <span class="kw-2">&amp;</span>V {
         <span class="self">self</span>.get(key).expect(<span class="string">&quot;no entry found for key&quot;</span>)
     }
 }
@@ -6431,8 +6431,8 @@
 
 <span class="comment">// FIXME(#26925) Remove in favor of `#[derive(Clone)]`
 </span><span class="kw">impl</span>&lt;K, V&gt; Clone <span class="kw">for </span>Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         Iter {
             inner: <span class="self">self</span>.inner.clone(),
             marker: PhantomData,
@@ -6466,8 +6466,8 @@
 
 <span class="kw">impl</span>&lt;K, V&gt; IterMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
     <span class="doccomment">/// Returns a iterator of references over the remaining items.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         Iter {
             inner: <span class="self">self</span>.inner.clone(),
             marker: PhantomData,
@@ -6488,8 +6488,8 @@
 
 <span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; IntoIter&lt;K, V, A&gt; {
     <span class="doccomment">/// Returns a iterator of references over the remaining items.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         Iter {
             inner: <span class="self">self</span>.inner.iter(),
             marker: PhantomData,
@@ -6510,8 +6510,8 @@
 
 <span class="comment">// FIXME(#26925) Remove in favor of `#[derive(Clone)]`
 </span><span class="kw">impl</span>&lt;K, V&gt; Clone <span class="kw">for </span>Keys&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         Keys {
             inner: <span class="self">self</span>.inner.clone(),
         }
@@ -6537,8 +6537,8 @@
 
 <span class="comment">// FIXME(#26925) Remove in favor of `#[derive(Clone)]`
 </span><span class="kw">impl</span>&lt;K, V&gt; Clone <span class="kw">for </span>Values&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         Values {
             inner: <span class="self">self</span>.inner.clone(),
         }
@@ -6564,8 +6564,8 @@
 
 <span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; Drain&lt;<span class="lifetime">&#39;_</span>, K, V, A&gt; {
     <span class="doccomment">/// Returns a iterator of references over the remaining items.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
         Iter {
             inner: <span class="self">self</span>.inner.iter(),
             marker: PhantomData,
@@ -6593,8 +6593,8 @@
     </span>F: FnMut(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;mut </span>V) -&gt; bool,
     A: Allocator + Clone,
 {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">while let </span><span class="prelude-val">Some</span>(item) = <span class="self">self</span>.next() {
             <span class="kw">let </span>guard = ConsumeAllOnDrop(<span class="self">self</span>);
             drop(item);
@@ -6606,8 +6606,8 @@
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>ConsumeAllOnDrop&lt;<span class="lifetime">&#39;a</span>, T: Iterator&gt;(<span class="kw">pub </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>T);
 
 <span class="kw">impl</span>&lt;T: Iterator&gt; Drop <span class="kw">for </span>ConsumeAllOnDrop&lt;<span class="lifetime">&#39;_</span>, T&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.<span class="number">0</span>.for_each(drop)
     }
 }
@@ -6619,13 +6619,13 @@
 {
     <span class="kw">type </span>Item = (K, V);
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
         <span class="self">self</span>.inner.next(<span class="kw-2">&amp;mut </span><span class="self">self</span>.f)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         (<span class="number">0</span>, <span class="self">self</span>.inner.iter.size_hint().<span class="number">1</span>)
     }
 }
@@ -6639,8 +6639,8 @@
 }
 
 <span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; DrainFilterInner&lt;<span class="lifetime">&#39;_</span>, K, V, A&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>next&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>F) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt;
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>next&lt;F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>F) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt;
     <span class="kw">where
         </span>F: FnMut(<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;mut </span>V) -&gt; bool,
     {
@@ -6739,9 +6739,9 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V, S, A: Allocator + Clone&gt; RawEntryBuilderMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt; {
     <span class="doccomment">/// Creates a `RawEntryMut` from the given key.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="attribute">#[allow(clippy::wrong_self_convention)]</span>
-    <span class="kw">pub fn </span>from_key&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    #[allow(clippy::wrong_self_convention)]
+    </span><span class="kw">pub fn </span>from_key&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>S: BuildHasher,
         K: Borrow&lt;Q&gt;,
@@ -6752,9 +6752,9 @@
     }
 
     <span class="doccomment">/// Creates a `RawEntryMut` from the given key and its hash.
-    </span><span class="attribute">#[inline]</span>
-    <span class="attribute">#[allow(clippy::wrong_self_convention)]</span>
-    <span class="kw">pub fn </span>from_key_hashed_nocheck&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, hash: u64, k: <span class="kw-2">&amp;</span>Q) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[inline]
+    #[allow(clippy::wrong_self_convention)]
+    </span><span class="kw">pub fn </span>from_key_hashed_nocheck&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, hash: u64, k: <span class="kw-2">&amp;</span>Q) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Eq,
@@ -6765,17 +6765,17 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V, S, A: Allocator + Clone&gt; RawEntryBuilderMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt; {
     <span class="doccomment">/// Creates a `RawEntryMut` from the given hash.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="attribute">#[allow(clippy::wrong_self_convention)]</span>
-    <span class="kw">pub fn </span>from_hash&lt;F&gt;(<span class="self">self</span>, hash: u64, is_match: F) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    #[allow(clippy::wrong_self_convention)]
+    </span><span class="kw">pub fn </span>from_hash&lt;F&gt;(<span class="self">self</span>, hash: u64, is_match: F) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         for</span>&lt;<span class="lifetime">&#39;b</span>&gt; F: FnMut(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>K) -&gt; bool,
     {
         <span class="self">self</span>.search(hash, is_match)
     }
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>search&lt;F&gt;(<span class="self">self</span>, hash: u64, <span class="kw-2">mut </span>is_match: F) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>search&lt;F&gt;(<span class="self">self</span>, hash: u64, <span class="kw-2">mut </span>is_match: F) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         for</span>&lt;<span class="lifetime">&#39;b</span>&gt; F: FnMut(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>K) -&gt; bool,
     {
@@ -6795,9 +6795,9 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V, S, A: Allocator + Clone&gt; RawEntryBuilder&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt; {
     <span class="doccomment">/// Access an entry by key.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="attribute">#[allow(clippy::wrong_self_convention)]</span>
-    <span class="kw">pub fn </span>from_key&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    #[allow(clippy::wrong_self_convention)]
+    </span><span class="kw">pub fn </span>from_key&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
     <span class="kw">where
         </span>S: BuildHasher,
         K: Borrow&lt;Q&gt;,
@@ -6808,9 +6808,9 @@
     }
 
     <span class="doccomment">/// Access an entry by a key and its hash.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="attribute">#[allow(clippy::wrong_self_convention)]</span>
-    <span class="kw">pub fn </span>from_key_hashed_nocheck&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, hash: u64, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    #[allow(clippy::wrong_self_convention)]
+    </span><span class="kw">pub fn </span>from_key_hashed_nocheck&lt;Q: <span class="question-mark">?</span>Sized&gt;(<span class="self">self</span>, hash: u64, k: <span class="kw-2">&amp;</span>Q) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
     <span class="kw">where
         </span>K: Borrow&lt;Q&gt;,
         Q: Eq,
@@ -6818,8 +6818,8 @@
         <span class="self">self</span>.from_hash(hash, equivalent(k))
     }
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>search&lt;F&gt;(<span class="self">self</span>, hash: u64, <span class="kw-2">mut </span>is_match: F) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>search&lt;F&gt;(<span class="self">self</span>, hash: u64, <span class="kw-2">mut </span>is_match: F) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
     <span class="kw">where
         </span>F: FnMut(<span class="kw-2">&amp;</span>K) -&gt; bool,
     {
@@ -6830,9 +6830,9 @@
     }
 
     <span class="doccomment">/// Access an entry by hash.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="attribute">#[allow(clippy::wrong_self_convention)]</span>
-    <span class="kw">pub fn </span>from_hash&lt;F&gt;(<span class="self">self</span>, hash: u64, is_match: F) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    #[allow(clippy::wrong_self_convention)]
+    </span><span class="kw">pub fn </span>from_hash&lt;F&gt;(<span class="self">self</span>, hash: u64, is_match: F) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;
     <span class="kw">where
         </span>F: FnMut(<span class="kw-2">&amp;</span>K) -&gt; bool,
     {
@@ -6853,8 +6853,8 @@
     ///
     /// assert_eq!(entry.remove_entry(), (&quot;horseyland&quot;, 37));
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="self">self</span>, key: K, value: V) -&gt; RawOccupiedEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="self">self</span>, key: K, value: V) -&gt; RawOccupiedEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -6884,8 +6884,8 @@
     /// *map.raw_entry_mut().from_key(&quot;poneyland&quot;).or_insert(&quot;poneyland&quot;, 10).1 *= 2;
     /// assert_eq!(map[&quot;poneyland&quot;], 6);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>or_insert(<span class="self">self</span>, default_key: K, default_val: V) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>or_insert(<span class="self">self</span>, default_key: K, default_val: V) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -6912,8 +6912,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], &quot;hoho&quot;.to_string());
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>or_insert_with&lt;F&gt;(<span class="self">self</span>, default: F) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>or_insert_with&lt;F&gt;(<span class="self">self</span>, default: F) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
     <span class="kw">where
         </span>F: FnOnce() -&gt; (K, V),
         K: Hash,
@@ -6950,8 +6950,8 @@
     ///    .or_insert(&quot;poneyland&quot;, 0);
     /// assert_eq!(map[&quot;poneyland&quot;], 43);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>and_modify&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>and_modify&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;mut </span>K, <span class="kw-2">&amp;mut </span>V),
     {
@@ -7022,8 +7022,8 @@
     ///
     /// assert!(!map.contains_key(&quot;poneyland&quot;));
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>and_replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>and_replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;</span>K, V) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt;,
     {
@@ -7036,46 +7036,46 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V, S, A: Allocator + Clone&gt; RawOccupiedEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt; {
     <span class="doccomment">/// Gets a reference to the key in the entry.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;</span><span class="self">self</span>.elem.as_ref().<span class="number">0 </span>}
     }
 
     <span class="doccomment">/// Gets a mutable reference to the key in the entry.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>key_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>key_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>K {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut </span><span class="self">self</span>.elem.as_mut().<span class="number">0 </span>}
     }
 
     <span class="doccomment">/// Converts the entry into a mutable reference to the key in the entry
     /// with a lifetime bound to the map itself.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>into_key(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>into_key(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut </span><span class="self">self</span>.elem.as_mut().<span class="number">0 </span>}
     }
 
     <span class="doccomment">/// Gets a reference to the value in the entry.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>V {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;</span><span class="self">self</span>.elem.as_ref().<span class="number">1 </span>}
     }
 
     <span class="doccomment">/// Converts the OccupiedEntry into a mutable reference to the value in the entry
     /// with a lifetime bound to the map itself.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>into_mut(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>into_mut(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut </span><span class="self">self</span>.elem.as_mut().<span class="number">1 </span>}
     }
 
     <span class="doccomment">/// Gets a mutable reference to the value in the entry.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>V {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut </span><span class="self">self</span>.elem.as_mut().<span class="number">1 </span>}
     }
 
     <span class="doccomment">/// Gets a reference to the key and value in the entry.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get_key_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; (<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;</span>V) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get_key_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; (<span class="kw-2">&amp;</span>K, <span class="kw-2">&amp;</span>V) {
         <span class="kw">unsafe </span>{
             <span class="kw">let </span><span class="kw-2">&amp;</span>(<span class="kw-2">ref </span>key, <span class="kw-2">ref </span>value) = <span class="self">self</span>.elem.as_ref();
             (key, value)
@@ -7083,8 +7083,8 @@
     }
 
     <span class="doccomment">/// Gets a mutable reference to the key and value in the entry.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get_key_value_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; (<span class="kw-2">&amp;mut </span>K, <span class="kw-2">&amp;mut </span>V) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get_key_value_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; (<span class="kw-2">&amp;mut </span>K, <span class="kw-2">&amp;mut </span>V) {
         <span class="kw">unsafe </span>{
             <span class="kw">let </span><span class="kw-2">&amp;mut </span>(<span class="kw-2">ref mut </span>key, <span class="kw-2">ref mut </span>value) = <span class="self">self</span>.elem.as_mut();
             (key, value)
@@ -7093,8 +7093,8 @@
 
     <span class="doccomment">/// Converts the OccupiedEntry into a mutable reference to the key and value in the entry
     /// with a lifetime bound to the map itself.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>into_key_value(<span class="self">self</span>) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>into_key_value(<span class="self">self</span>) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V) {
         <span class="kw">unsafe </span>{
             <span class="kw">let </span><span class="kw-2">&amp;mut </span>(<span class="kw-2">ref mut </span>key, <span class="kw-2">ref mut </span>value) = <span class="self">self</span>.elem.as_mut();
             (key, value)
@@ -7102,34 +7102,34 @@
     }
 
     <span class="doccomment">/// Sets the value of the entry, and returns the entry&#39;s old value.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: V) -&gt; V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: V) -&gt; V {
         mem::replace(<span class="self">self</span>.get_mut(), value)
     }
 
     <span class="doccomment">/// Sets the value of the entry, and returns the entry&#39;s old value.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert_key(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: K) -&gt; K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert_key(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: K) -&gt; K {
         mem::replace(<span class="self">self</span>.key_mut(), key)
     }
 
     <span class="doccomment">/// Takes the value out of the entry, and returns it.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>remove(<span class="self">self</span>) -&gt; V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>remove(<span class="self">self</span>) -&gt; V {
         <span class="self">self</span>.remove_entry().<span class="number">1
     </span>}
 
     <span class="doccomment">/// Take the ownership of the key and value from the map.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>remove_entry(<span class="self">self</span>) -&gt; (K, V) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>remove_entry(<span class="self">self</span>) -&gt; (K, V) {
         <span class="kw">unsafe </span>{ <span class="self">self</span>.table.remove(<span class="self">self</span>.elem) }
     }
 
     <span class="doccomment">/// Provides shared access to the key and owned access to the value of
     /// the entry and allows to replace or remove it based on the
     /// value of the returned option.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; RawEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;</span>K, V) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt;,
     {
@@ -7155,8 +7155,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V, S, A: Allocator + Clone&gt; RawVacantEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt; {
     <span class="doccomment">/// Sets the value of the entry with the VacantEntry&#39;s key,
     /// and returns a mutable reference to it.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="self">self</span>, key: K, value: V) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="self">self</span>, key: K, value: V) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7167,9 +7167,9 @@
 
     <span class="doccomment">/// Sets the value of the entry with the VacantEntry&#39;s key,
     /// and returns a mutable reference to it.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="attribute">#[allow(clippy::shadow_unrelated)]</span>
-    <span class="kw">pub fn </span>insert_hashed_nocheck(<span class="self">self</span>, hash: u64, key: K, value: V) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    #[allow(clippy::shadow_unrelated)]
+    </span><span class="kw">pub fn </span>insert_hashed_nocheck(<span class="self">self</span>, hash: u64, key: K, value: V) -&gt; (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7183,8 +7183,8 @@
     }
 
     <span class="doccomment">/// Set the value of an entry with a custom hasher function.
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert_with_hasher&lt;H&gt;(
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert_with_hasher&lt;H&gt;(
         <span class="self">self</span>,
         hash: u64,
         key: K,
@@ -7200,8 +7200,8 @@
         (k, v)
     }
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>insert_entry(<span class="self">self</span>, key: K, value: V) -&gt; RawOccupiedEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>insert_entry(<span class="self">self</span>, key: K, value: V) -&gt; RawOccupiedEntryMut&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7373,8 +7373,8 @@
     <span class="kw">type </span>Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V);
     <span class="kw">type </span>IntoIter = Iter&lt;<span class="lifetime">&#39;a</span>, K, V&gt;;
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; Iter&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
         <span class="self">self</span>.iter()
     }
 }
@@ -7383,8 +7383,8 @@
     <span class="kw">type </span>Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V);
     <span class="kw">type </span>IntoIter = IterMut&lt;<span class="lifetime">&#39;a</span>, K, V&gt;;
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; IterMut&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; IterMut&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
         <span class="self">self</span>.iter_mut()
     }
 }
@@ -7410,8 +7410,8 @@
     /// // Not possible with .iter()
     /// let vec: Vec&lt;(&amp;str, i32)&gt; = map.into_iter().collect();
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; IntoIter&lt;K, V, A&gt; {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; IntoIter&lt;K, V, A&gt; {
         IntoIter {
             inner: <span class="self">self</span>.table.into_iter(),
         }
@@ -7421,8 +7421,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; Iterator <span class="kw">for </span>Iter&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
     <span class="kw">type </span>Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V);
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt; {
         <span class="comment">// Avoid `Option::map` because it bloats LLVM IR.
         </span><span class="kw">match </span><span class="self">self</span>.inner.next() {
             <span class="prelude-val">Some</span>(x) =&gt; <span class="kw">unsafe </span>{
@@ -7432,14 +7432,14 @@
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V&gt; ExactSizeIterator <span class="kw">for </span>Iter&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7449,8 +7449,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; Iterator <span class="kw">for </span>IterMut&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
     <span class="kw">type </span>Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V);
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V)&gt; {
         <span class="comment">// Avoid `Option::map` because it bloats LLVM IR.
         </span><span class="kw">match </span><span class="self">self</span>.inner.next() {
             <span class="prelude-val">Some</span>(x) =&gt; <span class="kw">unsafe </span>{
@@ -7460,14 +7460,14 @@
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V&gt; ExactSizeIterator <span class="kw">for </span>IterMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7486,18 +7486,18 @@
 <span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; Iterator <span class="kw">for </span>IntoIter&lt;K, V, A&gt; {
     <span class="kw">type </span>Item = (K, V);
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt; {
         <span class="self">self</span>.inner.next()
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; ExactSizeIterator <span class="kw">for </span>IntoIter&lt;K, V, A&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7512,22 +7512,22 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; Iterator <span class="kw">for </span>Keys&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
     <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K;
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K&gt; {
         <span class="comment">// Avoid `Option::map` because it bloats LLVM IR.
         </span><span class="kw">match </span><span class="self">self</span>.inner.next() {
             <span class="prelude-val">Some</span>((k, <span class="kw">_</span>)) =&gt; <span class="prelude-val">Some</span>(k),
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V&gt; ExactSizeIterator <span class="kw">for </span>Keys&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7536,22 +7536,22 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; Iterator <span class="kw">for </span>Values&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
     <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V;
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V&gt; {
         <span class="comment">// Avoid `Option::map` because it bloats LLVM IR.
         </span><span class="kw">match </span><span class="self">self</span>.inner.next() {
             <span class="prelude-val">Some</span>((<span class="kw">_</span>, v)) =&gt; <span class="prelude-val">Some</span>(v),
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V&gt; ExactSizeIterator <span class="kw">for </span>Values&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7560,22 +7560,22 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; Iterator <span class="kw">for </span>ValuesMut&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
     <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V;
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V&gt; {
         <span class="comment">// Avoid `Option::map` because it bloats LLVM IR.
         </span><span class="kw">match </span><span class="self">self</span>.inner.next() {
             <span class="prelude-val">Some</span>((<span class="kw">_</span>, v)) =&gt; <span class="prelude-val">Some</span>(v),
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V&gt; ExactSizeIterator <span class="kw">for </span>ValuesMut&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7594,18 +7594,18 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V, A: Allocator + Clone&gt; Iterator <span class="kw">for </span>Drain&lt;<span class="lifetime">&#39;a</span>, K, V, A&gt; {
     <span class="kw">type </span>Item = (K, V);
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt; {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(K, V)&gt; {
         <span class="self">self</span>.inner.next()
     }
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>size_hint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, <span class="prelude-ty">Option</span>&lt;usize&gt;) {
         <span class="self">self</span>.inner.size_hint()
     }
 }
 <span class="kw">impl</span>&lt;K, V, A: Allocator + Clone&gt; ExactSizeIterator <span class="kw">for </span>Drain&lt;<span class="lifetime">&#39;_</span>, K, V, A&gt; {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inner.len()
     }
 }
@@ -7635,8 +7635,8 @@
     ///
     /// assert_eq!(entry.key(), &amp;&quot;horseyland&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="self">self</span>, value: V) -&gt; OccupiedEntry&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="self">self</span>, value: V) -&gt; OccupiedEntry&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7666,8 +7666,8 @@
     /// *map.entry(&quot;poneyland&quot;).or_insert(10) *= 2;
     /// assert_eq!(map[&quot;poneyland&quot;], 6);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>or_insert(<span class="self">self</span>, default: V) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>or_insert(<span class="self">self</span>, default: V) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7693,8 +7693,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], &quot;hoho&quot;.to_string());
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>or_insert_with&lt;F: FnOnce() -&gt; V&gt;(<span class="self">self</span>, default: F) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>or_insert_with&lt;F: FnOnce() -&gt; V&gt;(<span class="self">self</span>, default: F) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7723,8 +7723,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], 9);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>or_insert_with_key&lt;F: FnOnce(<span class="kw-2">&amp;</span>K) -&gt; V&gt;(<span class="self">self</span>, default: F) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>or_insert_with_key&lt;F: FnOnce(<span class="kw-2">&amp;</span>K) -&gt; V&gt;(<span class="self">self</span>, default: F) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7748,8 +7748,8 @@
     /// let mut map: HashMap&lt;&amp;str, u32&gt; = HashMap::new();
     /// assert_eq!(map.entry(&quot;poneyland&quot;).key(), &amp;&quot;poneyland&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
         <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
             Entry::Occupied(<span class="kw-2">ref </span>entry) =&gt; entry.key(),
             Entry::Vacant(<span class="kw-2">ref </span>entry) =&gt; entry.key(),
@@ -7776,8 +7776,8 @@
     ///    .or_insert(42);
     /// assert_eq!(map[&quot;poneyland&quot;], 43);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>and_modify&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>and_modify&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;mut </span>V),
     {
@@ -7844,8 +7844,8 @@
     ///
     /// assert!(!map.contains_key(&quot;poneyland&quot;));
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>and_replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>and_replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; <span class="self">Self
     </span><span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;</span>K, V) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt;,
     {
@@ -7870,8 +7870,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], None);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>or_default(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>or_default(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -7895,8 +7895,8 @@
     /// map.entry(&quot;poneyland&quot;).or_insert(12);
     /// assert_eq!(map.entry(&quot;poneyland&quot;).key(), &amp;&quot;poneyland&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;</span><span class="self">self</span>.elem.as_ref().<span class="number">0 </span>}
     }
 
@@ -7918,8 +7918,8 @@
     ///
     /// assert_eq!(map.contains_key(&quot;poneyland&quot;), false);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>remove_entry(<span class="self">self</span>) -&gt; (K, V) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>remove_entry(<span class="self">self</span>) -&gt; (K, V) {
         <span class="kw">unsafe </span>{ <span class="self">self</span>.table.table.remove(<span class="self">self</span>.elem) }
     }
 
@@ -7938,8 +7938,8 @@
     ///     assert_eq!(o.get(), &amp;12);
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>V {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;</span><span class="self">self</span>.elem.as_ref().<span class="number">1 </span>}
     }
 
@@ -7970,8 +7970,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], 24);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>get_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>V {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut </span><span class="self">self</span>.elem.as_mut().<span class="number">1 </span>}
     }
 
@@ -7998,8 +7998,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], 22);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>into_mut(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>into_mut(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V {
         <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut </span><span class="self">self</span>.elem.as_mut().<span class="number">1 </span>}
     }
 
@@ -8020,8 +8020,8 @@
     ///
     /// assert_eq!(map[&quot;poneyland&quot;], 15);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>value: V) -&gt; V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>value: V) -&gt; V {
         <span class="kw">let </span>old_value = <span class="self">self</span>.get_mut();
         mem::swap(<span class="kw-2">&amp;mut </span>value, old_value);
         value
@@ -8044,8 +8044,8 @@
     ///
     /// assert_eq!(map.contains_key(&quot;poneyland&quot;), false);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>remove(<span class="self">self</span>) -&gt; V {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>remove(<span class="self">self</span>) -&gt; V {
         <span class="self">self</span>.remove_entry().<span class="number">1
     </span>}
 
@@ -8073,8 +8073,8 @@
     /// }
     ///
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>replace_entry(<span class="self">self</span>, value: V) -&gt; (K, V) {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>replace_entry(<span class="self">self</span>, value: V) -&gt; (K, V) {
         <span class="kw">let </span>entry = <span class="kw">unsafe </span>{ <span class="self">self</span>.elem.as_mut() };
 
         <span class="kw">let </span>old_key = mem::replace(<span class="kw-2">&amp;mut </span>entry.<span class="number">0</span>, <span class="self">self</span>.key.unwrap());
@@ -8111,8 +8111,8 @@
     ///     }
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>replace_key(<span class="self">self</span>) -&gt; K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>replace_key(<span class="self">self</span>) -&gt; K {
         <span class="kw">let </span>entry = <span class="kw">unsafe </span>{ <span class="self">self</span>.elem.as_mut() };
         mem::replace(<span class="kw-2">&amp;mut </span>entry.<span class="number">0</span>, <span class="self">self</span>.key.unwrap())
     }
@@ -8165,8 +8165,8 @@
     ///
     /// assert!(!map.contains_key(&quot;poneyland&quot;));
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; Entry&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>replace_entry_with&lt;F&gt;(<span class="self">self</span>, f: F) -&gt; Entry&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>F: FnOnce(<span class="kw-2">&amp;</span>K, V) -&gt; <span class="prelude-ty">Option</span>&lt;V&gt;,
     {
@@ -8209,8 +8209,8 @@
     /// let mut map: HashMap&lt;&amp;str, u32&gt; = HashMap::new();
     /// assert_eq!(map.entry(&quot;poneyland&quot;).key(), &amp;&quot;poneyland&quot;);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
         <span class="kw-2">&amp;</span><span class="self">self</span>.key
     }
 
@@ -8228,8 +8228,8 @@
     ///     v.into_key();
     /// }
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>into_key(<span class="self">self</span>) -&gt; K {
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>into_key(<span class="self">self</span>) -&gt; K {
         <span class="self">self</span>.key
     }
 
@@ -8249,8 +8249,8 @@
     /// }
     /// assert_eq!(map[&quot;poneyland&quot;], 37);
     /// ```
-    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">pub fn </span>insert(<span class="self">self</span>, value: V) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
+    </span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">pub fn </span>insert(<span class="self">self</span>, value: V) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>V
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -8264,8 +8264,8 @@
         <span class="kw-2">&amp;mut </span>entry.<span class="number">1
     </span>}
 
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>insert_entry(<span class="self">self</span>, value: V) -&gt; OccupiedEntry&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>insert_entry(<span class="self">self</span>, value: V) -&gt; OccupiedEntry&lt;<span class="lifetime">&#39;a</span>, K, V, S, A&gt;
     <span class="kw">where
         </span>K: Hash,
         S: BuildHasher,
@@ -8290,8 +8290,8 @@
     S: BuildHasher + Default,
     A: Default + Allocator + Clone,
 {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>from_iter&lt;T: IntoIterator&lt;Item = (K, V)&gt;&gt;(iter: T) -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>from_iter&lt;T: IntoIterator&lt;Item = (K, V)&gt;&gt;(iter: T) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>iter = iter.into_iter();
         <span class="kw">let </span><span class="kw-2">mut </span>map =
             <span class="self">Self</span>::with_capacity_and_hasher_in(iter.size_hint().<span class="number">0</span>, S::default(), A::default());
@@ -8310,8 +8310,8 @@
     S: BuildHasher,
     A: Allocator + Clone,
 {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>extend&lt;T: IntoIterator&lt;Item = (K, V)&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: T) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>extend&lt;T: IntoIterator&lt;Item = (K, V)&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: T) {
         <span class="comment">// Keys may be already present or show multiple times in the iterator.
         // Reserve the entire hint lower bound if the map is empty.
         // Otherwise reserve half the hint (rounded up), so the map
@@ -8328,15 +8328,15 @@
         });
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">fn </span>extend_one(<span class="kw-2">&amp;mut </span><span class="self">self</span>, (k, v): (K, V)) {
+    <span class="attribute">#[inline]
+    #[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">fn </span>extend_one(<span class="kw-2">&amp;mut </span><span class="self">self</span>, (k, v): (K, V)) {
         <span class="self">self</span>.insert(k, v);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">fn </span>extend_reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) {
+    <span class="attribute">#[inline]
+    #[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">fn </span>extend_reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) {
         <span class="comment">// Keys may be already present or show multiple times in the iterator.
         // Reserve the entire hint lower bound if the map is empty.
         // Otherwise reserve half the hint (rounded up), so the map
@@ -8357,26 +8357,26 @@
     S: BuildHasher,
     A: Allocator + Clone,
 {
-    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]</span>
-    <span class="kw">fn </span>extend&lt;T: IntoIterator&lt;Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: T) {
+    <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;inline-more&quot;</span>, inline)]
+    </span><span class="kw">fn </span>extend&lt;T: IntoIterator&lt;Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, iter: T) {
         <span class="self">self</span>.extend(iter.into_iter().map(|(<span class="kw-2">&amp;</span>key, <span class="kw-2">&amp;</span>value)| (key, value)));
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">fn </span>extend_one(<span class="kw-2">&amp;mut </span><span class="self">self</span>, (k, v): (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)) {
+    <span class="attribute">#[inline]
+    #[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">fn </span>extend_one(<span class="kw-2">&amp;mut </span><span class="self">self</span>, (k, v): (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>K, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>V)) {
         <span class="self">self</span>.insert(<span class="kw-2">*</span>k, <span class="kw-2">*</span>v);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">fn </span>extend_reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) {
+    <span class="attribute">#[inline]
+    #[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">fn </span>extend_reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, additional: usize) {
         Extend::&lt;(K, V)&gt;::extend_reserve(<span class="self">self</span>, additional);
     }
 }
 
-<span class="attribute">#[allow(dead_code)]</span>
-<span class="kw">fn </span>assert_covariance() {
+<span class="attribute">#[allow(dead_code)]
+</span><span class="kw">fn </span>assert_covariance() {
     <span class="kw">fn </span>map_key&lt;<span class="lifetime">&#39;new</span>&gt;(v: HashMap&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, u8&gt;) -&gt; HashMap&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;new </span>str, u8&gt; {
         v
     }
@@ -8418,8 +8418,8 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>test_map {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test_map {
     <span class="kw">use </span><span class="kw">super</span>::DefaultHashBuilder;
     <span class="kw">use </span><span class="kw">super</span>::Entry::{Occupied, Vacant};
     <span class="kw">use super</span>::{HashMap, RawEntryMut};
@@ -8430,8 +8430,8 @@
     <span class="kw">use </span>std::usize;
     <span class="kw">use </span>std::vec::Vec;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_zero_capacities() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_zero_capacities() {
         <span class="kw">type </span>HM = HashMap&lt;i32, i32&gt;;
 
         <span class="kw">let </span>m = HM::new();
@@ -8462,8 +8462,8 @@
         <span class="macro">assert_eq!</span>(m.capacity(), <span class="number">0</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_create_capacity_zero() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_create_capacity_zero() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::with_capacity(<span class="number">0</span>);
 
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">1</span>).is_none());
@@ -8472,8 +8472,8 @@
         <span class="macro">assert!</span>(!m.contains_key(<span class="kw-2">&amp;</span><span class="number">0</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_insert() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_insert() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         <span class="macro">assert_eq!</span>(m.len(), <span class="number">0</span>);
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">2</span>).is_none());
@@ -8484,8 +8484,8 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>m.get(<span class="kw-2">&amp;</span><span class="number">2</span>).unwrap(), <span class="number">4</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_clone() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_clone() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         <span class="macro">assert_eq!</span>(m.len(), <span class="number">0</span>);
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">2</span>).is_none());
@@ -8498,8 +8498,8 @@
         <span class="macro">assert_eq!</span>(m2.len(), <span class="number">2</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_clone_from() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_clone_from() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>m2 = HashMap::new();
         <span class="macro">assert_eq!</span>(m.len(), <span class="number">0</span>);
@@ -8513,10 +8513,10 @@
         <span class="macro">assert_eq!</span>(m2.len(), <span class="number">2</span>);
     }
 
-    <span class="macro">thread_local!</span> { <span class="kw">static </span>DROP_VECTOR: RefCell&lt;Vec&lt;i32&gt;&gt; = RefCell::new(Vec::new()) }
+    <span class="macro">thread_local! </span>{ <span class="kw">static </span>DROP_VECTOR: RefCell&lt;Vec&lt;i32&gt;&gt; = RefCell::new(Vec::new()) }
 
-    <span class="attribute">#[derive(Hash, PartialEq, Eq)]</span>
-    <span class="kw">struct </span>Droppable {
+    <span class="attribute">#[derive(Hash, PartialEq, Eq)]
+    </span><span class="kw">struct </span>Droppable {
         k: usize,
     }
 
@@ -8544,8 +8544,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_drops() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_drops() {
         DROP_VECTOR.with(|slot| {
             <span class="kw-2">*</span>slot.borrow_mut() = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">200</span>];
         });
@@ -8603,8 +8603,8 @@
         });
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_into_iter_drops() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_into_iter_drops() {
         DROP_VECTOR.with(|v| {
             <span class="kw-2">*</span>v.borrow_mut() = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">200</span>];
         });
@@ -8664,14 +8664,14 @@
         });
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_empty_remove() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_empty_remove() {
         <span class="kw">let </span><span class="kw-2">mut </span>m: HashMap&lt;i32, bool&gt; = HashMap::new();
         <span class="macro">assert_eq!</span>(m.remove(<span class="kw-2">&amp;</span><span class="number">0</span>), <span class="prelude-val">None</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_empty_entry() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_empty_entry() {
         <span class="kw">let </span><span class="kw-2">mut </span>m: HashMap&lt;i32, bool&gt; = HashMap::new();
         <span class="kw">match </span>m.entry(<span class="number">0</span>) {
             Occupied(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(),
@@ -8681,8 +8681,8 @@
         <span class="macro">assert_eq!</span>(m.len(), <span class="number">1</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_empty_iter() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_empty_iter() {
         <span class="kw">let </span><span class="kw-2">mut </span>m: HashMap&lt;i32, bool&gt; = HashMap::new();
         <span class="macro">assert_eq!</span>(m.drain().next(), <span class="prelude-val">None</span>);
         <span class="macro">assert_eq!</span>(m.keys().next(), <span class="prelude-val">None</span>);
@@ -8695,8 +8695,8 @@
         <span class="macro">assert_eq!</span>(m.into_iter().next(), <span class="prelude-val">None</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg_attr(miri, ignore)]</span> <span class="comment">// FIXME: takes too long
+    <span class="attribute">#[test]
+    #[cfg_attr(miri, ignore)] </span><span class="comment">// FIXME: takes too long
     </span><span class="kw">fn </span>test_lots_of_insertions() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
 
@@ -8759,8 +8759,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_find_mut() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_find_mut() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">12</span>).is_none());
         <span class="macro">assert!</span>(m.insert(<span class="number">2</span>, <span class="number">8</span>).is_none());
@@ -8773,8 +8773,8 @@
         <span class="macro">assert_eq!</span>(m.get(<span class="kw-2">&amp;</span><span class="number">5</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>new));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_insert_overwrite() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_insert_overwrite() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">2</span>).is_none());
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>m.get(<span class="kw-2">&amp;</span><span class="number">1</span>).unwrap(), <span class="number">2</span>);
@@ -8782,8 +8782,8 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>m.get(<span class="kw-2">&amp;</span><span class="number">1</span>).unwrap(), <span class="number">3</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_insert_conflicts() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_insert_conflicts() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::with_capacity(<span class="number">4</span>);
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">2</span>).is_none());
         <span class="macro">assert!</span>(m.insert(<span class="number">5</span>, <span class="number">3</span>).is_none());
@@ -8793,8 +8793,8 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>m.get(<span class="kw-2">&amp;</span><span class="number">1</span>).unwrap(), <span class="number">2</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_conflict_remove() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_conflict_remove() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::with_capacity(<span class="number">4</span>);
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">2</span>).is_none());
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>m.get(<span class="kw-2">&amp;</span><span class="number">1</span>).unwrap(), <span class="number">2</span>);
@@ -8810,8 +8810,8 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">*</span>m.get(<span class="kw-2">&amp;</span><span class="number">5</span>).unwrap(), <span class="number">3</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_is_empty() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_is_empty() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::with_capacity(<span class="number">4</span>);
         <span class="macro">assert!</span>(m.insert(<span class="number">1</span>, <span class="number">2</span>).is_none());
         <span class="macro">assert!</span>(!m.is_empty());
@@ -8819,24 +8819,24 @@
         <span class="macro">assert!</span>(m.is_empty());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_remove() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_remove() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         m.insert(<span class="number">1</span>, <span class="number">2</span>);
         <span class="macro">assert_eq!</span>(m.remove(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="prelude-val">Some</span>(<span class="number">2</span>));
         <span class="macro">assert_eq!</span>(m.remove(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="prelude-val">None</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_remove_entry() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_remove_entry() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         m.insert(<span class="number">1</span>, <span class="number">2</span>);
         <span class="macro">assert_eq!</span>(m.remove_entry(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="prelude-val">Some</span>((<span class="number">1</span>, <span class="number">2</span>)));
         <span class="macro">assert_eq!</span>(m.remove(<span class="kw-2">&amp;</span><span class="number">1</span>), <span class="prelude-val">None</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_iterate() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_iterate() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::with_capacity(<span class="number">4</span>);
         <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">32 </span>{
             <span class="macro">assert!</span>(m.insert(i, i * <span class="number">2</span>).is_none());
@@ -8852,8 +8852,8 @@
         <span class="macro">assert_eq!</span>(observed, <span class="number">0xFFFF_FFFF</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_keys() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_keys() {
         <span class="kw">let </span>vec = <span class="macro">vec!</span>[(<span class="number">1</span>, <span class="string">&#39;a&#39;</span>), (<span class="number">2</span>, <span class="string">&#39;b&#39;</span>), (<span class="number">3</span>, <span class="string">&#39;c&#39;</span>)];
         <span class="kw">let </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = vec.into_iter().collect();
         <span class="kw">let </span>keys: Vec&lt;<span class="kw">_</span>&gt; = map.keys().cloned().collect();
@@ -8863,8 +8863,8 @@
         <span class="macro">assert!</span>(keys.contains(<span class="kw-2">&amp;</span><span class="number">3</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_values() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_values() {
         <span class="kw">let </span>vec = <span class="macro">vec!</span>[(<span class="number">1</span>, <span class="string">&#39;a&#39;</span>), (<span class="number">2</span>, <span class="string">&#39;b&#39;</span>), (<span class="number">3</span>, <span class="string">&#39;c&#39;</span>)];
         <span class="kw">let </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = vec.into_iter().collect();
         <span class="kw">let </span>values: Vec&lt;<span class="kw">_</span>&gt; = map.values().cloned().collect();
@@ -8874,8 +8874,8 @@
         <span class="macro">assert!</span>(values.contains(<span class="kw-2">&amp;</span><span class="string">&#39;c&#39;</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_values_mut() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_values_mut() {
         <span class="kw">let </span>vec = <span class="macro">vec!</span>[(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">3</span>)];
         <span class="kw">let </span><span class="kw-2">mut </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = vec.into_iter().collect();
         <span class="kw">for </span>value <span class="kw">in </span>map.values_mut() {
@@ -8888,8 +8888,8 @@
         <span class="macro">assert!</span>(values.contains(<span class="kw-2">&amp;</span><span class="number">6</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_find() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_find() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         <span class="macro">assert!</span>(m.get(<span class="kw-2">&amp;</span><span class="number">1</span>).is_none());
         m.insert(<span class="number">1</span>, <span class="number">2</span>);
@@ -8899,8 +8899,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_eq() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_eq() {
         <span class="kw">let </span><span class="kw-2">mut </span>m1 = HashMap::new();
         m1.insert(<span class="number">1</span>, <span class="number">2</span>);
         m1.insert(<span class="number">2</span>, <span class="number">3</span>);
@@ -8917,8 +8917,8 @@
         <span class="macro">assert_eq!</span>(m1, m2);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_show() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_show() {
         <span class="kw">let </span><span class="kw-2">mut </span>map = HashMap::new();
         <span class="kw">let </span>empty: HashMap&lt;i32, i32&gt; = HashMap::new();
 
@@ -8931,8 +8931,8 @@
         <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, empty), <span class="string">&quot;{}&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_expand() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_expand() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
 
         <span class="macro">assert_eq!</span>(m.len(), <span class="number">0</span>);
@@ -8949,8 +8949,8 @@
         <span class="macro">assert!</span>(!m.is_empty());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_behavior_resize_policy() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_behavior_resize_policy() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
 
         <span class="macro">assert_eq!</span>(m.len(), <span class="number">0</span>);
@@ -9005,8 +9005,8 @@
         <span class="macro">assert_eq!</span>(m.raw_capacity(), initial_raw_cap);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_reserve_shrink_to_fit() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_reserve_shrink_to_fit() {
         <span class="kw">let </span><span class="kw-2">mut </span>m = HashMap::new();
         m.insert(<span class="number">0</span>, <span class="number">0</span>);
         m.remove(<span class="kw-2">&amp;</span><span class="number">0</span>);
@@ -9042,8 +9042,8 @@
         <span class="macro">assert_eq!</span>(m.remove(<span class="kw-2">&amp;</span><span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="number">0</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_from_iter() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_from_iter() {
         <span class="kw">let </span>xs = [(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">4</span>), (<span class="number">5</span>, <span class="number">5</span>), (<span class="number">6</span>, <span class="number">6</span>)];
 
         <span class="kw">let </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = xs.iter().cloned().collect();
@@ -9055,8 +9055,8 @@
         <span class="macro">assert_eq!</span>(map.iter().len(), xs.len() - <span class="number">1</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_size_hint() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_size_hint() {
         <span class="kw">let </span>xs = [(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">4</span>), (<span class="number">5</span>, <span class="number">5</span>), (<span class="number">6</span>, <span class="number">6</span>)];
 
         <span class="kw">let </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = xs.iter().cloned().collect();
@@ -9068,8 +9068,8 @@
         <span class="macro">assert_eq!</span>(iter.size_hint(), (<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_iter_len() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_iter_len() {
         <span class="kw">let </span>xs = [(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">4</span>), (<span class="number">5</span>, <span class="number">5</span>), (<span class="number">6</span>, <span class="number">6</span>)];
 
         <span class="kw">let </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = xs.iter().cloned().collect();
@@ -9081,8 +9081,8 @@
         <span class="macro">assert_eq!</span>(iter.len(), <span class="number">3</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_mut_size_hint() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_mut_size_hint() {
         <span class="kw">let </span>xs = [(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">4</span>), (<span class="number">5</span>, <span class="number">5</span>), (<span class="number">6</span>, <span class="number">6</span>)];
 
         <span class="kw">let </span><span class="kw-2">mut </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = xs.iter().cloned().collect();
@@ -9094,8 +9094,8 @@
         <span class="macro">assert_eq!</span>(iter.size_hint(), (<span class="number">3</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>)));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_iter_mut_len() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_iter_mut_len() {
         <span class="kw">let </span>xs = [(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">2</span>, <span class="number">2</span>), (<span class="number">3</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">4</span>), (<span class="number">5</span>, <span class="number">5</span>), (<span class="number">6</span>, <span class="number">6</span>)];
 
         <span class="kw">let </span><span class="kw-2">mut </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = xs.iter().cloned().collect();
@@ -9107,8 +9107,8 @@
         <span class="macro">assert_eq!</span>(iter.len(), <span class="number">3</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_index() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_index() {
         <span class="kw">let </span><span class="kw-2">mut </span>map = HashMap::new();
 
         map.insert(<span class="number">1</span>, <span class="number">2</span>);
@@ -9118,9 +9118,9 @@
         <span class="macro">assert_eq!</span>(map[<span class="kw-2">&amp;</span><span class="number">2</span>], <span class="number">1</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[should_panic]</span>
-    <span class="kw">fn </span>test_index_nonexistent() {
+    <span class="attribute">#[test]
+    #[should_panic]
+    </span><span class="kw">fn </span>test_index_nonexistent() {
         <span class="kw">let </span><span class="kw-2">mut </span>map = HashMap::new();
 
         map.insert(<span class="number">1</span>, <span class="number">2</span>);
@@ -9130,8 +9130,8 @@
         map[<span class="kw-2">&amp;</span><span class="number">4</span>];
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_entry() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_entry() {
         <span class="kw">let </span>xs = [(<span class="number">1</span>, <span class="number">10</span>), (<span class="number">2</span>, <span class="number">20</span>), (<span class="number">3</span>, <span class="number">30</span>), (<span class="number">4</span>, <span class="number">40</span>), (<span class="number">5</span>, <span class="number">50</span>), (<span class="number">6</span>, <span class="number">60</span>)];
 
         <span class="kw">let </span><span class="kw-2">mut </span>map: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = xs.iter().cloned().collect();
@@ -9180,9 +9180,9 @@
         <span class="macro">assert_eq!</span>(map.len(), <span class="number">6</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_entry_take_doesnt_corrupt() {
-        <span class="attribute">#![allow(deprecated)]</span> <span class="comment">//rand
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_entry_take_doesnt_corrupt() {
+        <span class="attribute">#![allow(deprecated)] </span><span class="comment">//rand
                               // Test for #19292
         </span><span class="kw">fn </span>check(m: <span class="kw-2">&amp;</span>HashMap&lt;i32, ()&gt;) {
             <span class="kw">for </span>k <span class="kw">in </span>m.keys() {
@@ -9216,8 +9216,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_extend_ref() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_extend_ref() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
         a.insert(<span class="number">1</span>, <span class="string">&quot;one&quot;</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>b = HashMap::new();
@@ -9232,8 +9232,8 @@
         <span class="macro">assert_eq!</span>(a[<span class="kw-2">&amp;</span><span class="number">3</span>], <span class="string">&quot;three&quot;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_capacity_not_less_than_len() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_capacity_not_less_than_len() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>item = <span class="number">0</span>;
 
@@ -9257,8 +9257,8 @@
         <span class="macro">assert!</span>(a.capacity() &gt; a.len());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_occupied_entry_key() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_occupied_entry_key() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
         <span class="kw">let </span>key = <span class="string">&quot;hello there&quot;</span>;
         <span class="kw">let </span>value = <span class="string">&quot;value goes here&quot;</span>;
@@ -9275,8 +9275,8 @@
         <span class="macro">assert_eq!</span>(a[key], value);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_vacant_entry_key() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_vacant_entry_key() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
         <span class="kw">let </span>key = <span class="string">&quot;hello there&quot;</span>;
         <span class="kw">let </span>value = <span class="string">&quot;value goes here&quot;</span>;
@@ -9293,8 +9293,8 @@
         <span class="macro">assert_eq!</span>(a[key], value);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_occupied_entry_replace_entry_with() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_occupied_entry_replace_entry_with() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
 
         <span class="kw">let </span>key = <span class="string">&quot;a key&quot;</span>;
@@ -9336,8 +9336,8 @@
         <span class="macro">assert_eq!</span>(a.len(), <span class="number">0</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_entry_and_replace_entry_with() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_entry_and_replace_entry_with() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
 
         <span class="kw">let </span>key = <span class="string">&quot;a key&quot;</span>;
@@ -9385,8 +9385,8 @@
         <span class="macro">assert_eq!</span>(a.len(), <span class="number">0</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_raw_occupied_entry_replace_entry_with() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_raw_occupied_entry_replace_entry_with() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
 
         <span class="kw">let </span>key = <span class="string">&quot;a key&quot;</span>;
@@ -9432,8 +9432,8 @@
         <span class="macro">assert_eq!</span>(a.len(), <span class="number">0</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_raw_entry_and_replace_entry_with() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_raw_entry_and_replace_entry_with() {
         <span class="kw">let </span><span class="kw-2">mut </span>a = HashMap::new();
 
         <span class="kw">let </span>key = <span class="string">&quot;a key&quot;</span>;
@@ -9490,9 +9490,9 @@
         <span class="macro">assert_eq!</span>(a.len(), <span class="number">0</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_replace_entry_with_doesnt_corrupt() {
-        <span class="attribute">#![allow(deprecated)]</span> <span class="comment">//rand
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_replace_entry_with_doesnt_corrupt() {
+        <span class="attribute">#![allow(deprecated)] </span><span class="comment">//rand
                               // Test for #19292
         </span><span class="kw">fn </span>check(m: <span class="kw-2">&amp;</span>HashMap&lt;i32, ()&gt;) {
             <span class="kw">for </span>k <span class="kw">in </span>m.keys() {
@@ -9520,8 +9520,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_retain() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_retain() {
         <span class="kw">let </span><span class="kw-2">mut </span>map: HashMap&lt;i32, i32&gt; = (<span class="number">0</span>..<span class="number">100</span>).map(|x| (x, x * <span class="number">10</span>)).collect();
 
         map.retain(|<span class="kw-2">&amp;</span>k, <span class="kw">_</span>| k % <span class="number">2 </span>== <span class="number">0</span>);
@@ -9531,8 +9531,8 @@
         <span class="macro">assert_eq!</span>(map[<span class="kw-2">&amp;</span><span class="number">6</span>], <span class="number">60</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_drain_filter() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_drain_filter() {
         {
             <span class="kw">let </span><span class="kw-2">mut </span>map: HashMap&lt;i32, i32&gt; = (<span class="number">0</span>..<span class="number">8</span>).map(|x| (x, x * <span class="number">10</span>)).collect();
             <span class="kw">let </span>drained = map.drain_filter(|<span class="kw-2">&amp;</span>k, <span class="kw">_</span>| k % <span class="number">2 </span>== <span class="number">0</span>);
@@ -9548,8 +9548,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg_attr(miri, ignore)]</span> <span class="comment">// FIXME: no OOM signalling (https://github.com/rust-lang/miri/issues/613)
+    <span class="attribute">#[test]
+    #[cfg_attr(miri, ignore)] </span><span class="comment">// FIXME: no OOM signalling (https://github.com/rust-lang/miri/issues/613)
     </span><span class="kw">fn </span>test_try_reserve() {
         <span class="kw">let </span><span class="kw-2">mut </span>empty_bytes: HashMap&lt;u8, u8&gt; = HashMap::new();
 
@@ -9572,8 +9572,8 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_raw_entry() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_raw_entry() {
         <span class="kw">use </span><span class="kw">super</span>::RawEntryMut::{Occupied, Vacant};
 
         <span class="kw">let </span>xs = [(<span class="number">1i32</span>, <span class="number">10i32</span>), (<span class="number">2</span>, <span class="number">20</span>), (<span class="number">3</span>, <span class="number">30</span>), (<span class="number">4</span>, <span class="number">40</span>), (<span class="number">5</span>, <span class="number">50</span>), (<span class="number">6</span>, <span class="number">60</span>)];
@@ -9673,10 +9673,10 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_key_without_hash_impl() {
-        <span class="attribute">#[derive(Debug)]</span>
-        <span class="kw">struct </span>IntWrapper(u64);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_key_without_hash_impl() {
+        <span class="attribute">#[derive(Debug)]
+        </span><span class="kw">struct </span>IntWrapper(u64);
 
         <span class="kw">let </span><span class="kw-2">mut </span>m: HashMap&lt;IntWrapper, (), ()&gt; = HashMap::default();
         {
@@ -9718,15 +9718,15 @@
         <span class="macro">assert!</span>(m.raw_entry().from_hash(<span class="number">2</span>, |k| k.<span class="number">0 </span>== <span class="number">2</span>).is_none());
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;raw&quot;</span>)]</span>
-    <span class="kw">fn </span>test_into_iter_refresh() {
+    <span class="attribute">#[test]
+    #[cfg(feature = <span class="string">&quot;raw&quot;</span>)]
+    </span><span class="kw">fn </span>test_into_iter_refresh() {
         <span class="kw">use </span>core::hash::{BuildHasher, Hash, Hasher};
 
-        <span class="attribute">#[cfg(miri)]</span>
-        <span class="kw">const </span>N: usize = <span class="number">32</span>;
-        <span class="attribute">#[cfg(not(miri))]</span>
-        <span class="kw">const </span>N: usize = <span class="number">128</span>;
+        <span class="attribute">#[cfg(miri)]
+        </span><span class="kw">const </span>N: usize = <span class="number">32</span>;
+        <span class="attribute">#[cfg(not(miri))]
+        </span><span class="kw">const </span>N: usize = <span class="number">128</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>rng = rand::thread_rng();
         <span class="kw">for </span>n <span class="kw">in </span><span class="number">0</span>..N {
@@ -9790,13 +9790,13 @@
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>test_const_with_hasher() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>test_const_with_hasher() {
         <span class="kw">use </span>core::hash::BuildHasher;
         <span class="kw">use </span>std::collections::hash_map::DefaultHasher;
 
-        <span class="attribute">#[derive(Clone)]</span>
-        <span class="kw">struct </span>MyHasher;
+        <span class="attribute">#[derive(Clone)]
+        </span><span class="kw">struct </span>MyHasher;
         <span class="kw">impl </span>BuildHasher <span class="kw">for </span>MyHasher {
             <span class="kw">type </span>Hasher = DefaultHasher;
 
@@ -9813,9 +9813,9 @@
         <span class="macro">assert_eq!</span>(<span class="string">&quot;seventeen&quot;</span>, map[<span class="kw-2">&amp;</span><span class="number">17</span>]);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">fn </span>test_get_each_mut() {
+    <span class="attribute">#[test]
+    #[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span><span class="kw">fn </span>test_get_each_mut() {
         <span class="kw">use </span><span class="kw">crate</span>::UnavailableMutError::<span class="kw-2">*</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>map = HashMap::new();
@@ -9843,4 +9843,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

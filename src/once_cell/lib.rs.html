@@ -1631,20 +1631,20 @@
 //! Most of this crate&#39;s functionality is available in `std` in nightly Rust.
 //! See the [tracking issue](https://github.com/rust-lang/rust/issues/74465).
 
-</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">extern crate </span>alloc;
+#[cfg(feature = <span class="string">&quot;alloc&quot;</span>)]
+</span><span class="kw">extern crate </span>alloc;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parking_lot&quot;</span>)]</span>
-<span class="attribute">#[path = <span class="string">&quot;imp_pl.rs&quot;</span>]</span>
-<span class="kw">mod </span>imp;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+#[cfg(feature = <span class="string">&quot;parking_lot&quot;</span>)]
+#[path = <span class="string">&quot;imp_pl.rs&quot;</span>]
+</span><span class="kw">mod </span>imp;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;parking_lot&quot;</span>))]</span>
-<span class="attribute">#[path = <span class="string">&quot;imp_std.rs&quot;</span>]</span>
-<span class="kw">mod </span>imp;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+#[cfg(not(feature = <span class="string">&quot;parking_lot&quot;</span>))]
+#[path = <span class="string">&quot;imp_std.rs&quot;</span>]
+</span><span class="kw">mod </span>imp;
 
 <span class="doccomment">/// Single-threaded version of `OnceCell`.
 </span><span class="kw">pub mod </span>unsync {
@@ -1654,8 +1654,8 @@
         ops::{Deref, DerefMut},
     };
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">use </span>std::panic::{RefUnwindSafe, UnwindSafe};
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">use </span>std::panic::{RefUnwindSafe, UnwindSafe};
 
     <span class="doccomment">/// A cell which can be written to only once. It is not thread safe.
     ///
@@ -1686,10 +1686,10 @@
     // `&amp;unsync::OnceCell` to sneak a `T` through `catch_unwind`,
     // by initializing the cell in closure and extracting the value in the
     // `Drop`.
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">impl</span>&lt;T: RefUnwindSafe + UnwindSafe&gt; RefUnwindSafe <span class="kw">for </span>OnceCell&lt;T&gt; {}
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">impl</span>&lt;T: UnwindSafe&gt; UnwindSafe <span class="kw">for </span>OnceCell&lt;T&gt; {}
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">impl</span>&lt;T: RefUnwindSafe + UnwindSafe&gt; RefUnwindSafe <span class="kw">for </span>OnceCell&lt;T&gt; {}
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">impl</span>&lt;T: UnwindSafe&gt; UnwindSafe <span class="kw">for </span>OnceCell&lt;T&gt; {}
 
     <span class="kw">impl</span>&lt;T&gt; Default <span class="kw">for </span>OnceCell&lt;T&gt; {
         <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
@@ -1984,8 +1984,8 @@
         init: Cell&lt;<span class="prelude-ty">Option</span>&lt;F&gt;&gt;,
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">impl</span>&lt;T, F: RefUnwindSafe&gt; RefUnwindSafe <span class="kw">for </span>Lazy&lt;T, F&gt; <span class="kw">where </span>OnceCell&lt;T&gt;: RefUnwindSafe {}
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">impl</span>&lt;T, F: RefUnwindSafe&gt; RefUnwindSafe <span class="kw">for </span>Lazy&lt;T, F&gt; <span class="kw">where </span>OnceCell&lt;T&gt;: RefUnwindSafe {}
 
     <span class="kw">impl</span>&lt;T: fmt::Debug, F&gt; fmt::Debug <span class="kw">for </span>Lazy&lt;T, F&gt; {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
@@ -2087,8 +2087,8 @@
 }
 
 <span class="doccomment">/// Thread-safe, blocking version of `OnceCell`.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">pub mod </span>sync {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">pub mod </span>sync {
     <span class="kw">use </span>std::{
         cell::Cell,
         fmt, mem,
@@ -2493,8 +2493,8 @@
     </span><span class="kw">unsafe impl</span>&lt;T, F: Send&gt; Sync <span class="kw">for </span>Lazy&lt;T, F&gt; <span class="kw">where </span>OnceCell&lt;T&gt;: Sync {}
     <span class="comment">// auto-derived `Send` impl is OK.
 
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-    <span class="kw">impl</span>&lt;T, F: RefUnwindSafe&gt; RefUnwindSafe <span class="kw">for </span>Lazy&lt;T, F&gt; <span class="kw">where </span>OnceCell&lt;T&gt;: RefUnwindSafe {}
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+    </span><span class="kw">impl</span>&lt;T, F: RefUnwindSafe&gt; RefUnwindSafe <span class="kw">for </span>Lazy&lt;T, F&gt; <span class="kw">where </span>OnceCell&lt;T&gt;: RefUnwindSafe {}
 
     <span class="kw">impl</span>&lt;T, F&gt; Lazy&lt;T, F&gt; {
         <span class="doccomment">/// Creates a new lazy value with the given initializing
@@ -2593,11 +2593,11 @@
     </span><span class="kw">fn </span>_dummy() {}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;race&quot;</span>)]</span>
-<span class="kw">pub mod </span>race;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;race&quot;</span>)]
+</span><span class="kw">pub mod </span>race;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">unsafe fn </span>take_unchecked&lt;T&gt;(val: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;T&gt;) -&gt; T {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">unsafe fn </span>take_unchecked&lt;T&gt;(val: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;T&gt;) -&gt; T {
     <span class="kw">match </span>val.take() {
         <span class="prelude-val">Some</span>(it) =&gt; it,
         <span class="prelude-val">None </span>=&gt; {
@@ -2607,4 +2607,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="once_cell" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -552,8 +552,8 @@
 //
 // Tests on this are relegated to the public API of HIR in src/hir.rs.
 
-</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]</span>
-<span class="kw">pub struct </span>IntervalSet&lt;I&gt; {
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>IntervalSet&lt;I&gt; {
     ranges: Vec&lt;I&gt;,
 }
 
@@ -841,8 +841,8 @@
 }
 
 <span class="doccomment">/// An iterator over intervals.
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, I&gt;(slice::Iter&lt;<span class="lifetime">&#39;a</span>, I&gt;);
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, I&gt;(slice::Iter&lt;<span class="lifetime">&#39;a</span>, I&gt;);
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I&gt; Iterator <span class="kw">for </span>IntervalSetIter&lt;<span class="lifetime">&#39;a</span>, I&gt; {
     <span class="kw">type </span>Item = <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>I;
@@ -1039,4 +1039,4 @@
 
 <span class="comment">// Tests for interval sets are written in src/hir.rs against the public API.
 </span></code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

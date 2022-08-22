@@ -153,8 +153,8 @@
     <span class="self">self</span>.iter.next_back().map(take)
   }
 
-  <span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_40&quot;</span>)]</span>
-  <span class="kw">fn </span>nth_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+  <span class="attribute">#[cfg(feature = <span class="string">&quot;rustc_1_40&quot;</span>)]
+  </span><span class="kw">fn </span>nth_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
     <span class="self">self</span>.iter.nth_back(n).map(take)
   }
 }
@@ -185,4 +185,4 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: <span class="lifetime">&#39;a </span>+ Default&gt; ExactSizeIterator <span class="kw">for </span>ArrayVecDrain&lt;<span class="lifetime">&#39;a</span>, T&gt; {}
 <span class="comment">/* No need to impl Drop! */
 </span></code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="tinyvec" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

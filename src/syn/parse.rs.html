@@ -1497,8 +1497,8 @@
 //!
 //! *This module is available only if Syn is built with the `&quot;parsing&quot;` feature.*
 
-</span><span class="attribute">#[path = <span class="string">&quot;discouraged.rs&quot;</span>]</span>
-<span class="kw">pub mod </span>discouraged;
+</span><span class="attribute">#[path = <span class="string">&quot;discouraged.rs&quot;</span>]
+</span><span class="kw">pub mod </span>discouraged;
 
 <span class="kw">use </span><span class="kw">crate</span>::buffer::{Cursor, TokenBuffer};
 <span class="kw">use </span><span class="kw">crate</span>::error;
@@ -1506,15 +1506,15 @@
 <span class="attribute">#[cfg(all(
     not(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, any(target_os = <span class="string">&quot;unknown&quot;</span>, target_os = <span class="string">&quot;wasi&quot;</span>))),
     feature = <span class="string">&quot;proc-macro&quot;
-</span>))]</span>
-<span class="kw">use </span><span class="kw">crate</span>::proc_macro;
+</span>))]
+</span><span class="kw">use </span><span class="kw">crate</span>::proc_macro;
 <span class="kw">use </span><span class="kw">crate</span>::punctuated::Punctuated;
 <span class="kw">use </span><span class="kw">crate</span>::token::Token;
 <span class="kw">use </span>proc_macro2::{<span class="self">self</span>, Delimiter, Group, Literal, Punct, Span, TokenStream, TokenTree};
 <span class="kw">use </span>std::cell::Cell;
 <span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug, Display};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">use </span>std::hash::{Hash, Hasher};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">use </span>std::hash::{Hash, Hasher};
 <span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::mem;
 <span class="kw">use </span>std::ops::Deref;
@@ -2376,15 +2376,15 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl</span>&lt;T: Parse&gt; Parse <span class="kw">for </span>Box&lt;T&gt; {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl</span>&lt;T: Parse&gt; Parse <span class="kw">for </span>Box&lt;T&gt; {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.parse().map(Box::new)
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl</span>&lt;T: Parse + Token&gt; Parse <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl</span>&lt;T: Parse + Token&gt; Parse <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;T&gt; {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if </span>T::peek(input.cursor()) {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(input.parse()<span class="question-mark">?</span>))
@@ -2394,15 +2394,15 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>TokenStream {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>TokenStream {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| <span class="prelude-val">Ok</span>((cursor.token_stream(), Cursor::empty())))
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>TokenTree {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>TokenTree {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| <span class="kw">match </span>cursor.token_tree() {
             <span class="prelude-val">Some</span>((tt, rest)) =&gt; <span class="prelude-val">Ok</span>((tt, rest)),
@@ -2411,8 +2411,8 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>Group {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>Group {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| {
             <span class="kw">for </span>delim <span class="kw">in </span><span class="kw-2">&amp;</span>[Delimiter::Parenthesis, Delimiter::Brace, Delimiter::Bracket] {
@@ -2427,8 +2427,8 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>Punct {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>Punct {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| <span class="kw">match </span>cursor.punct() {
             <span class="prelude-val">Some</span>((punct, rest)) =&gt; <span class="prelude-val">Ok</span>((punct, rest)),
@@ -2437,8 +2437,8 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>Literal {
+<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>Literal {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| <span class="kw">match </span>cursor.literal() {
             <span class="prelude-val">Some</span>((literal, rest)) =&gt; <span class="prelude-val">Ok</span>((literal, rest)),
@@ -2473,8 +2473,8 @@
     </span><span class="attribute">#[cfg(all(
         not(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, any(target_os = <span class="string">&quot;unknown&quot;</span>, target_os = <span class="string">&quot;wasi&quot;</span>))),
         feature = <span class="string">&quot;proc-macro&quot;
-    </span>))]</span>
-    <span class="kw">fn </span>parse(<span class="self">self</span>, tokens: proc_macro::TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
+    </span>))]
+    </span><span class="kw">fn </span>parse(<span class="self">self</span>, tokens: proc_macro::TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
         <span class="self">self</span>.parse2(proc_macro2::TokenStream::from(tokens))
     }
 
@@ -2492,17 +2492,17 @@
     }
 
     <span class="comment">// Not public API.
-    </span><span class="attribute">#[doc(hidden)]</span>
-    <span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-    <span class="kw">fn </span>__parse_scoped(<span class="self">self</span>, scope: Span, tokens: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
+    </span><span class="attribute">#[doc(hidden)]
+    #[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+    </span><span class="kw">fn </span>__parse_scoped(<span class="self">self</span>, scope: Span, tokens: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
         <span class="kw">let _ </span>= scope;
         <span class="self">self</span>.parse2(tokens)
     }
 
     <span class="comment">// Not public API.
-    </span><span class="attribute">#[doc(hidden)]</span>
-    <span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-    <span class="kw">fn </span>__parse_stream(<span class="self">self</span>, input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
+    </span><span class="attribute">#[doc(hidden)]
+    #[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+    </span><span class="kw">fn </span>__parse_stream(<span class="self">self</span>, input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
         input.parse().and_then(|tokens| <span class="self">self</span>.parse2(tokens))
     }
 }
@@ -2532,8 +2532,8 @@
         }
     }
 
-    <span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-    <span class="kw">fn </span>__parse_scoped(<span class="self">self</span>, scope: Span, tokens: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
+    <span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+    </span><span class="kw">fn </span>__parse_scoped(<span class="self">self</span>, scope: Span, tokens: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
         <span class="kw">let </span>buf = TokenBuffer::new2(tokens);
         <span class="kw">let </span>cursor = buf.begin();
         <span class="kw">let </span>unexpected = Rc::new(Cell::new(Unexpected::None));
@@ -2547,19 +2547,19 @@
         }
     }
 
-    <span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-    <span class="kw">fn </span>__parse_stream(<span class="self">self</span>, input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
+    <span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+    </span><span class="kw">fn </span>__parse_stream(<span class="self">self</span>, input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Output&gt; {
         <span class="self">self</span>(input)
     }
 }
 
-<span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_scoped&lt;F: Parser&gt;(f: F, scope: Span, tokens: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;F::Output&gt; {
+<span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_scoped&lt;F: Parser&gt;(f: F, scope: Span, tokens: TokenStream) -&gt; <span class="prelude-ty">Result</span>&lt;F::Output&gt; {
     f.__parse_scoped(scope, tokens)
 }
 
-<span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_stream&lt;F: Parser&gt;(f: F, input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;F::Output&gt; {
+<span class="attribute">#[cfg(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>))]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_stream&lt;F: Parser&gt;(f: F, input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;F::Output&gt; {
     f.__parse_stream(input)
 }
 
@@ -2601,30 +2601,30 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-<span class="kw">impl </span>Debug <span class="kw">for </span>Nothing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+</span><span class="kw">impl </span>Debug <span class="kw">for </span>Nothing {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         f.write_str(<span class="string">&quot;Nothing&quot;</span>)
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-<span class="kw">impl </span>Eq <span class="kw">for </span>Nothing {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+</span><span class="kw">impl </span>Eq <span class="kw">for </span>Nothing {}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-<span class="kw">impl </span>PartialEq <span class="kw">for </span>Nothing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+</span><span class="kw">impl </span>PartialEq <span class="kw">for </span>Nothing {
     <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, _other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
         <span class="bool-val">true
     </span>}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-<span class="kw">impl </span>Hash <span class="kw">for </span>Nothing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+</span><span class="kw">impl </span>Hash <span class="kw">for </span>Nothing {
     <span class="kw">fn </span>hash&lt;H: Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, _state: <span class="kw-2">&amp;mut </span>H) {}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -275,8 +275,8 @@
 /// let upper_hex = format_ident!(&quot;Id_{:X}&quot;, num);
 /// assert_eq!(upper_hex, &quot;Id_A&quot;);
 /// ```
-</span><span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> format_ident {
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>format_ident {
     (<span class="macro-nonterminal">$fmt</span>:expr) =&gt; {
         <span class="macro-nonterminal">$</span><span class="macro">crate::format_ident_impl!</span>([
             <span class="macro-nonterminal">$crate::__private::Option::None</span>,
@@ -292,9 +292,9 @@
     };
 }
 
-<span class="attribute">#[macro_export]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="macro">macro_rules!</span> format_ident_impl {
+<span class="attribute">#[macro_export]
+#[doc(hidden)]
+</span><span class="macro">macro_rules! </span>format_ident_impl {
     <span class="comment">// Final state
     </span>([<span class="macro-nonterminal">$span</span>:expr, $(<span class="macro-nonterminal">$fmt</span>:tt)<span class="kw-2">*</span>]) =&gt; {
         <span class="macro-nonterminal">$crate::__private::mk_ident</span>(
@@ -335,4 +335,4 @@
     };
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="quote" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="quote" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

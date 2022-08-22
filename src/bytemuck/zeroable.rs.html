@@ -371,8 +371,8 @@
   /// This is a trait method so that you can write `MyType::zeroed()` in your
   /// code. It is a contract of this trait that if you implement it on your type
   /// you **must not** override this method.
-  </span><span class="attribute">#[inline]</span>
-  <span class="kw">fn </span>zeroed() -&gt; <span class="self">Self </span>{
+  </span><span class="attribute">#[inline]
+  </span><span class="kw">fn </span>zeroed() -&gt; <span class="self">Self </span>{
     <span class="kw">unsafe </span>{ core::mem::zeroed() }
   }
 }
@@ -401,8 +401,8 @@
 <span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>PhantomPinned {}
 <span class="kw">unsafe impl</span>&lt;T: Zeroable&gt; Zeroable <span class="kw">for </span>ManuallyDrop&lt;T&gt; {}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;zeroable_maybe_uninit&quot;</span>)]</span>
-<span class="kw">unsafe impl</span>&lt;T&gt; Zeroable <span class="kw">for </span>core::mem::MaybeUninit&lt;T&gt; {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;zeroable_maybe_uninit&quot;</span>)]
+</span><span class="kw">unsafe impl</span>&lt;T&gt; Zeroable <span class="kw">for </span>core::mem::MaybeUninit&lt;T&gt; {}
 
 <span class="kw">unsafe impl</span>&lt;A: Zeroable&gt; Zeroable <span class="kw">for </span>(A,) {}
 <span class="kw">unsafe impl</span>&lt;A: Zeroable, B: Zeroable&gt; Zeroable <span class="kw">for </span>(A, B) {}
@@ -449,260 +449,260 @@
 {
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;min_const_generics&quot;</span>)]</span>
-<span class="kw">unsafe impl</span>&lt;T, <span class="kw">const </span>N: usize&gt; Zeroable <span class="kw">for </span>[T; N] <span class="kw">where </span>T: Zeroable {}
+<span class="attribute">#[cfg(feature = <span class="string">&quot;min_const_generics&quot;</span>)]
+</span><span class="kw">unsafe impl</span>&lt;T, <span class="kw">const </span>N: usize&gt; Zeroable <span class="kw">for </span>[T; N] <span class="kw">where </span>T: Zeroable {}
 
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;min_const_generics&quot;</span>))]</span>
-<span class="macro">impl_unsafe_marker_for_array!</span>(
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;min_const_generics&quot;</span>))]
+</span><span class="macro">impl_unsafe_marker_for_array!</span>(
   Zeroable, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>,
   <span class="number">19</span>, <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>, <span class="number">24</span>, <span class="number">25</span>, <span class="number">26</span>, <span class="number">27</span>, <span class="number">28</span>, <span class="number">29</span>, <span class="number">30</span>, <span class="number">31</span>, <span class="number">32</span>, <span class="number">48</span>, <span class="number">64</span>, <span class="number">96</span>, <span class="number">128</span>, <span class="number">256</span>,
   <span class="number">512</span>, <span class="number">1024</span>, <span class="number">2048</span>, <span class="number">4096
 </span>);
 
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, feature = <span class="string">&quot;wasm_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>wasm32::v128 {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, feature = <span class="string">&quot;wasm_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>wasm32::v128 {}
 
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16x4_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8x2_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8x3_t {}
-<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float32x4x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x1x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::float64x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x4x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int16x8x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int32x4x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x1x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int64x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x16x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::int8x8x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x4x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly16x8x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x1x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly64x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x16x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::poly8x8x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x4x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint16x8x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint32x4x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x1x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint64x2x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x16x4_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8x2_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8x3_t {}
+<span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;aarch64&quot;</span>, feature = <span class="string">&quot;aarch64_simd&quot;</span>))]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>aarch64::uint8x8x4_t {}
 
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m128i {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m128 {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m128d {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m256i {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m256 {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m256d {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m128i {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m128 {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m128d {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m256i {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m256 {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86::__m256d {}
 
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m128i {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m128 {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m128d {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m256i {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m256 {}
-<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]</span>
-<span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m256d {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m128i {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m128 {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m128d {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m256i {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m256 {}
+<span class="attribute">#[cfg(target_arch = <span class="string">&quot;x86_64&quot;</span>)]
+</span><span class="kw">unsafe impl </span>Zeroable <span class="kw">for </span>x86_64::__m256d {}
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly_portable_simd&quot;</span>)]</span>
-<span class="kw">unsafe impl</span>&lt;T, <span class="kw">const </span>N: usize&gt; Zeroable <span class="kw">for </span>core::simd::Simd&lt;T, N&gt;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly_portable_simd&quot;</span>)]
+</span><span class="kw">unsafe impl</span>&lt;T, <span class="kw">const </span>N: usize&gt; Zeroable <span class="kw">for </span>core::simd::Simd&lt;T, N&gt;
 <span class="kw">where
   </span>T: core::simd::SimdElement + Zeroable,
   core::simd::LaneCount&lt;N&gt;: core::simd::SupportedLaneCount,
 {
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

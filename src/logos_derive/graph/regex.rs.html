@@ -461,14 +461,14 @@
     start &lt; <span class="number">128 </span>&amp;&amp; (end &lt; <span class="number">128 </span>|| end == <span class="number">0x0010_FFFF</span>)
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::graph::Node;
     <span class="kw">use </span>pretty_assertions::assert_eq;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>rope() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>rope() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;foobar&quot;</span>).unwrap();
@@ -481,8 +481,8 @@
         <span class="macro">assert_eq!</span>(graph[id], Node::Rope(Rope::new(<span class="string">&quot;foobar&quot;</span>, leaf)),)
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>alternation() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>alternation() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;a|b&quot;</span>).unwrap();
@@ -498,8 +498,8 @@
         );
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>repeat() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>repeat() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;[a-z]*&quot;</span>).unwrap();
@@ -519,8 +519,8 @@
         );
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>maybe() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>maybe() {
         <span class="kw">let </span><span class="kw-2">mut </span>graph = Graph::new();
 
         <span class="kw">let </span>mir = Mir::utf8(<span class="string">&quot;[a-z]?&quot;</span>).unwrap();
@@ -537,4 +537,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

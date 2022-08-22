@@ -339,17 +339,17 @@
 ///     }
 /// }
 /// ```
-</span><span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> custom_keyword {
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {
-        <span class="attribute">#[allow(non_camel_case_types)]</span>
-        <span class="kw">pub struct </span><span class="macro-nonterminal">$ident </span>{
+        <span class="attribute">#[allow(non_camel_case_types)]
+        </span><span class="kw">pub struct </span><span class="macro-nonterminal">$ident </span>{
             <span class="kw">pub </span>span: <span class="macro-nonterminal">$crate::__private::Span</span>,
         }
 
-        <span class="attribute">#[doc(hidden)]</span>
-        <span class="attribute">#[allow(dead_code, non_snake_case)]</span>
-        <span class="kw">pub fn </span><span class="macro-nonterminal">$ident</span>&lt;__S: <span class="macro-nonterminal">$crate::__private::IntoSpans</span>&lt;[<span class="macro-nonterminal">$crate::__private::Span</span>; <span class="number">1</span>]&gt;&gt;(
+        <span class="attribute">#[doc(hidden)]
+        #[allow(dead_code, non_snake_case)]
+        </span><span class="kw">pub fn </span><span class="macro-nonterminal">$ident</span>&lt;__S: <span class="macro-nonterminal">$crate::__private::IntoSpans</span>&lt;[<span class="macro-nonterminal">$crate::__private::Span</span>; <span class="number">1</span>]&gt;&gt;(
             span: __S,
         ) -&gt; <span class="macro-nonterminal">$ident </span>{
             <span class="macro-nonterminal">$ident </span>{
@@ -373,10 +373,10 @@
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_parse_for_custom_keyword {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_parse_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {
         <span class="comment">// For peek.
         </span><span class="kw">impl </span><span class="macro-nonterminal">$crate::token::CustomToken </span><span class="kw">for </span><span class="macro-nonterminal">$ident </span>{
@@ -413,18 +413,18 @@
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;parsing&quot;</span>))]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_parse_for_custom_keyword {
+</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;parsing&quot;</span>))]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_parse_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {};
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_to_tokens_for_custom_keyword {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_to_tokens_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {
         <span class="kw">impl </span><span class="macro-nonterminal">$crate::__private::ToTokens </span><span class="kw">for </span><span class="macro-nonterminal">$ident </span>{
             <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span><span class="macro-nonterminal">$crate::__private::TokenStream2</span>) {
@@ -436,23 +436,23 @@
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;printing&quot;</span>))]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_to_tokens_for_custom_keyword {
+</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;printing&quot;</span>))]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_to_tokens_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {};
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_clone_for_custom_keyword {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_clone_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {
         <span class="kw">impl </span><span class="macro-nonterminal">$crate::__private::Copy </span><span class="kw">for </span><span class="macro-nonterminal">$ident </span>{}
 
-        <span class="attribute">#[allow(clippy::expl_impl_clone_on_copy)]</span>
-        <span class="kw">impl </span><span class="macro-nonterminal">$crate::__private::Clone </span><span class="kw">for </span><span class="macro-nonterminal">$ident </span>{
+        <span class="attribute">#[allow(clippy::expl_impl_clone_on_copy)]
+        </span><span class="kw">impl </span><span class="macro-nonterminal">$crate::__private::Clone </span><span class="kw">for </span><span class="macro-nonterminal">$ident </span>{
             <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
                 <span class="kw-2">*</span><span class="self">self
             </span>}
@@ -461,18 +461,18 @@
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;clone-impls&quot;</span>))]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_clone_for_custom_keyword {
+</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;clone-impls&quot;</span>))]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_clone_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {};
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_extra_traits_for_custom_keyword {
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_extra_traits_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {
         <span class="kw">impl </span><span class="macro-nonterminal">$crate::__private::Debug </span><span class="kw">for </span><span class="macro-nonterminal">$ident </span>{
             <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span><span class="macro-nonterminal">$crate::__private::Formatter</span>) -&gt; <span class="macro-nonterminal">$crate::__private::fmt::Result </span>{
@@ -498,11 +498,11 @@
 }
 
 <span class="comment">// Not public API.
-</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;extra-traits&quot;</span>))]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[macro_export]</span>
-<span class="macro">macro_rules!</span> impl_extra_traits_for_custom_keyword {
+</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;extra-traits&quot;</span>))]
+#[doc(hidden)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>impl_extra_traits_for_custom_keyword {
     (<span class="macro-nonterminal">$ident</span>:ident) =&gt; {};
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

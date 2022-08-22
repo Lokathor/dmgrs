@@ -57,8 +57,8 @@ pointing out the exact token that triggered the failure to parse.</p>
     }
 }
 
-<span class="attribute">#[proc_macro]</span>
-<span class="kw">pub fn </span>my_macro(tokens: TokenStream) -&gt; TokenStream {
+<span class="attribute">#[proc_macro]
+</span><span class="kw">pub fn </span>my_macro(tokens: TokenStream) -&gt; TokenStream {
     <span class="kw">let </span>input = <span class="macro">parse_macro_input!</span>(tokens <span class="kw">as </span>Item);
 
     <span class="comment">/* ... */
@@ -128,4 +128,4 @@ way from a token stream.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Peek.html" title="syn::parse::Peek trait">Peek</a></div><div class="item-right docblock-short"><p>Types that can be parsed by looking at just one token.</p>
 </div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.ParseStream.html" title="syn::parse::ParseStream type">ParseStream</a></div><div class="item-right docblock-short"><p>Input to a Syn parser function.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.Result.html" title="syn::parse::Result type">Result</a></div><div class="item-right docblock-short"><p>The result of a Syn parser.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

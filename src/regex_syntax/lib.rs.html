@@ -466,11 +466,11 @@ The following features are available:
   `\p{sb=ATerm}`.
 */
 
-</span><span class="attribute">#![deny(missing_docs)]</span>
-<span class="attribute">#![warn(missing_debug_implementations)]</span>
-<span class="attribute">#![forbid(unsafe_code)]</span>
+</span><span class="attribute">#![deny(missing_docs)]
+#![warn(missing_debug_implementations)]
+#![forbid(unsafe_code)]
 
-<span class="kw">pub use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
+</span><span class="kw">pub use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
 <span class="kw">pub use </span><span class="kw">crate</span>::parser::{Parser, ParserBuilder};
 <span class="kw">pub use </span><span class="kw">crate</span>::unicode::UnicodeWordError;
 
@@ -575,27 +575,27 @@ The following features are available:
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>escape_meta() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>escape_meta() {
         <span class="macro">assert_eq!</span>(
             escape(<span class="string">r&quot;\.+*?()|[]{}^$#&amp;-~&quot;</span>),
             <span class="string">r&quot;\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#\&amp;\-\~&quot;</span>.to_string()
         );
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>word_byte() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>word_byte() {
         <span class="macro">assert!</span>(is_word_byte(<span class="string">b&#39;a&#39;</span>));
         <span class="macro">assert!</span>(!is_word_byte(<span class="string">b&#39;-&#39;</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;unicode-perl&quot;</span>)]</span>
-    <span class="kw">fn </span>word_char() {
+    <span class="attribute">#[test]
+    #[cfg(feature = <span class="string">&quot;unicode-perl&quot;</span>)]
+    </span><span class="kw">fn </span>word_char() {
         <span class="macro">assert!</span>(is_word_character(<span class="string">&#39;a&#39;</span>), <span class="string">&quot;ASCII&quot;</span>);
         <span class="macro">assert!</span>(is_word_character(<span class="string">&#39;à&#39;</span>), <span class="string">&quot;Latin-1&quot;</span>);
         <span class="macro">assert!</span>(is_word_character(<span class="string">&#39;β&#39;</span>), <span class="string">&quot;Greek&quot;</span>);
@@ -609,18 +609,18 @@ The following features are available:
         <span class="macro">assert!</span>(!is_word_character(<span class="string">&#39;☃&#39;</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[should_panic]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;unicode-perl&quot;</span>))]</span>
-    <span class="kw">fn </span>word_char_disabled_panic() {
+    <span class="attribute">#[test]
+    #[should_panic]
+    #[cfg(not(feature = <span class="string">&quot;unicode-perl&quot;</span>))]
+    </span><span class="kw">fn </span>word_char_disabled_panic() {
         <span class="macro">assert!</span>(is_word_character(<span class="string">&#39;a&#39;</span>));
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;unicode-perl&quot;</span>))]</span>
-    <span class="kw">fn </span>word_char_disabled_error() {
+    <span class="attribute">#[test]
+    #[cfg(not(feature = <span class="string">&quot;unicode-perl&quot;</span>))]
+    </span><span class="kw">fn </span>word_char_disabled_error() {
         <span class="macro">assert!</span>(try_is_word_character(<span class="string">&#39;a&#39;</span>).is_err());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

@@ -382,8 +382,8 @@
     }
 
     <span class="doccomment">/// Source from which this Lexer is reading tokens.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>Token::Source {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>Token::Source {
         <span class="self">self</span>.source
     }
 
@@ -420,33 +420,33 @@
     ///     ],
     /// );
     /// ```
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>spanned(<span class="self">self</span>) -&gt; SpannedIter&lt;<span class="lifetime">&#39;source</span>, Token&gt; {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>spanned(<span class="self">self</span>) -&gt; SpannedIter&lt;<span class="lifetime">&#39;source</span>, Token&gt; {
         SpannedIter { lexer: <span class="self">self </span>}
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="attribute">#[doc(hidden)]</span>
-    <span class="attribute">#[deprecated(since = <span class="string">&quot;0.11.0&quot;</span>, note = <span class="string">&quot;please use `span` instead&quot;</span>)]</span>
-    <span class="kw">pub fn </span>range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
+    <span class="attribute">#[inline]
+    #[doc(hidden)]
+    #[deprecated(since = <span class="string">&quot;0.11.0&quot;</span>, note = <span class="string">&quot;please use `span` instead&quot;</span>)]
+    </span><span class="kw">pub fn </span>range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
         <span class="self">self</span>.span()
     }
 
     <span class="doccomment">/// Get the range for the current token in `Source`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>span(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
         <span class="self">self</span>.token_start..<span class="self">self</span>.token_end
     }
 
     <span class="doccomment">/// Get a string slice of the current token.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>&lt;Token::Source <span class="kw">as </span>Source&gt;::Slice {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>&lt;Token::Source <span class="kw">as </span>Source&gt;::Slice {
         <span class="kw">unsafe </span>{ <span class="self">self</span>.source.slice_unchecked(<span class="self">self</span>.span()) }
     }
 
     <span class="doccomment">/// Get a slice of remaining source, starting at the end of current token.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">pub fn </span>remainder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>&lt;Token::Source <span class="kw">as </span>Source&gt;::Slice {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">pub fn </span>remainder(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;source </span>&lt;Token::Source <span class="kw">as </span>Source&gt;::Slice {
         <span class="kw">unsafe </span>{
             <span class="self">self</span>.source
                 .slice_unchecked(<span class="self">self</span>.token_end..<span class="self">self</span>.source.len())
@@ -507,8 +507,8 @@
 {
     <span class="kw">type </span>Item = Token;
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Token&gt; {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Token&gt; {
         <span class="self">self</span>.token_start = <span class="self">self</span>.token_end;
 
         Token::lex(<span class="self">self</span>);
@@ -539,8 +539,8 @@
     }
 }
 
-<span class="attribute">#[doc(hidden)]</span>
-<span class="doccomment">/// # WARNING!
+<span class="attribute">#[doc(hidden)]
+</span><span class="doccomment">/// # WARNING!
 ///
 /// **This trait, and it&#39;s methods, are not meant to be used outside of the
 /// code produced by `#[derive(Logos)]` macro.**
@@ -552,8 +552,8 @@
 
     <span class="doccomment">/// Read a `Chunk` at current position of the `Lexer`. If end
     /// of the `Source` has been reached, this will return `0`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>read&lt;Chunk&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>read&lt;Chunk&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
     <span class="kw">where
         </span>Chunk: source::Chunk&lt;<span class="lifetime">&#39;source</span>&gt;,
     {
@@ -561,16 +561,16 @@
     }
 
     <span class="doccomment">/// Read a `Chunk` at a position offset by `n`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>read_at&lt;Chunk&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>read_at&lt;Chunk&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; <span class="prelude-ty">Option</span>&lt;Chunk&gt;
     <span class="kw">where
         </span>Chunk: source::Chunk&lt;<span class="lifetime">&#39;source</span>&gt;,
     {
         <span class="self">self</span>.source.read(<span class="self">self</span>.token_end + n)
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">unsafe fn </span>read_unchecked&lt;Chunk&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; Chunk
+    <span class="attribute">#[inline]
+    </span><span class="kw">unsafe fn </span>read_unchecked&lt;Chunk&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize) -&gt; Chunk
     <span class="kw">where
         </span>Chunk: source::Chunk&lt;<span class="lifetime">&#39;source</span>&gt;,
     {
@@ -578,8 +578,8 @@
     }
 
     <span class="doccomment">/// Test a chunk at current position with a closure.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>test&lt;T, F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, test: F) -&gt; bool
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>test&lt;T, F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, test: F) -&gt; bool
     <span class="kw">where
         </span>T: source::Chunk&lt;<span class="lifetime">&#39;source</span>&gt;,
         F: FnOnce(T) -&gt; bool,
@@ -591,8 +591,8 @@
     }
 
     <span class="doccomment">/// Test a chunk at current position offset by `n` with a closure.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>test_at&lt;T, F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize, test: F) -&gt; bool
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>test_at&lt;T, F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, n: usize, test: F) -&gt; bool
     <span class="kw">where
         </span>T: source::Chunk&lt;<span class="lifetime">&#39;source</span>&gt;,
         F: FnOnce(T) -&gt; bool,
@@ -604,8 +604,8 @@
     }
 
     <span class="doccomment">/// Bump the position `Lexer` is reading from by `size`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>bump_unchecked(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: usize) {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>bump_unchecked(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: usize) {
         <span class="macro">debug_assert!</span>(
             <span class="self">self</span>.token_end + size &lt;= <span class="self">self</span>.source.len(),
             <span class="string">&quot;Bumping out of bounds!&quot;
@@ -615,28 +615,28 @@
     }
 
     <span class="doccomment">/// Reset `token_start` to `token_end`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>trivia(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.token_start = <span class="self">self</span>.token_end;
     }
 
     <span class="doccomment">/// Set the current token to appropriate `#[error]` variant.
     /// Guarantee that `token_end` is at char boundary for `&amp;str`.
-    </span><span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>error(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    </span><span class="attribute">#[inline]
+    </span><span class="kw">fn </span>error(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.token_end = <span class="self">self</span>.source.find_boundary(<span class="self">self</span>.token_end);
         <span class="self">self</span>.token = ManuallyDrop::new(<span class="prelude-val">Some</span>(Token::ERROR));
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>end(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>end(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.token = ManuallyDrop::new(<span class="prelude-val">None</span>);
     }
 
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: Token) {
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: Token) {
         <span class="self">self</span>.token = ManuallyDrop::new(<span class="prelude-val">Some</span>(token));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

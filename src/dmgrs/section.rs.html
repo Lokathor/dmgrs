@@ -234,8 +234,8 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::StaticStr;
 
-<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub enum </span>Condition {
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub enum </span>Condition {
   Zero = <span class="number">0</span>,
   NonZero = <span class="number">1</span>,
   Carry = <span class="number">2</span>,
@@ -243,8 +243,8 @@
   Always,
 }
 
-<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub enum </span>SectionLine {
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub enum </span>SectionLine {
   <span class="doccomment">/// Label inside this section.
   </span>Label(StaticStr),
   <span class="doccomment">/// Relative jump to a label in this same section.
@@ -265,8 +265,8 @@
   }
 }
 
-<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub struct </span>Section {
+<span class="attribute">#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>Section {
   <span class="kw">pub </span>lines: Vec&lt;SectionLine&gt;,
 }
 <span class="kw">impl </span>Section {
@@ -341,14 +341,14 @@
   }
 }
 
-<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub enum </span>RelativeJumpResolveError {
+<span class="attribute">#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub enum </span>RelativeJumpResolveError {
   LabelMissing(StaticStr),
   DeltaTooLarge { src: usize, dest: usize },
 }
 
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_Section_required_size() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_Section_required_size() {
   <span class="kw">let </span>s = Section {
     lines: <span class="macro">vec!</span>[
       SectionLine::Label(<span class="string">&quot;main&quot;</span>),
@@ -369,8 +369,8 @@
   <span class="macro">assert_eq!</span>(s.required_size(), <span class="number">3</span>);
 }
 
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_Section_resolve_relative_label_jumps() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_Section_resolve_relative_label_jumps() {
   <span class="comment">//
   </span>{
     <span class="kw">let </span>expected = Section {
@@ -459,4 +459,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

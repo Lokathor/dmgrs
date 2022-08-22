@@ -877,11 +877,11 @@
 <span class="kw">use </span>core::char;
 <span class="kw">use </span>core::str::{Bytes, CharIndices, Chars};
 
-<span class="attribute">#[derive(Copy, Clone, Eq, PartialEq)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Cursor&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="attribute">#[derive(Copy, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Cursor&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">pub </span>rest: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
-    <span class="attribute">#[cfg(span_locations)]</span>
-    <span class="kw">pub </span>off: u32,
+    <span class="attribute">#[cfg(span_locations)]
+    </span><span class="kw">pub </span>off: u32,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Cursor&lt;<span class="lifetime">&#39;a</span>&gt; {
@@ -889,8 +889,8 @@
         <span class="kw">let </span>(_front, rest) = <span class="self">self</span>.rest.split_at(bytes);
         Cursor {
             rest,
-            <span class="attribute">#[cfg(span_locations)]</span>
-            off: <span class="self">self</span>.off + _front.chars().count() <span class="kw">as </span>u32,
+            <span class="attribute">#[cfg(span_locations)]
+            </span>off: <span class="self">self</span>.off + _front.chars().count() <span class="kw">as </span>u32,
         }
     }
 
@@ -1033,21 +1033,21 @@
             <span class="kw">continue</span>;
         }
 
-        <span class="attribute">#[cfg(span_locations)]</span>
-        <span class="kw">let </span>lo = input.off;
+        <span class="attribute">#[cfg(span_locations)]
+        </span><span class="kw">let </span>lo = input.off;
 
         <span class="kw">let </span>first = <span class="kw">match </span>input.bytes().next() {
             <span class="prelude-val">Some</span>(first) =&gt; first,
             <span class="prelude-val">None </span>=&gt; <span class="kw">match </span>stack.last() {
                 <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(trees.build()),
-                <span class="attribute">#[cfg(span_locations)]</span>
-                <span class="prelude-val">Some</span>((lo, _frame)) =&gt; {
+                <span class="attribute">#[cfg(span_locations)]
+                </span><span class="prelude-val">Some</span>((lo, _frame)) =&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(LexError {
                         span: Span { lo: <span class="kw-2">*</span>lo, hi: <span class="kw-2">*</span>lo },
                     })
                 }
-                <span class="attribute">#[cfg(not(span_locations))]</span>
-                <span class="prelude-val">Some</span>(_frame) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LexError { span: Span {} }),
+                <span class="attribute">#[cfg(not(span_locations))]
+                </span><span class="prelude-val">Some</span>(_frame) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(LexError { span: Span {} }),
             },
         };
 
@@ -1059,8 +1059,8 @@
         } {
             input = input.advance(<span class="number">1</span>);
             <span class="kw">let </span>frame = (open_delimiter, trees);
-            <span class="attribute">#[cfg(span_locations)]</span>
-            <span class="kw">let </span>frame = (lo, frame);
+            <span class="attribute">#[cfg(span_locations)]
+            </span><span class="kw">let </span>frame = (lo, frame);
             stack.push(frame);
             trees = TokenStreamBuilder::new();
         } <span class="kw">else if let </span><span class="prelude-val">Some</span>(close_delimiter) = <span class="kw">match </span>first {
@@ -1073,8 +1073,8 @@
                 <span class="prelude-val">Some</span>(frame) =&gt; frame,
                 <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(lex_error(input)),
             };
-            <span class="attribute">#[cfg(span_locations)]</span>
-            <span class="kw">let </span>(lo, frame) = frame;
+            <span class="attribute">#[cfg(span_locations)]
+            </span><span class="kw">let </span>(lo, frame) = frame;
             <span class="kw">let </span>(open_delimiter, outer) = frame;
             <span class="kw">if </span>open_delimiter != close_delimiter {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(lex_error(input));
@@ -1082,10 +1082,10 @@
             input = input.advance(<span class="number">1</span>);
             <span class="kw">let </span><span class="kw-2">mut </span>g = Group::new(open_delimiter, trees.build());
             g.set_span(Span {
-                <span class="attribute">#[cfg(span_locations)]</span>
-                lo,
-                <span class="attribute">#[cfg(span_locations)]</span>
-                hi: input.off,
+                <span class="attribute">#[cfg(span_locations)]
+                </span>lo,
+                <span class="attribute">#[cfg(span_locations)]
+                </span>hi: input.off,
             });
             trees = outer;
             trees.push_token_from_parser(TokenTree::Group(<span class="kw">crate</span>::Group::_new_stable(g)));
@@ -1095,10 +1095,10 @@
                 <span class="prelude-val">Err</span>(Reject) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(lex_error(input)),
             };
             tt.set_span(<span class="kw">crate</span>::Span::_new_stable(Span {
-                <span class="attribute">#[cfg(span_locations)]</span>
-                lo,
-                <span class="attribute">#[cfg(span_locations)]</span>
-                hi: rest.off,
+                <span class="attribute">#[cfg(span_locations)]
+                </span>lo,
+                <span class="attribute">#[cfg(span_locations)]
+                </span>hi: rest.off,
             }));
             trees.push_token_from_parser(tt);
             input = rest;
@@ -1107,14 +1107,14 @@
 }
 
 <span class="kw">fn </span>lex_error(cursor: Cursor) -&gt; LexError {
-    <span class="attribute">#[cfg(not(span_locations))]</span>
-    <span class="kw">let _ </span>= cursor;
+    <span class="attribute">#[cfg(not(span_locations))]
+    </span><span class="kw">let _ </span>= cursor;
     LexError {
         span: Span {
-            <span class="attribute">#[cfg(span_locations)]</span>
-            lo: cursor.off,
-            <span class="attribute">#[cfg(span_locations)]</span>
-            hi: cursor.off,
+            <span class="attribute">#[cfg(span_locations)]
+            </span>lo: cursor.off,
+            <span class="attribute">#[cfg(span_locations)]
+            </span>hi: cursor.off,
         },
     }
 }
@@ -1403,7 +1403,7 @@
     <span class="prelude-val">Ok</span>(literal_suffix(input))
 }
 
-<span class="macro">macro_rules!</span> next_ch {
+<span class="macro">macro_rules! </span>next_ch {
     (<span class="macro-nonterminal">$chars</span>:ident @ <span class="macro-nonterminal">$pat</span>:pat $(| <span class="macro-nonterminal">$rest</span>:pat)<span class="kw-2">*</span>) =&gt; {
         <span class="kw">match </span><span class="macro-nonterminal">$chars</span>.next() {
             <span class="prelude-val">Some</span>((<span class="kw">_</span>, ch)) =&gt; <span class="kw">match </span>ch {
@@ -1658,14 +1658,14 @@
 }
 
 <span class="kw">fn </span>doc_comment&lt;<span class="lifetime">&#39;a</span>&gt;(input: Cursor&lt;<span class="lifetime">&#39;a</span>&gt;, trees: <span class="kw-2">&amp;mut </span>TokenStreamBuilder) -&gt; PResult&lt;<span class="lifetime">&#39;a</span>, ()&gt; {
-    <span class="attribute">#[cfg(span_locations)]</span>
-    <span class="kw">let </span>lo = input.off;
+    <span class="attribute">#[cfg(span_locations)]
+    </span><span class="kw">let </span>lo = input.off;
     <span class="kw">let </span>(rest, (comment, inner)) = doc_comment_contents(input)<span class="question-mark">?</span>;
     <span class="kw">let </span>span = <span class="kw">crate</span>::Span::_new_stable(Span {
-        <span class="attribute">#[cfg(span_locations)]</span>
-        lo,
-        <span class="attribute">#[cfg(span_locations)]</span>
-        hi: rest.off,
+        <span class="attribute">#[cfg(span_locations)]
+        </span>lo,
+        <span class="attribute">#[cfg(span_locations)]
+        </span>hi: rest.off,
     });
 
     <span class="kw">let </span><span class="kw-2">mut </span>scan_for_bare_cr = comment;
@@ -1741,4 +1741,4 @@
     (input.advance(input.len()), input.rest)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

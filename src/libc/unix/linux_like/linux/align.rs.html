@@ -148,9 +148,9 @@
 <span id="148">148</span>
 <span id="149">149</span>
 <span id="150">150</span>
-</pre><pre class="rust"><code><span class="macro">macro_rules!</span> expand_align {
+</pre><pre class="rust"><code><span class="macro">macro_rules! </span>expand_align {
     () =&gt; {
-        <span class="macro">s!</span> {
+        <span class="macro">s! </span>{
             <span class="attribute">#[cfg_attr(any(target_pointer_width = <span class="string">&quot;32&quot;</span>,
                            target_arch = <span class="string">&quot;x86_64&quot;</span>,
                            target_arch = <span class="string">&quot;powerpc64&quot;</span>,
@@ -161,8 +161,8 @@
                            target_arch = <span class="string">&quot;riscv64&quot;</span>,
                            target_arch = <span class="string">&quot;riscv32&quot;</span>,
                            target_arch = <span class="string">&quot;loongarch64&quot;</span>),
-                       repr(align(<span class="number">4</span>)))]</span>
-            <span class="attribute">#[cfg_attr(not(any(target_pointer_width = <span class="string">&quot;32&quot;</span>,
+                       repr(align(<span class="number">4</span>)))]
+            #[cfg_attr(not(any(target_pointer_width = <span class="string">&quot;32&quot;</span>,
                                target_arch = <span class="string">&quot;x86_64&quot;</span>,
                                target_arch = <span class="string">&quot;powerpc64&quot;</span>,
                                target_arch = <span class="string">&quot;mips64&quot;</span>,
@@ -172,30 +172,30 @@
                                target_arch = <span class="string">&quot;riscv64&quot;</span>,
                                target_arch = <span class="string">&quot;riscv32&quot;</span>,
                                target_arch = <span class="string">&quot;loongarch64&quot;</span>)),
-                       repr(align(<span class="number">8</span>)))]</span>
-            <span class="kw">pub struct </span>pthread_mutexattr_t {
-                <span class="attribute">#[doc(hidden)]</span>
-                size: [u8; ::__SIZEOF_PTHREAD_MUTEXATTR_T],
+                       repr(align(<span class="number">8</span>)))]
+            </span><span class="kw">pub struct </span>pthread_mutexattr_t {
+                <span class="attribute">#[doc(hidden)]
+                </span>size: [u8; ::__SIZEOF_PTHREAD_MUTEXATTR_T],
             }
 
             <span class="attribute">#[cfg_attr(any(target_env = <span class="string">&quot;musl&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>),
-                       repr(align(<span class="number">4</span>)))]</span>
-            <span class="attribute">#[cfg_attr(all(not(target_env = <span class="string">&quot;musl&quot;</span>),
+                       repr(align(<span class="number">4</span>)))]
+            #[cfg_attr(all(not(target_env = <span class="string">&quot;musl&quot;</span>),
                            target_pointer_width = <span class="string">&quot;64&quot;</span>),
-                       repr(align(<span class="number">8</span>)))]</span>
-            <span class="kw">pub struct </span>pthread_rwlockattr_t {
-                <span class="attribute">#[doc(hidden)]</span>
-                size: [u8; ::__SIZEOF_PTHREAD_RWLOCKATTR_T],
+                       repr(align(<span class="number">8</span>)))]
+            </span><span class="kw">pub struct </span>pthread_rwlockattr_t {
+                <span class="attribute">#[doc(hidden)]
+                </span>size: [u8; ::__SIZEOF_PTHREAD_RWLOCKATTR_T],
             }
 
-            <span class="attribute">#[repr(align(<span class="number">4</span>))]</span>
-            <span class="kw">pub struct </span>pthread_condattr_t {
-                <span class="attribute">#[doc(hidden)]</span>
-                size: [u8; ::__SIZEOF_PTHREAD_CONDATTR_T],
+            <span class="attribute">#[repr(align(<span class="number">4</span>))]
+            </span><span class="kw">pub struct </span>pthread_condattr_t {
+                <span class="attribute">#[doc(hidden)]
+                </span>size: [u8; ::__SIZEOF_PTHREAD_CONDATTR_T],
             }
 
-            <span class="attribute">#[repr(align(<span class="number">8</span>))]</span>
-            <span class="kw">pub struct </span>fanotify_event_metadata {
+            <span class="attribute">#[repr(align(<span class="number">8</span>))]
+            </span><span class="kw">pub struct </span>fanotify_event_metadata {
                 <span class="kw">pub </span>event_len: __u32,
                 <span class="kw">pub </span>vers: __u8,
                 <span class="kw">pub </span>reserved: __u8,
@@ -206,22 +206,22 @@
             }
         }
 
-        <span class="macro">s_no_extra_traits!</span> {
+        <span class="macro">s_no_extra_traits! </span>{
             <span class="attribute">#[cfg_attr(all(target_env = <span class="string">&quot;musl&quot;</span>,
                            target_pointer_width = <span class="string">&quot;32&quot;</span>),
-                       repr(align(<span class="number">4</span>)))]</span>
-            <span class="attribute">#[cfg_attr(all(target_env = <span class="string">&quot;musl&quot;</span>,
+                       repr(align(<span class="number">4</span>)))]
+            #[cfg_attr(all(target_env = <span class="string">&quot;musl&quot;</span>,
                            target_pointer_width = <span class="string">&quot;64&quot;</span>),
-                       repr(align(<span class="number">8</span>)))]</span>
-            <span class="attribute">#[cfg_attr(all(not(target_env = <span class="string">&quot;musl&quot;</span>),
+                       repr(align(<span class="number">8</span>)))]
+            #[cfg_attr(all(not(target_env = <span class="string">&quot;musl&quot;</span>),
                            target_arch = <span class="string">&quot;x86&quot;</span>),
-                       repr(align(<span class="number">4</span>)))]</span>
-            <span class="attribute">#[cfg_attr(all(not(target_env = <span class="string">&quot;musl&quot;</span>),
+                       repr(align(<span class="number">4</span>)))]
+            #[cfg_attr(all(not(target_env = <span class="string">&quot;musl&quot;</span>),
                            not(target_arch = <span class="string">&quot;x86&quot;</span>)),
-                       repr(align(<span class="number">8</span>)))]</span>
-            <span class="kw">pub struct </span>pthread_cond_t {
-                <span class="attribute">#[doc(hidden)]</span>
-                size: [u8; ::__SIZEOF_PTHREAD_COND_T],
+                       repr(align(<span class="number">8</span>)))]
+            </span><span class="kw">pub struct </span>pthread_cond_t {
+                <span class="attribute">#[doc(hidden)]
+                </span>size: [u8; ::__SIZEOF_PTHREAD_COND_T],
             }
 
             <span class="attribute">#[cfg_attr(all(target_pointer_width = <span class="string">&quot;32&quot;</span>,
@@ -233,8 +233,8 @@
                                target_arch = <span class="string">&quot;sparc&quot;</span>,
                                target_arch = <span class="string">&quot;x86_64&quot;</span>,
                                target_arch = <span class="string">&quot;x86&quot;</span>)),
-                       repr(align(<span class="number">4</span>)))]</span>
-            <span class="attribute">#[cfg_attr(any(target_pointer_width = <span class="string">&quot;64&quot;</span>,
+                       repr(align(<span class="number">4</span>)))]
+            #[cfg_attr(any(target_pointer_width = <span class="string">&quot;64&quot;</span>,
                            not(any(target_arch = <span class="string">&quot;mips&quot;</span>,
                                    target_arch = <span class="string">&quot;arm&quot;</span>,
                                    target_arch = <span class="string">&quot;hexagon&quot;</span>,
@@ -243,10 +243,10 @@
                                    target_arch = <span class="string">&quot;sparc&quot;</span>,
                                    target_arch = <span class="string">&quot;x86_64&quot;</span>,
                                    target_arch = <span class="string">&quot;x86&quot;</span>))),
-                       repr(align(<span class="number">8</span>)))]</span>
-            <span class="kw">pub struct </span>pthread_mutex_t {
-                <span class="attribute">#[doc(hidden)]</span>
-                size: [u8; ::__SIZEOF_PTHREAD_MUTEX_T],
+                       repr(align(<span class="number">8</span>)))]
+            </span><span class="kw">pub struct </span>pthread_mutex_t {
+                <span class="attribute">#[doc(hidden)]
+                </span>size: [u8; ::__SIZEOF_PTHREAD_MUTEX_T],
             }
 
             <span class="attribute">#[cfg_attr(all(target_pointer_width = <span class="string">&quot;32&quot;</span>,
@@ -258,8 +258,8 @@
                                target_arch = <span class="string">&quot;sparc&quot;</span>,
                                target_arch = <span class="string">&quot;x86_64&quot;</span>,
                                target_arch = <span class="string">&quot;x86&quot;</span>)),
-                       repr(align(<span class="number">4</span>)))]</span>
-            <span class="attribute">#[cfg_attr(any(target_pointer_width = <span class="string">&quot;64&quot;</span>,
+                       repr(align(<span class="number">4</span>)))]
+            #[cfg_attr(any(target_pointer_width = <span class="string">&quot;64&quot;</span>,
                            not(any(target_arch = <span class="string">&quot;mips&quot;</span>,
                                    target_arch = <span class="string">&quot;arm&quot;</span>,
                                    target_arch = <span class="string">&quot;hexagon&quot;</span>,
@@ -268,15 +268,15 @@
                                    target_arch = <span class="string">&quot;sparc&quot;</span>,
                                    target_arch = <span class="string">&quot;x86_64&quot;</span>,
                                    target_arch = <span class="string">&quot;x86&quot;</span>))),
-                       repr(align(<span class="number">8</span>)))]</span>
-            <span class="kw">pub struct </span>pthread_rwlock_t {
+                       repr(align(<span class="number">8</span>)))]
+            </span><span class="kw">pub struct </span>pthread_rwlock_t {
                 size: [u8; ::__SIZEOF_PTHREAD_RWLOCK_T],
             }
 
             <span class="comment">// linux/can.h
-            </span><span class="attribute">#[repr(align(<span class="number">8</span>))]</span>
-            <span class="attribute">#[allow(missing_debug_implementations)]</span>
-            <span class="kw">pub struct </span>can_frame {
+            </span><span class="attribute">#[repr(align(<span class="number">8</span>))]
+            #[allow(missing_debug_implementations)]
+            </span><span class="kw">pub struct </span>can_frame {
                 <span class="kw">pub </span>can_id: canid_t,
                 <span class="kw">pub </span>can_dlc: u8,
                 __pad: u8,
@@ -285,9 +285,9 @@
                 <span class="kw">pub </span>data: [u8; CAN_MAX_DLEN],
             }
 
-            <span class="attribute">#[repr(align(<span class="number">8</span>))]</span>
-            <span class="attribute">#[allow(missing_debug_implementations)]</span>
-            <span class="kw">pub struct </span>canfd_frame {
+            <span class="attribute">#[repr(align(<span class="number">8</span>))]
+            #[allow(missing_debug_implementations)]
+            </span><span class="kw">pub struct </span>canfd_frame {
                 <span class="kw">pub </span>can_id: canid_t,
                 <span class="kw">pub </span>len: u8,
                 <span class="kw">pub </span>flags: u8,
@@ -299,4 +299,4 @@
     };
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

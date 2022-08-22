@@ -144,8 +144,8 @@
 
 <span class="kw">use </span>std::cmp::{Ord, Ordering};
 
-<span class="attribute">#[derive(Clone, Copy, PartialOrd, PartialEq, Eq, Hash)]</span>
-<span class="kw">pub struct </span>Range {
+<span class="attribute">#[derive(Clone, Copy, PartialOrd, PartialEq, Eq, Hash)]
+</span><span class="kw">pub struct </span>Range {
     <span class="kw">pub </span>start: u8,
     <span class="kw">pub </span>end: u8,
 }
@@ -244,20 +244,20 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>range_iter_one() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_iter_one() {
         <span class="kw">let </span>byte = Range::from(<span class="string">b&#39;!&#39;</span>);
         <span class="kw">let </span>collected = byte.take(<span class="number">1000</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="macro">assert_eq!</span>(<span class="string">b&quot;!&quot;</span>, <span class="kw-2">&amp;</span>collected[..]);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>range_iter_few() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_iter_few() {
         <span class="kw">let </span>byte = Range {
             start: <span class="string">b&#39;a&#39;</span>,
             end: <span class="string">b&#39;d&#39;</span>,
@@ -267,8 +267,8 @@
         <span class="macro">assert_eq!</span>(<span class="string">b&quot;abcd&quot;</span>, <span class="kw-2">&amp;</span>collected[..]);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>range_iter_bunds() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>range_iter_bunds() {
         <span class="kw">let </span>byte = Range::from(<span class="number">0xFA</span>..=<span class="number">0xFF</span>);
 
         <span class="kw">let </span>collected = byte.take(<span class="number">1000</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
@@ -277,4 +277,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

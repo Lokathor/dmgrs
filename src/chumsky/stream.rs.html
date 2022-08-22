@@ -356,8 +356,8 @@
     </span><span class="kw">fn </span>extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;T&gt;, n: usize);
 }
 
-<span class="attribute">#[allow(deprecated)]</span>
-<span class="kw">impl</span>&lt;I: Iterator&gt; StreamExtend&lt;I::Item&gt; <span class="kw">for </span>I {
+<span class="attribute">#[allow(deprecated)]
+</span><span class="kw">impl</span>&lt;I: Iterator&gt; StreamExtend&lt;I::Item&gt; <span class="kw">for </span>I {
     <span class="kw">fn </span>extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>, v: <span class="kw-2">&amp;mut </span>Vec&lt;I::Item&gt;, n: usize) {
         v.reserve(n);
         v.extend(<span class="self">self</span>.take(n));
@@ -374,8 +374,8 @@
 
 <span class="doccomment">/// A type that represents a stream of input tokens. Unlike [`Iterator`], this type supports backtracking and a few
 /// other features required by the crate.
-</span><span class="attribute">#[allow(deprecated)]</span>
-<span class="kw">pub struct </span>Stream&lt;
+</span><span class="attribute">#[allow(deprecated)]
+</span><span class="kw">pub struct </span>Stream&lt;
     <span class="lifetime">&#39;a</span>,
     I,
     S: Span,
@@ -531,8 +531,8 @@
 
     <span class="kw">fn </span>pull_until(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: usize) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(I, S)&gt; {
         <span class="kw">let </span>additional = offset.saturating_sub(<span class="self">self</span>.buffer.len()) + <span class="number">1024</span>;
-        <span class="attribute">#[allow(deprecated)]</span>
-        (<span class="kw-2">&amp;mut &amp;mut </span><span class="self">self</span>.iter <span class="kw">as </span><span class="kw-2">&amp;mut </span><span class="kw">dyn </span>StreamExtend&lt;<span class="kw">_</span>&gt;).extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer, additional);
+        <span class="attribute">#[allow(deprecated)]
+        </span>(<span class="kw-2">&amp;mut &amp;mut </span><span class="self">self</span>.iter <span class="kw">as </span><span class="kw-2">&amp;mut </span><span class="kw">dyn </span>StreamExtend&lt;<span class="kw">_</span>&gt;).extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer, additional);
         <span class="self">self</span>.buffer.get(offset)
     }
 
@@ -683,4 +683,4 @@
 //     }
 // }
 </span></code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

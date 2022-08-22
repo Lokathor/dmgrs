@@ -272,8 +272,8 @@
 /// [definition](Recursive::define).
 ///
 /// Prefer to use [`recursive()`], which exists as a convenient wrapper around both operations, if possible.
-</span><span class="attribute">#[must_use]</span>
-<span class="kw">pub struct </span>Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E: Error&lt;I&gt;&gt;(RecursiveInner&lt;OnceParser&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt;&gt;);
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub struct </span>Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E: Error&lt;I&gt;&gt;(RecursiveInner&lt;OnceParser&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt;&gt;);
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, I: Clone, O, E: Error&lt;I&gt;&gt; Recursive&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt; {
     <span class="kw">fn </span>cell(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Rc&lt;OnceParser&lt;<span class="lifetime">&#39;a</span>, I, O, E&gt;&gt; {
@@ -352,20 +352,20 @@
         debugger: <span class="kw-2">&amp;mut </span>D,
         stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, <span class="self">Self</span>::Error&gt;,
     ) -&gt; PResult&lt;I, O, <span class="self">Self</span>::Error&gt; {
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;stacker&quot;</span>)]</span>
-        <span class="attribute">#[inline(always)]</span>
-        <span class="kw">fn </span>recurse&lt;R, F: FnOnce() -&gt; R&gt;(f: F) -&gt; R {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;stacker&quot;</span>)]
+        #[inline(always)]
+        </span><span class="kw">fn </span>recurse&lt;R, F: FnOnce() -&gt; R&gt;(f: F) -&gt; R {
             stacker::maybe_grow(<span class="number">1024 </span>* <span class="number">1024</span>, <span class="number">1024 </span>* <span class="number">1024</span>, f)
         }
-        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;stacker&quot;</span>))]</span>
-        <span class="attribute">#[inline(always)]</span>
-        <span class="kw">fn </span>recurse&lt;R, F: FnOnce() -&gt; R&gt;(f: F) -&gt; R {
+        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;stacker&quot;</span>))]
+        #[inline(always)]
+        </span><span class="kw">fn </span>recurse&lt;R, F: FnOnce() -&gt; R&gt;(f: F) -&gt; R {
             f()
         }
 
         recurse(|| {
-            <span class="attribute">#[allow(deprecated)]</span>
-            debugger.invoke(
+            <span class="attribute">#[allow(deprecated)]
+            </span>debugger.invoke(
                 <span class="self">self</span>.cell()
                     .get()
                     .expect(<span class="string">&quot;Recursive parser used before being defined&quot;</span>)
@@ -376,12 +376,12 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
@@ -451,4 +451,4 @@
     parser
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

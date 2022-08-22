@@ -99,26 +99,26 @@
 <span id="99">99</span>
 <span id="100">100</span>
 <span id="101">101</span>
-</pre><pre class="rust"><code><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::lookahead;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream, <span class="prelude-ty">Result</span>};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::token::Token;
+</pre><pre class="rust"><code><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::lookahead;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream, <span class="prelude-ty">Result</span>};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::token::Token;
 
 <span class="kw">pub use </span>proc_macro2::Ident;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[allow(non_snake_case)]</span>
-<span class="kw">pub fn </span>Ident(marker: lookahead::TokenMarker) -&gt; Ident {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[doc(hidden)]
+#[allow(non_snake_case)]
+</span><span class="kw">pub fn </span>Ident(marker: lookahead::TokenMarker) -&gt; Ident {
     <span class="kw">match </span>marker {}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">fn </span>accept_as_ident(ident: <span class="kw-2">&amp;</span>Ident) -&gt; bool {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">fn </span>accept_as_ident(ident: <span class="kw-2">&amp;</span>Ident) -&gt; bool {
     <span class="kw">match </span>ident.to_string().as_str() {
         <span class="string">&quot;_&quot; </span>|
         <span class="comment">// Based on https://doc.rust-lang.org/grammar.html#keywords
@@ -135,9 +135,9 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-<span class="kw">impl </span>Parse <span class="kw">for </span>Ident {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+</span><span class="kw">impl </span>Parse <span class="kw">for </span>Ident {
     <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         input.step(|cursor| {
             <span class="kw">if let </span><span class="prelude-val">Some</span>((ident, rest)) = cursor.ident() {
@@ -150,8 +150,8 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">impl </span>Token <span class="kw">for </span>Ident {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">impl </span>Token <span class="kw">for </span>Ident {
     <span class="kw">fn </span>peek(cursor: Cursor) -&gt; bool {
         <span class="kw">if let </span><span class="prelude-val">Some</span>((ident, _rest)) = cursor.ident() {
             accept_as_ident(<span class="kw-2">&amp;</span>ident)
@@ -165,7 +165,7 @@
     </span>}
 }
 
-<span class="macro">macro_rules!</span> ident_from_token {
+<span class="macro">macro_rules! </span>ident_from_token {
     (<span class="macro-nonterminal">$token</span>:ident) =&gt; {
         <span class="kw">impl </span>From&lt;<span class="macro">Token!</span>[<span class="macro-nonterminal">$token</span>]&gt; <span class="kw">for </span>Ident {
             <span class="kw">fn </span>from(token: <span class="macro">Token!</span>[<span class="macro-nonterminal">$token</span>]) -&gt; Ident {
@@ -201,4 +201,4 @@
     <span class="bool-val">true
 </span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

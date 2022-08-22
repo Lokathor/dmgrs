@@ -394,9 +394,9 @@
 }
 
 <span class="doccomment">/// See [`skip_then_retry_until`].
-</span><span class="attribute">#[must_use]</span>
-<span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>SkipThenRetryUntil&lt;I, <span class="kw">const </span>N: usize&gt;(
+</span><span class="attribute">#[must_use]
+#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>SkipThenRetryUntil&lt;I, <span class="kw">const </span>N: usize&gt;(
     <span class="kw">pub</span>(<span class="kw">crate</span>) [I; N],
     <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
     <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
@@ -436,8 +436,8 @@
             <span class="kw">let _ </span>= stream.next();
         }
         <span class="kw">loop </span>{
-            <span class="attribute">#[allow(clippy::blocks_in_if_conditions)]</span>
-            <span class="kw">if </span>!stream.attempt(
+            <span class="attribute">#[allow(clippy::blocks_in_if_conditions)]
+            </span><span class="kw">if </span>!stream.attempt(
                 |stream| <span class="kw">match </span>stream.next().<span class="number">2</span>.map(|tok| <span class="self">self</span>.<span class="number">0</span>.contains(<span class="kw-2">&amp;</span>tok)) {
                     <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) =&gt; (<span class="self">self</span>.<span class="number">1</span>, <span class="bool-val">false</span>),
                     <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) =&gt; (<span class="bool-val">false</span>, <span class="bool-val">true</span>),
@@ -446,8 +446,8 @@
             ) {
                 <span class="kw">break </span>(a_errors, <span class="prelude-val">Err</span>(a_err));
             }
-            <span class="attribute">#[allow(deprecated)]</span>
-            <span class="kw">let </span>(<span class="kw-2">mut </span>errors, res) = debugger.invoke(<span class="kw-2">&amp;</span>parser, stream);
+            <span class="attribute">#[allow(deprecated)]
+            </span><span class="kw">let </span>(<span class="kw-2">mut </span>errors, res) = debugger.invoke(<span class="kw-2">&amp;</span>parser, stream);
             <span class="kw">if let </span><span class="prelude-val">Ok</span>(out) = res {
                 errors.push(a_err);
                 <span class="kw">break </span>(errors, <span class="prelude-val">Ok</span>(out));
@@ -468,9 +468,9 @@
 }
 
 <span class="doccomment">/// See [`skip_until`].
-</span><span class="attribute">#[must_use]</span>
-<span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>SkipUntil&lt;I, F, <span class="kw">const </span>N: usize&gt;(
+</span><span class="attribute">#[must_use]
+#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>SkipUntil&lt;I, F, <span class="kw">const </span>N: usize&gt;(
     <span class="kw">pub</span>(<span class="kw">crate</span>) [I; N],
     <span class="kw">pub</span>(<span class="kw">crate</span>) F,
     <span class="kw">pub</span>(<span class="kw">crate</span>) bool,
@@ -550,9 +550,9 @@
 }
 
 <span class="doccomment">/// See [`nested_delimiters`].
-</span><span class="attribute">#[must_use]</span>
-<span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>NestedDelimiters&lt;I, F, <span class="kw">const </span>N: usize&gt;(
+</span><span class="attribute">#[must_use]
+#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>NestedDelimiters&lt;I, F, <span class="kw">const </span>N: usize&gt;(
     <span class="kw">pub</span>(<span class="kw">crate</span>) I,
     <span class="kw">pub</span>(<span class="kw">crate</span>) I,
     <span class="kw">pub</span>(<span class="kw">crate</span>) [(I, I); N],
@@ -564,8 +564,8 @@
 {
     <span class="comment">// This looks like something weird with clippy, it warns in a weird spot and isn&#39;t fixed by
     // marking it at the spot.
-    </span><span class="attribute">#[allow(clippy::blocks_in_if_conditions)]</span>
-    <span class="kw">fn </span>recover&lt;D: Debugger, P: Parser&lt;I, O, Error = E&gt;&gt;(
+    </span><span class="attribute">#[allow(clippy::blocks_in_if_conditions)]
+    </span><span class="kw">fn </span>recover&lt;D: Debugger, P: Parser&lt;I, O, Error = E&gt;&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="kw-2">mut </span>a_errors: Vec&lt;Located&lt;I, P::Error&gt;&gt;,
         a_err: Located&lt;I, P::Error&gt;,
@@ -690,9 +690,9 @@
 }
 
 <span class="doccomment">/// A parser that includes a fallback recovery strategy should parsing result in an error.
-</span><span class="attribute">#[must_use]</span>
-<span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub struct </span>Recovery&lt;A, S&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) A, <span class="kw">pub</span>(<span class="kw">crate</span>) S);
+</span><span class="attribute">#[must_use]
+#[derive(Copy, Clone)]
+</span><span class="kw">pub struct </span>Recovery&lt;A, S&gt;(<span class="kw">pub</span>(<span class="kw">crate</span>) A, <span class="kw">pub</span>(<span class="kw">crate</span>) S);
 
 <span class="kw">impl</span>&lt;I: Clone, O, A: Parser&lt;I, O, Error = E&gt;, S: Strategy&lt;I, O, E&gt;, E: Error&lt;I&gt;&gt; Parser&lt;I, O&gt;
     <span class="kw">for </span>Recovery&lt;A, S&gt;
@@ -705,8 +705,8 @@
         stream: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;,
     ) -&gt; PResult&lt;I, O, E&gt; {
         <span class="kw">match </span>stream.try_parse(|stream| {
-            <span class="attribute">#[allow(deprecated)]</span>
-            debugger.invoke(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, stream)
+            <span class="attribute">#[allow(deprecated)]
+            </span>debugger.invoke(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, stream)
         }) {
             (a_errors, <span class="prelude-val">Ok</span>(a_out)) =&gt; (a_errors, <span class="prelude-val">Ok</span>(a_out)),
             (a_errors, <span class="prelude-val">Err</span>(a_err)) =&gt; <span class="self">self</span>.<span class="number">1</span>.recover(a_errors, a_err, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, debugger, stream),
@@ -714,22 +714,22 @@
     }
 
     <span class="kw">fn </span>parse_inner_verbose(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Verbose, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
     <span class="kw">fn </span>parse_inner_silent(<span class="kw-2">&amp;</span><span class="self">self</span>, d: <span class="kw-2">&amp;mut </span>Silent, s: <span class="kw-2">&amp;mut </span>StreamOf&lt;I, E&gt;) -&gt; PResult&lt;I, O, E&gt; {
-        <span class="attribute">#[allow(deprecated)]</span>
-        <span class="self">self</span>.parse_inner(d, s)
+        <span class="attribute">#[allow(deprecated)]
+        </span><span class="self">self</span>.parse_inner(d, s)
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use </span><span class="kw">crate</span>::error::Cheap;
     <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>recover_with_skip_then_retry_until() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>recover_with_skip_then_retry_until() {
         <span class="kw">let </span>parser = just::&lt;<span class="kw">_</span>, <span class="kw">_</span>, Cheap&lt;<span class="kw">_</span>&gt;&gt;(<span class="string">&#39;a&#39;</span>)
             .recover_with(skip_then_retry_until([<span class="string">&#39;,&#39;</span>]))
             .separated_by(just(<span class="string">&#39;,&#39;</span>));
@@ -751,4 +751,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

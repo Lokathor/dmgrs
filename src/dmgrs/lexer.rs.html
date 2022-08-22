@@ -320,68 +320,68 @@
 /// At this early stage of the processing all keywords, instructions, and
 /// register names just count as an &quot;ident&quot;. A simple string interning mechanism
 /// is used, so it&#39;s not a super allocation fest to do this.
-</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Logos)]</span> <span class="comment">// Note: custom Debug at the end of the file
+</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Logos)] </span><span class="comment">// Note: custom Debug at the end of the file
 </span><span class="kw">pub enum </span>Lexeme {
   <span class="doccomment">/// An error during lexing.
-  </span><span class="attribute">#[error]</span>
-  Error,
+  </span><span class="attribute">#[error]
+  </span>Error,
 
   <span class="doccomment">/// Spaces and tabs, but *not* line endings.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;[ \t]+&quot;</span>, logos::skip)]</span>
-  HorizontalWhitespace,
+  </span><span class="attribute">#[regex(<span class="string">r&quot;[ \t]+&quot;</span>, logos::skip)]
+  </span>HorizontalWhitespace,
 
   <span class="doccomment">/// Starts with `//` and eats characters until the end of line.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;//[^\r\n]*&quot;</span>, logos::skip)]</span>
-  EndOfLineComment,
+  </span><span class="attribute">#[regex(<span class="string">r&quot;//[^\r\n]*&quot;</span>, logos::skip)]
+  </span>EndOfLineComment,
 
   <span class="doccomment">/// Multi-line comments start with `/*`
-  </span><span class="attribute">#[token(<span class="string">r&quot;/*&quot;</span>, priority = <span class="number">2</span>)]</span>
-  StartMultiComment,
+  </span><span class="attribute">#[token(<span class="string">r&quot;/*&quot;</span>, priority = <span class="number">2</span>)]
+  </span>StartMultiComment,
 
   <span class="doccomment">/// Multi-line comments end with `*/`
-  </span><span class="attribute">#[token(<span class="string">r&quot;*/&quot;</span>, priority = <span class="number">2</span>)]</span>
-  EndMultiComment,
+  </span><span class="attribute">#[token(<span class="string">r&quot;*/&quot;</span>, priority = <span class="number">2</span>)]
+  </span>EndMultiComment,
 
   <span class="doccomment">/// A line ends with `\r\n` (windows), `\n` (unix), or `\r` (pre-unix mac).
-  </span><span class="attribute">#[regex(<span class="string">r&quot;(\r\n|\n|\r)&quot;</span>)]</span>
-  EndOfLine,
+  </span><span class="attribute">#[regex(<span class="string">r&quot;(\r\n|\n|\r)&quot;</span>)]
+  </span>EndOfLine,
 
   <span class="doccomment">/// A punctuation character (using the `[:punct:]` regex class) that does
   /// *not* match any other case.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;[[:punct:]]&quot;</span>, |lex| lex.slice().chars().next().unwrap())]</span>
-  Punct(char),
+  </span><span class="attribute">#[regex(<span class="string">r&quot;[[:punct:]]&quot;</span>, |lex| lex.slice().chars().next().unwrap())]
+  </span>Punct(char),
 
   <span class="doccomment">/// Starts a constant declaration
-  </span><span class="attribute">#[token(<span class="string">&quot;const&quot;</span>)]</span>
-  KwConst,
-  <span class="attribute">#[token(<span class="string">&quot;fn&quot;</span>)]</span>
-  <span class="doccomment">/// Starts a function declaration
+  </span><span class="attribute">#[token(<span class="string">&quot;const&quot;</span>)]
+  </span>KwConst,
+  <span class="attribute">#[token(<span class="string">&quot;fn&quot;</span>)]
+  </span><span class="doccomment">/// Starts a function declaration
   </span>KwFn,
   <span class="doccomment">/// Used at the opening of a loop
-  </span><span class="attribute">#[token(<span class="string">&quot;loop&quot;</span>)]</span>
-  KwLoop,
+  </span><span class="attribute">#[token(<span class="string">&quot;loop&quot;</span>)]
+  </span>KwLoop,
   <span class="doccomment">/// Used for branching around code blocks
-  </span><span class="attribute">#[token(<span class="string">&quot;if&quot;</span>)]</span>
-  KwIf,
+  </span><span class="attribute">#[token(<span class="string">&quot;if&quot;</span>)]
+  </span>KwIf,
   <span class="doccomment">/// Used for branching around code blocks
-  </span><span class="attribute">#[token(<span class="string">&quot;else&quot;</span>)]</span>
-  KwElse,
+  </span><span class="attribute">#[token(<span class="string">&quot;else&quot;</span>)]
+  </span>KwElse,
   <span class="doccomment">/// Continue a loop (jump to the start)
-  </span><span class="attribute">#[token(<span class="string">&quot;continue&quot;</span>)]</span>
-  KwContinue,
+  </span><span class="attribute">#[token(<span class="string">&quot;continue&quot;</span>)]
+  </span>KwContinue,
   <span class="doccomment">/// Break a loop (jump to the end)
-  </span><span class="attribute">#[token(<span class="string">&quot;break&quot;</span>)]</span>
-  KwBreak,
+  </span><span class="attribute">#[token(<span class="string">&quot;break&quot;</span>)]
+  </span>KwBreak,
   <span class="doccomment">/// Starts a static declaration
-  </span><span class="attribute">#[token(<span class="string">&quot;static&quot;</span>)]</span>
-  KwStatic,
+  </span><span class="attribute">#[token(<span class="string">&quot;static&quot;</span>)]
+  </span>KwStatic,
 
   <span class="doccomment">/// A standard identifier in C-style langs: `[_a-zA-Z][_a-zA-Z0-9]*`
   ///
   /// The lone character `_` ends up matching as an Ident rather than a
   /// Punctuation.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;[_a-zA-Z][_a-zA-Z0-9]*&quot;</span>, |lex| cache_str(lex.slice()), priority=<span class="number">2</span>)]</span>
-  Ident(StaticStr),
+  </span><span class="attribute">#[regex(<span class="string">r&quot;[_a-zA-Z][_a-zA-Z0-9]*&quot;</span>, |lex| cache_str(lex.slice()), priority=<span class="number">2</span>)]
+  </span>Ident(StaticStr),
 
   <span class="doccomment">/// Holds all the stuff *between* `&quot;`.
   ///
@@ -399,22 +399,22 @@
   ///
   /// * Binary literals are a digit sequence (`0-1`) prefixed with `%` or `0b`
   /// * Use of `_` is allowed in the literal, but they don&#39;t change the value.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;(%|0b)[01_]+&quot;</span>, |lex| {<span class="kw">let </span>s = lex.slice(); try_bin_str_to_u16(<span class="kw">if </span>s.starts_with(<span class="string">&#39;%&#39;</span>) { <span class="kw-2">&amp;</span>s[<span class="number">1</span>..]</span> } <span class="kw">else </span>{ <span class="kw-2">&amp;</span>s[<span class="number">2</span>..] }) })]
+  </span><span class="attribute">#[regex(<span class="string">r&quot;(%|0b)[01_]+&quot;</span>, |lex| {<span class="kw">let </span>s = lex.slice(); try_bin_str_to_u16(<span class="kw">if </span>s.starts_with(<span class="string">&#39;%&#39;</span>) { <span class="kw-2">&amp;</span>s[<span class="number">1</span>..] </span>} <span class="kw">else </span>{ <span class="kw-2">&amp;</span>s[<span class="number">2</span>..] }) })]
   BinaryLiteral(u16),
 
   <span class="doccomment">/// The digits of a decimal literal.
   ///
   /// * Decimal literals are a digit sequence (`0-9`) with no prefix.
   /// * Use of `_` is allowed in the literal, but they don&#39;t change the value.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;[0-9]+&quot;</span>, |lex| try_dec_str_to_u16(lex.slice()))]</span>
-  DecimalLiteral(u16),
+  </span><span class="attribute">#[regex(<span class="string">r&quot;[0-9]+&quot;</span>, |lex| try_dec_str_to_u16(lex.slice()))]
+  </span>DecimalLiteral(u16),
 
   <span class="doccomment">/// The digits of a hex literal (no prefix).
   ///
   /// * Hex literals are a digit sequence (`0-9a-fA-F`) prefixed with `$` or
   ///   `0x`
   /// * Use of `_` is allowed in the literal, but they don&#39;t change the value.
-  </span><span class="attribute">#[regex(<span class="string">r&quot;(\$|0x)[0-9a-fA-F_]+&quot;</span>, |lex| {<span class="kw">let </span>s = lex.slice(); try_hex_str_to_u16(<span class="kw">if </span>s.starts_with(<span class="string">&#39;$&#39;</span>) { <span class="kw-2">&amp;</span>s[<span class="number">1</span>..]</span> } <span class="kw">else </span>{ <span class="kw-2">&amp;</span>s[<span class="number">2</span>..] }) })]
+  </span><span class="attribute">#[regex(<span class="string">r&quot;(\$|0x)[0-9a-fA-F_]+&quot;</span>, |lex| {<span class="kw">let </span>s = lex.slice(); try_hex_str_to_u16(<span class="kw">if </span>s.starts_with(<span class="string">&#39;$&#39;</span>) { <span class="kw-2">&amp;</span>s[<span class="number">1</span>..] </span>} <span class="kw">else </span>{ <span class="kw-2">&amp;</span>s[<span class="number">2</span>..] }) })]
   HexLiteral(u16),
 }
 
@@ -435,8 +435,8 @@
     }
   })
 }
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_try_bin_str_to_u16() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_try_bin_str_to_u16() {
   <span class="macro">assert_eq!</span>(try_bin_str_to_u16(<span class="string">&quot;1010&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">0b1010</span>));
 }
 
@@ -457,8 +457,8 @@
     }
   })
 }
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_try_dec_str_to_u16() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_try_dec_str_to_u16() {
   <span class="macro">assert_eq!</span>(try_dec_str_to_u16(<span class="string">&quot;1234&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">1234</span>));
 }
 
@@ -481,8 +481,8 @@
     }
   })
 }
-<span class="attribute">#[test]</span>
-<span class="kw">fn </span>test_try_hex_str_to_u16() {
+<span class="attribute">#[test]
+</span><span class="kw">fn </span>test_try_hex_str_to_u16() {
   <span class="macro">assert_eq!</span>(try_hex_str_to_u16(<span class="string">&quot;12aF&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">0x12AF</span>));
   <span class="macro">assert_eq!</span>(try_hex_str_to_u16(<span class="string">&quot;FF26&quot;</span>), <span class="prelude-val">Some</span>(<span class="number">0xFF26</span>));
 }
@@ -559,4 +559,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

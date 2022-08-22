@@ -453,8 +453,8 @@
 </span><span class="attribute">#[cfg(all(
     not(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, any(target_os = <span class="string">&quot;unknown&quot;</span>, target_os = <span class="string">&quot;wasi&quot;</span>))),
     feature = <span class="string">&quot;proc-macro&quot;
-</span>))]</span>
-<span class="kw">use </span><span class="kw">crate</span>::proc_macro <span class="kw">as </span>pm;
+</span>))]
+</span><span class="kw">use </span><span class="kw">crate</span>::proc_macro <span class="kw">as </span>pm;
 <span class="kw">use </span><span class="kw">crate</span>::Lifetime;
 <span class="kw">use </span>proc_macro2::{Delimiter, Group, Ident, Literal, Punct, Spacing, Span, TokenStream, TokenTree};
 <span class="kw">use </span>std::hint;
@@ -588,8 +588,8 @@
     </span><span class="attribute">#[cfg(all(
         not(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, any(target_os = <span class="string">&quot;unknown&quot;</span>, target_os = <span class="string">&quot;wasi&quot;</span>))),
         feature = <span class="string">&quot;proc-macro&quot;
-    </span>))]</span>
-    <span class="kw">pub fn </span>new(stream: pm::TokenStream) -&gt; <span class="self">Self </span>{
+    </span>))]
+    </span><span class="kw">pub fn </span>new(stream: pm::TokenStream) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new2(stream.into())
     }
 
@@ -885,4 +885,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

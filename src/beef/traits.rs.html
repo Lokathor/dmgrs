@@ -237,8 +237,8 @@
     <span class="kw">unsafe impl </span>Beef <span class="kw">for </span>str {
         <span class="kw">type </span>PointerT = u8;
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>ref_into_parts&lt;U&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (NonNull&lt;u8&gt;, usize, U::Field)
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>ref_into_parts&lt;U&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (NonNull&lt;u8&gt;, usize, U::Field)
         <span class="kw">where
             </span>U: Capacity,
         {
@@ -255,16 +255,16 @@
             )
         }
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">unsafe fn </span>ref_from_parts&lt;U&gt;(ptr: NonNull&lt;u8&gt;, fat: usize) -&gt; <span class="kw-2">*const </span>str
+        <span class="attribute">#[inline]
+        </span><span class="kw">unsafe fn </span>ref_from_parts&lt;U&gt;(ptr: NonNull&lt;u8&gt;, fat: usize) -&gt; <span class="kw-2">*const </span>str
         <span class="kw">where
             </span>U: Capacity,
         {
             slice_from_raw_parts(ptr.as_ptr(), U::len(fat)) <span class="kw">as </span><span class="kw-2">*const </span>str
         }
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>owned_into_parts&lt;U&gt;(owned: String) -&gt; (NonNull&lt;u8&gt;, usize, U::Field)
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>owned_into_parts&lt;U&gt;(owned: String) -&gt; (NonNull&lt;u8&gt;, usize, U::Field)
         <span class="kw">where
             </span>U: Capacity,
         {
@@ -281,8 +281,8 @@
             )
         }
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">unsafe fn </span>owned_from_parts&lt;U&gt;(ptr: NonNull&lt;u8&gt;, fat: usize, capacity: U::NonZero) -&gt; String
+        <span class="attribute">#[inline]
+        </span><span class="kw">unsafe fn </span>owned_from_parts&lt;U&gt;(ptr: NonNull&lt;u8&gt;, fat: usize, capacity: U::NonZero) -&gt; String
         <span class="kw">where
             </span>U: Capacity,
         {
@@ -295,8 +295,8 @@
     <span class="kw">unsafe impl</span>&lt;T: Clone&gt; Beef <span class="kw">for </span>[T] {
         <span class="kw">type </span>PointerT = T;
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>ref_into_parts&lt;U&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (NonNull&lt;T&gt;, usize, U::Field)
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>ref_into_parts&lt;U&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (NonNull&lt;T&gt;, usize, U::Field)
         <span class="kw">where
             </span>U: Capacity,
         {
@@ -313,16 +313,16 @@
             )
         }
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">unsafe fn </span>ref_from_parts&lt;U&gt;(ptr: NonNull&lt;T&gt;, fat: usize) -&gt; <span class="kw-2">*const </span>[T]
+        <span class="attribute">#[inline]
+        </span><span class="kw">unsafe fn </span>ref_from_parts&lt;U&gt;(ptr: NonNull&lt;T&gt;, fat: usize) -&gt; <span class="kw-2">*const </span>[T]
         <span class="kw">where
             </span>U: Capacity,
         {
             slice_from_raw_parts(ptr.as_ptr(), U::len(fat))
         }
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>owned_into_parts&lt;U&gt;(owned: Vec&lt;T&gt;) -&gt; (NonNull&lt;T&gt;, usize, U::Field)
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>owned_into_parts&lt;U&gt;(owned: Vec&lt;T&gt;) -&gt; (NonNull&lt;T&gt;, usize, U::Field)
         <span class="kw">where
             </span>U: Capacity,
         {
@@ -337,8 +337,8 @@
             )
         }
 
-        <span class="attribute">#[inline]</span>
-        <span class="kw">unsafe fn </span>owned_from_parts&lt;U&gt;(ptr: NonNull&lt;T&gt;, fat: usize, capacity: U::NonZero) -&gt; Vec&lt;T&gt;
+        <span class="attribute">#[inline]
+        </span><span class="kw">unsafe fn </span>owned_from_parts&lt;U&gt;(ptr: NonNull&lt;T&gt;, fat: usize, capacity: U::NonZero) -&gt; Vec&lt;T&gt;
         <span class="kw">where
             </span>U: Capacity,
         {
@@ -349,4 +349,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beef" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beef" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

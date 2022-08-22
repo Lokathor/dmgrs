@@ -179,8 +179,8 @@
 ///   used by Restart and Interrupt functions).
 ///
 /// See Also: [Pandocs: The Cartridge Header](https://gbdev.io/pandocs/The_Cartridge_Header.html#the-cartridge-header)
-</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]</span>
-<span class="kw">pub struct </span>Header([u8; <span class="number">0x50</span>]);
+</span><span class="attribute">#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+</span><span class="kw">pub struct </span>Header([u8; <span class="number">0x50</span>]);
 <span class="kw">impl </span>Header {
   <span class="doccomment">/// The entry point is 4 bytes that will be executed immediately after the
   /// boot rom.
@@ -189,8 +189,8 @@
   </span><span class="kw">pub fn </span>entry_point(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8; <span class="number">4</span>] {
     <span class="kw-2">&amp;</span>cast_slice::&lt;u8, [u8; <span class="number">4</span>]&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x00</span>..=<span class="number">0x03</span>])[<span class="number">0</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>entry_point_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8; <span class="number">4</span>] {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>entry_point_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8; <span class="number">4</span>] {
     <span class="kw-2">&amp;mut </span>cast_slice_mut::&lt;u8, [u8; <span class="number">4</span>]&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x00</span>..=<span class="number">0x03</span>])[<span class="number">0</span>]
   }
 
@@ -201,8 +201,8 @@
   </span><span class="kw">pub fn </span>title(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8; <span class="number">16</span>] {
     <span class="kw-2">&amp;</span>cast_slice::&lt;u8, [u8; <span class="number">16</span>]&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x34</span>..=<span class="number">0x43</span>])[<span class="number">0</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>title_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8; <span class="number">16</span>] {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>title_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8; <span class="number">16</span>] {
     <span class="kw-2">&amp;mut </span>cast_slice_mut::&lt;u8, [u8; <span class="number">16</span>]&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x34</span>..=<span class="number">0x43</span>])[<span class="number">0</span>]
   }
 
@@ -213,8 +213,8 @@
   </span><span class="kw">pub fn </span>cgb_flag(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>u8 {
     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x46</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>cgb_flag_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>cgb_flag_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x46</span>]
   }
 
@@ -222,8 +222,8 @@
   </span><span class="kw">pub fn </span>sgb_flag(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
     <span class="self">self</span>.<span class="number">0</span>[<span class="number">0x43</span>] == <span class="number">0x03
   </span>}
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>set_sgb_flag(<span class="kw-2">&amp;mut </span><span class="self">self</span>, sgb_supported: bool) {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>set_sgb_flag(<span class="kw-2">&amp;mut </span><span class="self">self</span>, sgb_supported: bool) {
     <span class="self">self</span>.<span class="number">0</span>[<span class="number">0x43</span>] = <span class="number">0x03 </span>* u8::from(sgb_supported);
   }
 
@@ -231,8 +231,8 @@
   </span><span class="kw">pub fn </span>cart_type(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>u8 {
     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>cart_type_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>cart_type_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
 
@@ -240,8 +240,8 @@
   </span><span class="kw">pub fn </span>rom_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>u8 {
     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>rom_size_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>rom_size_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
 
@@ -249,8 +249,8 @@
   </span><span class="kw">pub fn </span>ram_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>u8 {
     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>ram_size_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>ram_size_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
 
@@ -258,8 +258,8 @@
   </span><span class="kw">pub fn </span>version(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>u8 {
     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
-  <span class="attribute">#[allow(missing_docs)]</span>
-  <span class="kw">pub fn </span>version_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
+  <span class="attribute">#[allow(missing_docs)]
+  </span><span class="kw">pub fn </span>version_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u8 {
     <span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>[<span class="number">0x47</span>]
   }
 
@@ -315,4 +315,4 @@
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="dmgrs" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

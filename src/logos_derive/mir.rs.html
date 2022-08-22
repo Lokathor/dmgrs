@@ -170,8 +170,8 @@
 /// `regex_syntax`&#39;s `Hir`. The goal here is to strip and canonicalize
 /// the tree, so that we don&#39;t have to do transformations later on the
 /// graph, with the potential of running into looping references.
-</span><span class="attribute">#[derive(Clone, Debug)]</span>
-<span class="kw">pub enum </span>Mir {
+</span><span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub enum </span>Mir {
     Empty,
     Loop(Box&lt;Mir&gt;),
     Maybe(Box&lt;Mir&gt;),
@@ -293,12 +293,12 @@
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use </span><span class="kw">super</span>::Mir;
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>priorities() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>priorities() {
         <span class="kw">let </span>regexes = [
             (<span class="string">&quot;[a-z]+&quot;</span>, <span class="number">1</span>),
             (<span class="string">&quot;a|b&quot;</span>, <span class="number">2</span>),
@@ -315,4 +315,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

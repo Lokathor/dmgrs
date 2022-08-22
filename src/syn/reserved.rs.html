@@ -52,10 +52,10 @@
 </span><span class="kw">use </span>proc_macro2::Span;
 <span class="kw">use </span>std::marker::PhantomData;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="kw">pub struct </span>Reserved {
         _private: PhantomData&lt;Span&gt;,
     }
@@ -69,9 +69,9 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-<span class="kw">impl </span>Clone <span class="kw">for </span>Reserved {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+</span><span class="kw">impl </span>Clone <span class="kw">for </span>Reserved {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         Reserved {
             _private: <span class="self">self</span>._private,
@@ -79,12 +79,12 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-<span class="kw">impl </span>Debug <span class="kw">for </span>Reserved {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+</span><span class="kw">impl </span>Debug <span class="kw">for </span>Reserved {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         formatter.debug_struct(<span class="string">&quot;Reserved&quot;</span>).finish()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

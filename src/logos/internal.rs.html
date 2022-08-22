@@ -188,8 +188,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span>P {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
     <span class="kw">where
         </span>Constructor: Fn(P) -&gt; T,
     {
@@ -198,8 +198,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, (), T&gt; <span class="kw">for </span>bool {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
     <span class="kw">where
         </span>Constructor: Fn(()) -&gt; T,
     {
@@ -211,8 +211,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span><span class="prelude-ty">Option</span>&lt;P&gt; {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
     <span class="kw">where
         </span>Constructor: Fn(P) -&gt; T,
     {
@@ -224,8 +224,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, E, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span><span class="prelude-ty">Result</span>&lt;P, E&gt; {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
     <span class="kw">where
         </span>Constructor: Fn(P) -&gt; T,
     {
@@ -237,8 +237,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, (), T&gt; <span class="kw">for </span>Skip {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, <span class="kw">_</span>: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, <span class="kw">_</span>: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
     <span class="kw">where
         </span>Constructor: Fn(()) -&gt; T,
     {
@@ -248,8 +248,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;s</span>, P, T: Logos&lt;<span class="lifetime">&#39;s</span>&gt;&gt; CallbackResult&lt;<span class="lifetime">&#39;s</span>, P, T&gt; <span class="kw">for </span>Filter&lt;P&gt; {
-    <span class="attribute">#[inline]</span>
-    <span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
+    <span class="attribute">#[inline]
+    </span><span class="kw">fn </span>construct&lt;Constructor&gt;(<span class="self">self</span>, c: Constructor, lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>, T&gt;)
     <span class="kw">where
         </span>Constructor: Fn(P) -&gt; T,
     {
@@ -279,4 +279,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

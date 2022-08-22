@@ -562,21 +562,21 @@
 //! + `foobar` has a priority of 12.
 //! + `(foo|hello)(bar)?` has a priority of 6, `foo` being it&#39;s shortest possible match.
 
-</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]</span>
-<span class="attribute">#![warn(missing_docs)]</span>
-<span class="attribute">#![doc(html_logo_url = <span class="string">&quot;https://maciej.codes/kosz/logos.png&quot;</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
+#![warn(missing_docs)]
+#![doc(html_logo_url = <span class="string">&quot;https://maciej.codes/kosz/logos.png&quot;</span>)]
 
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">extern crate </span>core <span class="kw">as </span>std;
+#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">extern crate </span>core <span class="kw">as </span>std;
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;export_derive&quot;</span>)]</span>
-<span class="kw">pub use </span>logos_derive::Logos;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;export_derive&quot;</span>)]
+</span><span class="kw">pub use </span>logos_derive::Logos;
 
 <span class="kw">mod </span>lexer;
 <span class="kw">pub mod </span>source;
 
-<span class="attribute">#[doc(hidden)]</span>
-<span class="kw">pub mod </span>internal;
+<span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub mod </span>internal;
 
 <span class="kw">pub use </span><span class="kw">crate</span>::lexer::{Lexer, Span, SpannedIter};
 <span class="kw">pub use </span><span class="kw">crate</span>::source::Source;
@@ -782,21 +782,21 @@
 ///     ],
 /// );
 /// ```
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub fn </span>skip&lt;<span class="lifetime">&#39;source</span>, Token: Logos&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;source</span>, Token&gt;) -&gt; Skip {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub fn </span>skip&lt;<span class="lifetime">&#39;source</span>, Token: Logos&lt;<span class="lifetime">&#39;source</span>&gt;&gt;(<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;source</span>, Token&gt;) -&gt; Skip {
     Skip
 }
 
-<span class="attribute">#[cfg(doctest)]</span>
-<span class="kw">mod </span>test_readme {
-    <span class="macro">macro_rules!</span> external_doc_test {
+<span class="attribute">#[cfg(doctest)]
+</span><span class="kw">mod </span>test_readme {
+    <span class="macro">macro_rules! </span>external_doc_test {
         (<span class="macro-nonterminal">$x</span>:expr) =&gt; {
-            <span class="attribute">#[doc = <span class="macro-nonterminal">$x</span>]</span>
-            <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{}
+            <span class="attribute">#[doc = <span class="macro-nonterminal">$x</span>]
+            </span><span class="kw">extern </span><span class="string">&quot;C&quot; </span>{}
         };
     }
 
     <span class="macro">external_doc_test!</span>(<span class="macro">include_str!</span>(<span class="string">&quot;../../README.md&quot;</span>));
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

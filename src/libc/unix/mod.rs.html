@@ -1567,8 +1567,8 @@
 <span class="kw">pub type </span>sighandler_t = ::size_t;
 <span class="kw">pub type </span>cc_t = ::c_uchar;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;espidf&quot;</span>, target_os = <span class="string">&quot;horizon&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;espidf&quot;</span>, target_os = <span class="string">&quot;horizon&quot;</span>))] </span>{
         <span class="kw">pub type </span>uid_t = ::c_ushort;
         <span class="kw">pub type </span>gid_t = ::c_ushort;
     } <span class="kw">else </span>{
@@ -1577,8 +1577,8 @@
     }
 }
 
-<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]</span>
-<span class="kw">pub enum </span>DIR {}
+<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]
+</span><span class="kw">pub enum </span>DIR {}
 <span class="kw">impl </span>::Copy <span class="kw">for </span>DIR {}
 <span class="kw">impl </span>::Clone <span class="kw">for </span>DIR {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DIR {
@@ -1587,7 +1587,7 @@
 }
 <span class="kw">pub type </span>locale_t = <span class="kw-2">*mut </span>::c_void;
 
-<span class="macro">s!</span> {
+<span class="macro">s! </span>{
     <span class="kw">pub struct </span>group {
         <span class="kw">pub </span>gr_name: <span class="kw-2">*mut </span>::c_char,
         <span class="kw">pub </span>gr_passwd: <span class="kw-2">*mut </span>::c_char,
@@ -1609,10 +1609,10 @@
     // See https://sourceware.org/bugzilla/show_bug.cgi?id=16437
     </span><span class="kw">pub struct </span>timespec {
         <span class="kw">pub </span>tv_sec: time_t,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        <span class="kw">pub </span>tv_nsec: i64,
-        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]</span>
-        <span class="kw">pub </span>tv_nsec: ::c_long,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span><span class="kw">pub </span>tv_nsec: i64,
+        <span class="attribute">#[cfg(not(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>)))]
+        </span><span class="kw">pub </span>tv_nsec: ::c_long,
     }
 
     <span class="kw">pub struct </span>rlimit {
@@ -1624,58 +1624,58 @@
         <span class="kw">pub </span>ru_utime: timeval,
         <span class="kw">pub </span>ru_stime: timeval,
         <span class="kw">pub </span>ru_maxrss: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad1: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad1: u32,
         <span class="kw">pub </span>ru_ixrss: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad2: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad2: u32,
         <span class="kw">pub </span>ru_idrss: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad3: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad3: u32,
         <span class="kw">pub </span>ru_isrss: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad4: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad4: u32,
         <span class="kw">pub </span>ru_minflt: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad5: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad5: u32,
         <span class="kw">pub </span>ru_majflt: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad6: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad6: u32,
         <span class="kw">pub </span>ru_nswap: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad7: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad7: u32,
         <span class="kw">pub </span>ru_inblock: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad8: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad8: u32,
         <span class="kw">pub </span>ru_oublock: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad9: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad9: u32,
         <span class="kw">pub </span>ru_msgsnd: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad10: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad10: u32,
         <span class="kw">pub </span>ru_msgrcv: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad11: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad11: u32,
         <span class="kw">pub </span>ru_nsignals: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad12: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad12: u32,
         <span class="kw">pub </span>ru_nvcsw: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad13: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad13: u32,
         <span class="kw">pub </span>ru_nivcsw: c_long,
-        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]</span>
-        __pad14: u32,
+        <span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;x86_64&quot;</span>, target_pointer_width = <span class="string">&quot;32&quot;</span>))]
+        </span>__pad14: u32,
 
-        <span class="attribute">#[cfg(any(target_env = <span class="string">&quot;musl&quot;</span>, target_os = <span class="string">&quot;emscripten&quot;</span>))]</span>
-        __reserved: [c_long; <span class="number">16</span>],
+        <span class="attribute">#[cfg(any(target_env = <span class="string">&quot;musl&quot;</span>, target_os = <span class="string">&quot;emscripten&quot;</span>))]
+        </span>__reserved: [c_long; <span class="number">16</span>],
     }
 
     <span class="kw">pub struct </span>ipv6_mreq {
         <span class="kw">pub </span>ipv6mr_multiaddr: in6_addr,
-        <span class="attribute">#[cfg(target_os = <span class="string">&quot;android&quot;</span>)]</span>
-        <span class="kw">pub </span>ipv6mr_interface: ::c_int,
-        <span class="attribute">#[cfg(not(target_os = <span class="string">&quot;android&quot;</span>))]</span>
-        <span class="kw">pub </span>ipv6mr_interface: ::c_uint,
+        <span class="attribute">#[cfg(target_os = <span class="string">&quot;android&quot;</span>)]
+        </span><span class="kw">pub </span>ipv6mr_interface: ::c_int,
+        <span class="attribute">#[cfg(not(target_os = <span class="string">&quot;android&quot;</span>))]
+        </span><span class="kw">pub </span>ipv6mr_interface: ::c_uint,
     }
 
     <span class="kw">pub struct </span>hostent {
@@ -1758,8 +1758,8 @@
 <span class="kw">pub const </span>DT_LNK: u8 = <span class="number">10</span>;
 <span class="kw">pub const </span>DT_SOCK: u8 = <span class="number">12</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_os = <span class="string">&quot;redox&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_os = <span class="string">&quot;redox&quot;</span>))] </span>{
         <span class="kw">pub const </span>FD_CLOEXEC: ::c_int = <span class="number">0x1</span>;
     }
 }
@@ -1773,9 +1773,9 @@
 <span class="kw">pub const </span>S_ISGID: ::mode_t = <span class="number">0x400</span>;
 <span class="kw">pub const </span>S_ISVTX: ::mode_t = <span class="number">0x200</span>;
 
-<span class="macro">cfg_if!</span> {
+<span class="macro">cfg_if! </span>{
     <span class="kw">if </span><span class="attribute">#[cfg(not(any(target_os = <span class="string">&quot;haiku&quot;</span>, target_os = <span class="string">&quot;illumos&quot;</span>,
-                     target_os = <span class="string">&quot;solaris&quot;</span>)))]</span> {
+                     target_os = <span class="string">&quot;solaris&quot;</span>)))] </span>{
         <span class="kw">pub const </span>IF_NAMESIZE: ::size_t = <span class="number">16</span>;
         <span class="kw">pub const </span>IFNAMSIZ: ::size_t = IF_NAMESIZE;
     }
@@ -1808,8 +1808,8 @@
 <span class="kw">pub const </span>LOG_LOCAL6: ::c_int = <span class="number">22 </span>&lt;&lt; <span class="number">3</span>;
 <span class="kw">pub const </span>LOG_LOCAL7: ::c_int = <span class="number">23 </span>&lt;&lt; <span class="number">3</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_os = <span class="string">&quot;haiku&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_os = <span class="string">&quot;haiku&quot;</span>))] </span>{
         <span class="kw">pub const </span>LOG_PID: ::c_int = <span class="number">0x01</span>;
         <span class="kw">pub const </span>LOG_CONS: ::c_int = <span class="number">0x02</span>;
         <span class="kw">pub const </span>LOG_ODELAY: ::c_int = <span class="number">0x04</span>;
@@ -1843,107 +1843,107 @@
 <span class="kw">pub const </span>ATF_PUBL: ::c_int = <span class="number">0x08</span>;
 <span class="kw">pub const </span>ATF_USETRAILERS: ::c_int = <span class="number">0x10</span>;
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;l4re&quot;</span>, target_os = <span class="string">&quot;espidf&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;l4re&quot;</span>, target_os = <span class="string">&quot;espidf&quot;</span>))] </span>{
         <span class="comment">// required libraries for L4Re and the ESP-IDF framework are linked externally, ATM
-    </span>} <span class="kw">else if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]</span> {
+    </span>} <span class="kw">else if </span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)] </span>{
         <span class="comment">// cargo build, don&#39;t pull in anything extra as the libstd dep
         // already pulls in all libs.
     </span>} <span class="kw">else if </span><span class="attribute">#[cfg(all(target_os = <span class="string">&quot;linux&quot;</span>,
                         any(target_env = <span class="string">&quot;gnu&quot;</span>, target_env = <span class="string">&quot;uclibc&quot;</span>),
-                        feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>))]</span> {
+                        feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>))] </span>{
         <span class="attribute">#[link(name = <span class="string">&quot;util&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;rt&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;pthread&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;dl&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;gcc_eh&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;gcc&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;util&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;rt&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;pthread&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;dl&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;musl&quot;</span>)]</span> {
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;rt&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;pthread&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;m&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;dl&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;c&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;gcc_eh&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;gcc&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;util&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[link(name = <span class="string">&quot;rt&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[link(name = <span class="string">&quot;pthread&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[link(name = <span class="string">&quot;m&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[link(name = <span class="string">&quot;dl&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;musl&quot;</span>)] </span>{
         <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>,
                    link(name = <span class="string">&quot;c&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-                        cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>,
-                   link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>))))]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;emscripten&quot;</span>)]</span> {
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_os = <span class="string">&quot;android&quot;</span>, feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>))]</span> {
+                        cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[cfg_attr(feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>,
+                   link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>))))]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;emscripten&quot;</span>)] </span>{
+        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(all(target_os = <span class="string">&quot;android&quot;</span>, feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>))] </span>{
         <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="kw">extern </span>{}
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;m&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
+            cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>))]
+        #[link(name = <span class="string">&quot;m&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        </span><span class="kw">extern </span>{}
     } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;macos&quot;</span>,
                         target_os = <span class="string">&quot;ios&quot;</span>,
                         target_os = <span class="string">&quot;watchos&quot;</span>,
                         target_os = <span class="string">&quot;android&quot;</span>,
-                        target_os = <span class="string">&quot;openbsd&quot;</span>))]</span> {
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;haiku&quot;</span>)]</span> {
-        <span class="attribute">#[link(name = <span class="string">&quot;root&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;network&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;newlib&quot;</span>)]</span> {
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;hermit&quot;</span>)]</span> {
+                        target_os = <span class="string">&quot;openbsd&quot;</span>))] </span>{
+        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]
+        #[link(name = <span class="string">&quot;m&quot;</span>)]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;haiku&quot;</span>)] </span>{
+        <span class="attribute">#[link(name = <span class="string">&quot;root&quot;</span>)]
+        #[link(name = <span class="string">&quot;network&quot;</span>)]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;newlib&quot;</span>)] </span>{
+        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]
+        #[link(name = <span class="string">&quot;m&quot;</span>)]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;hermit&quot;</span>)] </span>{
         <span class="comment">// no_default_libraries is set to false for HermitCore, so only a link
         // to &quot;pthread&quot; needs to be added.
-        </span><span class="attribute">#[link(name = <span class="string">&quot;pthread&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;illumos&quot;</span>)]</span> {
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;redox&quot;</span>)]</span> {
+        </span><span class="attribute">#[link(name = <span class="string">&quot;pthread&quot;</span>)]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;illumos&quot;</span>)] </span>{
+        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]
+        #[link(name = <span class="string">&quot;m&quot;</span>)]
+        </span><span class="kw">extern </span>{}
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;redox&quot;</span>)] </span>{
         <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>,
                    link(name = <span class="string">&quot;c&quot;</span>, kind = <span class="string">&quot;static&quot;</span>, modifiers = <span class="string">&quot;-bundle&quot;</span>,
-                        cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]</span>
-        <span class="attribute">#[cfg_attr(feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>,
-                   link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>))))]</span>
-        <span class="kw">extern </span>{}
+                        cfg(target_feature = <span class="string">&quot;crt-static&quot;</span>)))]
+        #[cfg_attr(feature = <span class="string">&quot;rustc-dep-of-std&quot;</span>,
+                   link(name = <span class="string">&quot;c&quot;</span>, cfg(not(target_feature = <span class="string">&quot;crt-static&quot;</span>))))]
+        </span><span class="kw">extern </span>{}
     } <span class="kw">else </span>{
-        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;m&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;rt&quot;</span>)]</span>
-        <span class="attribute">#[link(name = <span class="string">&quot;pthread&quot;</span>)]</span>
-        <span class="kw">extern </span>{}
+        <span class="attribute">#[link(name = <span class="string">&quot;c&quot;</span>)]
+        #[link(name = <span class="string">&quot;m&quot;</span>)]
+        #[link(name = <span class="string">&quot;rt&quot;</span>)]
+        #[link(name = <span class="string">&quot;pthread&quot;</span>)]
+        </span><span class="kw">extern </span>{}
     }
 }
 
-<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]</span>
-<span class="kw">pub enum </span>FILE {}
+<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]
+</span><span class="kw">pub enum </span>FILE {}
 <span class="kw">impl </span>::Copy <span class="kw">for </span>FILE {}
 <span class="kw">impl </span>::Clone <span class="kw">for </span>FILE {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; FILE {
         <span class="kw-2">*</span><span class="self">self
     </span>}
 }
-<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]</span>
-<span class="kw">pub enum </span>fpos_t {} <span class="comment">// FIXME: fill this out with a struct
+<span class="attribute">#[cfg_attr(feature = <span class="string">&quot;extra_traits&quot;</span>, derive(Debug))]
+</span><span class="kw">pub enum </span>fpos_t {} <span class="comment">// FIXME: fill this out with a struct
 </span><span class="kw">impl </span>::Copy <span class="kw">for </span>fpos_t {}
 <span class="kw">impl </span>::Clone <span class="kw">for </span>fpos_t {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fpos_t {
@@ -1982,13 +1982,13 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fopen$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fopen(filename: <span class="kw-2">*const </span>c_char, mode: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>FILE;
+    </span>)]
+    </span><span class="kw">pub fn </span>fopen(filename: <span class="kw-2">*const </span>c_char, mode: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>FILE;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;freopen$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>freopen(filename: <span class="kw-2">*const </span>c_char, mode: <span class="kw-2">*const </span>c_char, file: <span class="kw-2">*mut </span>FILE) -&gt; <span class="kw-2">*mut </span>FILE;
+    </span>)]
+    </span><span class="kw">pub fn </span>freopen(filename: <span class="kw-2">*const </span>c_char, mode: <span class="kw-2">*const </span>c_char, file: <span class="kw-2">*mut </span>FILE) -&gt; <span class="kw-2">*mut </span>FILE;
     <span class="kw">pub fn </span>fmemopen(buf: <span class="kw-2">*mut </span>c_void, size: size_t, mode: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>FILE;
     <span class="kw">pub fn </span>open_memstream(ptr: <span class="kw-2">*mut *mut </span>c_char, sizeloc: <span class="kw-2">*mut </span>size_t) -&gt; <span class="kw-2">*mut </span>FILE;
 
@@ -2007,23 +2007,23 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fputs$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fputs(s: <span class="kw-2">*const </span>c_char, stream: <span class="kw-2">*mut </span>FILE) -&gt; c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>fputs(s: <span class="kw-2">*const </span>c_char, stream: <span class="kw-2">*mut </span>FILE) -&gt; c_int;
     <span class="kw">pub fn </span>puts(s: <span class="kw-2">*const </span>c_char) -&gt; c_int;
     <span class="kw">pub fn </span>ungetc(c: c_int, stream: <span class="kw-2">*mut </span>FILE) -&gt; c_int;
     <span class="kw">pub fn </span>fread(ptr: <span class="kw-2">*mut </span>c_void, size: size_t, nobj: size_t, stream: <span class="kw-2">*mut </span>FILE) -&gt; size_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fwrite$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fwrite(ptr: <span class="kw-2">*const </span>c_void, size: size_t, nobj: size_t, stream: <span class="kw-2">*mut </span>FILE) -&gt; size_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>fwrite(ptr: <span class="kw-2">*const </span>c_void, size: size_t, nobj: size_t, stream: <span class="kw-2">*mut </span>FILE) -&gt; size_t;
     <span class="kw">pub fn </span>fseek(stream: <span class="kw-2">*mut </span>FILE, offset: c_long, whence: c_int) -&gt; c_int;
     <span class="kw">pub fn </span>ftell(stream: <span class="kw-2">*mut </span>FILE) -&gt; c_long;
     <span class="kw">pub fn </span>rewind(stream: <span class="kw-2">*mut </span>FILE);
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__fgetpos50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>fgetpos(stream: <span class="kw-2">*mut </span>FILE, ptr: <span class="kw-2">*mut </span>fpos_t) -&gt; c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__fsetpos50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>fsetpos(stream: <span class="kw-2">*mut </span>FILE, ptr: <span class="kw-2">*const </span>fpos_t) -&gt; c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__fgetpos50&quot;</span>)]
+    </span><span class="kw">pub fn </span>fgetpos(stream: <span class="kw-2">*mut </span>FILE, ptr: <span class="kw-2">*mut </span>fpos_t) -&gt; c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__fsetpos50&quot;</span>)]
+    </span><span class="kw">pub fn </span>fsetpos(stream: <span class="kw-2">*mut </span>FILE, ptr: <span class="kw-2">*const </span>fpos_t) -&gt; c_int;
     <span class="kw">pub fn </span>feof(stream: <span class="kw-2">*mut </span>FILE) -&gt; c_int;
     <span class="kw">pub fn </span>ferror(stream: <span class="kw-2">*mut </span>FILE) -&gt; c_int;
     <span class="kw">pub fn </span>clearerr(stream: <span class="kw-2">*mut </span>FILE);
@@ -2032,8 +2032,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;strtod$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>strtod(s: <span class="kw-2">*const </span>c_char, endp: <span class="kw-2">*mut *mut </span>c_char) -&gt; c_double;
+    </span>)]
+    </span><span class="kw">pub fn </span>strtod(s: <span class="kw-2">*const </span>c_char, endp: <span class="kw-2">*mut *mut </span>c_char) -&gt; c_double;
     <span class="kw">pub fn </span>strtof(s: <span class="kw-2">*const </span>c_char, endp: <span class="kw-2">*mut *mut </span>c_char) -&gt; c_float;
     <span class="kw">pub fn </span>strtol(s: <span class="kw-2">*const </span>c_char, endp: <span class="kw-2">*mut *mut </span>c_char, base: c_int) -&gt; c_long;
     <span class="kw">pub fn </span>strtoul(s: <span class="kw-2">*const </span>c_char, endp: <span class="kw-2">*mut *mut </span>c_char, base: c_int) -&gt; c_ulong;
@@ -2048,8 +2048,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;system$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>system(s: <span class="kw-2">*const </span>c_char) -&gt; c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>system(s: <span class="kw-2">*const </span>c_char) -&gt; c_int;
     <span class="kw">pub fn </span>getenv(s: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>c_char;
 
     <span class="kw">pub fn </span>strcpy(dst: <span class="kw-2">*mut </span>c_char, src: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>c_char;
@@ -2075,8 +2075,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;strerror$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>strerror(n: c_int) -&gt; <span class="kw-2">*mut </span>c_char;
+    </span>)]
+    </span><span class="kw">pub fn </span>strerror(n: c_int) -&gt; <span class="kw-2">*mut </span>c_char;
     <span class="kw">pub fn </span>strtok(s: <span class="kw-2">*mut </span>c_char, t: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>c_char;
     <span class="kw">pub fn </span>strtok_r(s: <span class="kw-2">*mut </span>c_char, t: <span class="kw-2">*const </span>c_char, p: <span class="kw-2">*mut *mut </span>c_char) -&gt; <span class="kw-2">*mut </span>c_char;
     <span class="kw">pub fn </span>strxfrm(s: <span class="kw-2">*mut </span>c_char, ct: <span class="kw-2">*const </span>c_char, n: size_t) -&gt; size_t;
@@ -2093,10 +2093,10 @@
 }
 
 <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__getpwnam50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getpwnam(name: <span class="kw-2">*const </span>::c_char) -&gt; <span class="kw-2">*mut </span>passwd;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__getpwuid50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getpwuid(uid: ::uid_t) -&gt; <span class="kw-2">*mut </span>passwd;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__getpwnam50&quot;</span>)]
+    </span><span class="kw">pub fn </span>getpwnam(name: <span class="kw-2">*const </span>::c_char) -&gt; <span class="kw-2">*mut </span>passwd;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__getpwuid50&quot;</span>)]
+    </span><span class="kw">pub fn </span>getpwuid(uid: ::uid_t) -&gt; <span class="kw-2">*mut </span>passwd;
 
     <span class="kw">pub fn </span>fprintf(stream: <span class="kw-2">*mut </span>::FILE, format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
     <span class="kw">pub fn </span>printf(format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
@@ -2105,18 +2105,18 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;linux&quot;</span>, not(target_env = <span class="string">&quot;uclibc&quot;</span>)),
         link_name = <span class="string">&quot;__isoc99_fscanf&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fscanf(stream: <span class="kw-2">*mut </span>::FILE, format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>fscanf(stream: <span class="kw-2">*mut </span>::FILE, format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;linux&quot;</span>, not(target_env = <span class="string">&quot;uclibc&quot;</span>)),
         link_name = <span class="string">&quot;__isoc99_scanf&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>scanf(format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>scanf(format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;linux&quot;</span>, not(target_env = <span class="string">&quot;uclibc&quot;</span>)),
         link_name = <span class="string">&quot;__isoc99_sscanf&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>sscanf(s: <span class="kw-2">*const </span>::c_char, format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>sscanf(s: <span class="kw-2">*const </span>::c_char, format: <span class="kw-2">*const </span>::c_char, ...) -&gt; ::c_int;
     <span class="kw">pub fn </span>getchar_unlocked() -&gt; ::c_int;
     <span class="kw">pub fn </span>putchar_unlocked(c: ::c_int) -&gt; ::c_int;
 
@@ -2124,51 +2124,51 @@
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__socket30&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_socket&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_socket&quot;</span>)]</span>
-    <span class="kw">pub fn </span>socket(domain: ::c_int, ty: ::c_int, protocol: ::c_int) -&gt; ::c_int;
+    </span>)))]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__socket30&quot;</span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_socket&quot;</span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_socket&quot;</span>)]
+    </span><span class="kw">pub fn </span>socket(domain: ::c_int, ty: ::c_int, protocol: ::c_int) -&gt; ::c_int;
     <span class="attribute">#[cfg(not(all(
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)))]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;connect$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_connect&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_connect&quot;</span>)]</span>
-    <span class="kw">pub fn </span>connect(socket: ::c_int, address: <span class="kw-2">*const </span>sockaddr, len: socklen_t) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_connect&quot;</span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_connect&quot;</span>)]
+    </span><span class="kw">pub fn </span>connect(socket: ::c_int, address: <span class="kw-2">*const </span>sockaddr, len: socklen_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;listen$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_listen&quot;</span>)]</span>
-    <span class="kw">pub fn </span>listen(socket: ::c_int, backlog: ::c_int) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_listen&quot;</span>)]
+    </span><span class="kw">pub fn </span>listen(socket: ::c_int, backlog: ::c_int) -&gt; ::c_int;
     <span class="attribute">#[cfg(not(all(
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)))]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;accept$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_accept&quot;</span>)]</span>
-    <span class="kw">pub fn </span>accept(socket: ::c_int, address: <span class="kw-2">*mut </span>sockaddr, address_len: <span class="kw-2">*mut </span>socklen_t) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_accept&quot;</span>)]
+    </span><span class="kw">pub fn </span>accept(socket: ::c_int, address: <span class="kw-2">*mut </span>sockaddr, address_len: <span class="kw-2">*mut </span>socklen_t) -&gt; ::c_int;
     <span class="attribute">#[cfg(not(all(
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)))]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;getpeername$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getpeername&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getpeername(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getpeername&quot;</span>)]
+    </span><span class="kw">pub fn </span>getpeername(
         socket: ::c_int,
         address: <span class="kw-2">*mut </span>sockaddr,
         address_len: <span class="kw-2">*mut </span>socklen_t,
@@ -2177,19 +2177,19 @@
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)))]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;getsockname$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getsockname&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getsockname(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getsockname&quot;</span>)]
+    </span><span class="kw">pub fn </span>getsockname(
         socket: ::c_int,
         address: <span class="kw-2">*mut </span>sockaddr,
         address_len: <span class="kw-2">*mut </span>socklen_t,
     ) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_setsockopt&quot;</span>)]</span>
-    <span class="kw">pub fn </span>setsockopt(
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_setsockopt&quot;</span>)]
+    </span><span class="kw">pub fn </span>setsockopt(
         socket: ::c_int,
         level: ::c_int,
         name: ::c_int,
@@ -2199,9 +2199,9 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;socketpair$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_socketpair&quot;</span>)]</span>
-    <span class="kw">pub fn </span>socketpair(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_socketpair&quot;</span>)]
+    </span><span class="kw">pub fn </span>socketpair(
         domain: ::c_int,
         type_: ::c_int,
         protocol: ::c_int,
@@ -2211,14 +2211,14 @@
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)))]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;sendto$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_sendto&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_sendto&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sendto(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_sendto&quot;</span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_sendto&quot;</span>)]
+    </span><span class="kw">pub fn </span>sendto(
         socket: ::c_int,
         buf: <span class="kw-2">*const </span>::c_void,
         len: ::size_t,
@@ -2226,103 +2226,103 @@
         addr: <span class="kw-2">*const </span>sockaddr,
         addrlen: socklen_t,
     ) -&gt; ::ssize_t;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_shutdown&quot;</span>)]</span>
-    <span class="kw">pub fn </span>shutdown(socket: ::c_int, how: ::c_int) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_shutdown&quot;</span>)]
+    </span><span class="kw">pub fn </span>shutdown(socket: ::c_int, how: ::c_int) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;chmod$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>chmod(path: <span class="kw-2">*const </span>c_char, mode: mode_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>chmod(path: <span class="kw-2">*const </span>c_char, mode: mode_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fchmod$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fchmod(fd: ::c_int, mode: mode_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>fchmod(fd: ::c_int, mode: mode_t) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, not(target_arch = <span class="string">&quot;aarch64&quot;</span>)),
         link_name = <span class="string">&quot;fstat$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__fstat50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__fstat50&quot;</span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
         link_name = <span class="string">&quot;fstat@FBSD_1.0&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fstat(fildes: ::c_int, buf: <span class="kw-2">*mut </span>stat) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>fstat(fildes: ::c_int, buf: <span class="kw-2">*mut </span>stat) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>mkdir(path: <span class="kw-2">*const </span>c_char, mode: mode_t) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, not(target_arch = <span class="string">&quot;aarch64&quot;</span>)),
         link_name = <span class="string">&quot;stat$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__stat50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__stat50&quot;</span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
         link_name = <span class="string">&quot;stat@FBSD_1.0&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>stat(path: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*mut </span>stat) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>stat(path: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*mut </span>stat) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>pclose(stream: <span class="kw-2">*mut </span>::FILE) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fdopen$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fdopen(fd: ::c_int, mode: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>::FILE;
+    </span>)]
+    </span><span class="kw">pub fn </span>fdopen(fd: ::c_int, mode: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>::FILE;
     <span class="kw">pub fn </span>fileno(stream: <span class="kw-2">*mut </span>::FILE) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;open$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>open(path: <span class="kw-2">*const </span>c_char, oflag: ::c_int, ...) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>open(path: <span class="kw-2">*const </span>c_char, oflag: ::c_int, ...) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;creat$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>creat(path: <span class="kw-2">*const </span>c_char, mode: mode_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>creat(path: <span class="kw-2">*const </span>c_char, mode: mode_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fcntl$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fcntl(fd: ::c_int, cmd: ::c_int, ...) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>fcntl(fd: ::c_int, cmd: ::c_int, ...) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>),
         link_name = <span class="string">&quot;opendir$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;opendir$INODE64$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__opendir30&quot;</span>)]</span>
-    <span class="kw">pub fn </span>opendir(dirname: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>::DIR;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__opendir30&quot;</span>)]
+    </span><span class="kw">pub fn </span>opendir(dirname: <span class="kw-2">*const </span>c_char) -&gt; <span class="kw-2">*mut </span>::DIR;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, not(target_arch = <span class="string">&quot;aarch64&quot;</span>)),
         link_name = <span class="string">&quot;readdir$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__readdir30&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__readdir30&quot;</span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
         link_name = <span class="string">&quot;readdir@FBSD_1.0&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>readdir(dirp: <span class="kw-2">*mut </span>::DIR) -&gt; <span class="kw-2">*mut </span>::dirent;
+    </span>)]
+    </span><span class="kw">pub fn </span>readdir(dirp: <span class="kw-2">*mut </span>::DIR) -&gt; <span class="kw-2">*mut </span>::dirent;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;closedir$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>closedir(dirp: <span class="kw-2">*mut </span>::DIR) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>closedir(dirp: <span class="kw-2">*mut </span>::DIR) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>),
         link_name = <span class="string">&quot;rewinddir$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;rewinddir$INODE64$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>rewinddir(dirp: <span class="kw-2">*mut </span>::DIR);
+    </span>)]
+    </span><span class="kw">pub fn </span>rewinddir(dirp: <span class="kw-2">*mut </span>::DIR);
 
     <span class="kw">pub fn </span>fchmodat(
         dirfd: ::c_int,
@@ -2341,12 +2341,12 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, not(target_arch = <span class="string">&quot;aarch64&quot;</span>)),
         link_name = <span class="string">&quot;fstatat$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
         link_name = <span class="string">&quot;fstatat@FBSD_1.1&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fstatat(
+    </span>)]
+    </span><span class="kw">pub fn </span>fstatat(
         dirfd: ::c_int,
         pathname: <span class="kw-2">*const </span>::c_char,
         buf: <span class="kw-2">*mut </span>stat,
@@ -2380,17 +2380,17 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;lchown$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>lchown(path: <span class="kw-2">*const </span>c_char, uid: uid_t, gid: gid_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>lchown(path: <span class="kw-2">*const </span>c_char, uid: uid_t, gid: gid_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;close$NOCANCEL$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>),
         link_name = <span class="string">&quot;close$NOCANCEL&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>close(fd: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>close(fd: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>dup(fd: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>dup2(src: ::c_int, dst: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>execl(path: <span class="kw-2">*const </span>c_char, arg0: <span class="kw-2">*const </span>c_char, ...) -&gt; ::c_int;
@@ -2410,13 +2410,13 @@
     <span class="kw">pub fn </span>geteuid() -&gt; uid_t;
     <span class="kw">pub fn </span>getgid() -&gt; gid_t;
     <span class="kw">pub fn </span>getgroups(ngroups_max: ::c_int, groups: <span class="kw-2">*mut </span>gid_t) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;getloginx&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getlogin() -&gt; <span class="kw-2">*mut </span>c_char;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;getloginx&quot;</span>)]
+    </span><span class="kw">pub fn </span>getlogin() -&gt; <span class="kw-2">*mut </span>c_char;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;getopt$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>getopt(argc: ::c_int, argv: <span class="kw-2">*const *mut </span>c_char, optstr: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>getopt(argc: ::c_int, argv: <span class="kw-2">*const *mut </span>c_char, optstr: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
     <span class="kw">pub fn </span>getpgid(pid: pid_t) -&gt; pid_t;
     <span class="kw">pub fn </span>getpgrp() -&gt; pid_t;
     <span class="kw">pub fn </span>getpid() -&gt; pid_t;
@@ -2431,8 +2431,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;read$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>read(fd: ::c_int, buf: <span class="kw-2">*mut </span>::c_void, count: ::size_t) -&gt; ::ssize_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>read(fd: ::c_int, buf: <span class="kw-2">*mut </span>::c_void, count: ::size_t) -&gt; ::ssize_t;
     <span class="kw">pub fn </span>rmdir(path: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
     <span class="kw">pub fn </span>seteuid(uid: uid_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>setegid(gid: gid_t) -&gt; ::c_int;
@@ -2445,64 +2445,64 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;sleep$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>sleep(secs: ::c_uint) -&gt; ::c_uint;
+    </span>)]
+    </span><span class="kw">pub fn </span>sleep(secs: ::c_uint) -&gt; ::c_uint;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;nanosleep$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__nanosleep50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>nanosleep(rqtp: <span class="kw-2">*const </span>timespec, rmtp: <span class="kw-2">*mut </span>timespec) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__nanosleep50&quot;</span>)]
+    </span><span class="kw">pub fn </span>nanosleep(rqtp: <span class="kw-2">*const </span>timespec, rmtp: <span class="kw-2">*mut </span>timespec) -&gt; ::c_int;
     <span class="kw">pub fn </span>tcgetpgrp(fd: ::c_int) -&gt; pid_t;
     <span class="kw">pub fn </span>tcsetpgrp(fd: ::c_int, pgrp: ::pid_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>ttyname(fd: ::c_int) -&gt; <span class="kw-2">*mut </span>c_char;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;ttyname_r$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__posix_ttyname_r&quot;</span>)]</span>
-    <span class="kw">pub fn </span>ttyname_r(fd: ::c_int, buf: <span class="kw-2">*mut </span>c_char, buflen: ::size_t) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__posix_ttyname_r&quot;</span>)]
+    </span><span class="kw">pub fn </span>ttyname_r(fd: ::c_int, buf: <span class="kw-2">*mut </span>c_char, buflen: ::size_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>unlink(c: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;wait$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>wait(status: <span class="kw-2">*mut </span>::c_int) -&gt; pid_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>wait(status: <span class="kw-2">*mut </span>::c_int) -&gt; pid_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;waitpid$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>waitpid(pid: pid_t, status: <span class="kw-2">*mut </span>::c_int, options: ::c_int) -&gt; pid_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>waitpid(pid: pid_t, status: <span class="kw-2">*mut </span>::c_int, options: ::c_int) -&gt; pid_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;write$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>write(fd: ::c_int, buf: <span class="kw-2">*const </span>::c_void, count: ::size_t) -&gt; ::ssize_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>write(fd: ::c_int, buf: <span class="kw-2">*const </span>::c_void, count: ::size_t) -&gt; ::ssize_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pread$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pread(fd: ::c_int, buf: <span class="kw-2">*mut </span>::c_void, count: ::size_t, offset: off_t) -&gt; ::ssize_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>pread(fd: ::c_int, buf: <span class="kw-2">*mut </span>::c_void, count: ::size_t, offset: off_t) -&gt; ::ssize_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pwrite$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pwrite(fd: ::c_int, buf: <span class="kw-2">*const </span>::c_void, count: ::size_t, offset: off_t) -&gt; ::ssize_t;
+    </span>)]
+    </span><span class="kw">pub fn </span>pwrite(fd: ::c_int, buf: <span class="kw-2">*const </span>::c_void, count: ::size_t, offset: off_t) -&gt; ::ssize_t;
     <span class="kw">pub fn </span>umask(mask: mode_t) -&gt; mode_t;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__utime50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>utime(file: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*const </span>utimbuf) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__utime50&quot;</span>)]
+    </span><span class="kw">pub fn </span>utime(file: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*const </span>utimbuf) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;kill$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>kill(pid: pid_t, sig: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>kill(pid: pid_t, sig: ::c_int) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;killpg$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>killpg(pgrp: pid_t, sig: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>killpg(pgrp: pid_t, sig: ::c_int) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>mlock(addr: <span class="kw-2">*const </span>::c_void, len: ::size_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>munlock(addr: <span class="kw-2">*const </span>::c_void, len: ::size_t) -&gt; ::c_int;
@@ -2512,8 +2512,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;mmap$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>mmap(
+    </span>)]
+    </span><span class="kw">pub fn </span>mmap(
         addr: <span class="kw-2">*mut </span>::c_void,
         len: ::size_t,
         prot: ::c_int,
@@ -2524,8 +2524,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;munmap$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>munmap(addr: <span class="kw-2">*mut </span>::c_void, len: ::size_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>munmap(addr: <span class="kw-2">*mut </span>::c_void, len: ::size_t) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>if_nametoindex(ifname: <span class="kw-2">*const </span>c_char) -&gt; ::c_uint;
     <span class="kw">pub fn </span>if_indextoname(ifindex: ::c_uint, ifname: <span class="kw-2">*mut </span>::c_char) -&gt; <span class="kw-2">*mut </span>::c_char;
@@ -2533,31 +2533,31 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, not(target_arch = <span class="string">&quot;aarch64&quot;</span>)),
         link_name = <span class="string">&quot;lstat$INODE64&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__lstat50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__lstat50&quot;</span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
         link_name = <span class="string">&quot;lstat@FBSD_1.0&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>lstat(path: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*mut </span>stat) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>lstat(path: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*mut </span>stat) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;fsync$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>fsync(fd: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>fsync(fd: ::c_int) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;setenv$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>setenv(name: <span class="kw-2">*const </span>c_char, val: <span class="kw-2">*const </span>c_char, overwrite: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>setenv(name: <span class="kw-2">*const </span>c_char, val: <span class="kw-2">*const </span>c_char, overwrite: ::c_int) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;unsetenv$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__unsetenv13&quot;</span>)]</span>
-    <span class="kw">pub fn </span>unsetenv(name: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__unsetenv13&quot;</span>)]
+    </span><span class="kw">pub fn </span>unsetenv(name: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>symlink(path1: <span class="kw-2">*const </span>c_char, path2: <span class="kw-2">*const </span>c_char) -&gt; ::c_int;
 
@@ -2565,34 +2565,34 @@
 
     <span class="kw">pub fn </span>signal(signum: ::c_int, handler: sighandler_t) -&gt; sighandler_t;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__getrusage50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getrusage(resource: ::c_int, usage: <span class="kw-2">*mut </span>rusage) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__getrusage50&quot;</span>)]
+    </span><span class="kw">pub fn </span>getrusage(resource: ::c_int, usage: <span class="kw-2">*mut </span>rusage) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         any(target_os = <span class="string">&quot;macos&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;watchos&quot;</span>),
         link_name = <span class="string">&quot;realpath$DARWIN_EXTSN&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>realpath(pathname: <span class="kw-2">*const </span>::c_char, resolved: <span class="kw-2">*mut </span>::c_char) -&gt; <span class="kw-2">*mut </span>::c_char;
+    </span>)]
+    </span><span class="kw">pub fn </span>realpath(pathname: <span class="kw-2">*const </span>::c_char, resolved: <span class="kw-2">*mut </span>::c_char) -&gt; <span class="kw-2">*mut </span>::c_char;
 
     <span class="kw">pub fn </span>flock(fd: ::c_int, operation: ::c_int) -&gt; ::c_int;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__times13&quot;</span>)]</span>
-    <span class="kw">pub fn </span>times(buf: <span class="kw-2">*mut </span>::tms) -&gt; ::clock_t;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__times13&quot;</span>)]
+    </span><span class="kw">pub fn </span>times(buf: <span class="kw-2">*mut </span>::tms) -&gt; ::clock_t;
 
     <span class="kw">pub fn </span>pthread_self() -&gt; ::pthread_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_join$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_join(native: ::pthread_t, value: <span class="kw-2">*mut *mut </span>::c_void) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_join(native: ::pthread_t, value: <span class="kw-2">*mut *mut </span>::c_void) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_exit(value: <span class="kw-2">*mut </span>::c_void) -&gt; !;
     <span class="kw">pub fn </span>pthread_attr_init(attr: <span class="kw-2">*mut </span>::pthread_attr_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_attr_destroy(attr: <span class="kw-2">*mut </span>::pthread_attr_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_attr_setstacksize(attr: <span class="kw-2">*mut </span>::pthread_attr_t, stack_size: ::size_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_attr_setdetachstate(attr: <span class="kw-2">*mut </span>::pthread_attr_t, state: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_detach(thread: ::pthread_t) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__libc_thr_yield&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sched_yield() -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__libc_thr_yield&quot;</span>)]
+    </span><span class="kw">pub fn </span>sched_yield() -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_key_create(
         key: <span class="kw-2">*mut </span>pthread_key_t,
         dtor: ::Option&lt;<span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn</span>(<span class="kw-2">*mut </span>::c_void)&gt;,
@@ -2613,26 +2613,26 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_mutexattr_destroy$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_mutexattr_destroy(attr: <span class="kw-2">*mut </span>pthread_mutexattr_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_mutexattr_destroy(attr: <span class="kw-2">*mut </span>pthread_mutexattr_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_mutexattr_settype(attr: <span class="kw-2">*mut </span>pthread_mutexattr_t, _type: ::c_int) -&gt; ::c_int;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_cond_init$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_cond_init(cond: <span class="kw-2">*mut </span>pthread_cond_t, attr: <span class="kw-2">*const </span>pthread_condattr_t)
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_cond_init(cond: <span class="kw-2">*mut </span>pthread_cond_t, attr: <span class="kw-2">*const </span>pthread_condattr_t)
         -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_cond_wait$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_cond_wait(cond: <span class="kw-2">*mut </span>pthread_cond_t, lock: <span class="kw-2">*mut </span>pthread_mutex_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_cond_wait(cond: <span class="kw-2">*mut </span>pthread_cond_t, lock: <span class="kw-2">*mut </span>pthread_mutex_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_cond_timedwait$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_cond_timedwait(
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_cond_timedwait(
         cond: <span class="kw-2">*mut </span>pthread_cond_t,
         lock: <span class="kw-2">*mut </span>pthread_mutex_t,
         abstime: <span class="kw-2">*const </span>::timespec,
@@ -2645,47 +2645,47 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_init$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_init(
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_init(
         lock: <span class="kw-2">*mut </span>pthread_rwlock_t,
         attr: <span class="kw-2">*const </span>pthread_rwlockattr_t,
     ) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_destroy$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_destroy(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_destroy(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_rdlock$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_rdlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_rdlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_tryrdlock$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_tryrdlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_tryrdlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_wrlock$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_wrlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_wrlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_trywrlock$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_trywrlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_trywrlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pthread_rwlock_unlock$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>pthread_rwlock_unlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>pthread_rwlock_unlock(lock: <span class="kw-2">*mut </span>pthread_rwlock_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_rwlockattr_init(attr: <span class="kw-2">*mut </span>pthread_rwlockattr_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>pthread_rwlockattr_destroy(attr: <span class="kw-2">*mut </span>pthread_rwlockattr_t) -&gt; ::c_int;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_getsockopt&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getsockopt&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getsockopt(
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_getsockopt&quot;</span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getsockopt&quot;</span>)]
+    </span><span class="kw">pub fn </span>getsockopt(
         sockfd: ::c_int,
         level: ::c_int,
         optname: ::c_int,
@@ -2693,11 +2693,11 @@
         optlen: <span class="kw-2">*mut </span>::socklen_t,
     ) -&gt; ::c_int;
     <span class="kw">pub fn </span>raise(signum: ::c_int) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigaction14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigaction(signum: ::c_int, act: <span class="kw-2">*const </span>sigaction, oldact: <span class="kw-2">*mut </span>sigaction) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigaction14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigaction(signum: ::c_int, act: <span class="kw-2">*const </span>sigaction, oldact: <span class="kw-2">*mut </span>sigaction) -&gt; ::c_int;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__utimes50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>utimes(filename: <span class="kw-2">*const </span>::c_char, times: <span class="kw-2">*const </span>::timeval) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__utimes50&quot;</span>)]
+    </span><span class="kw">pub fn </span>utimes(filename: <span class="kw-2">*const </span>::c_char, times: <span class="kw-2">*const </span>::timeval) -&gt; ::c_int;
     <span class="kw">pub fn </span>dlopen(filename: <span class="kw-2">*const </span>::c_char, flag: ::c_int) -&gt; <span class="kw-2">*mut </span>::c_void;
     <span class="kw">pub fn </span>dlerror() -&gt; <span class="kw-2">*mut </span>::c_char;
     <span class="kw">pub fn </span>dlsym(handle: <span class="kw-2">*mut </span>::c_void, symbol: <span class="kw-2">*const </span>::c_char) -&gt; <span class="kw-2">*mut </span>::c_void;
@@ -2708,10 +2708,10 @@
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_getaddrinfo&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getaddrinfo&quot;</span>)]</span>
-    <span class="kw">pub fn </span>getaddrinfo(
+    </span>)))]
+    #[cfg_attr(target_os = <span class="string">&quot;illumos&quot;</span>, link_name = <span class="string">&quot;__xnet_getaddrinfo&quot;</span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_getaddrinfo&quot;</span>)]
+    </span><span class="kw">pub fn </span>getaddrinfo(
         node: <span class="kw-2">*const </span>c_char,
         service: <span class="kw-2">*const </span>c_char,
         hints: <span class="kw-2">*const </span>addrinfo,
@@ -2721,9 +2721,9 @@
         libc_cfg_target_vendor,
         target_arch = <span class="string">&quot;powerpc&quot;</span>,
         target_vendor = <span class="string">&quot;nintendo&quot;
-    </span>)))]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_freeaddrinfo&quot;</span>)]</span>
-    <span class="kw">pub fn </span>freeaddrinfo(res: <span class="kw-2">*mut </span>addrinfo);
+    </span>)))]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_freeaddrinfo&quot;</span>)]
+    </span><span class="kw">pub fn </span>freeaddrinfo(res: <span class="kw-2">*mut </span>addrinfo);
     <span class="kw">pub fn </span>hstrerror(errcode: ::c_int) -&gt; <span class="kw-2">*const </span>::c_char;
     <span class="kw">pub fn </span>gai_strerror(errcode: ::c_int) -&gt; <span class="kw-2">*const </span>::c_char;
     <span class="attribute">#[cfg_attr(
@@ -2734,56 +2734,56 @@
             target_os = <span class="string">&quot;haiku&quot;
         </span>),
         link_name = <span class="string">&quot;__res_init&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         any(target_os = <span class="string">&quot;macos&quot;</span>, target_os = <span class="string">&quot;ios&quot;</span>, target_os = <span class="string">&quot;watchos&quot;</span>),
         link_name = <span class="string">&quot;res_9_init&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>res_init() -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>res_init() -&gt; ::c_int;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__gmtime_r50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__gmtime_r50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>gmtime_r(time_p: <span class="kw-2">*const </span>time_t, result: <span class="kw-2">*mut </span>tm) -&gt; <span class="kw-2">*mut </span>tm;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__localtime_r50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__localtime_r50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>localtime_r(time_p: <span class="kw-2">*const </span>time_t, result: <span class="kw-2">*mut </span>tm) -&gt; <span class="kw-2">*mut </span>tm;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;mktime$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__mktime50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__mktime50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>mktime(tm: <span class="kw-2">*mut </span>tm) -&gt; time_t;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__time50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__time50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>time(time: <span class="kw-2">*mut </span>time_t) -&gt; time_t;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__gmtime50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__gmtime50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>gmtime(time_p: <span class="kw-2">*const </span>time_t) -&gt; <span class="kw-2">*mut </span>tm;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__locatime50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__locatime50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>localtime(time_p: <span class="kw-2">*const </span>time_t) -&gt; <span class="kw-2">*mut </span>tm;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__difftime50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__difftime50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>difftime(time1: time_t, time0: time_t) -&gt; ::c_double;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__timegm50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]</span>
-    <span class="comment">// FIXME: for `time_t`
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__timegm50&quot;</span>)]
+    #[cfg_attr(target_env = <span class="string">&quot;musl&quot;</span>, allow(deprecated))]
+    </span><span class="comment">// FIXME: for `time_t`
     </span><span class="kw">pub fn </span>timegm(tm: <span class="kw-2">*mut </span>::tm) -&gt; time_t;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__mknod50&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__mknod50&quot;</span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
         link_name = <span class="string">&quot;mknod@FBSD_1.0&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>mknod(pathname: <span class="kw-2">*const </span>::c_char, mode: ::mode_t, dev: ::dev_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>mknod(pathname: <span class="kw-2">*const </span>::c_char, mode: ::mode_t, dev: ::dev_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>gethostname(name: <span class="kw-2">*mut </span>::c_char, len: ::size_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>endservent();
     <span class="kw">pub fn </span>getservbyname(name: <span class="kw-2">*const </span>::c_char, proto: <span class="kw-2">*const </span>::c_char) -&gt; <span class="kw-2">*mut </span>servent;
@@ -2796,56 +2796,56 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;usleep$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>usleep(secs: ::c_uint) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>usleep(secs: ::c_uint) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;send$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_send&quot;</span>)]</span>
-    <span class="kw">pub fn </span>send(socket: ::c_int, buf: <span class="kw-2">*const </span>::c_void, len: ::size_t, flags: ::c_int) -&gt; ::ssize_t;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_send&quot;</span>)]
+    </span><span class="kw">pub fn </span>send(socket: ::c_int, buf: <span class="kw-2">*const </span>::c_void, len: ::size_t, flags: ::c_int) -&gt; ::ssize_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;recv$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_recv&quot;</span>)]</span>
-    <span class="kw">pub fn </span>recv(socket: ::c_int, buf: <span class="kw-2">*mut </span>::c_void, len: ::size_t, flags: ::c_int) -&gt; ::ssize_t;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;espidf&quot;</span>, link_name = <span class="string">&quot;lwip_recv&quot;</span>)]
+    </span><span class="kw">pub fn </span>recv(socket: ::c_int, buf: <span class="kw-2">*mut </span>::c_void, len: ::size_t, flags: ::c_int) -&gt; ::ssize_t;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;putenv$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__putenv50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>putenv(string: <span class="kw-2">*mut </span>c_char) -&gt; ::c_int;
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__putenv50&quot;</span>)]
+    </span><span class="kw">pub fn </span>putenv(string: <span class="kw-2">*mut </span>c_char) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;poll$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>poll(fds: <span class="kw-2">*mut </span>pollfd, nfds: nfds_t, timeout: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>poll(fds: <span class="kw-2">*mut </span>pollfd, nfds: nfds_t, timeout: ::c_int) -&gt; ::c_int;
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>),
         link_name = <span class="string">&quot;select$1050&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;select$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__select50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>select(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__select50&quot;</span>)]
+    </span><span class="kw">pub fn </span>select(
         nfds: ::c_int,
         readfs: <span class="kw-2">*mut </span>fd_set,
         writefds: <span class="kw-2">*mut </span>fd_set,
         errorfds: <span class="kw-2">*mut </span>fd_set,
         timeout: <span class="kw-2">*mut </span>timeval,
     ) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__setlocale50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>setlocale(category: ::c_int, locale: <span class="kw-2">*const </span>::c_char) -&gt; <span class="kw-2">*mut </span>::c_char;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__setlocale50&quot;</span>)]
+    </span><span class="kw">pub fn </span>setlocale(category: ::c_int, locale: <span class="kw-2">*const </span>::c_char) -&gt; <span class="kw-2">*mut </span>::c_char;
     <span class="kw">pub fn </span>localeconv() -&gt; <span class="kw-2">*mut </span>lconv;
 
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;sem_wait$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>sem_wait(sem: <span class="kw-2">*mut </span>sem_t) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>sem_wait(sem: <span class="kw-2">*mut </span>sem_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>sem_trywait(sem: <span class="kw-2">*mut </span>sem_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>sem_post(sem: <span class="kw-2">*mut </span>sem_t) -&gt; ::c_int;
     <span class="kw">pub fn </span>statvfs(path: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*mut </span>statvfs) -&gt; ::c_int;
@@ -2853,21 +2853,21 @@
 
     <span class="kw">pub fn </span>readlink(path: <span class="kw-2">*const </span>c_char, buf: <span class="kw-2">*mut </span>c_char, bufsz: ::size_t) -&gt; ::ssize_t;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigemptyset14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigemptyset(set: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigaddset14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigaddset(set: <span class="kw-2">*mut </span>sigset_t, signum: ::c_int) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigfillset14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigfillset(set: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigdelset14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigdelset(set: <span class="kw-2">*mut </span>sigset_t, signum: ::c_int) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigismember14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigismember(set: <span class="kw-2">*const </span>sigset_t, signum: ::c_int) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigemptyset14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigemptyset(set: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigaddset14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigaddset(set: <span class="kw-2">*mut </span>sigset_t, signum: ::c_int) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigfillset14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigfillset(set: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigdelset14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigdelset(set: <span class="kw-2">*mut </span>sigset_t, signum: ::c_int) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigismember14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigismember(set: <span class="kw-2">*const </span>sigset_t, signum: ::c_int) -&gt; ::c_int;
 
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigprocmask14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigprocmask(how: ::c_int, set: <span class="kw-2">*const </span>sigset_t, oldset: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigpending14&quot;</span>)]</span>
-    <span class="kw">pub fn </span>sigpending(set: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigprocmask14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigprocmask(how: ::c_int, set: <span class="kw-2">*const </span>sigset_t, oldset: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__sigpending14&quot;</span>)]
+    </span><span class="kw">pub fn </span>sigpending(set: <span class="kw-2">*mut </span>sigset_t) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>sysconf(name: ::c_int) -&gt; ::c_long;
 
@@ -2876,13 +2876,13 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>),
         link_name = <span class="string">&quot;pselect$1050&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(
+    </span>)]
+    #[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;pselect$UNIX2003&quot;
-    </span>)]</span>
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__pselect50&quot;</span>)]</span>
-    <span class="kw">pub fn </span>pselect(
+    </span>)]
+    #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__pselect50&quot;</span>)]
+    </span><span class="kw">pub fn </span>pselect(
         nfds: ::c_int,
         readfs: <span class="kw-2">*mut </span>fd_set,
         writefds: <span class="kw-2">*mut </span>fd_set,
@@ -2895,8 +2895,8 @@
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;tcdrain$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>tcdrain(fd: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>tcdrain(fd: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>cfgetispeed(termios: <span class="kw-2">*const </span>::termios) -&gt; ::speed_t;
     <span class="kw">pub fn </span>cfgetospeed(termios: <span class="kw-2">*const </span>::termios) -&gt; ::speed_t;
     <span class="kw">pub fn </span>cfsetispeed(termios: <span class="kw-2">*mut </span>::termios, speed: ::speed_t) -&gt; ::c_int;
@@ -2915,13 +2915,13 @@
     <span class="kw">pub fn </span>openlog(ident: <span class="kw-2">*const </span>::c_char, logopt: ::c_int, facility: ::c_int);
     <span class="kw">pub fn </span>closelog();
     <span class="kw">pub fn </span>setlogmask(maskpri: ::c_int) -&gt; ::c_int;
-    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;macos&quot;</span>, link_name = <span class="string">&quot;syslog$DARWIN_EXTSN&quot;</span>)]</span>
-    <span class="kw">pub fn </span>syslog(priority: ::c_int, message: <span class="kw-2">*const </span>::c_char, ...);
+    <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;macos&quot;</span>, link_name = <span class="string">&quot;syslog$DARWIN_EXTSN&quot;</span>)]
+    </span><span class="kw">pub fn </span>syslog(priority: ::c_int, message: <span class="kw-2">*const </span>::c_char, ...);
     <span class="attribute">#[cfg_attr(
         all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
         link_name = <span class="string">&quot;nice$UNIX2003&quot;
-    </span>)]</span>
-    <span class="kw">pub fn </span>nice(incr: ::c_int) -&gt; ::c_int;
+    </span>)]
+    </span><span class="kw">pub fn </span>nice(incr: ::c_int) -&gt; ::c_int;
 
     <span class="kw">pub fn </span>grantpt(fd: ::c_int) -&gt; ::c_int;
     <span class="kw">pub fn </span>posix_openpt(flags: ::c_int) -&gt; ::c_int;
@@ -2934,10 +2934,10 @@
     <span class="kw">pub fn </span>lockf(fd: ::c_int, cmd: ::c_int, len: ::off_t) -&gt; ::c_int;
 
 }
-<span class="macro">cfg_if!</span> {
+<span class="macro">cfg_if! </span>{
     <span class="kw">if </span><span class="attribute">#[cfg(not(any(target_os = <span class="string">&quot;emscripten&quot;</span>,
                      target_os = <span class="string">&quot;android&quot;</span>,
-                     target_os = <span class="string">&quot;haiku&quot;</span>)))]</span> {
+                     target_os = <span class="string">&quot;haiku&quot;</span>)))] </span>{
         <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{
             <span class="kw">pub fn </span>adjtime(delta: <span class="kw-2">*const </span>timeval, olddelta: <span class="kw-2">*mut </span>timeval) -&gt; ::c_int;
             <span class="kw">pub fn </span>stpncpy(dst: <span class="kw-2">*mut </span>c_char, src: <span class="kw-2">*const </span>c_char, n: size_t) -&gt; <span class="kw-2">*mut </span>c_char;
@@ -2945,8 +2945,8 @@
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_env = <span class="string">&quot;uclibc&quot;</span>))] </span>{
         <span class="kw">extern </span><span class="string">&quot;C&quot; </span>{
             <span class="kw">pub fn </span>open_wmemstream(
                 ptr: <span class="kw-2">*mut *mut </span>wchar_t,
@@ -2956,14 +2956,14 @@
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(not(target_os = <span class="string">&quot;redox&quot;</span>))]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(not(target_os = <span class="string">&quot;redox&quot;</span>))] </span>{
         <span class="kw">extern </span>{
             <span class="kw">pub fn </span>getsid(pid: pid_t) -&gt; pid_t;
             <span class="kw">pub fn </span>truncate(path: <span class="kw-2">*const </span>c_char, length: off_t) -&gt; ::c_int;
             <span class="attribute">#[cfg_attr(all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
-                       link_name = <span class="string">&quot;pause$UNIX2003&quot;</span>)]</span>
-            <span class="kw">pub fn </span>pause() -&gt; ::c_int;
+                       link_name = <span class="string">&quot;pause$UNIX2003&quot;</span>)]
+            </span><span class="kw">pub fn </span>pause() -&gt; ::c_int;
 
             <span class="kw">pub fn </span>readlinkat(dirfd: ::c_int,
                               pathname: <span class="kw-2">*const </span>::c_char,
@@ -2975,19 +2975,19 @@
                           flags: ::c_int, ...) -&gt; ::c_int;
 
             <span class="attribute">#[cfg_attr(all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86_64&quot;</span>),
-                       link_name = <span class="string">&quot;fdopendir$INODE64&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
-                       link_name = <span class="string">&quot;fdopendir$INODE64$UNIX2003&quot;</span>)]</span>
-            <span class="kw">pub fn </span>fdopendir(fd: ::c_int) -&gt; <span class="kw-2">*mut </span>::DIR;
+                       link_name = <span class="string">&quot;fdopendir$INODE64&quot;</span>)]
+            #[cfg_attr(all(target_os = <span class="string">&quot;macos&quot;</span>, target_arch = <span class="string">&quot;x86&quot;</span>),
+                       link_name = <span class="string">&quot;fdopendir$INODE64$UNIX2003&quot;</span>)]
+            </span><span class="kw">pub fn </span>fdopendir(fd: ::c_int) -&gt; <span class="kw-2">*mut </span>::DIR;
 
             <span class="attribute">#[cfg_attr(all(target_os = <span class="string">&quot;macos&quot;</span>, not(target_arch = <span class="string">&quot;aarch64&quot;</span>)),
-                       link_name = <span class="string">&quot;readdir_r$INODE64&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__readdir_r30&quot;</span>)]</span>
-            <span class="attribute">#[cfg_attr(
+                       link_name = <span class="string">&quot;readdir_r$INODE64&quot;</span>)]
+            #[cfg_attr(target_os = <span class="string">&quot;netbsd&quot;</span>, link_name = <span class="string">&quot;__readdir_r30&quot;</span>)]
+            #[cfg_attr(
                 all(target_os = <span class="string">&quot;freebsd&quot;</span>, any(freebsd11, freebsd10)),
                 link_name = <span class="string">&quot;readdir_r@FBSD_1.0&quot;
-            </span>)]</span>
-            <span class="attribute">#[allow(non_autolinks)]</span> <span class="comment">// FIXME: `&lt;&gt;` breaks line length limit.
+            </span>)]
+            #[allow(non_autolinks)] </span><span class="comment">// FIXME: `&lt;&gt;` breaks line length limit.
             </span><span class="doccomment">/// The 64-bit libc on Solaris and illumos only has readdir_r. If a
             /// 32-bit Solaris or illumos target is ever created, it should use
             /// __posix_readdir_r. See libc(3LIB) on Solaris or illumos:
@@ -3000,8 +3000,8 @@
     }
 }
 
-<span class="macro">cfg_if!</span> {
-   <span class="kw">if </span><span class="attribute">#[cfg(not(any(target_os = <span class="string">&quot;solaris&quot;</span>, target_os = <span class="string">&quot;illumos&quot;</span>)))]</span> {
+<span class="macro">cfg_if! </span>{
+   <span class="kw">if </span><span class="attribute">#[cfg(not(any(target_os = <span class="string">&quot;solaris&quot;</span>, target_os = <span class="string">&quot;illumos&quot;</span>)))] </span>{
         <span class="kw">extern </span>{
             <span class="kw">pub fn </span>cfmakeraw(termios: <span class="kw-2">*mut </span>::termios);
             <span class="kw">pub fn </span>cfsetspeed(termios: <span class="kw-2">*mut </span>::termios,
@@ -3010,14 +3010,14 @@
    }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;newlib&quot;</span>)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(target_env = <span class="string">&quot;newlib&quot;</span>)] </span>{
         <span class="kw">mod </span>newlib;
         <span class="kw">pub use </span><span class="self">self</span>::newlib::<span class="kw-2">*</span>;
     } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;linux&quot;</span>,
                         target_os = <span class="string">&quot;l4re&quot;</span>,
                         target_os = <span class="string">&quot;android&quot;</span>,
-                        target_os = <span class="string">&quot;emscripten&quot;</span>))]</span> {
+                        target_os = <span class="string">&quot;emscripten&quot;</span>))] </span>{
         <span class="kw">mod </span>linux_like;
         <span class="kw">pub use </span><span class="self">self</span>::linux_like::<span class="kw-2">*</span>;
     } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;macos&quot;</span>,
@@ -3026,20 +3026,20 @@
                         target_os = <span class="string">&quot;freebsd&quot;</span>,
                         target_os = <span class="string">&quot;dragonfly&quot;</span>,
                         target_os = <span class="string">&quot;openbsd&quot;</span>,
-                        target_os = <span class="string">&quot;netbsd&quot;</span>))]</span> {
+                        target_os = <span class="string">&quot;netbsd&quot;</span>))] </span>{
         <span class="kw">mod </span>bsd;
         <span class="kw">pub use </span><span class="self">self</span>::bsd::<span class="kw-2">*</span>;
     } <span class="kw">else if </span><span class="attribute">#[cfg(any(target_os = <span class="string">&quot;solaris&quot;</span>,
-                        target_os = <span class="string">&quot;illumos&quot;</span>))]</span> {
+                        target_os = <span class="string">&quot;illumos&quot;</span>))] </span>{
         <span class="kw">mod </span>solarish;
         <span class="kw">pub use </span><span class="self">self</span>::solarish::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;haiku&quot;</span>)]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;haiku&quot;</span>)] </span>{
         <span class="kw">mod </span>haiku;
         <span class="kw">pub use </span><span class="self">self</span>::haiku::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;hermit&quot;</span>)]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;hermit&quot;</span>)] </span>{
         <span class="kw">mod </span>hermit;
         <span class="kw">pub use </span><span class="self">self</span>::hermit::<span class="kw-2">*</span>;
-    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;redox&quot;</span>)]</span> {
+    } <span class="kw">else if </span><span class="attribute">#[cfg(target_os = <span class="string">&quot;redox&quot;</span>)] </span>{
         <span class="kw">mod </span>redox;
         <span class="kw">pub use </span><span class="self">self</span>::redox::<span class="kw-2">*</span>;
     } <span class="kw">else </span>{
@@ -3047,28 +3047,28 @@
     </span>}
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_core_cvoid)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_core_cvoid)] </span>{
         <span class="kw">pub use </span>::ffi::c_void;
     } <span class="kw">else </span>{
         <span class="comment">// Use repr(u8) as LLVM expects `void*` to be the same as `i8*` to help
         // enable more optimization opportunities around it recognizing things
         // like malloc/free.
-        </span><span class="attribute">#[repr(u8)]</span>
-        <span class="attribute">#[allow(missing_copy_implementations)]</span>
-        <span class="attribute">#[allow(missing_debug_implementations)]</span>
-        <span class="kw">pub enum </span>c_void {
+        </span><span class="attribute">#[repr(u8)]
+        #[allow(missing_copy_implementations)]
+        #[allow(missing_debug_implementations)]
+        </span><span class="kw">pub enum </span>c_void {
             <span class="comment">// Two dummy variants so the #[repr] attribute can be used.
-            </span><span class="attribute">#[doc(hidden)]</span>
-            __variant1,
-            <span class="attribute">#[doc(hidden)]</span>
-            __variant2,
+            </span><span class="attribute">#[doc(hidden)]
+            </span>__variant1,
+            <span class="attribute">#[doc(hidden)]
+            </span>__variant2,
         }
     }
 }
 
-<span class="macro">cfg_if!</span> {
-    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)]</span> {
+<span class="macro">cfg_if! </span>{
+    <span class="kw">if </span><span class="attribute">#[cfg(libc_align)] </span>{
         <span class="kw">mod </span>align;
         <span class="kw">pub use </span><span class="self">self</span>::align::<span class="kw-2">*</span>;
     } <span class="kw">else </span>{
@@ -3077,4 +3077,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="libc" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

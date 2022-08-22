@@ -340,7 +340,7 @@
         <span class="kw">let </span>rendered = <span class="kw-2">&amp;</span><span class="self">self</span>.rendered;
         <span class="kw">let </span>tables = <span class="kw-2">&amp;</span><span class="self">self</span>.tables;
 
-        <span class="macro">quote!</span> {
+        <span class="macro">quote! </span>{
             #tables
             #rendered
             #root
@@ -359,9 +359,9 @@
             Node::Leaf(leaf) =&gt; <span class="self">self</span>.generate_leaf(leaf, ctx),
         };
         <span class="kw">let </span>ident = <span class="self">self</span>.generate_ident(id, ctx);
-        <span class="kw">let </span>out = <span class="macro">quote!</span> {
-            <span class="attribute">#[inline]</span>
-            <span class="kw">fn </span>#ident&lt;<span class="lifetime">&#39;s</span>&gt;(lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) {
+        <span class="kw">let </span>out = <span class="macro">quote! </span>{
+            <span class="attribute">#[inline]
+            </span><span class="kw">fn </span>#ident&lt;<span class="lifetime">&#39;s</span>&gt;(lex: <span class="kw-2">&amp;mut </span>Lexer&lt;<span class="lifetime">&#39;s</span>&gt;) {
                 #body
             }
         };
@@ -431,7 +431,7 @@
 
             <span class="kw">let </span>body = <span class="kw">match </span>ranges.len() {
                 <span class="number">0</span>..=<span class="number">2 </span>=&gt; {
-                    <span class="macro">quote!</span> {
+                    <span class="macro">quote! </span>{
                         <span class="kw">match </span>byte {
                             #(#ranges)|* =&gt; <span class="bool-val">true</span>,
                             <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
@@ -459,7 +459,7 @@
                         <span class="kw">_ </span>=&gt; <span class="macro">quote!</span>(byte.wrapping_sub(#offset)),
                     };
 
-                    <span class="macro">quote!</span> {
+                    <span class="macro">quote! </span>{
                         <span class="kw">const </span>LUT: u64 = #table;
 
                         <span class="kw">match </span><span class="number">1u64</span>.checked_shl(#search <span class="kw">as </span>u32) {
@@ -478,14 +478,14 @@
                     <span class="kw">let </span>mask = view.mask();
                     <span class="kw">let </span>lut = view.ident();
 
-                    <span class="macro">quote!</span> {
+                    <span class="macro">quote! </span>{
                         #lut[byte <span class="kw">as </span>usize] &amp; #mask &gt; <span class="number">0
                     </span>}
                 }
             };
-            <span class="self">self</span>.rendered.append_all(<span class="macro">quote!</span> {
-                <span class="attribute">#[inline]</span>
-                <span class="kw">fn </span>#ident(byte: u8) -&gt; bool {
+            <span class="self">self</span>.rendered.append_all(<span class="macro">quote! </span>{
+                <span class="attribute">#[inline]
+                </span><span class="kw">fn </span>#ident(byte: u8) -&gt; bool {
                     #body
                 }
             });
@@ -495,7 +495,7 @@
     }
 }
 
-<span class="macro">macro_rules!</span> match_quote {
+<span class="macro">macro_rules! </span>match_quote {
     (<span class="macro-nonterminal">$source</span>:expr; $(<span class="macro-nonterminal">$byte</span>:tt,)* ) =&gt; {<span class="kw">match </span><span class="macro-nonterminal">$source </span>{
         $( <span class="macro-nonterminal">$byte </span>=&gt; <span class="macro">quote!</span>(<span class="macro-nonterminal">$byte</span>), )*
         byte =&gt; <span class="macro">quote!</span>(#byte),
@@ -503,7 +503,7 @@
 }
 
 <span class="kw">fn </span>byte_to_tokens(byte: u8) -&gt; TokenStream {
-    <span class="macro">match_quote!</span> {
+    <span class="macro">match_quote! </span>{
         byte;
         <span class="string">b&#39;0&#39;</span>, <span class="string">b&#39;1&#39;</span>, <span class="string">b&#39;2&#39;</span>, <span class="string">b&#39;3&#39;</span>, <span class="string">b&#39;4&#39;</span>, <span class="string">b&#39;5&#39;</span>, <span class="string">b&#39;6&#39;</span>, <span class="string">b&#39;7&#39;</span>, <span class="string">b&#39;8&#39;</span>, <span class="string">b&#39;9&#39;</span>,
         <span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;b&#39;</span>, <span class="string">b&#39;c&#39;</span>, <span class="string">b&#39;d&#39;</span>, <span class="string">b&#39;e&#39;</span>, <span class="string">b&#39;f&#39;</span>, <span class="string">b&#39;g&#39;</span>, <span class="string">b&#39;h&#39;</span>, <span class="string">b&#39;i&#39;</span>, <span class="string">b&#39;j&#39;</span>,
@@ -531,4 +531,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

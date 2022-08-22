@@ -983,11 +983,11 @@
 <span class="kw">use </span>core::ops::RangeBounds;
 <span class="kw">use </span>core::str::FromStr;
 <span class="kw">use </span>std::panic;
-<span class="attribute">#[cfg(super_unstable)]</span>
-<span class="kw">use </span>std::path::PathBuf;
+<span class="attribute">#[cfg(super_unstable)]
+</span><span class="kw">use </span>std::path::PathBuf;
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TokenStream {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TokenStream {
     Compiler(DeferredTokenStream),
     Fallback(fallback::TokenStream),
 }
@@ -996,8 +996,8 @@
 // In `impl Extend&lt;TokenTree&gt; for TokenStream` which is used heavily by quote,
 // we hold on to the appended tokens and do proc_macro::TokenStream::extend as
 // late as possible to batch together consecutive uses of the Extend impl.
-</span><span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>DeferredTokenStream {
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>DeferredTokenStream {
     stream: proc_macro::TokenStream,
     extra: Vec&lt;proc_macro::TokenTree&gt;,
 }
@@ -1262,10 +1262,10 @@
 <span class="kw">impl </span>Display <span class="kw">for </span>LexError {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attribute">#[cfg(not(no_lexerror_display))]</span>
-            LexError::Compiler(e) =&gt; Display::fmt(e, f),
-            <span class="attribute">#[cfg(no_lexerror_display)]</span>
-            LexError::Compiler(_e) =&gt; Display::fmt(
+            <span class="attribute">#[cfg(not(no_lexerror_display))]
+            </span>LexError::Compiler(e) =&gt; Display::fmt(e, f),
+            <span class="attribute">#[cfg(no_lexerror_display)]
+            </span>LexError::Compiler(_e) =&gt; Display::fmt(
                 <span class="kw-2">&amp;</span>fallback::LexError {
                     span: fallback::Span::call_site(),
                 },
@@ -1276,8 +1276,8 @@
     }
 }
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TokenTreeIter {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TokenTreeIter {
     Compiler(proc_macro::token_stream::IntoIter),
     Fallback(fallback::TokenTreeIter),
 }
@@ -1328,15 +1328,15 @@
     }
 }
 
-<span class="attribute">#[derive(Clone, PartialEq, Eq)]</span>
-<span class="attribute">#[cfg(super_unstable)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>SourceFile {
+<span class="attribute">#[derive(Clone, PartialEq, Eq)]
+#[cfg(super_unstable)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>SourceFile {
     Compiler(proc_macro::SourceFile),
     Fallback(fallback::SourceFile),
 }
 
-<span class="attribute">#[cfg(super_unstable)]</span>
-<span class="kw">impl </span>SourceFile {
+<span class="attribute">#[cfg(super_unstable)]
+</span><span class="kw">impl </span>SourceFile {
     <span class="kw">fn </span>nightly(sf: proc_macro::SourceFile) -&gt; <span class="self">Self </span>{
         SourceFile::Compiler(sf)
     }
@@ -1357,8 +1357,8 @@
     }
 }
 
-<span class="attribute">#[cfg(super_unstable)]</span>
-<span class="kw">impl </span>Debug <span class="kw">for </span>SourceFile {
+<span class="attribute">#[cfg(super_unstable)]
+</span><span class="kw">impl </span>Debug <span class="kw">for </span>SourceFile {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         <span class="kw">match </span><span class="self">self </span>{
             SourceFile::Compiler(a) =&gt; Debug::fmt(a, f),
@@ -1367,14 +1367,14 @@
     }
 }
 
-<span class="attribute">#[cfg(any(super_unstable, feature = <span class="string">&quot;span-locations&quot;</span>))]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LineColumn {
+<span class="attribute">#[cfg(any(super_unstable, feature = <span class="string">&quot;span-locations&quot;</span>))]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LineColumn {
     <span class="kw">pub </span>line: usize,
     <span class="kw">pub </span>column: usize,
 }
 
-<span class="attribute">#[derive(Copy, Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Span {
+<span class="attribute">#[derive(Copy, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Span {
     Compiler(proc_macro::Span),
     Fallback(fallback::Span),
 }
@@ -1388,8 +1388,8 @@
         }
     }
 
-    <span class="attribute">#[cfg(not(no_hygiene))]</span>
-    <span class="kw">pub fn </span>mixed_site() -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[cfg(not(no_hygiene))]
+    </span><span class="kw">pub fn </span>mixed_site() -&gt; <span class="self">Self </span>{
         <span class="kw">if </span>inside_proc_macro() {
             Span::Compiler(proc_macro::Span::mixed_site())
         } <span class="kw">else </span>{
@@ -1397,8 +1397,8 @@
         }
     }
 
-    <span class="attribute">#[cfg(super_unstable)]</span>
-    <span class="kw">pub fn </span>def_site() -&gt; <span class="self">Self </span>{
+    <span class="attribute">#[cfg(super_unstable)]
+    </span><span class="kw">pub fn </span>def_site() -&gt; <span class="self">Self </span>{
         <span class="kw">if </span>inside_proc_macro() {
             Span::Compiler(proc_macro::Span::def_site())
         } <span class="kw">else </span>{
@@ -1408,12 +1408,12 @@
 
     <span class="kw">pub fn </span>resolved_at(<span class="kw-2">&amp;</span><span class="self">self</span>, other: Span) -&gt; Span {
         <span class="kw">match </span>(<span class="self">self</span>, other) {
-            <span class="attribute">#[cfg(not(no_hygiene))]</span>
-            (Span::Compiler(a), Span::Compiler(b)) =&gt; Span::Compiler(a.resolved_at(b)),
+            <span class="attribute">#[cfg(not(no_hygiene))]
+            </span>(Span::Compiler(a), Span::Compiler(b)) =&gt; Span::Compiler(a.resolved_at(b)),
 
             <span class="comment">// Name resolution affects semantics, but location is only cosmetic
-            </span><span class="attribute">#[cfg(no_hygiene)]</span>
-            (Span::Compiler(<span class="kw">_</span>), Span::Compiler(<span class="kw">_</span>)) =&gt; other,
+            </span><span class="attribute">#[cfg(no_hygiene)]
+            </span>(Span::Compiler(<span class="kw">_</span>), Span::Compiler(<span class="kw">_</span>)) =&gt; other,
 
             (Span::Fallback(a), Span::Fallback(b)) =&gt; Span::Fallback(a.resolved_at(b)),
             <span class="kw">_ </span>=&gt; mismatch(),
@@ -1422,12 +1422,12 @@
 
     <span class="kw">pub fn </span>located_at(<span class="kw-2">&amp;</span><span class="self">self</span>, other: Span) -&gt; Span {
         <span class="kw">match </span>(<span class="self">self</span>, other) {
-            <span class="attribute">#[cfg(not(no_hygiene))]</span>
-            (Span::Compiler(a), Span::Compiler(b)) =&gt; Span::Compiler(a.located_at(b)),
+            <span class="attribute">#[cfg(not(no_hygiene))]
+            </span>(Span::Compiler(a), Span::Compiler(b)) =&gt; Span::Compiler(a.located_at(b)),
 
             <span class="comment">// Name resolution affects semantics, but location is only cosmetic
-            </span><span class="attribute">#[cfg(no_hygiene)]</span>
-            (Span::Compiler(<span class="kw">_</span>), Span::Compiler(<span class="kw">_</span>)) =&gt; <span class="kw-2">*</span><span class="self">self</span>,
+            </span><span class="attribute">#[cfg(no_hygiene)]
+            </span>(Span::Compiler(<span class="kw">_</span>), Span::Compiler(<span class="kw">_</span>)) =&gt; <span class="kw-2">*</span><span class="self">self</span>,
 
             (Span::Fallback(a), Span::Fallback(b)) =&gt; Span::Fallback(a.located_at(b)),
             <span class="kw">_ </span>=&gt; mismatch(),
@@ -1441,24 +1441,24 @@
         }
     }
 
-    <span class="attribute">#[cfg(super_unstable)]</span>
-    <span class="kw">pub fn </span>source_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SourceFile {
+    <span class="attribute">#[cfg(super_unstable)]
+    </span><span class="kw">pub fn </span>source_file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SourceFile {
         <span class="kw">match </span><span class="self">self </span>{
             Span::Compiler(s) =&gt; SourceFile::nightly(s.source_file()),
             Span::Fallback(s) =&gt; SourceFile::Fallback(s.source_file()),
         }
     }
 
-    <span class="attribute">#[cfg(any(super_unstable, feature = <span class="string">&quot;span-locations&quot;</span>))]</span>
-    <span class="kw">pub fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LineColumn {
+    <span class="attribute">#[cfg(any(super_unstable, feature = <span class="string">&quot;span-locations&quot;</span>))]
+    </span><span class="kw">pub fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LineColumn {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attribute">#[cfg(proc_macro_span)]</span>
-            Span::Compiler(s) =&gt; {
+            <span class="attribute">#[cfg(proc_macro_span)]
+            </span>Span::Compiler(s) =&gt; {
                 <span class="kw">let </span>proc_macro::LineColumn { line, column } = s.start();
                 LineColumn { line, column }
             }
-            <span class="attribute">#[cfg(not(proc_macro_span))]</span>
-            Span::Compiler(<span class="kw">_</span>) =&gt; LineColumn { line: <span class="number">0</span>, column: <span class="number">0 </span>},
+            <span class="attribute">#[cfg(not(proc_macro_span))]
+            </span>Span::Compiler(<span class="kw">_</span>) =&gt; LineColumn { line: <span class="number">0</span>, column: <span class="number">0 </span>},
             Span::Fallback(s) =&gt; {
                 <span class="kw">let </span>fallback::LineColumn { line, column } = s.start();
                 LineColumn { line, column }
@@ -1466,16 +1466,16 @@
         }
     }
 
-    <span class="attribute">#[cfg(any(super_unstable, feature = <span class="string">&quot;span-locations&quot;</span>))]</span>
-    <span class="kw">pub fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LineColumn {
+    <span class="attribute">#[cfg(any(super_unstable, feature = <span class="string">&quot;span-locations&quot;</span>))]
+    </span><span class="kw">pub fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LineColumn {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attribute">#[cfg(proc_macro_span)]</span>
-            Span::Compiler(s) =&gt; {
+            <span class="attribute">#[cfg(proc_macro_span)]
+            </span>Span::Compiler(s) =&gt; {
                 <span class="kw">let </span>proc_macro::LineColumn { line, column } = s.end();
                 LineColumn { line, column }
             }
-            <span class="attribute">#[cfg(not(proc_macro_span))]</span>
-            Span::Compiler(<span class="kw">_</span>) =&gt; LineColumn { line: <span class="number">0</span>, column: <span class="number">0 </span>},
+            <span class="attribute">#[cfg(not(proc_macro_span))]
+            </span>Span::Compiler(<span class="kw">_</span>) =&gt; LineColumn { line: <span class="number">0</span>, column: <span class="number">0 </span>},
             Span::Fallback(s) =&gt; {
                 <span class="kw">let </span>fallback::LineColumn { line, column } = s.end();
                 LineColumn { line, column }
@@ -1485,16 +1485,16 @@
 
     <span class="kw">pub fn </span>join(<span class="kw-2">&amp;</span><span class="self">self</span>, other: Span) -&gt; <span class="prelude-ty">Option</span>&lt;Span&gt; {
         <span class="kw">let </span>ret = <span class="kw">match </span>(<span class="self">self</span>, other) {
-            <span class="attribute">#[cfg(proc_macro_span)]</span>
-            (Span::Compiler(a), Span::Compiler(b)) =&gt; Span::Compiler(a.join(b)<span class="question-mark">?</span>),
+            <span class="attribute">#[cfg(proc_macro_span)]
+            </span>(Span::Compiler(a), Span::Compiler(b)) =&gt; Span::Compiler(a.join(b)<span class="question-mark">?</span>),
             (Span::Fallback(a), Span::Fallback(b)) =&gt; Span::Fallback(a.join(b)<span class="question-mark">?</span>),
             <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
         };
         <span class="prelude-val">Some</span>(ret)
     }
 
-    <span class="attribute">#[cfg(super_unstable)]</span>
-    <span class="kw">pub fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Span) -&gt; bool {
+    <span class="attribute">#[cfg(super_unstable)]
+    </span><span class="kw">pub fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Span) -&gt; bool {
         <span class="kw">match </span>(<span class="self">self</span>, other) {
             (Span::Compiler(a), Span::Compiler(b)) =&gt; a.eq(b),
             (Span::Fallback(a), Span::Fallback(b)) =&gt; a.eq(b),
@@ -1540,8 +1540,8 @@
     }
 }
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Group {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Group {
     Compiler(proc_macro::Group),
     Fallback(fallback::Group),
 }
@@ -1592,20 +1592,20 @@
 
     <span class="kw">pub fn </span>span_open(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attribute">#[cfg(not(no_group_open_close))]</span>
-            Group::Compiler(g) =&gt; Span::Compiler(g.span_open()),
-            <span class="attribute">#[cfg(no_group_open_close)]</span>
-            Group::Compiler(g) =&gt; Span::Compiler(g.span()),
+            <span class="attribute">#[cfg(not(no_group_open_close))]
+            </span>Group::Compiler(g) =&gt; Span::Compiler(g.span_open()),
+            <span class="attribute">#[cfg(no_group_open_close)]
+            </span>Group::Compiler(g) =&gt; Span::Compiler(g.span()),
             Group::Fallback(g) =&gt; Span::Fallback(g.span_open()),
         }
     }
 
     <span class="kw">pub fn </span>span_close(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Span {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attribute">#[cfg(not(no_group_open_close))]</span>
-            Group::Compiler(g) =&gt; Span::Compiler(g.span_close()),
-            <span class="attribute">#[cfg(no_group_open_close)]</span>
-            Group::Compiler(g) =&gt; Span::Compiler(g.span()),
+            <span class="attribute">#[cfg(not(no_group_open_close))]
+            </span>Group::Compiler(g) =&gt; Span::Compiler(g.span_close()),
+            <span class="attribute">#[cfg(no_group_open_close)]
+            </span>Group::Compiler(g) =&gt; Span::Compiler(g.span()),
             Group::Fallback(g) =&gt; Span::Fallback(g.span_close()),
         }
     }
@@ -1650,8 +1650,8 @@
     }
 }
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Ident {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Ident {
     Compiler(proc_macro::Ident),
     Fallback(fallback::Ident),
 }
@@ -1666,10 +1666,10 @@
 
     <span class="kw">pub fn </span>new_raw(string: <span class="kw-2">&amp;</span>str, span: Span) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>span {
-            <span class="attribute">#[cfg(not(no_ident_new_raw))]</span>
-            Span::Compiler(s) =&gt; Ident::Compiler(proc_macro::Ident::new_raw(string, s)),
-            <span class="attribute">#[cfg(no_ident_new_raw)]</span>
-            Span::Compiler(s) =&gt; {
+            <span class="attribute">#[cfg(not(no_ident_new_raw))]
+            </span>Span::Compiler(s) =&gt; Ident::Compiler(proc_macro::Ident::new_raw(string, s)),
+            <span class="attribute">#[cfg(no_ident_new_raw)]
+            </span>Span::Compiler(s) =&gt; {
                 <span class="kw">let _ </span>= proc_macro::Ident::new(string, s);
                 <span class="comment">// At this point the un-r#-prefixed string is known to be a
                 // valid identifier. Try to produce a valid raw identifier by
@@ -1755,13 +1755,13 @@
     }
 }
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Literal {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>Literal {
     Compiler(proc_macro::Literal),
     Fallback(fallback::Literal),
 }
 
-<span class="macro">macro_rules!</span> suffixed_numbers {
+<span class="macro">macro_rules! </span>suffixed_numbers {
     ($(<span class="macro-nonterminal">$name</span>:ident =&gt; <span class="macro-nonterminal">$kind</span>:ident,)<span class="kw-2">*</span>) =&gt; ($(
         <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>(n: <span class="macro-nonterminal">$kind</span>) -&gt; Literal {
             <span class="kw">if </span>inside_proc_macro() {
@@ -1773,7 +1773,7 @@
     )<span class="kw-2">*</span>)
 }
 
-<span class="macro">macro_rules!</span> unsuffixed_integers {
+<span class="macro">macro_rules! </span>unsuffixed_integers {
     ($(<span class="macro-nonterminal">$name</span>:ident =&gt; <span class="macro-nonterminal">$kind</span>:ident,)<span class="kw-2">*</span>) =&gt; ($(
         <span class="kw">pub fn </span><span class="macro-nonterminal">$name</span>(n: <span class="macro-nonterminal">$kind</span>) -&gt; Literal {
             <span class="kw">if </span>inside_proc_macro() {
@@ -1794,7 +1794,7 @@
         }
     }
 
-    <span class="macro">suffixed_numbers!</span> {
+    <span class="macro">suffixed_numbers! </span>{
         u8_suffixed =&gt; u8,
         u16_suffixed =&gt; u16,
         u32_suffixed =&gt; u32,
@@ -1812,7 +1812,7 @@
         f64_suffixed =&gt; f64,
     }
 
-    <span class="macro">unsuffixed_integers!</span> {
+    <span class="macro">unsuffixed_integers! </span>{
         u8_unsuffixed =&gt; u8,
         u16_unsuffixed =&gt; u16,
         u32_unsuffixed =&gt; u32,
@@ -1884,10 +1884,10 @@
 
     <span class="kw">pub fn </span>subspan&lt;R: RangeBounds&lt;usize&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, range: R) -&gt; <span class="prelude-ty">Option</span>&lt;Span&gt; {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attribute">#[cfg(proc_macro_span)]</span>
-            Literal::Compiler(lit) =&gt; lit.subspan(range).map(Span::Compiler),
-            <span class="attribute">#[cfg(not(proc_macro_span))]</span>
-            Literal::Compiler(_lit) =&gt; <span class="prelude-val">None</span>,
+            <span class="attribute">#[cfg(proc_macro_span)]
+            </span>Literal::Compiler(lit) =&gt; lit.subspan(range).map(Span::Compiler),
+            <span class="attribute">#[cfg(not(proc_macro_span))]
+            </span>Literal::Compiler(_lit) =&gt; <span class="prelude-val">None</span>,
             Literal::Fallback(lit) =&gt; lit.subspan(range).map(Span::Fallback),
         }
     }
@@ -1920,12 +1920,12 @@
 }
 
 <span class="kw">fn </span>compiler_literal_from_str(repr: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;proc_macro::Literal, LexError&gt; {
-    <span class="attribute">#[cfg(not(no_literal_from_str))]</span>
-    {
+    <span class="attribute">#[cfg(not(no_literal_from_str))]
+    </span>{
         proc_macro::Literal::from_str(repr).map_err(LexError::Compiler)
     }
-    <span class="attribute">#[cfg(no_literal_from_str)]</span>
-    {
+    <span class="attribute">#[cfg(no_literal_from_str)]
+    </span>{
         <span class="kw">let </span>tokens = proc_macro_parse(repr)<span class="question-mark">?</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>iter = tokens.into_iter();
         <span class="kw">if let </span>(<span class="prelude-val">Some</span>(proc_macro::TokenTree::Literal(literal)), <span class="prelude-val">None</span>) = (iter.next(), iter.next()) {
@@ -1955,4 +1955,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="proc_macro2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

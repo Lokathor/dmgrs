@@ -382,9 +382,9 @@
 //! and therefore marked as unsafe. This is used so that we don&#39;t need to
 //! duplicate the business logic contained in these functions between the
 //! versions exported in the crate root, `checked`, and `relaxed` modules.
-</span><span class="attribute">#![allow(unused_unsafe)]</span>
+</span><span class="attribute">#![allow(unused_unsafe)]
 
-<span class="kw">use </span><span class="kw">crate</span>::PodCastError;
+</span><span class="kw">use </span><span class="kw">crate</span>::PodCastError;
 <span class="kw">use </span>core::{marker::<span class="kw-2">*</span>, mem::<span class="kw-2">*</span>};
 
 <span class="comment">/*
@@ -400,10 +400,10 @@ possibility code branch.
 */
 
 </span><span class="doccomment">/// Immediately panics.
-</span><span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;spirv&quot;</span>))]</span>
-<span class="attribute">#[cold]</span>
-<span class="attribute">#[inline(never)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>something_went_wrong&lt;D: core::fmt::Display&gt;(_src: <span class="kw-2">&amp;</span>str, _err: D) -&gt; ! {
+</span><span class="attribute">#[cfg(not(target_arch = <span class="string">&quot;spirv&quot;</span>))]
+#[cold]
+#[inline(never)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>something_went_wrong&lt;D: core::fmt::Display&gt;(_src: <span class="kw-2">&amp;</span>str, _err: D) -&gt; ! {
   <span class="comment">// Note(Lokathor): Keeping the panic here makes the panic _formatting_ go
   // here too, which helps assembly readability and also helps keep down
   // the inline pressure.
@@ -411,10 +411,10 @@ possibility code branch.
 }
 
 <span class="doccomment">/// Immediately panics.
-</span><span class="attribute">#[cfg(target_arch = <span class="string">&quot;spirv&quot;</span>)]</span>
-<span class="attribute">#[cold]</span>
-<span class="attribute">#[inline(never)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>something_went_wrong&lt;D&gt;(_src: <span class="kw-2">&amp;</span>str, _err: D) -&gt; ! {
+</span><span class="attribute">#[cfg(target_arch = <span class="string">&quot;spirv&quot;</span>)]
+#[cold]
+#[inline(never)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>something_went_wrong&lt;D&gt;(_src: <span class="kw-2">&amp;</span>str, _err: D) -&gt; ! {
   <span class="comment">// Note: On the spirv targets from [rust-gpu](https://github.com/EmbarkStudios/rust-gpu)
   // panic formatting cannot be used. We we just give a generic error message
   // The chance that the panicking version of these functions will ever get
@@ -427,8 +427,8 @@ possibility code branch.
 ///
 /// Any ZST becomes an empty slice, and in that case the pointer value of that
 /// empty slice might not match the pointer value of the input reference.
-</span><span class="attribute">#[inline(always)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>bytes_of&lt;T: Copy&gt;(t: <span class="kw-2">&amp;</span>T) -&gt; <span class="kw-2">&amp;</span>[u8] {
+</span><span class="attribute">#[inline(always)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>bytes_of&lt;T: Copy&gt;(t: <span class="kw-2">&amp;</span>T) -&gt; <span class="kw-2">&amp;</span>[u8] {
   <span class="kw">if </span>size_of::&lt;T&gt;() == <span class="number">0 </span>{
     <span class="kw-2">&amp;</span>[]
   } <span class="kw">else </span>{
@@ -443,8 +443,8 @@ possibility code branch.
 ///
 /// Any ZST becomes an empty slice, and in that case the pointer value of that
 /// empty slice might not match the pointer value of the input reference.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>bytes_of_mut&lt;T: Copy&gt;(t: <span class="kw-2">&amp;mut </span>T) -&gt; <span class="kw-2">&amp;mut </span>[u8] {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>bytes_of_mut&lt;T: Copy&gt;(t: <span class="kw-2">&amp;mut </span>T) -&gt; <span class="kw-2">&amp;mut </span>[u8] {
   <span class="kw">if </span>size_of::&lt;T&gt;() == <span class="number">0 </span>{
     <span class="kw-2">&amp;mut </span>[]
   } <span class="kw">else </span>{
@@ -460,8 +460,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// This is [`try_from_bytes`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>from_bytes&lt;T: Copy&gt;(s: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span>T {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>from_bytes&lt;T: Copy&gt;(s: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="kw-2">&amp;</span>T {
   <span class="kw">match </span>try_from_bytes(s) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;from_bytes&quot;</span>, e),
@@ -473,8 +473,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// This is [`try_from_bytes_mut`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>from_bytes_mut&lt;T: Copy&gt;(s: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="kw-2">&amp;mut </span>T {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>from_bytes_mut&lt;T: Copy&gt;(s: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="kw-2">&amp;mut </span>T {
   <span class="kw">match </span>try_from_bytes_mut(s) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;from_bytes_mut&quot;</span>, e),
@@ -485,8 +485,8 @@ possibility code branch.
 ///
 /// ## Failure
 /// * If the `bytes` length is not equal to `size_of::&lt;T&gt;()`.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_pod_read_unaligned&lt;T: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_pod_read_unaligned&lt;T: Copy&gt;(
   bytes: <span class="kw-2">&amp;</span>[u8],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;T, PodCastError&gt; {
   <span class="kw">if </span>bytes.len() != size_of::&lt;T&gt;() {
@@ -500,8 +500,8 @@ possibility code branch.
 ///
 /// ## Panics
 /// * This is like `try_pod_read_unaligned` but will panic on failure.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>pod_read_unaligned&lt;T: Copy&gt;(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; T {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>pod_read_unaligned&lt;T: Copy&gt;(bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; T {
   <span class="kw">match </span>try_pod_read_unaligned(bytes) {
     <span class="prelude-val">Ok</span>(t) =&gt; t,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;pod_read_unaligned&quot;</span>, e),
@@ -514,8 +514,8 @@ possibility code branch.
 ///
 /// * If the slice isn&#39;t aligned for the new type
 /// * If the slice&#39;s length isn’t exactly the size of the new type
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_from_bytes&lt;T: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_from_bytes&lt;T: Copy&gt;(
   s: <span class="kw-2">&amp;</span>[u8],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>T, PodCastError&gt; {
   <span class="kw">if </span>s.len() != size_of::&lt;T&gt;() {
@@ -533,8 +533,8 @@ possibility code branch.
 ///
 /// * If the slice isn&#39;t aligned for the new type
 /// * If the slice&#39;s length isn’t exactly the size of the new type
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_from_bytes_mut&lt;T: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_from_bytes_mut&lt;T: Copy&gt;(
   s: <span class="kw-2">&amp;mut </span>[u8],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>T, PodCastError&gt; {
   <span class="kw">if </span>s.len() != size_of::&lt;T&gt;() {
@@ -551,8 +551,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// * This is like [`try_cast`](try_cast), but will panic on a size mismatch.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast&lt;A: Copy, B: Copy&gt;(a: A) -&gt; B {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast&lt;A: Copy, B: Copy&gt;(a: A) -&gt; B {
   <span class="kw">if </span>size_of::&lt;A&gt;() == size_of::&lt;B&gt;() {
     <span class="kw">unsafe </span>{ <span class="macro">transmute!</span>(a) }
   } <span class="kw">else </span>{
@@ -565,8 +565,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// This is [`try_cast_mut`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_mut&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;mut </span>A) -&gt; <span class="kw-2">&amp;mut </span>B {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_mut&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;mut </span>A) -&gt; <span class="kw-2">&amp;mut </span>B {
   <span class="kw">if </span>size_of::&lt;A&gt;() == size_of::&lt;B&gt;() &amp;&amp; align_of::&lt;A&gt;() &gt;= align_of::&lt;B&gt;() {
     <span class="comment">// Plz mr compiler, just notice that we can&#39;t ever hit Err in this case.
     </span><span class="kw">match </span>try_cast_mut(a) {
@@ -586,8 +586,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// This is [`try_cast_ref`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_ref&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;</span>A) -&gt; <span class="kw-2">&amp;</span>B {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_ref&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;</span>A) -&gt; <span class="kw-2">&amp;</span>B {
   <span class="kw">if </span>size_of::&lt;A&gt;() == size_of::&lt;B&gt;() &amp;&amp; align_of::&lt;A&gt;() &gt;= align_of::&lt;B&gt;() {
     <span class="comment">// Plz mr compiler, just notice that we can&#39;t ever hit Err in this case.
     </span><span class="kw">match </span>try_cast_ref(a) {
@@ -607,8 +607,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// This is [`try_cast_slice`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_slice&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;</span>[A]) -&gt; <span class="kw-2">&amp;</span>[B] {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_slice&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;</span>[A]) -&gt; <span class="kw-2">&amp;</span>[B] {
   <span class="kw">match </span>try_cast_slice(a) {
     <span class="prelude-val">Ok</span>(b) =&gt; b,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;cast_slice&quot;</span>, e),
@@ -620,8 +620,8 @@ possibility code branch.
 /// ## Panics
 ///
 /// This is [`try_cast_slice_mut`] but will panic on error.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_slice_mut&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;mut </span>[A]) -&gt; <span class="kw-2">&amp;mut </span>[B] {
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>cast_slice_mut&lt;A: Copy, B: Copy&gt;(a: <span class="kw-2">&amp;mut </span>[A]) -&gt; <span class="kw-2">&amp;mut </span>[B] {
   <span class="kw">match </span>try_cast_slice_mut(a) {
     <span class="prelude-val">Ok</span>(b) =&gt; b,
     <span class="prelude-val">Err</span>(e) =&gt; something_went_wrong(<span class="string">&quot;cast_slice_mut&quot;</span>, e),
@@ -638,8 +638,8 @@ possibility code branch.
 /// ## Failure
 ///
 /// * If the types don&#39;t have the same size this fails.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast&lt;A: Copy, B: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast&lt;A: Copy, B: Copy&gt;(
   a: A,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;B, PodCastError&gt; {
   <span class="kw">if </span>size_of::&lt;A&gt;() == size_of::&lt;B&gt;() {
@@ -655,8 +655,8 @@ possibility code branch.
 ///
 /// * If the reference isn&#39;t aligned in the new type
 /// * If the source type and target type aren&#39;t the same size.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_ref&lt;A: Copy, B: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_ref&lt;A: Copy, B: Copy&gt;(
   a: <span class="kw-2">&amp;</span>A,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>B, PodCastError&gt; {
   <span class="comment">// Note(Lokathor): everything with `align_of` and `size_of` will optimize away
@@ -675,8 +675,8 @@ possibility code branch.
 <span class="doccomment">/// Try to convert a `&amp;mut T` into `&amp;mut U`.
 ///
 /// As [`try_cast_ref`], but `mut`.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_mut&lt;A: Copy, B: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_mut&lt;A: Copy, B: Copy&gt;(
   a: <span class="kw-2">&amp;mut </span>A,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>B, PodCastError&gt; {
   <span class="comment">// Note(Lokathor): everything with `align_of` and `size_of` will optimize away
@@ -707,8 +707,8 @@ possibility code branch.
 ///   that&#39;s a failure).
 /// * Similarly, you can&#39;t convert between a [ZST](https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts)
 ///   and a non-ZST.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_slice&lt;A: Copy, B: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_slice&lt;A: Copy, B: Copy&gt;(
   a: <span class="kw-2">&amp;</span>[A],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>[B], PodCastError&gt; {
   <span class="comment">// Note(Lokathor): everything with `align_of` and `size_of` will optimize away
@@ -733,8 +733,8 @@ possibility code branch.
 /// length).
 ///
 /// As [`try_cast_slice`], but `&amp;mut`.
-</span><span class="attribute">#[inline]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_slice_mut&lt;A: Copy, B: Copy&gt;(
+</span><span class="attribute">#[inline]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>try_cast_slice_mut&lt;A: Copy, B: Copy&gt;(
   a: <span class="kw-2">&amp;mut </span>[A],
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>[B], PodCastError&gt; {
   <span class="comment">// Note(Lokathor): everything with `align_of` and `size_of` will optimize away
@@ -759,4 +759,4 @@ possibility code branch.
   }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bytemuck" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

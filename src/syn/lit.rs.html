@@ -1598,20 +1598,20 @@
 <span id="1598">1598</span>
 <span id="1599">1599</span>
 <span id="1600">1600</span>
-</pre><pre class="rust"><code><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::lookahead;
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, Parser};
+</pre><pre class="rust"><code><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::lookahead;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, Parser};
 <span class="kw">use crate</span>::{Error, <span class="prelude-ty">Result</span>};
 <span class="kw">use </span>proc_macro2::{Ident, Literal, Span};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">use </span>proc_macro2::{TokenStream, TokenTree};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">use </span>proc_macro2::{TokenStream, TokenTree};
 <span class="kw">use </span>std::fmt::{<span class="self">self</span>, Display};
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">use </span>std::hash::{Hash, Hasher};
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">use </span>std::hash::{Hash, Hasher};
 <span class="kw">use </span>std::str::{<span class="self">self</span>, FromStr};
 
-<span class="macro">ast_enum_of_structs!</span> {
+<span class="macro">ast_enum_of_structs! </span>{
     <span class="doccomment">/// A Rust literal such as a string or integer or boolean.
     ///
     /// # Syntax tree enum
@@ -1648,28 +1648,28 @@
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A UTF-8 string literal: `&quot;foo&quot;`.
     </span><span class="kw">pub struct </span>LitStr {
         repr: Box&lt;LitRepr&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A byte string literal: `b&quot;foo&quot;`.
     </span><span class="kw">pub struct </span>LitByteStr {
         repr: Box&lt;LitRepr&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A byte literal: `b&#39;f&#39;`.
     </span><span class="kw">pub struct </span>LitByte {
         repr: Box&lt;LitRepr&gt;,
     }
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A character literal: `&#39;a&#39;`.
     </span><span class="kw">pub struct </span>LitChar {
         repr: Box&lt;LitRepr&gt;,
@@ -1681,7 +1681,7 @@
     suffix: Box&lt;str&gt;,
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// An integer literal: `1` or `1u16`.
     </span><span class="kw">pub struct </span>LitInt {
         repr: Box&lt;LitIntRepr&gt;,
@@ -1694,7 +1694,7 @@
     suffix: Box&lt;str&gt;,
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A floating point literal: `1f64` or `1.0e10f64`.
     ///
     /// Must be finite. May not be infinite or NaN.
@@ -1709,7 +1709,7 @@
     suffix: Box&lt;str&gt;,
 }
 
-<span class="macro">ast_struct!</span> {
+<span class="macro">ast_struct! </span>{
     <span class="doccomment">/// A boolean literal: `true` or `false`.
     </span><span class="kw">pub struct </span>LitBool {
         <span class="kw">pub </span>value: bool,
@@ -1766,9 +1766,9 @@
     ///     }
     /// }
     /// ```
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">pub fn </span>parse&lt;T: Parse&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;T&gt; {
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">pub fn </span>parse&lt;T: Parse&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;T&gt; {
         <span class="self">self</span>.parse_with(T::parse)
     }
 
@@ -1796,9 +1796,9 @@
     /// #     Ok(())
     /// # }
     /// ```
-    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">pub fn </span>parse_with&lt;F: Parser&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, parser: F) -&gt; <span class="prelude-ty">Result</span>&lt;F::Output&gt; {
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">pub fn </span>parse_with&lt;F: Parser&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, parser: F) -&gt; <span class="prelude-ty">Result</span>&lt;F::Output&gt; {
         <span class="kw">use </span>proc_macro2::Group;
 
         <span class="comment">// Token stream with every span replaced by the given one.
@@ -2149,13 +2149,13 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-<span class="kw">mod </span>debug_impls {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+</span><span class="kw">mod </span>debug_impls {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span>std::fmt::{<span class="self">self</span>, Debug};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitStr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitStr {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitStr&quot;</span>)
@@ -2164,8 +2164,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitByteStr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitByteStr {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitByteStr&quot;</span>)
@@ -2174,8 +2174,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitByte {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitByte {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitByte&quot;</span>)
@@ -2184,8 +2184,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitChar {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitChar {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitChar&quot;</span>)
@@ -2194,8 +2194,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitInt {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitInt {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitInt&quot;</span>)
@@ -2204,8 +2204,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitFloat {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitFloat {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitFloat&quot;</span>)
@@ -2214,8 +2214,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-    <span class="kw">impl </span>Debug <span class="kw">for </span>LitBool {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+    </span><span class="kw">impl </span>Debug <span class="kw">for </span>LitBool {
         <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
             formatter
                 .debug_struct(<span class="string">&quot;LitBool&quot;</span>)
@@ -2225,9 +2225,9 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-<span class="kw">impl </span>Clone <span class="kw">for </span>LitRepr {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+</span><span class="kw">impl </span>Clone <span class="kw">for </span>LitRepr {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         LitRepr {
             token: <span class="self">self</span>.token.clone(),
@@ -2236,9 +2236,9 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-<span class="kw">impl </span>Clone <span class="kw">for </span>LitIntRepr {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+</span><span class="kw">impl </span>Clone <span class="kw">for </span>LitIntRepr {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         LitIntRepr {
             token: <span class="self">self</span>.token.clone(),
@@ -2248,9 +2248,9 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-<span class="kw">impl </span>Clone <span class="kw">for </span>LitFloatRepr {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+</span><span class="kw">impl </span>Clone <span class="kw">for </span>LitFloatRepr {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         LitFloatRepr {
             token: <span class="self">self</span>.token.clone(),
@@ -2260,11 +2260,11 @@
     }
 }
 
-<span class="macro">macro_rules!</span> lit_extra_traits {
+<span class="macro">macro_rules! </span>lit_extra_traits {
     (<span class="macro-nonterminal">$ty</span>:ident) =&gt; {
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]</span>
-        <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]</span>
-        <span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;clone-impls&quot;</span>)))]
+        </span><span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
             <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
                 <span class="macro-nonterminal">$ty </span>{
                     repr: <span class="self">self</span>.repr.clone(),
@@ -2272,17 +2272,17 @@
             }
         }
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-        <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-        <span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+        </span><span class="kw">impl </span>PartialEq <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
             <span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
                 <span class="self">self</span>.repr.token.to_string() == other.repr.token.to_string()
             }
         }
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]</span>
-        <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]</span>
-        <span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;extra-traits&quot;</span>)))]
+        </span><span class="kw">impl </span>Hash <span class="kw">for </span><span class="macro-nonterminal">$ty </span>{
             <span class="kw">fn </span>hash&lt;H&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>H)
             <span class="kw">where
                 </span>H: Hasher,
@@ -2291,10 +2291,10 @@
             }
         }
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-        <span class="attribute">#[doc(hidden)]</span>
-        <span class="attribute">#[allow(non_snake_case)]</span>
-        <span class="kw">pub fn </span><span class="macro-nonterminal">$ty</span>(marker: lookahead::TokenMarker) -&gt; <span class="macro-nonterminal">$ty </span>{
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+        #[doc(hidden)]
+        #[allow(non_snake_case)]
+        </span><span class="kw">pub fn </span><span class="macro-nonterminal">$ty</span>(marker: lookahead::TokenMarker) -&gt; <span class="macro-nonterminal">$ty </span>{
             <span class="kw">match </span>marker {}
         }
     };
@@ -2307,14 +2307,14 @@
 <span class="macro">lit_extra_traits!</span>(LitInt);
 <span class="macro">lit_extra_traits!</span>(LitFloat);
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[allow(non_snake_case)]</span>
-<span class="kw">pub fn </span>LitBool(marker: lookahead::TokenMarker) -&gt; LitBool {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[doc(hidden)]
+#[allow(non_snake_case)]
+</span><span class="kw">pub fn </span>LitBool(marker: lookahead::TokenMarker) -&gt; LitBool {
     <span class="kw">match </span>marker {}
 }
 
-<span class="macro">ast_enum!</span> {
+<span class="macro">ast_enum! </span>{
     <span class="doccomment">/// The style of a string literal, either plain quoted or a raw string like
     /// `r##&quot;data&quot;##`.
     </span><span class="kw">pub enum </span>StrStyle #no_visit {
@@ -2327,22 +2327,22 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="attribute">#[doc(hidden)]</span>
-<span class="attribute">#[allow(non_snake_case)]</span>
-<span class="kw">pub fn </span>Lit(marker: lookahead::TokenMarker) -&gt; Lit {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+#[doc(hidden)]
+#[allow(non_snake_case)]
+</span><span class="kw">pub fn </span>Lit(marker: lookahead::TokenMarker) -&gt; Lit {
     <span class="kw">match </span>marker {}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]</span>
-<span class="kw">pub mod </span>parsing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;parsing&quot;</span>)]
+</span><span class="kw">pub mod </span>parsing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::buffer::Cursor;
     <span class="kw">use </span><span class="kw">crate</span>::parse::{Parse, ParseStream, <span class="prelude-ty">Result</span>};
     <span class="kw">use </span>proc_macro2::Punct;
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>Lit {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>Lit {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             input.step(|cursor| {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>((lit, rest)) = cursor.literal() {
@@ -2413,8 +2413,8 @@
         ))
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitStr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitStr {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2424,8 +2424,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitByteStr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitByteStr {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2435,8 +2435,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitByte {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitByte {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2446,8 +2446,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitChar {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitChar {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2457,8 +2457,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitInt {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitInt {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2468,8 +2468,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitFloat {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitFloat {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2479,8 +2479,8 @@
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]</span>
-    <span class="kw">impl </span>Parse <span class="kw">for </span>LitBool {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;parsing&quot;</span>)))]
+    </span><span class="kw">impl </span>Parse <span class="kw">for </span>LitBool {
         <span class="kw">fn </span>parse(input: ParseStream) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
             <span class="kw">let </span>head = input.fork();
             <span class="kw">match </span>input.parse() {
@@ -2491,56 +2491,56 @@
     }
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="kw">mod </span>printing {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+</span><span class="kw">mod </span>printing {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span>proc_macro2::TokenStream;
     <span class="kw">use </span>quote::{ToTokens, TokenStreamExt};
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitStr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitStr {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.repr.token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitByteStr {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitByteStr {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.repr.token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitByte {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitByte {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.repr.token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitChar {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitChar {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.repr.token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitInt {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitInt {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.repr.token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitFloat {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitFloat {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             <span class="self">self</span>.repr.token.to_tokens(tokens);
         }
     }
 
-    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-    <span class="kw">impl </span>ToTokens <span class="kw">for </span>LitBool {
+    <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+    </span><span class="kw">impl </span>ToTokens <span class="kw">for </span>LitBool {
         <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, tokens: <span class="kw-2">&amp;mut </span>TokenStream) {
             tokens.append(<span class="self">self</span>.token());
         }
@@ -2685,8 +2685,8 @@
 
     <span class="comment">// Clippy false positive
     // https://github.com/rust-lang-nursery/rust-clippy/issues/2329
-    </span><span class="attribute">#[allow(clippy::needless_continue)]</span>
-    <span class="kw">fn </span>parse_lit_str_cooked(<span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span>str) -&gt; (Box&lt;str&gt;, Box&lt;str&gt;) {
+    </span><span class="attribute">#[allow(clippy::needless_continue)]
+    </span><span class="kw">fn </span>parse_lit_str_cooked(<span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span>str) -&gt; (Box&lt;str&gt;, Box&lt;str&gt;) {
         <span class="macro">assert_eq!</span>(byte(s, <span class="number">0</span>), <span class="string">b&#39;&quot;&#39;</span>);
         s = <span class="kw-2">&amp;</span>s[<span class="number">1</span>..];
 
@@ -2778,8 +2778,8 @@
 
     <span class="comment">// Clippy false positive
     // https://github.com/rust-lang-nursery/rust-clippy/issues/2329
-    </span><span class="attribute">#[allow(clippy::needless_continue)]</span>
-    <span class="kw">fn </span>parse_lit_byte_str_cooked(<span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span>str) -&gt; (Vec&lt;u8&gt;, Box&lt;str&gt;) {
+    </span><span class="attribute">#[allow(clippy::needless_continue)]
+    </span><span class="kw">fn </span>parse_lit_byte_str_cooked(<span class="kw-2">mut </span>s: <span class="kw-2">&amp;</span>str) -&gt; (Vec&lt;u8&gt;, Box&lt;str&gt;) {
         <span class="macro">assert_eq!</span>(byte(s, <span class="number">0</span>), <span class="string">b&#39;b&#39;</span>);
         <span class="macro">assert_eq!</span>(byte(s, <span class="number">1</span>), <span class="string">b&#39;&quot;&#39;</span>);
         s = <span class="kw-2">&amp;</span>s[<span class="number">2</span>..];
@@ -3164,10 +3164,10 @@
         </span>}
     }
 
-    <span class="attribute">#[allow(clippy::unnecessary_wraps)]</span>
-    <span class="kw">pub fn </span>to_literal(repr: <span class="kw-2">&amp;</span>str, digits: <span class="kw-2">&amp;</span>str, suffix: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Literal&gt; {
-        <span class="attribute">#[cfg(syn_no_negative_literal_parse)]</span>
-        {
+    <span class="attribute">#[allow(clippy::unnecessary_wraps)]
+    </span><span class="kw">pub fn </span>to_literal(repr: <span class="kw-2">&amp;</span>str, digits: <span class="kw-2">&amp;</span>str, suffix: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;Literal&gt; {
+        <span class="attribute">#[cfg(syn_no_negative_literal_parse)]
+        </span>{
             <span class="comment">// Rustc older than https://github.com/rust-lang/rust/pull/87262.
             </span><span class="kw">if </span>repr.starts_with(<span class="string">&#39;-&#39;</span>) {
                 <span class="kw">let </span>f64_parse_finite = || digits.parse().ok().filter(|x: <span class="kw-2">&amp;</span>f64| x.is_finite());
@@ -3199,4 +3199,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

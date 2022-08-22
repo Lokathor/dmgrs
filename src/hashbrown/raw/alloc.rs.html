@@ -72,36 +72,36 @@
 <span id="72">72</span>
 </pre><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="self">self</span>::inner::{do_alloc, Allocator, Global};
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]</span>
-<span class="kw">mod </span>inner {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+</span><span class="kw">mod </span>inner {
     <span class="kw">use </span><span class="kw">crate</span>::alloc::alloc::Layout;
     <span class="kw">pub use </span><span class="kw">crate</span>::alloc::alloc::{Allocator, Global};
     <span class="kw">use </span>core::ptr::NonNull;
 
-    <span class="attribute">#[allow(clippy::map_err_ignore)]</span>
-    <span class="kw">pub fn </span>do_alloc&lt;A: Allocator&gt;(alloc: <span class="kw-2">&amp;</span>A, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;u8&gt;, ()&gt; {
+    <span class="attribute">#[allow(clippy::map_err_ignore)]
+    </span><span class="kw">pub fn </span>do_alloc&lt;A: Allocator&gt;(alloc: <span class="kw-2">&amp;</span>A, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;u8&gt;, ()&gt; {
         alloc
             .allocate(layout)
             .map(|ptr| ptr.as_non_null_ptr())
             .map_err(|<span class="kw">_</span>| ())
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;bumpalo&quot;</span>)]</span>
-    <span class="kw">unsafe impl </span>Allocator <span class="kw">for </span><span class="kw">crate</span>::BumpWrapper&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>allocate(<span class="kw-2">&amp;</span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;[u8]&gt;, core::alloc::AllocError&gt; {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;bumpalo&quot;</span>)]
+    </span><span class="kw">unsafe impl </span>Allocator <span class="kw">for </span><span class="kw">crate</span>::BumpWrapper&lt;<span class="lifetime">&#39;_</span>&gt; {
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>allocate(<span class="kw-2">&amp;</span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;[u8]&gt;, core::alloc::AllocError&gt; {
             <span class="kw">match </span><span class="self">self</span>.<span class="number">0</span>.try_alloc_layout(layout) {
                 <span class="prelude-val">Ok</span>(ptr) =&gt; <span class="prelude-val">Ok</span>(NonNull::slice_from_raw_parts(ptr, layout.size())),
                 <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(core::alloc::AllocError),
             }
         }
-        <span class="attribute">#[inline]</span>
-        <span class="kw">unsafe fn </span>deallocate(<span class="kw-2">&amp;</span><span class="self">self</span>, _ptr: NonNull&lt;u8&gt;, _layout: Layout) {}
+        <span class="attribute">#[inline]
+        </span><span class="kw">unsafe fn </span>deallocate(<span class="kw-2">&amp;</span><span class="self">self</span>, _ptr: NonNull&lt;u8&gt;, _layout: Layout) {}
     }
 }
 
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;nightly&quot;</span>))]</span>
-<span class="kw">mod </span>inner {
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;nightly&quot;</span>))]
+</span><span class="kw">mod </span>inner {
     <span class="kw">use </span><span class="kw">crate</span>::alloc::alloc::{alloc, dealloc, Layout};
     <span class="kw">use </span>core::ptr::NonNull;
 
@@ -110,21 +110,21 @@
         <span class="kw">unsafe fn </span>deallocate(<span class="kw-2">&amp;</span><span class="self">self</span>, ptr: NonNull&lt;u8&gt;, layout: Layout);
     }
 
-    <span class="attribute">#[derive(Copy, Clone)]</span>
-    <span class="kw">pub struct </span>Global;
+    <span class="attribute">#[derive(Copy, Clone)]
+    </span><span class="kw">pub struct </span>Global;
     <span class="kw">unsafe impl </span>Allocator <span class="kw">for </span>Global {
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>allocate(<span class="kw-2">&amp;</span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;u8&gt;, ()&gt; {
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>allocate(<span class="kw-2">&amp;</span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;u8&gt;, ()&gt; {
             <span class="kw">unsafe </span>{ NonNull::new(alloc(layout)).ok_or(()) }
         }
-        <span class="attribute">#[inline]</span>
-        <span class="kw">unsafe fn </span>deallocate(<span class="kw-2">&amp;</span><span class="self">self</span>, ptr: NonNull&lt;u8&gt;, layout: Layout) {
+        <span class="attribute">#[inline]
+        </span><span class="kw">unsafe fn </span>deallocate(<span class="kw-2">&amp;</span><span class="self">self</span>, ptr: NonNull&lt;u8&gt;, layout: Layout) {
             dealloc(ptr.as_ptr(), layout)
         }
     }
     <span class="kw">impl </span>Default <span class="kw">for </span>Global {
-        <span class="attribute">#[inline]</span>
-        <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="attribute">#[inline]
+        </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
             Global
         }
     }
@@ -133,14 +133,14 @@
         alloc.allocate(layout)
     }
 
-    <span class="attribute">#[cfg(feature = <span class="string">&quot;bumpalo&quot;</span>)]</span>
-    <span class="kw">unsafe impl </span>Allocator <span class="kw">for </span><span class="kw">crate</span>::BumpWrapper&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="attribute">#[allow(clippy::map_err_ignore)]</span>
-        <span class="kw">fn </span>allocate(<span class="kw-2">&amp;</span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;u8&gt;, ()&gt; {
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;bumpalo&quot;</span>)]
+    </span><span class="kw">unsafe impl </span>Allocator <span class="kw">for </span><span class="kw">crate</span>::BumpWrapper&lt;<span class="lifetime">&#39;_</span>&gt; {
+        <span class="attribute">#[allow(clippy::map_err_ignore)]
+        </span><span class="kw">fn </span>allocate(<span class="kw-2">&amp;</span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;u8&gt;, ()&gt; {
             <span class="self">self</span>.<span class="number">0</span>.try_alloc_layout(layout).map_err(|<span class="kw">_</span>| ())
         }
         <span class="kw">unsafe fn </span>deallocate(<span class="kw-2">&amp;</span><span class="self">self</span>, _ptr: NonNull&lt;u8&gt;, _layout: Layout) {}
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="hashbrown" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

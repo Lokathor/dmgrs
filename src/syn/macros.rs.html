@@ -178,22 +178,22 @@
 </pre><pre class="rust"><code><span class="attribute">#[cfg_attr(
     not(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>)),
     allow(unknown_lints, unused_macro_rules)
-)]</span>
-<span class="macro">macro_rules!</span> ast_struct {
+)]
+</span><span class="macro">macro_rules! </span>ast_struct {
     (
         [$(<span class="macro-nonterminal">$attrs_pub</span>:tt)<span class="kw-2">*</span>]
         <span class="kw">struct </span><span class="macro-nonterminal">$name</span>:ident #full $(<span class="macro-nonterminal">$rest</span>:tt)*
     ) =&gt; {
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]</span>
-        $(<span class="macro-nonterminal">$attrs_pub</span>)* <span class="kw">struct </span><span class="macro-nonterminal">$name </span>$(<span class="macro-nonterminal">$rest</span>)*
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;full&quot;</span>)]
+        </span>$(<span class="macro-nonterminal">$attrs_pub</span>)* <span class="kw">struct </span><span class="macro-nonterminal">$name </span>$(<span class="macro-nonterminal">$rest</span>)*
 
-        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;full&quot;</span>))]</span>
-        $(<span class="macro-nonterminal">$attrs_pub</span>)* <span class="kw">struct </span><span class="macro-nonterminal">$name </span>{
+        <span class="attribute">#[cfg(not(feature = <span class="string">&quot;full&quot;</span>))]
+        </span>$(<span class="macro-nonterminal">$attrs_pub</span>)* <span class="kw">struct </span><span class="macro-nonterminal">$name </span>{
             _noconstruct: ::std::marker::PhantomData&lt;::proc_macro2::Span&gt;,
         }
 
-        <span class="attribute">#[cfg(all(not(feature = <span class="string">&quot;full&quot;</span>), feature = <span class="string">&quot;printing&quot;</span>))]</span>
-        <span class="kw">impl </span>::quote::ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+        <span class="attribute">#[cfg(all(not(feature = <span class="string">&quot;full&quot;</span>), feature = <span class="string">&quot;printing&quot;</span>))]
+        </span><span class="kw">impl </span>::quote::ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
             <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>::proc_macro2::TokenStream) {
                 <span class="macro">unreachable!</span>()
             }
@@ -212,7 +212,7 @@
     };
 }
 
-<span class="macro">macro_rules!</span> ast_enum {
+<span class="macro">macro_rules! </span>ast_enum {
     <span class="comment">// Drop the `#no_visit` attribute, if present.
     </span>(
         [$(<span class="macro-nonterminal">$attrs_pub</span>:tt)<span class="kw-2">*</span>]
@@ -233,7 +233,7 @@
     };
 }
 
-<span class="macro">macro_rules!</span> ast_enum_of_structs {
+<span class="macro">macro_rules! </span>ast_enum_of_structs {
     (
         $(<span class="attribute">#[<span class="macro-nonterminal">$enum_attr</span>:meta]</span>)*
         <span class="macro-nonterminal">$</span><span class="kw">pub</span>:<span class="macro-nonterminal">ident $</span><span class="kw">enum</span>:<span class="macro-nonterminal">ident $name</span>:ident <span class="macro-nonterminal">$body</span>:tt
@@ -244,7 +244,7 @@
     };
 }
 
-<span class="macro">macro_rules!</span> ast_enum_of_structs_impl {
+<span class="macro">macro_rules! </span>ast_enum_of_structs_impl {
     (
         <span class="macro-nonterminal">$</span><span class="kw">pub</span>:<span class="macro-nonterminal">ident $</span><span class="kw">enum</span>:<span class="macro-nonterminal">ident $name</span>:ident {
             $(
@@ -263,8 +263,8 @@
             <span class="macro">ast_enum_from_struct!</span>(<span class="macro-nonterminal">$name</span>::<span class="macro-nonterminal">$variant</span>, $(<span class="macro-nonterminal">$member</span>)::+);
         )<span class="kw-2">*</span>)*
 
-        <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-        <span class="macro">generate_to_tokens!</span> {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+        </span><span class="macro">generate_to_tokens! </span>{
             $(<span class="macro-nonterminal">$remaining</span>)*
             ()
             tokens
@@ -279,7 +279,7 @@
     };
 }
 
-<span class="macro">macro_rules!</span> ast_enum_from_struct {
+<span class="macro">macro_rules! </span>ast_enum_from_struct {
     <span class="comment">// No From&lt;TokenStream&gt; for verbatim variants.
     </span>(<span class="macro-nonterminal">$name</span>:ident::Verbatim, <span class="macro-nonterminal">$member</span>:ident) =&gt; {};
 
@@ -292,12 +292,12 @@
     };
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]</span>
-<span class="attribute">#[cfg_attr(
+<span class="attribute">#[cfg(feature = <span class="string">&quot;printing&quot;</span>)]
+#[cfg_attr(
     not(any(feature = <span class="string">&quot;full&quot;</span>, feature = <span class="string">&quot;derive&quot;</span>)),
     allow(unknown_lints, unused_macro_rules)
-)]</span>
-<span class="macro">macro_rules!</span> generate_to_tokens {
+)]
+</span><span class="macro">macro_rules! </span>generate_to_tokens {
     (do_not_generate_to_tokens $(<span class="macro-nonterminal">$foo</span>:tt)<span class="kw-2">*</span>) =&gt; ();
 
     (
@@ -329,8 +329,8 @@
     };
 
     (($(<span class="macro-nonterminal">$arms</span>:tt)<span class="kw-2">*</span>) <span class="macro-nonterminal">$tokens</span>:ident <span class="macro-nonterminal">$name</span>:ident {}) =&gt; {
-        <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]</span>
-        <span class="kw">impl </span>::quote::ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+        <span class="attribute">#[cfg_attr(doc_cfg, doc(cfg(feature = <span class="string">&quot;printing&quot;</span>)))]
+        </span><span class="kw">impl </span>::quote::ToTokens <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
             <span class="kw">fn </span>to_tokens(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="macro-nonterminal">$tokens</span>: <span class="kw-2">&amp;mut </span>::proc_macro2::TokenStream) {
                 <span class="kw">match </span><span class="self">self </span>{
                     $(<span class="macro-nonterminal">$arms</span>)*
@@ -340,7 +340,7 @@
     };
 }
 
-<span class="macro">macro_rules!</span> strip_attrs_pub {
+<span class="macro">macro_rules! </span>strip_attrs_pub {
     (<span class="macro-nonterminal">$mac</span>:<span class="macro">ident!</span>($(<span class="attribute">#[<span class="macro-nonterminal">$m</span>:meta]</span>)* <span class="macro-nonterminal">$</span><span class="kw">pub</span>:<span class="macro-nonterminal">ident </span>$(<span class="macro-nonterminal">$t</span>:tt)<span class="kw-2">*</span>)) =&gt; {
         <span class="macro">check_keyword_matches!</span>(<span class="kw">pub </span><span class="macro-nonterminal">$</span><span class="kw">pub</span>);
 
@@ -348,9 +348,9 @@
     };
 }
 
-<span class="macro">macro_rules!</span> check_keyword_matches {
+<span class="macro">macro_rules! </span>check_keyword_matches {
     (<span class="kw">enum enum</span>) =&gt; {};
     (<span class="kw">pub pub</span>) =&gt; {};
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="syn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

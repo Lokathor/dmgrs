@@ -105,8 +105,8 @@
 <span class="kw">use </span><span class="kw">crate</span>::graph::{Disambiguate, Node};
 <span class="kw">use </span><span class="kw">crate</span>::util::MaybeVoid;
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub struct </span>Leaf&lt;<span class="lifetime">&#39;t</span>&gt; {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>Leaf&lt;<span class="lifetime">&#39;t</span>&gt; {
     <span class="kw">pub </span>ident: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t </span>Ident,
     <span class="kw">pub </span>span: Span,
     <span class="kw">pub </span>priority: usize,
@@ -114,14 +114,14 @@
     <span class="kw">pub </span>callback: <span class="prelude-ty">Option</span>&lt;Callback&gt;,
 }
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub enum </span>Callback {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub enum </span>Callback {
     Label(TokenStream),
     Inline(Box&lt;InlineCallback&gt;),
 }
 
-<span class="attribute">#[derive(Clone)]</span>
-<span class="kw">pub struct </span>InlineCallback {
+<span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>InlineCallback {
     <span class="kw">pub </span>arg: Ident,
     <span class="kw">pub </span>body: TokenStream,
     <span class="kw">pub </span>span: Span,
@@ -193,4 +193,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

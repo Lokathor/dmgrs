@@ -13,8 +13,8 @@ routing, and doesn’t perform the same fine-grained error prioritisation that <
 <p>These qualities make this parser ideal for lexers.</p>
 <p>The output type of this parser is the output type of the inner parsers.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2>
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[derive(Clone, Debug, PartialEq)]</span>
-<span class="kw">enum </span>Token {
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[derive(Clone, Debug, PartialEq)]
+</span><span class="kw">enum </span>Token {
     If,
     For,
     While,
@@ -42,8 +42,8 @@ routing, and doesn’t perform the same fine-grained error prioritisation that <
 <p>If you have more than 26 choices, the array-form of choice will work for any length. The downside
 being that the contained parsers must all be of the same type.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[derive(Clone, Debug, PartialEq)]</span>
-<span class="kw">enum </span>Token {
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[derive(Clone, Debug, PartialEq)]
+</span><span class="kw">enum </span>Token {
     If,
     For,
     While,
@@ -66,4 +66,4 @@ being that the contained parsers must all be of the same type.</p>
     tokens.parse(<span class="string">&quot;def fn while if for&quot;</span>),
     <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[Def, Fn, While, If, For]),
 );</code></pre></div>
-</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="chumsky" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

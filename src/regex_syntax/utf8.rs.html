@@ -667,9 +667,9 @@ I also got the idea from
 which uses it for executing automata on their term index.
 */
 
-</span><span class="attribute">#![deny(missing_docs)]</span>
+</span><span class="attribute">#![deny(missing_docs)]
 
-<span class="kw">use </span>std::char;
+</span><span class="kw">use </span>std::char;
 <span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::iter::FusedIterator;
 <span class="kw">use </span>std::slice;
@@ -683,8 +683,8 @@ which uses it for executing automata on their term index.
 ///
 /// For example, if there are two ranges, `[C2-DF][80-BF]`, then the byte
 /// sequence `\xDD\x61` would not match because `0x61 &lt; 0x80`.
-</span><span class="attribute">#[derive(Copy, Clone, Eq, PartialEq, PartialOrd, Ord)]</span>
-<span class="kw">pub enum </span>Utf8Sequence {
+</span><span class="attribute">#[derive(Copy, Clone, Eq, PartialEq, PartialOrd, Ord)]
+</span><span class="kw">pub enum </span>Utf8Sequence {
     <span class="doccomment">/// One byte range.
     </span>One(Utf8Range),
     <span class="doccomment">/// Two successive byte ranges.
@@ -804,8 +804,8 @@ which uses it for executing automata on their term index.
 }
 
 <span class="doccomment">/// A single inclusive range of UTF-8 bytes.
-</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Ord)]</span>
-<span class="kw">pub struct </span>Utf8Range {
+</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Ord)]
+</span><span class="kw">pub struct </span>Utf8Range {
     <span class="doccomment">/// Start of byte range (inclusive).
     </span><span class="kw">pub </span>start: u8,
     <span class="doccomment">/// End of byte range (inclusive).
@@ -883,8 +883,8 @@ which uses it for executing automata on their term index.
 /// illustrative. In practice, you could just try to decode your byte sequence
 /// and compare it with the scalar value range directly. However, this is not
 /// always possible (for example, in a byte based automaton).
-</span><span class="attribute">#[derive(Debug)]</span>
-<span class="kw">pub struct </span>Utf8Sequences {
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Utf8Sequences {
     range_stack: Vec&lt;ScalarRange&gt;,
 }
 
@@ -901,8 +901,8 @@ which uses it for executing automata on their term index.
     /// Any existing state is cleared, but resources may be reused.
     ///
     /// N.B. Benchmarks say that this method is dubious.
-    </span><span class="attribute">#[doc(hidden)]</span>
-    <span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>, start: char, end: char) {
+    </span><span class="attribute">#[doc(hidden)]
+    </span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>, start: char, end: char) {
         <span class="self">self</span>.range_stack.clear();
         <span class="self">self</span>.push(start <span class="kw">as </span>u32, end <span class="kw">as </span>u32);
     }
@@ -1040,8 +1040,8 @@ which uses it for executing automata on their term index.
     }
 }
 
-<span class="attribute">#[cfg(test)]</span>
-<span class="kw">mod </span>tests {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
     <span class="kw">use </span>std::char;
 
     <span class="kw">use </span><span class="kw">crate</span>::utf8::{Utf8Range, Utf8Sequences};
@@ -1066,8 +1066,8 @@ which uses it for executing automata on their term index.
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>codepoints_no_surrogates() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>codepoints_no_surrogates() {
         never_accepts_surrogate_codepoints(<span class="string">&#39;\u{0}&#39;</span>, <span class="string">&#39;\u{FFFF}&#39;</span>);
         never_accepts_surrogate_codepoints(<span class="string">&#39;\u{0}&#39;</span>, <span class="string">&#39;\u{10FFFF}&#39;</span>);
         never_accepts_surrogate_codepoints(<span class="string">&#39;\u{0}&#39;</span>, <span class="string">&#39;\u{10FFFE}&#39;</span>);
@@ -1075,8 +1075,8 @@ which uses it for executing automata on their term index.
         never_accepts_surrogate_codepoints(<span class="string">&#39;\u{D7FF}&#39;</span>, <span class="string">&#39;\u{E000}&#39;</span>);
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>single_codepoint_one_sequence() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>single_codepoint_one_sequence() {
         <span class="comment">// Tests that every range of scalar values that contains a single
         // scalar value is recognized by one sequence of byte ranges.
         </span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0x0</span>..=<span class="number">0x0010_FFFF </span>{
@@ -1089,8 +1089,8 @@ which uses it for executing automata on their term index.
         }
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>bmp() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>bmp() {
         <span class="kw">use </span><span class="kw">crate</span>::utf8::Utf8Sequence::<span class="kw-2">*</span>;
 
         <span class="kw">let </span>seqs = Utf8Sequences::new(<span class="string">&#39;\u{0}&#39;</span>, <span class="string">&#39;\u{FFFF}&#39;</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
@@ -1123,8 +1123,8 @@ which uses it for executing automata on their term index.
         );
     }
 
-    <span class="attribute">#[test]</span>
-    <span class="kw">fn </span>reverse() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>reverse() {
         <span class="kw">use </span><span class="kw">crate</span>::utf8::Utf8Sequence::<span class="kw-2">*</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>s = One(rutf8(<span class="number">0xA</span>, <span class="number">0xB</span>));
@@ -1173,4 +1173,4 @@ which uses it for executing automata on their term index.
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="regex_syntax" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

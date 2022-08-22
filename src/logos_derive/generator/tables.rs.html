@@ -148,11 +148,11 @@
         <span class="kw">for </span>(ident, table) <span class="kw">in </span><span class="self">self</span>.tables.iter() {
             <span class="kw">let </span>bytes = table.iter().copied().map(Literal::u8_unsuffixed);
 
-            out.extend(<span class="macro">quote!</span> {
+            out.extend(<span class="macro">quote! </span>{
                 <span class="kw">static </span>#ident: [u8; <span class="number">256</span>] = [#(#bytes),<span class="kw-2">*</span>];
             });
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (878aef79d 2022-08-20)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="logos_derive" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>
