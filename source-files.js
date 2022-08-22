@@ -4,7 +4,7 @@ var sourcesIndex = JSON.parse('{\
 "bytemuck":["",[],["anybitpattern.rs","checked.rs","contiguous.rs","internal.rs","lib.rs","no_uninit.rs","offset_of.rs","pod.rs","pod_in_option.rs","transparent.rs","zeroable.rs","zeroable_in_option.rs"]],\
 "cfg_if":["",[],["lib.rs"]],\
 "chumsky":["",[],["chain.rs","combinator.rs","debug.rs","error.rs","lib.rs","primitive.rs","recovery.rs","recursive.rs","span.rs","stream.rs","text.rs"]],\
-"dmgrs":["",[],["easy_lexer.rs","header.rs","lexer.rs","lib.rs","multi_line_comments.rs","parser.rs","repeated_newline_filter.rs","str_cache_impl.rs"]],\
+"dmgrs":["",[],["easy_lexer.rs","header.rs","lexer.rs","lib.rs","multi_line_comments.rs","parser.rs","repeated_newline_filter.rs","section.rs","str_cache_impl.rs"]],\
 "fnv":["",[],["lib.rs"]],\
 "getrandom":["",[],["error.rs","lib.rs","linux_android.rs","use_file.rs","util.rs","util_libc.rs"]],\
 "hashbrown":["",[["external_trait_impls",[],["mod.rs"]],["raw",[],["alloc.rs","bitmask.rs","mod.rs","sse2.rs"]]],["lib.rs","macros.rs","map.rs","scopeguard.rs","set.rs"]],\
@@ -18,6 +18,7 @@ var sourcesIndex = JSON.parse('{\
 "regex_syntax":["",[["ast",[],["mod.rs","parse.rs","print.rs","visitor.rs"]],["hir",[["literal",[],["mod.rs"]]],["interval.rs","mod.rs","print.rs","translate.rs","visitor.rs"]],["unicode_tables",[],["age.rs","case_folding_simple.rs","general_category.rs","grapheme_cluster_break.rs","mod.rs","perl_word.rs","property_bool.rs","property_names.rs","property_values.rs","script.rs","script_extension.rs","sentence_break.rs","word_break.rs"]]],["either.rs","error.rs","lib.rs","parser.rs","unicode.rs","utf8.rs"]],\
 "stacker":["",[],["lib.rs"]],\
 "syn":["",[["gen",[],["clone.rs","gen_helper.rs"]]],["attr.rs","await.rs","bigint.rs","buffer.rs","custom_keyword.rs","custom_punctuation.rs","data.rs","derive.rs","discouraged.rs","error.rs","export.rs","expr.rs","ext.rs","file.rs","generics.rs","group.rs","ident.rs","item.rs","lib.rs","lifetime.rs","lit.rs","lookahead.rs","mac.rs","macros.rs","op.rs","parse.rs","parse_macro_input.rs","parse_quote.rs","pat.rs","path.rs","print.rs","punctuated.rs","reserved.rs","sealed.rs","span.rs","spanned.rs","stmt.rs","thread.rs","token.rs","ty.rs","verbatim.rs","whitespace.rs"]],\
+"tinyvec":["",[["array",[],["generated_impl.rs"]]],["array.rs","arrayvec.rs","arrayvec_drain.rs","lib.rs","slicevec.rs"]],\
 "unicode_ident":["",[],["lib.rs","tables.rs"]]\
 }');
 createSourceSidebar();

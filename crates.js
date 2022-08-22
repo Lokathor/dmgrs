@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["ahash","beef","bytemuck","cfg_if","chumsky","dmgrs","fnv","getrandom","hashbrown","libc","logos","logos_derive","once_cell","proc_macro2","psm","quote","regex_syntax","stacker","syn","unicode_ident"];
+window.ALL_CRATES = ["ahash","beef","bytemuck","cfg_if","chumsky","dmgrs","fnv","getrandom","hashbrown","libc","logos","logos_derive","once_cell","proc_macro2","psm","quote","regex_syntax","stacker","syn","tinyvec","unicode_ident"];
